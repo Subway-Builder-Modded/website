@@ -81,7 +81,7 @@ const NavbarProvider = ({
     <NavbarContext value={contextValue}>
       <div
         className={twMerge(
-          "peer/navbar group/navbar relative isolate z-10 flex w-full flex-col",
+          "peer/navbar group/navbar relative isolate z-50 flex w-full flex-col",
           "has-data-navbar-inset:min-h-svh has-data-navbar-inset:bg-navbar dark:has-data-navbar-inset:bg-bg",
           className,
         )}
@@ -129,7 +129,7 @@ const Navbar = ({
           className="sr-only"
           aria-hidden
           data-navbar={intent}
-          data-navbar-sticky={isSticky}
+          data-navbar-sticky={isSticky ? true : undefined}
           data-placement={placement ?? undefined}
         />
         <Sheet isOpen={open} onOpenChange={setOpen} {...props}>
@@ -152,10 +152,10 @@ const Navbar = ({
       data-navbar={intent}
       ref={ref}
       data-placement={placement ?? undefined}
-      data-navbar-sticky={isSticky}
+      data-navbar-sticky={isSticky ? true : undefined}
       className={twMerge([
         "group/navbar-intent relative isolate",
-        isSticky && "sticky top-0 z-40",
+        isSticky && "fixed inset-x-0 top-0 z-40",
         placement === "top" && intent === "float" && "md:pt-8",
         placement === "bottom" && intent === "float" && "bottom-0 md:pb-8",
         intent === "float" && "mx-auto w-full max-w-7xl px-4 xl:max-w-(--breakpoint-xl)",
@@ -164,9 +164,19 @@ const Navbar = ({
     >
       <div
         className={twMerge(
-          "relative isolate hidden py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)] md:block",
+          "relative isolate py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)]",
           intent === "float" &&
-            "rounded-xl bg-bg py-0 *:data-[navbar=content]:max-w-7xl *:data-[navbar=content]:rounded-xl *:data-[navbar=content]:border *:data-[navbar=content]:bg-navbar *:data-[navbar=content]:px-4 *:data-[navbar=content]:py-(--navbar-gutter) *:data-[navbar=content]:shadow-xs",
+          twJoin(
+            "rounded-xl bg-background/80 backdrop-blur py-0",
+            "*:data-[navbar=content]:max-w-7xl",
+            "*:data-[navbar=content]:rounded-xl",
+            "*:data-[navbar=content]:border",
+            "*:data-[navbar=content]:bg-background/80",
+            "*:data-[navbar=content]:backdrop-blur",
+            "*:data-[navbar=content]:px-4",
+            "*:data-[navbar=content]:py-(--navbar-gutter)",
+            "*:data-[navbar=content]:shadow-sm",
+          ),
           ["default", "inset"].includes(intent) && "px-4",
           intent === "default" && "border-b bg-navbar",
           className,
@@ -174,7 +184,11 @@ const Navbar = ({
       >
         <div
           data-navbar="content"
-          className="mx-auto w-full max-w-(--breakpoint-2xl) items-center md:flex"
+          className={twMerge(
+            "mx-auto w-full max-w-(--breakpoint-2xl) items-center md:flex",
+            intent === "float" && "bg-background/80 backdrop-blur",
+            intent === "default" && "bg-background",
+          )}
         >
           {children}
         </div>

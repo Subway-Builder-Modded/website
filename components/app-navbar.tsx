@@ -1,5 +1,7 @@
 "use client"
+
 import { ChevronDownIcon, MagnifyingGlassIcon, ShoppingBagIcon } from "@heroicons/react/24/outline"
+import { usePathname } from "next/navigation"
 import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/components/ui/link"
@@ -33,16 +35,26 @@ const categories = [
   { id: 10, label: "Health & Wellness", url: "#" },
 ]
 
+const nav = [
+  { label: "Home", href: "/" },
+  { label: "Shop", href: "/shop" },
+  { label: "Offers", href: "/offers" },
+  { label: "Orders", href: "/orders" },
+]
+
 export default function AppNavbar(props: NavbarProps) {
+  const pathname = usePathname()
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/"
+    return pathname === href || pathname.startsWith(href + "/")
+  }
+
   return (
     <NavbarProvider>
-      <Navbar {...props}>
+      <Navbar intent="float" isSticky placement="top" {...props}>
         <NavbarStart>
-          <Link
-            className="flex items-center gap-x-2 font-medium"
-            aria-label="Goto documentation of Navbar"
-            href="/docs/components/layouts/navbar"
-          >
+          <Link className="flex items-center gap-x-2 font-medium" aria-label="Home" href="/">
             <Avatar
               isSquare
               size="sm"
@@ -54,14 +66,16 @@ export default function AppNavbar(props: NavbarProps) {
             </span>
           </Link>
         </NavbarStart>
+
         <NavbarGap />
+
         <NavbarSection>
-          <NavbarItem href="#" isCurrent>
-            Home
-          </NavbarItem>
-          <NavbarItem href="#">Shop</NavbarItem>
-          <NavbarItem href="#">Offers</NavbarItem>
-          <NavbarItem href="#">Orders</NavbarItem>
+          {nav.map((item) => (
+            <NavbarItem key={item.href} href={item.href} isCurrent={isActive(item.href)}>
+              {item.label}
+            </NavbarItem>
+          ))}
+
           <Menu>
             <NavbarItem>
               Categories
@@ -76,9 +90,11 @@ export default function AppNavbar(props: NavbarProps) {
             </MenuContent>
           </Menu>
         </NavbarSection>
+
         <NavbarSpacer />
+
         <NavbarSection className="max-md:hidden">
-          <Button intent="plain" size="sq-sm" aria-label="Search for products">
+          <Button intent="plain" size="sq-sm" aria-label="Search">
             <MagnifyingGlassIcon />
           </Button>
           <Button intent="plain" size="sq-sm" aria-label="Your Bag">
@@ -88,10 +104,11 @@ export default function AppNavbar(props: NavbarProps) {
           <UserMenu />
         </NavbarSection>
       </Navbar>
+
       <NavbarMobile>
         <NavbarTrigger />
         <NavbarSpacer />
-        <Button intent="plain" size="sq-sm" aria-label="Search for products">
+        <Button intent="plain" size="sq-sm" aria-label="Search">
           <MagnifyingGlassIcon />
         </Button>
         <Button intent="plain" size="sq-sm" aria-label="Your Bag">
