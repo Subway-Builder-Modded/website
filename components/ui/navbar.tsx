@@ -1,3 +1,4 @@
+// navbar.tsx
 "use client"
 
 import { Bars2Icon } from "@heroicons/react/20/solid"
@@ -81,7 +82,7 @@ const NavbarProvider = ({
     <NavbarContext value={contextValue}>
       <div
         className={twMerge(
-          "peer/navbar group/navbar relative isolate z-50 flex w-full flex-col",
+          "peer/navbar group/navbar relative isolate z-10 flex w-full flex-col",
           "has-data-navbar-inset:min-h-svh has-data-navbar-inset:bg-navbar dark:has-data-navbar-inset:bg-bg",
           className,
         )}
@@ -122,6 +123,7 @@ const Navbar = ({
   ...props
 }: NavbarProps) => {
   const { isMobile, open, setOpen } = useNavbar()
+
   if (isMobile) {
     return (
       <>
@@ -129,7 +131,7 @@ const Navbar = ({
           className="sr-only"
           aria-hidden
           data-navbar={intent}
-          data-navbar-sticky={isSticky ? true : undefined}
+          data-navbar-sticky={isSticky}
           data-placement={placement ?? undefined}
         />
         <Sheet isOpen={open} onOpenChange={setOpen} {...props}>
@@ -152,43 +154,25 @@ const Navbar = ({
       data-navbar={intent}
       ref={ref}
       data-placement={placement ?? undefined}
-      data-navbar-sticky={isSticky ? true : undefined}
+      data-navbar-sticky={isSticky}
       className={twMerge([
-        "group/navbar-intent relative isolate",
-        isSticky && "fixed inset-x-0 top-0 z-40",
-        placement === "top" && intent === "float" && "md:pt-8",
-        placement === "bottom" && intent === "float" && "bottom-0 md:pb-8",
-        intent === "float" && "mx-auto w-full max-w-7xl px-4 xl:max-w-(--breakpoint-xl)",
+        "group/navbar-intent relative isolate w-full pointer-events-auto",
+        isSticky && placement === "top" && "fixed top-0 left-0 right-0 z-[5000]",
+        isSticky && placement === "bottom" && "fixed bottom-0 left-0 right-0 z-[5000]",
+        className,
       ])}
       {...props}
     >
       <div
         className={twMerge(
-          "relative isolate py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)]",
-          intent === "float" &&
-          twJoin(
-            "rounded-xl bg-background/80 backdrop-blur py-0",
-            "*:data-[navbar=content]:max-w-7xl",
-            "*:data-[navbar=content]:rounded-xl",
-            "*:data-[navbar=content]:border",
-            "*:data-[navbar=content]:bg-background/80",
-            "*:data-[navbar=content]:backdrop-blur",
-            "*:data-[navbar=content]:px-4",
-            "*:data-[navbar=content]:py-(--navbar-gutter)",
-            "*:data-[navbar=content]:shadow-sm",
-          ),
-          ["default", "inset"].includes(intent) && "px-4",
-          intent === "default" && "border-b bg-navbar",
-          className,
+          "relative isolate hidden py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)] md:block",
+          ["default", "inset"].includes(intent) && "px-0",
+          intent === "default" && "border-b bg-muted shadow-sm",
         )}
       >
         <div
           data-navbar="content"
-          className={twMerge(
-            "mx-auto w-full max-w-(--breakpoint-2xl) items-center md:flex",
-            intent === "float" && "bg-background/80 backdrop-blur",
-            intent === "default" && "bg-background",
-          )}
+          className="mx-auto w-full max-w-(--breakpoint-2xl) items-center md:flex px-4"
         >
           {children}
         </div>
@@ -226,8 +210,10 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
       aria-current={isCurrent ? "page" : undefined}
       className={cx(
         [
+          "no-underline",
           "href" in props ? "cursor-pointer" : "cursor-default",
-          "group/sidebar-item pressed:bg-secondary pressed:text-secondary-fg hover:bg-secondary hover:text-secondary-fg",
+          "group/sidebar-item pressed:bg-secondary hover:bg-secondary/80",
+          "hover:text-primary pressed:text-primary",
           "aria-[current=page]:text-fg aria-[current=page]*:data-[slot=icon]:text-fg",
           "col-span-full grid grid-cols-[auto_1fr_1.5rem_0.5rem_auto] supports-[grid-template-columns:subgrid]:grid-cols-subgrid md:supports-[grid-template-columns:subgrid]:grid-cols-none",
           "relative min-w-0 items-center gap-x-3 rounded-lg p-2 text-start font-medium text-base/6 md:gap-x-(--navbar-gutter) md:px-(--navbar-gutter) md:py-[calc(var(--navbar-gutter)---spacing(0.5))] md:text-sm/5",
@@ -235,9 +221,11 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
           "*:data-[slot=loader]:size-5 *:data-[slot=loader]:shrink-0 md:*:data-[slot=loader]:size-4",
           "*:not-nth-2:last:data-[slot=icon]:row-start-1 *:not-nth-2:last:data-[slot=icon]:ms-auto *:not-nth-2:last:data-[slot=icon]:size-5 md:*:not-nth-2:last:data-[slot=icon]:size-4",
           "*:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-6 md:*:data-[slot=avatar]:size-5",
-          "*:data-[slot=icon]:text-muted-fg pressed:*:data-[slot=icon]:text-fg hover:*:data-[slot=icon]:text-fg",
+          "hover:*:data-[slot=icon]:text-primary pressed:*:data-[slot=icon]:text-primary",
+          "*:data-[slot=icon]:transition-colors *:data-[slot=icon]:duration-150 *:data-[slot=icon]:ease-out",
           "outline-hidden focus-visible:inset-ring focus-visible:inset-ring-ring focus-visible:ring-2 focus-visible:ring-ring/20",
           "text-start disabled:cursor-default disabled:opacity-50",
+          "transition-[background-color,color,box-shadow,transform] duration-150 ease-out hover:-translate-y-[1px] active:translate-y-0",
         ],
         className,
       )}
@@ -251,7 +239,7 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
             <motion.span
               data-slot="current-indicator"
               layoutId="current-indicator"
-              transition={{ type: "spring", stiffness: 500, damping: 40 }}
+              transition={{ type: "spring", stiffness: 550, damping: 42 }}
               className={twJoin(
                 "absolute rounded-full bg-fg [--gutter:--spacing(0.5)]",
                 "inset-y-[calc(var(--navbar-gutter)---spacing(0.5))] -start-4 w-(--gutter) md:inset-y-auto md:w-auto",
@@ -288,10 +276,9 @@ const NavbarMobile = ({ className, ref, ...props }: React.ComponentProps<"div">)
       data-slot="navbar-mobile"
       className={twMerge(
         "group/navbar-mobile flex items-center gap-x-3 px-4 py-2.5 md:hidden",
-        "group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-navbar",
-        // top
+        "group-has-data-navbar-sticky/navbar:fixed group-has-data-navbar-sticky/navbar:left-0 group-has-data-navbar-sticky/navbar:right-0 group-has-data-navbar-sticky/navbar:z-[5000]",
+        "group-has-data-navbar-sticky/navbar:bg-muted",
         "group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:top-0 group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-b",
-        // bottom
         "group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:bottom-0 group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:border-t",
         className,
       )}
@@ -328,7 +315,10 @@ const NavbarTrigger = ({ className, onPress, ref, ...props }: NavbarTriggerProps
       intent="plain"
       aria-label={props["aria-label"] || "Toggle Navbar"}
       size="sq-sm"
-      className={cx("-ms-2 lg:hidden", className)}
+      className={cx(
+        "-ms-2 lg:hidden transition-[color,transform] duration-150 ease-out hover:text-primary hover:-translate-y-[1px] active:translate-y-0 hover:[&>svg]:text-primary",
+        className,
+      )}
       onPress={(event) => {
         onPress?.(event)
         toggleNavbar()
