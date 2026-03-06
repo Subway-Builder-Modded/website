@@ -24,7 +24,7 @@ export default function AppFooter() {
                 <Avatar
                   isSquare
                   size="sm"
-                  src="logo.png"
+                  src="/logo.png"
                   className="outline-hidden ring-0 shadow-none border-0 [&_*]:ring-0 [&_*]:border-0 [&_*]:shadow-none"
                 />
                 <span className="font-bold">Subway Builder Modded</span>

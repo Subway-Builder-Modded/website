@@ -28,10 +28,10 @@ export type WikiBreadcrumbItem = {
   href?: string
 }
 
-function getInstanceContentDir(instance: WikiInstance, version: string | null) {
-  return instance.versioned
-    ? path.join(CONTENT_ROOT, instance.id, version ?? "")
-    : path.join(CONTENT_ROOT, instance.id)
+export type WikiTocHeading = {
+  id: string
+  text: string
+  level: number
 }
 
 function exists(filePath: string) {
@@ -44,16 +44,73 @@ function humanizeSegment(segment: string) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+}
+
+function getInstanceContentDir(instance: WikiInstance, version: string | null) {
+  return instance.versioned
+    ? path.join(CONTENT_ROOT, instance.id, version ?? "")
+    : path.join(CONTENT_ROOT, instance.id)
+}
+
+async function readSource(filePath: string) {
+  return fs.promises.readFile(filePath, "utf8")
+}
+
 async function readFrontmatter(filePath: string) {
-  const source = await fs.promises.readFile(filePath, "utf8")
+  const source = await readSource(filePath)
   const { frontmatter } = await compileMDX<WikiFrontmatter>({
     source,
     options: {
       parseFrontmatter: true,
     },
   })
-
   return frontmatter
+}
+
+export async function extractTocHeadings(filePath: string): Promise<WikiTocHeading[]> {
+  const source = await readSource(filePath)
+  const lines = source.split("\n")
+  const headings: WikiTocHeading[] = []
+
+  for (const line of lines) {
+    const match = /^(##|###|####)\s+(.*)$/.exec(line.trim())
+    if (!match) continue
+
+    const level = match[1].length
+    const text = match[2].trim()
+    headings.push({
+      id: slugify(text),
+      text,
+      level,
+    })
+  }
+
+  return headings
+}
+
+function sortEntries(entries: WikiSidebarEntry[]) {
+  return entries.sort((a, b) => {
+    if (a.sidebarPosition !== b.sidebarPosition) {
+      return a.sidebarPosition - b.sidebarPosition
+    }
+    return a.title.localeCompare(b.title)
+  })
+}
+
+function getCategoryPageFile(parentDir: string, categoryName: string) {
+  const folderIndex = path.join(parentDir, categoryName, "index.mdx")
+  const siblingFile = path.join(parentDir, `${categoryName}.mdx`)
+
+  if (exists(folderIndex)) return folderIndex
+  if (exists(siblingFile)) return siblingFile
+  return null
 }
 
 async function readTitleForPath(baseDir: string, relativePath: string) {
@@ -73,68 +130,70 @@ async function readTitleForPath(baseDir: string, relativePath: string) {
   return undefined
 }
 
-function sortEntries(entries: WikiSidebarEntry[]) {
-  return entries.sort((a, b) => {
-    if (a.sidebarPosition !== b.sidebarPosition) {
-      return a.sidebarPosition - b.sidebarPosition
-    }
-    return a.title.localeCompare(b.title)
-  })
-}
-
 async function buildCategoryEntry(
-  dirPath: string,
+  parentDir: string,
+  categoryName: string,
   pathSegments: string[],
   instance: WikiInstance,
   version: string | null
 ): Promise<WikiSidebarCategory | null> {
-  const entries = await fs.promises.readdir(dirPath, { withFileTypes: true })
-  const indexPath = path.join(dirPath, "index.mdx")
-  const hasIndex = exists(indexPath)
+  const dirPath = path.join(parentDir, categoryName)
+  if (!exists(dirPath)) return null
 
+  const categoryPageFile = getCategoryPageFile(parentDir, categoryName)
+  const categoryFrontmatter = categoryPageFile
+    ? await readFrontmatter(categoryPageFile)
+    : undefined
+
+  const entries = await fs.promises.readdir(dirPath, { withFileTypes: true })
+  const dirNames = new Set(entries.filter((e) => e.isDirectory()).map((e) => e.name))
   const items: WikiSidebarEntry[] = []
 
   for (const entry of entries) {
     if (entry.isDirectory()) {
-      const category = await buildCategoryEntry(
-        path.join(dirPath, entry.name),
+      const childCategory = await buildCategoryEntry(
+        dirPath,
+        entry.name,
         [...pathSegments, entry.name],
         instance,
         version
       )
-      if (category) items.push(category)
+      if (childCategory) items.push(childCategory)
+      continue
     }
 
-    if (entry.isFile() && entry.name.endsWith(".mdx") && entry.name !== "index.mdx") {
-      const basename = entry.name.replace(/\.mdx$/, "")
-      const relPath = [...pathSegments, basename].join("/")
-      const frontmatter = await readFrontmatter(path.join(dirPath, entry.name))
+    if (!entry.isFile() || !entry.name.endsWith(".mdx")) continue
 
-      items.push({
-        kind: "page",
-        key: relPath,
-        title: frontmatter?.title ?? humanizeSegment(basename),
-        href: buildDocHref(instance, version, relPath),
-        sidebarPosition: frontmatter?.sidebar_position ?? 9999,
-      } satisfies WikiSidebarPage)
-    }
+    const basename = entry.name.replace(/\.mdx$/, "")
+
+    if (basename === "index") continue
+    if (dirNames.has(basename)) continue
+
+    const relPath = [...pathSegments, basename].join("/")
+    const frontmatter = await readFrontmatter(path.join(dirPath, entry.name))
+
+    items.push({
+      kind: "page",
+      key: relPath,
+      title: frontmatter?.title ?? humanizeSegment(basename),
+      href: buildDocHref(instance, version, relPath),
+      sidebarPosition: frontmatter?.sidebar_position ?? 9999,
+    } satisfies WikiSidebarPage)
   }
 
   const sortedItems = sortEntries(items)
 
-  if (!hasIndex && sortedItems.length === 0) return null
+  if (!categoryPageFile && sortedItems.length === 0) return null
 
-  const lastSegment = pathSegments[pathSegments.length - 1]
-  const frontmatter = hasIndex ? await readFrontmatter(indexPath) : undefined
   const relPath = pathSegments.join("/")
 
   return {
     kind: "category",
     key: relPath,
-    title: frontmatter?.title ?? humanizeSegment(lastSegment),
-    href: hasIndex ? buildDocHref(instance, version, relPath) : undefined,
+    title: categoryFrontmatter?.title ?? humanizeSegment(categoryName),
+    href: categoryPageFile ? buildDocHref(instance, version, relPath) : undefined,
     items: sortedItems,
-    sidebarPosition: frontmatter?.sidebar_position ?? 9999,
+    sidebarPosition: categoryFrontmatter?.sidebar_position ?? 9999,
   }
 }
 
@@ -146,31 +205,38 @@ export async function getSidebarTree(
   if (!exists(dir)) return { entries: [] }
 
   const entries = await fs.promises.readdir(dir, { withFileTypes: true })
+  const dirNames = new Set(entries.filter((e) => e.isDirectory()).map((e) => e.name))
   const treeEntries: WikiSidebarEntry[] = []
 
   for (const entry of entries) {
     if (entry.isDirectory()) {
       const category = await buildCategoryEntry(
-        path.join(dir, entry.name),
+        dir,
+        entry.name,
         [entry.name],
         instance,
         version
       )
       if (category) treeEntries.push(category)
+      continue
     }
 
-    if (entry.isFile() && entry.name.endsWith(".mdx") && entry.name !== "index.mdx") {
-      const basename = entry.name.replace(/\.mdx$/, "")
-      const frontmatter = await readFrontmatter(path.join(dir, entry.name))
+    if (!entry.isFile() || !entry.name.endsWith(".mdx")) continue
 
-      treeEntries.push({
-        kind: "page",
-        key: basename,
-        title: frontmatter?.title ?? humanizeSegment(basename),
-        href: buildDocHref(instance, version, basename),
-        sidebarPosition: frontmatter?.sidebar_position ?? 9999,
-      } satisfies WikiSidebarPage)
-    }
+    const basename = entry.name.replace(/\.mdx$/, "")
+
+    if (basename === "index") continue
+    if (dirNames.has(basename)) continue
+
+    const frontmatter = await readFrontmatter(path.join(dir, entry.name))
+
+    treeEntries.push({
+      kind: "page",
+      key: basename,
+      title: frontmatter?.title ?? humanizeSegment(basename),
+      href: buildDocHref(instance, version, basename),
+      sidebarPosition: frontmatter?.sidebar_position ?? 9999,
+    } satisfies WikiSidebarPage)
   }
 
   return {
@@ -183,7 +249,6 @@ export async function resolveWikiDocFilePath(slug?: string[]) {
   if (!resolved) return null
 
   const dir = getInstanceContentDir(resolved.instance, resolved.version)
-
   if (!resolved.docSlug) return null
 
   const directFile = path.join(dir, `${resolved.docSlug}.mdx`)
@@ -197,7 +262,7 @@ export async function resolveWikiDocFilePath(slug?: string[]) {
 
 export async function getWikiBreadcrumbs(slug?: string[]): Promise<WikiBreadcrumbItem[]> {
   const resolved = resolveWikiRoute(slug)
-  if (!resolved) return []
+  if (!resolved) return [{ label: "Wiki", href: "/wiki" }]
 
   const dir = getInstanceContentDir(resolved.instance, resolved.version)
   const items: WikiBreadcrumbItem[] = [

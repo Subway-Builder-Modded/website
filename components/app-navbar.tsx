@@ -58,7 +58,7 @@ export default function AppNavbar(props: NavbarProps) {
             aria-label="Home"
             className="group flex items-center gap-x-2 font-medium no-underline transition-colors duration-150 ease-out"
           >
-            <Avatar isSquare size="sm" className="outline-hidden" src="logo.png" />
+            <Avatar isSquare size="sm" className="outline-hidden" src="/logo.png" />
             <span className="font-bold text-muted-fg transition-colors duration-150 ease-out group-hover:text-primary">
               Subway Builder Modded
             </span>
