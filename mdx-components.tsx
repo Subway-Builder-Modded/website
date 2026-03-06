@@ -1,7 +1,24 @@
 import type { MDXComponents } from "mdx/types"
 import Link from "next/link"
 
+import {
+  Admonition,
+  Note,
+  Tip,
+  Important,
+  Warning,
+  Caution,
+  Danger,
+} from "@/components/ui/admonition"
+
 const components: MDXComponents = {
+  Admonition,
+  Note,
+  Tip,
+  Important,
+  Warning,
+  Caution,
+  Danger,
   a: ({ href = "", ...props }) => (
     <Link
       href={href}
