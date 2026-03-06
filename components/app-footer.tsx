@@ -7,6 +7,7 @@ import {
   BookText,
   Megaphone,
   Trophy,
+  RailSymbol,
   Download,
   Map,
   Unplug,
@@ -19,13 +20,15 @@ export default function AppFooter() {
         <div className="grid gap-10 md:grid-cols-[max-content_1fr] md:gap-x-24 md:items-center">
           <div className="flex flex-col items-start gap-3">
             <div className="flex items-center gap-2 pl-8">
-              <Avatar
-                isSquare
-                size="sm"
-                src="/logo.png"
-                className="outline-hidden ring-0 shadow-none border-0 [&_*]:ring-0 [&_*]:border-0 [&_*]:shadow-none"
-              />
-              <span className="font-bold">Subway Builder Modded</span>
+              <Link href="/" className="flex items-center gap-2 font-bold text-foreground transition-colors hover:text-primary">
+                <Avatar
+                  isSquare
+                  size="sm"
+                  src="/logo.png"
+                  className="outline-hidden ring-0 shadow-none border-0 [&_*]:ring-0 [&_*]:border-0 [&_*]:shadow-none"
+                />
+                <span className="font-bold">Subway Builder Modded</span>
+              </Link>
             </div>
 
             <p className="max-w-xs text-sm text-muted-foreground pl-8">
@@ -69,7 +72,7 @@ export default function AppFooter() {
 
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <MapPin className="size-5 stroke-[2.25] text-foreground md:size-6" />
+                <RailSymbol className="size-5 stroke-[2.25] text-foreground md:size-6" />
                 <h3 className="text-base font-bold text-foreground md:text-lg">Railyard</h3>
               </div>
 

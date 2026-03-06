@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useLayoutEffect, useCallback } from "react"
 import { useTheme } from "next-themes"
 import { motion, useScroll, useTransform } from "motion/react"
 
@@ -120,11 +120,7 @@ export default function Page() {
         <div className="mt-10 space-y-7">
           {rows.map((row, rowIdx) => (
             <AnimatedRow key={rowIdx}>
-              <div className="grid items-stretch gap-7 justify-center [grid-template-columns:repeat(auto-fit,minmax(280px,340px))]">
-                {row.map((item) => (
-                  <HomepageCard key={item.id} item={item} />
-                ))}
-              </div>
+              <HomepageCardRow items={row} />
             </AnimatedRow>
           ))}
         </div>
@@ -170,7 +166,95 @@ function AnimatedRow({ children }: { children: React.ReactNode }) {
   )
 }
 
-function HomepageCard({ item }: { item: HomeItem }) {
+function HomepageCardRow({ items }: { items: HomeItem[] }) {
+  const [headingHeight, setHeadingHeight] = useState(0)
+  const [titleHeight, setTitleHeight] = useState(0)
+
+  const headingNodes = useRef<Record<string, HTMLDivElement | null>>({})
+  const titleNodes = useRef<Record<string, HTMLDivElement | null>>({})
+
+  const registerHeading = useCallback(
+    (id: string) => (node: HTMLDivElement | null) => {
+      headingNodes.current[id] = node
+    },
+    [],
+  )
+
+  const registerTitle = useCallback(
+    (id: string) => (node: HTMLDivElement | null) => {
+      titleNodes.current[id] = node
+    },
+    [],
+  )
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const headingHeights = items
+        .map((item) => headingNodes.current[item.id]?.offsetHeight ?? 0)
+        .filter(Boolean)
+
+      const titleHeights = items
+        .map((item) => titleNodes.current[item.id]?.offsetHeight ?? 0)
+        .filter(Boolean)
+
+      if (headingHeights.length) {
+        setHeadingHeight(Math.max(...headingHeights))
+      }
+
+      if (titleHeights.length) {
+        setTitleHeight(Math.max(...titleHeights))
+      }
+    }
+
+    measure()
+
+    const observer = new ResizeObserver(measure)
+
+    items.forEach((item) => {
+      const headingNode = headingNodes.current[item.id]
+      const titleNode = titleNodes.current[item.id]
+
+      if (headingNode) observer.observe(headingNode)
+      if (titleNode) observer.observe(titleNode)
+    })
+
+    window.addEventListener("resize", measure)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("resize", measure)
+    }
+  }, [items])
+
+  return (
+    <div className="grid items-stretch justify-center gap-7 [grid-template-columns:repeat(auto-fit,minmax(280px,340px))]">
+      {items.map((item) => (
+        <HomepageCard
+          key={item.id}
+          item={item}
+          headingHeight={headingHeight}
+          titleHeight={titleHeight}
+          registerHeading={registerHeading(item.id)}
+          registerTitle={registerTitle(item.id)}
+        />
+      ))}
+    </div>
+  )
+}
+
+function HomepageCard({
+  item,
+  headingHeight,
+  titleHeight,
+  registerHeading,
+  registerTitle,
+}: {
+  item: HomeItem
+  headingHeight: number
+  titleHeight: number
+  registerHeading: (node: HTMLDivElement | null) => void
+  registerTitle: (node: HTMLDivElement | null) => void
+}) {
   return (
     <Link href={item.href} className="block h-full outline-none">
       <Card
@@ -181,30 +265,49 @@ function HomepageCard({ item }: { item: HomeItem }) {
           "focus-visible:ring-2 focus-visible:ring-ring/40",
         )}
       >
-        <div className="flex h-full flex-col px-6 pb-2 pt-5">
-          <div className="min-h-[90px]">
-            <div className="flex items-start gap-3">
-              <div className="mt-1 shrink-0">
-                <LineBullet
-                  bullet={(item.letter || "").slice(0, 2).toUpperCase()}
-                  color={item.bullet}
-                  textColor={pickTextColor(item.bullet)}
-                  shape="circle"
-                  size="sm"
-                />
-              </div>
+        <div className="flex h-full flex-col px-6 pb-2 pt-3">
+          <div
+            className="flex items-center"
+            style={headingHeight > 0 ? { minHeight: `${headingHeight}px` } : undefined}
+          >
+            <div ref={registerHeading} className="w-full">
+              <div className="flex gap-3">
+                <div
+                  className="flex shrink-0 items-center"
+                  style={titleHeight > 0 ? { height: `${titleHeight}px` } : undefined}
+                >
+                  <LineBullet
+                    bullet={(item.letter || "").slice(0, 2).toUpperCase()}
+                    color={item.bullet}
+                    textColor={pickTextColor(item.bullet)}
+                    shape="circle"
+                    size="sm"
+                  />
+                </div>
 
-              <div className="min-w-0">
-                <CardTitle className="text-xl font-semibold leading-[1.18] pb-[2px] sm:text-2xl">
-                  <span className="line-clamp-2">{item.title}</span>
-                </CardTitle>
+                <div className="min-w-0 flex-1">
+                  <div
+                    className="flex items-center"
+                    style={titleHeight > 0 ? { minHeight: `${titleHeight}px` } : undefined}
+                  >
+                    <CardTitle
+                      ref={registerTitle}
+                      className="pb-[2px] text-xl font-semibold leading-[1.18] sm:text-2xl"
+                    >
+                      {item.title}
+                    </CardTitle>
+                  </div>
 
-                <div className="mt-3 h-[2px] w-16 rounded-full opacity-70" style={{ backgroundColor: item.bullet }} />
+                  <div
+                    className="mt-3 h-[2px] w-16 rounded-full opacity-70"
+                    style={{ backgroundColor: item.bullet }}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-1 flex-1">
+          <div className="mt-3 flex-1">
             <p className="text-lg font-medium leading-relaxed text-muted-foreground">
               <span className="line-clamp-3">{item.description}</span>
             </p>

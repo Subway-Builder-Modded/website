@@ -22,7 +22,15 @@ import {
   NavbarStart,
   NavbarTrigger,
 } from "@/components/ui/navbar"
-import { BookText, Megaphone, Trophy, RailSymbol, Download, Map, Unplug } from "lucide-react"
+import {
+  BookText,
+  Megaphone,
+  Trophy,
+  RailSymbol,
+  Download,
+  Map,
+  Unplug
+} from "lucide-react"
 
 const railyard = [
   { id: 1, label: "Download App", url: "/railyard" },
