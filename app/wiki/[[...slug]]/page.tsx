@@ -5,6 +5,15 @@ import { notFound, redirect } from "next/navigation"
 import { compileMDX } from "next-mdx-remote/rsc"
 
 import {
+  Admonition,
+  Note,
+  Tip,
+  Important,
+  Warning,
+  Caution,
+  Danger,
+} from "@/components/ui/admonition"
+import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -82,6 +91,15 @@ export default async function WikiPage({
     source,
     options: {
       parseFrontmatter: true,
+    },
+    components: {
+      Admonition,
+      Note,
+      Tip,
+      Important,
+      Warning,
+      Caution,
+      Danger,
     },
   })
 
