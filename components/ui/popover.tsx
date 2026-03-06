@@ -28,29 +28,21 @@ const PopoverFooter = DialogFooter
 
 interface PopoverContentProps extends PopoverProps {
   arrow?: boolean
-  /**
-   * Default behavior in react-aria is to close overlays on scroll.
-   * For navbar menus we want the opposite.
-   */
-  shouldCloseOnScroll?: boolean
   ref?: React.Ref<HTMLDivElement>
 }
 
 const PopoverContent = ({
   children,
   arrow = false,
-  shouldCloseOnScroll = true,
   className,
   ref,
   ...props
 }: PopoverContentProps) => {
   const offset = props.offset ?? (arrow ? 12 : 8)
-
   return (
     <PopoverPrimitive
       ref={ref}
       offset={offset}
-      shouldCloseOnScroll={shouldCloseOnScroll}
       className={cx(
         "[--visual-viewport-vertical-padding:16px] sm:[--visual-viewport-vertical-padding:32px]",
         "group/popover min-w-(--trigger-width) max-w-xs origin-(--trigger-anchor-point) rounded-(--popover-radius) bg-overlay text-overlay-fg shadow-xs outline-hidden ring ring-muted-fg/20 drop-shadow-xl transition-transform [--gutter:--spacing(6)] [--popover-radius:var(--radius-xl)] sm:text-sm dark:ring-border dark:backdrop-saturate-200 **:[[role=dialog]]:[--gutter:--spacing(6)]",
@@ -76,7 +68,6 @@ const PopoverContent = ({
               </svg>
             </OverlayArrow>
           )}
-
           <div data-slot="popover-inner" className="max-h-[inherit] overflow-y-auto">
             {typeof children === "function" ? children(values) : children}
           </div>
