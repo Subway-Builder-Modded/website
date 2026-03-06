@@ -116,7 +116,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-7 py-16 sm:px-7 sm:py-24">
+      <section className="mx-auto max-w-6xl px-7 pt-16 pb-4 sm:px-7 sm:pt-24 sm:pb-12">
         <div className="mt-10 space-y-7">
           {rows.map((row, rowIdx) => (
             <AnimatedRow key={rowIdx}>
