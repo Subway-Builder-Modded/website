@@ -40,7 +40,7 @@ export default function RootLayout({
           <div className="min-h-screen pt-14">
             <AppNavbar/>
             <main>{children}</main>
-            <footer className="mt-24 border-t border-border/50 bg-background backdrop-blur-sm">
+            <footer id="site-footer" className="border-t border-border/50 bg-background backdrop-blur-sm">
               <div className="mx-auto flex items-center justify-center">
                 <FooterBars />
               </div>

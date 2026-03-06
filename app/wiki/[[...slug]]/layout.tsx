@@ -21,7 +21,7 @@ export default async function WikiCatchAllLayout({
   const tree = await getSidebarTree(resolved.instance, resolved.version)
 
   return (
-    <section className="w-full px-4 pb-12 md:px-6">
+    <section className="w-full">
       <SidebarProvider defaultOpen className="w-full items-start">
         <AppWikiSidebar tree={tree} />
         <SidebarInset className="min-w-0 md:ml-0">

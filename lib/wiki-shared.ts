@@ -10,7 +10,6 @@ export type WikiSidebarPage = {
   key: string
   title: string
   href: string
-  sidebarPosition: number
 }
 
 export type WikiSidebarCategory = {
@@ -19,7 +18,6 @@ export type WikiSidebarCategory = {
   title: string
   href?: string
   items: WikiSidebarEntry[]
-  sidebarPosition: number
 }
 
 export type WikiSidebarEntry = WikiSidebarPage | WikiSidebarCategory

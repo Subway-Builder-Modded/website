@@ -7,7 +7,6 @@ import {
   Archive,
   ChevronDown,
   PanelLeftCloseIcon,
-  Search,
   Tag,
 } from "lucide-react"
 
@@ -15,18 +14,16 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarInput,
   SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
+import { useFooterOffset } from "@/hooks/use-footer-offset"
 import {
   buildBaseHomeHref,
   buildVersionedDocHref,
   getActiveInstanceFromPathname,
   getActiveVersionFromPathname,
   isLatestVersion,
-  type WikiSidebarCategory,
   type WikiSidebarEntry,
   type WikiSidebarTree,
 } from "@/lib/wiki-shared"
@@ -55,22 +52,14 @@ function useOnClickOutside(
 }
 
 function SidebarRailTrigger() {
-  const { state } = useSidebar()
-
   return (
     <SidebarTrigger
       className={cn(
-        "fixed top-20 z-40 flex h-14 w-10 items-center justify-center border border-border bg-card/95 text-muted-foreground shadow-md backdrop-blur transition-all duration-200 hover:bg-card hover:text-foreground",
-        state === "expanded"
-          ? "left-[calc(16rem-1px)] rounded-r-xl border-l-0"
-          : "left-0 rounded-r-xl border-l-0"
+        "absolute top-6 -right-10 z-[-1] flex h-14 w-10 items-center justify-center rounded-r-xl border border-l-0 border-border bg-card/95 text-muted-foreground shadow-md backdrop-blur transition-colors duration-200 hover:bg-card hover:text-foreground"
       )}
     >
       <PanelLeftCloseIcon
-        className={cn(
-          "size-4 transition-transform duration-200",
-          state === "collapsed" && "rotate-180"
-        )}
+        className="size-4 transition-transform duration-200 group-data-[state=collapsed]:rotate-180"
       />
     </SidebarTrigger>
   )
@@ -239,7 +228,9 @@ function InstanceSwitcher({
               href={buildBaseHomeHref(instance)}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 transition-all duration-150",
-                isActive ? "bg-card" : instance.accentSurfaceHoverClassName
+                isActive
+                  ? cn(instance.accentSurfaceClassName)
+                  : instance.accentSurfaceHoverClassName
               )}
             >
               <InstanceIcon instance={instance} />
@@ -253,6 +244,18 @@ function InstanceSwitcher({
         })}
       </DropdownPanel>
     </div>
+  )
+}
+
+function getVersionHoverClassName(instance: WikiInstance, version: WikiVersion) {
+  const latest = isLatestVersion(instance, version.value)
+  if (latest) {
+    return instance.accentSurfaceHoverClassName
+  }
+  // Non-latest: use a lighter version of the deprecated surface color in dark mode
+  return cn(
+    "hover:bg-zinc-500/12",
+    "dark:hover:bg-zinc-400/18"
   )
 }
 
@@ -306,10 +309,12 @@ function VersionSwitcher({
               className={cn(
                 "flex items-center gap-3 px-3 py-2 transition-all duration-150",
                 isActive
-                  ? "bg-card"
-                  : latest
-                    ? activeInstance.accentSurfaceHoverClassName
-                    : "hover:bg-muted"
+                  ? cn(
+                      latest
+                        ? activeInstance.accentSurfaceClassName.replace("/14", "/10")
+                        : "bg-zinc-500/12 dark:bg-zinc-400/14"
+                    )
+                  : getVersionHoverClassName(activeInstance, version)
               )}
             >
               <VersionIcon instance={activeInstance} version={version} />
@@ -330,30 +335,6 @@ function VersionSwitcher({
       </DropdownPanel>
     </div>
   )
-}
-
-function filterTree(entries: WikiSidebarEntry[], query: string): WikiSidebarEntry[] {
-  if (!query.trim()) return entries
-
-  const q = query.toLowerCase()
-
-  return entries
-    .map((entry) => {
-      if (entry.kind === "page") {
-        return entry.title.toLowerCase().includes(q) ? entry : null
-      }
-
-      const categoryMatches = entry.title.toLowerCase().includes(q)
-      const filteredChildren = categoryMatches ? entry.items : filterTree(entry.items, q)
-
-      if (!categoryMatches && filteredChildren.length === 0) return null
-
-      return {
-        ...entry,
-        items: filteredChildren,
-      } satisfies WikiSidebarCategory
-    })
-    .filter(Boolean) as WikiSidebarEntry[]
 }
 
 function entryHasActiveDescendant(entry: WikiSidebarEntry, pathname: string): boolean {
@@ -381,21 +362,47 @@ function collectActiveCategoryKeys(
   return out
 }
 
+function findActiveEntry(
+  entries: WikiSidebarEntry[],
+  pathname: string,
+  openKeys: Set<string>
+): WikiSidebarEntry | null {
+  for (const entry of entries) {
+    if (entry.kind === "page") {
+      if (pathname === entry.href) return entry
+    } else {
+      const selfActive = !!entry.href && pathname === entry.href
+      const descendantActive = entry.items.some((child) => entryHasActiveDescendant(child, pathname))
+
+      if (selfActive || descendantActive) {
+        if (openKeys.has(entry.key)) {
+          const deeper = findActiveEntry(entry.items, pathname, openKeys)
+          if (deeper) return deeper
+        }
+        if (selfActive || descendantActive) return entry
+      }
+    }
+  }
+  return null
+}
+
 function SidebarNavEntry({
   entry,
   pathname,
   openKeys,
   setOpenKeys,
   depth = 0,
+  activeIndicatorKey,
 }: {
   entry: WikiSidebarEntry
   pathname: string
   openKeys: Set<string>
   setOpenKeys: React.Dispatch<React.SetStateAction<Set<string>>>
   depth?: number
+  activeIndicatorKey: string | null
 }) {
   if (entry.kind === "page") {
-    const isActive = pathname === entry.href
+    const showIndicator = activeIndicatorKey === entry.key
 
     return (
       <li className="relative">
@@ -404,13 +411,13 @@ function SidebarNavEntry({
           className={cn(
             "relative block rounded-md px-3 py-1.5 text-[15px] transition-colors",
             depth > 0 && "ml-4",
-            isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            showIndicator ? "text-primary" : "text-muted-foreground hover:text-foreground"
           )}
         >
           <span
             className={cn(
-              "absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-primary transition-all duration-200",
-              isActive ? "opacity-100" : "opacity-0"
+              "absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-primary transition-all duration-300",
+              showIndicator ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
             )}
           />
           <span className="block truncate">{entry.title}</span>
@@ -420,9 +427,7 @@ function SidebarNavEntry({
   }
 
   const isOpen = openKeys.has(entry.key)
-  const descendantActive = entry.items.some((child) => entryHasActiveDescendant(child, pathname))
-  const selfActive = !!entry.href && pathname === entry.href
-  const showCategoryActive = !isOpen && (selfActive || descendantActive)
+  const showIndicator = activeIndicatorKey === entry.key
 
   const toggle = () => {
     setOpenKeys((prev) => {
@@ -455,29 +460,37 @@ function SidebarNavEntry({
     })
   }
 
-  const MainComp = entry.href ? NextLink : "button"
-  const mainProps = entry.href
-    ? { href: entry.href, onClick: onMainClick }
-    : { type: "button" as const, onClick: onMainClick }
+  const labelClassName = cn(
+    "min-w-0 flex-1 rounded-md px-3 py-1.5 text-left text-[15px] transition-colors",
+    showIndicator ? "text-primary" : "text-muted-foreground hover:text-foreground"
+  )
 
   return (
     <li className="relative">
       <div className={cn("group relative flex items-center", depth > 0 && "ml-4")}>
         <span
           className={cn(
-            "absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-primary transition-all duration-200",
-            showCategoryActive ? "opacity-100" : "opacity-0"
+            "absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-primary transition-all duration-300",
+            showIndicator ? "opacity-100 scale-y-100" : "opacity-0 scale-y-0"
           )}
         />
-        <MainComp
-          className={cn(
-            "min-w-0 flex-1 rounded-md px-3 py-1.5 text-left text-[15px] transition-colors",
-            showCategoryActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-          )}
-          {...mainProps}
-        >
-          <span className="truncate">{entry.title}</span>
-        </MainComp>
+        {entry.href ? (
+          <NextLink
+            href={entry.href}
+            onClick={onMainClick}
+            className={labelClassName}
+          >
+            <span className="truncate">{entry.title}</span>
+          </NextLink>
+        ) : (
+          <button
+            type="button"
+            onClick={onMainClick}
+            className={labelClassName}
+          >
+            <span className="truncate">{entry.title}</span>
+          </button>
+        )}
 
         <button
           type="button"
@@ -507,6 +520,7 @@ function SidebarNavEntry({
                 openKeys={openKeys}
                 setOpenKeys={setOpenKeys}
                 depth={depth + 1}
+                activeIndicatorKey={activeIndicatorKey}
               />
             ))}
           </ul>
@@ -528,7 +542,6 @@ export function AppWikiSidebar({ tree }: AppWikiSidebarProps) {
   )
 
   const [openDropdown, setOpenDropdown] = React.useState<OpenDropdown>(null)
-  const [search, setSearch] = React.useState("")
   const [openKeys, setOpenKeys] = React.useState<Set<string>>(new Set())
 
   const switcherAreaRef = React.useRef<HTMLDivElement | null>(null)
@@ -546,11 +559,6 @@ export function AppWikiSidebar({ tree }: AppWikiSidebarProps) {
     setOpenDropdown(null)
   }, [pathname])
 
-  const filteredEntries = React.useMemo(
-    () => filterTree(tree?.entries ?? [], search),
-    [tree?.entries, search]
-  )
-
   React.useEffect(() => {
     const activeKeys = collectActiveCategoryKeys(tree?.entries ?? [], pathname)
     setOpenKeys((prev) => {
@@ -560,16 +568,23 @@ export function AppWikiSidebar({ tree }: AppWikiSidebarProps) {
     })
   }, [pathname, tree?.entries])
 
+  const activeIndicatorKey = React.useMemo(() => {
+    const entry = findActiveEntry(tree?.entries ?? [], pathname, openKeys)
+    return entry?.key ?? null
+  }, [tree?.entries, pathname, openKeys])
+
+  const footerOffset = useFooterOffset()
+
   return (
     <>
-      <SidebarRailTrigger />
-
       <Sidebar
         collapsible="offcanvas"
         variant="sidebar"
-        className="sticky top-14 h-[calc(100svh-3.5rem)] self-start overflow-visible border-r border-border bg-sidebar"
+        className="overflow-visible border-r border-border bg-sidebar"
+        trigger={<SidebarRailTrigger />}
+        style={{ "--footer-offset": `${footerOffset}px` } as React.CSSProperties}
       >
-        <SidebarHeader className="gap-3 border-b border-border bg-sidebar px-4 pt-3 pb-3">
+        <SidebarHeader className="gap-3 border-b border-border bg-sidebar px-6 pt-3 pb-3">
           <div ref={switcherAreaRef} className="space-y-3">
             <InstanceSwitcher
               activeInstance={activeInstance}
@@ -590,25 +605,16 @@ export function AppWikiSidebar({ tree }: AppWikiSidebarProps) {
         </SidebarHeader>
 
         <SidebarContent className="min-h-0 px-4 py-4">
-          <div className="relative mb-5">
-            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-            <SidebarInput
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search the docs..."
-              className="h-8 rounded-xl border-border bg-card pl-9 text-sm"
-            />
-          </div>
-
           <nav aria-label="Wiki navigation">
             <ul className="space-y-0.5">
-              {filteredEntries.map((entry) => (
+              {(tree?.entries ?? []).map((entry) => (
                 <SidebarNavEntry
                   key={entry.key}
                   entry={entry}
                   pathname={pathname}
                   openKeys={openKeys}
                   setOpenKeys={setOpenKeys}
+                  activeIndicatorKey={activeIndicatorKey}
                 />
               ))}
             </ul>

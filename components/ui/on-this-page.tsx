@@ -3,6 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useFooterOffset } from "@/hooks/use-footer-offset"
 
 export type TocHeading = {
   id: string
@@ -12,6 +13,7 @@ export type TocHeading = {
 
 export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
   const [activeId, setActiveId] = React.useState<string>("")
+  const footerOffset = useFooterOffset()
 
   React.useEffect(() => {
     const elements = headings
@@ -20,41 +22,65 @@ export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
 
     if (!elements.length) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => {
-            const topA = Math.abs(a.boundingClientRect.top)
-            const topB = Math.abs(b.boundingClientRect.top)
-            return topA - topB
-          })
-
-        if (visible[0]?.target?.id) {
-          setActiveId(visible[0].target.id)
+    function update() {
+      let current = ""
+      for (const el of elements) {
+        const rect = el.getBoundingClientRect()
+        if (rect.top <= 100) {
+          current = el.id
+        } else {
+          break
         }
-      },
-      {
-        rootMargin: "0px 0px -70% 0px",
-        threshold: [0.1, 0.5, 1],
       }
-    )
+      if (!current && elements[0]) {
+        current = elements[0].id
+      }
+      setActiveId(current)
+    }
 
-    elements.forEach((element) => observer.observe(element))
-    return () => observer.disconnect()
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+    return () => window.removeEventListener("scroll", update)
   }, [headings])
 
   if (!headings.length) return null
 
+  const singleHeading = headings.length === 1
+
   return (
-    <aside className="sticky top-14 hidden h-[calc(100svh-3.5rem)] self-start xl:block xl:w-64">
-      <div className="border-l border-border/70 pl-4 pt-2">
+    <aside
+      className="sticky hidden xl:block xl:w-64"
+      style={{
+        top: "3.5rem",
+        maxHeight: `calc(100vh - 3.5rem - ${footerOffset}px)`,
+        alignSelf: "start",
+      }}
+    >
+      <div className="relative pl-4 pt-2">
+        {/* Gray track line - only show if more than one heading */}
+        {!singleHeading && (
+          <div
+            className="absolute left-0 top-2 w-[1px] bg-border/70"
+            style={{
+              bottom: 0,
+            }}
+          />
+        )}
+
         <ul className="space-y-1">
           {headings.map((heading) => {
             const active = activeId === heading.id
 
             return (
               <li key={heading.id} className="relative">
+                {/* Active indicator line - centered on the gray track */}
+                <span
+                  className={cn(
+                    "absolute top-1.5 bottom-1.5 w-[2px] rounded-full bg-primary transition-all duration-150",
+                    active ? "opacity-100" : "opacity-0"
+                  )}
+                  style={{ left: "-16.5px" }}
+                />
                 <Link
                   href={`#${heading.id}`}
                   className={cn(
@@ -65,12 +91,6 @@ export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
                     active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  <span
-                    className={cn(
-                      "absolute -left-[17px] top-1.5 bottom-1.5 w-[2px] rounded-full bg-primary transition-all duration-150",
-                      active ? "opacity-100" : "opacity-0"
-                    )}
-                  />
                   {heading.text}
                 </Link>
               </li>

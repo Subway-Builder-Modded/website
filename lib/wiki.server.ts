@@ -4,7 +4,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { compileMDX } from "next-mdx-remote/rsc"
 
-import type { WikiInstance } from "@/lib/wiki-config"
+import { getSidebarOrder, type WikiInstance } from "@/lib/wiki-config"
 import {
   buildBaseHomeHref,
   buildDocHref,
@@ -20,7 +20,6 @@ const CONTENT_ROOT = path.join(process.cwd(), "content", "wiki")
 export type WikiFrontmatter = {
   title: string
   description?: string
-  sidebar_position?: number
 }
 
 export type WikiBreadcrumbItem = {
@@ -95,11 +94,15 @@ export async function extractTocHeadings(filePath: string): Promise<WikiTocHeadi
   return headings
 }
 
-function sortEntries(entries: WikiSidebarEntry[]) {
+function sortEntriesWithOrder(entries: WikiSidebarEntry[], order: string[]) {
+  const orderMap = new Map<string, number>()
+  order.forEach((key, index) => orderMap.set(key, index))
+
   return entries.sort((a, b) => {
-    if (a.sidebarPosition !== b.sidebarPosition) {
-      return a.sidebarPosition - b.sidebarPosition
-    }
+    const aPos = orderMap.get(a.key) ?? Infinity
+    const bPos = orderMap.get(b.key) ?? Infinity
+
+    if (aPos !== bPos) return aPos - bPos
     return a.title.localeCompare(b.title)
   })
 }
@@ -135,7 +138,8 @@ async function buildCategoryEntry(
   categoryName: string,
   pathSegments: string[],
   instance: WikiInstance,
-  version: string | null
+  version: string | null,
+  order: string[]
 ): Promise<WikiSidebarCategory | null> {
   const dirPath = path.join(parentDir, categoryName)
   if (!exists(dirPath)) return null
@@ -156,7 +160,8 @@ async function buildCategoryEntry(
         entry.name,
         [...pathSegments, entry.name],
         instance,
-        version
+        version,
+        order
       )
       if (childCategory) items.push(childCategory)
       continue
@@ -177,11 +182,10 @@ async function buildCategoryEntry(
       key: relPath,
       title: frontmatter?.title ?? humanizeSegment(basename),
       href: buildDocHref(instance, version, relPath),
-      sidebarPosition: frontmatter?.sidebar_position ?? 9999,
     } satisfies WikiSidebarPage)
   }
 
-  const sortedItems = sortEntries(items)
+  const sortedItems = sortEntriesWithOrder(items, order)
 
   if (!categoryPageFile && sortedItems.length === 0) return null
 
@@ -193,7 +197,6 @@ async function buildCategoryEntry(
     title: categoryFrontmatter?.title ?? humanizeSegment(categoryName),
     href: categoryPageFile ? buildDocHref(instance, version, relPath) : undefined,
     items: sortedItems,
-    sidebarPosition: categoryFrontmatter?.sidebar_position ?? 9999,
   }
 }
 
@@ -204,6 +207,7 @@ export async function getSidebarTree(
   const dir = getInstanceContentDir(instance, version)
   if (!exists(dir)) return { entries: [] }
 
+  const order = getSidebarOrder(instance, version)
   const entries = await fs.promises.readdir(dir, { withFileTypes: true })
   const dirNames = new Set(entries.filter((e) => e.isDirectory()).map((e) => e.name))
   const treeEntries: WikiSidebarEntry[] = []
@@ -215,7 +219,8 @@ export async function getSidebarTree(
         entry.name,
         [entry.name],
         instance,
-        version
+        version,
+        order
       )
       if (category) treeEntries.push(category)
       continue
@@ -225,22 +230,24 @@ export async function getSidebarTree(
 
     const basename = entry.name.replace(/\.mdx$/, "")
 
-    if (basename === "index") continue
     if (dirNames.has(basename)) continue
 
     const frontmatter = await readFrontmatter(path.join(dir, entry.name))
 
+    // index.mdx at root is the home page - register it with the "home" doc slug
+    const docPath = basename === "index" ? "home" : basename
+    const key = basename === "index" ? "home" : basename
+
     treeEntries.push({
       kind: "page",
-      key: basename,
+      key,
       title: frontmatter?.title ?? humanizeSegment(basename),
-      href: buildDocHref(instance, version, basename),
-      sidebarPosition: frontmatter?.sidebar_position ?? 9999,
+      href: buildDocHref(instance, version, docPath),
     } satisfies WikiSidebarPage)
   }
 
   return {
-    entries: sortEntries(treeEntries),
+    entries: sortEntriesWithOrder(treeEntries, order),
   }
 }
 
@@ -256,6 +263,12 @@ export async function resolveWikiDocFilePath(slug?: string[]) {
 
   if (exists(directFile)) return directFile
   if (exists(categoryIndex)) return categoryIndex
+
+  // For "home" slug, also check for root index.mdx
+  if (resolved.docSlug === "home") {
+    const rootIndex = path.join(dir, "index.mdx")
+    if (exists(rootIndex)) return rootIndex
+  }
 
   return null
 }
