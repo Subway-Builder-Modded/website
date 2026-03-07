@@ -4,7 +4,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { compileMDX } from "next-mdx-remote/rsc"
 
-import { getSidebarOrder, type WikiInstance } from "@/lib/wiki-config"
+import { WIKI_INSTANCES, getSidebarOrder, type WikiInstance } from "@/lib/wiki-config"
 import {
   buildBaseHomeHref,
   buildDocHref,

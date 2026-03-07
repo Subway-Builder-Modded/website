@@ -32,7 +32,7 @@ function textFromChildren(children: React.ReactNode): string {
   if (typeof children === "number") return String(children)
   if (Array.isArray(children)) return children.map(textFromChildren).join("")
 
-  if (React.isValidElement(children)) {
+  if (React.isValidElement<{ children?: React.ReactNode }>(children)) {
     return textFromChildren(children.props.children)
   }
 

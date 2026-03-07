@@ -99,6 +99,8 @@
 }
 
 :root {
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-geist-mono: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --background: oklch(0.901 0.002 67.8);
   --foreground: oklch(0.178 0.000 89.9);
 

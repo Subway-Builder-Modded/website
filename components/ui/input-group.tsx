@@ -88,14 +88,14 @@ type InputGroupButtonProps = Omit<React.ComponentProps<typeof Button>, "size"> &
 function InputGroupButton({
   className,
   type = "button",
-  variant = "ghost",
+  intent = "plain",
   size = "xs",
   ...props
 }: InputGroupButtonProps) {
   return (
     <Button
       type={type}
-      variant={variant}
+      intent={intent}
       className={cn(inputGroupButtonVariants({ size }), className)}
       {...props}
     />

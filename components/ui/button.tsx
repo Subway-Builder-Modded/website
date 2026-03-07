@@ -88,19 +88,48 @@ export const buttonStyles = tv({
   },
 })
 
-export interface ButtonProps extends ButtonPrimitiveProps, VariantProps<typeof buttonStyles> {
+type LegacyVariant = "default" | "secondary" | "destructive" | "outline" | "ghost" | "link"
+type LegacySize = "icon" | "icon-sm" | "icon-xs"
+
+type ButtonStyleProps = VariantProps<typeof buttonStyles>
+
+export interface ButtonProps extends ButtonPrimitiveProps, Omit<ButtonStyleProps, "size"> {
   ref?: React.Ref<HTMLButtonElement>
+  variant?: LegacyVariant
+  size?: ButtonStyleProps["size"] | LegacySize
 }
 
-export function Button({ className, intent, size, isCircle, ref, ...props }: ButtonProps) {
+const variantToIntent: Record<LegacyVariant, NonNullable<ButtonStyleProps["intent"]>> = {
+  default: "primary",
+  secondary: "secondary",
+  destructive: "danger",
+  outline: "outline",
+  ghost: "plain",
+  link: "plain",
+}
+
+const sizeAlias: Record<LegacySize, NonNullable<ButtonStyleProps["size"]>> = {
+  icon: "sq-sm",
+  "icon-sm": "sq-sm",
+  "icon-xs": "sq-xs",
+}
+
+export function Button({ className, intent, variant, size, isCircle, ref, ...props }: ButtonProps) {
+  const resolvedIntent = intent ?? (variant ? variantToIntent[variant] : undefined)
+  const resolvedSize = (size
+    ? size in sizeAlias
+      ? sizeAlias[size as LegacySize]
+      : size
+    : undefined) as ButtonStyleProps["size"]
+
   return (
     <ButtonPrimitive
       ref={ref}
       {...props}
       className={cx(
         buttonStyles({
-          intent,
-          size,
+          intent: resolvedIntent,
+          size: resolvedSize,
           isCircle,
         }),
         className,

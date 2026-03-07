@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { CheckCircle2, MessageSquarePlus, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -93,8 +93,8 @@ function DiffList({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
-                          size="icon"
-                          variant="secondary"
+                          size="sq-xs"
+                          intent="secondary"
                           aria-label="Add inline comment"
                           className="h-5 w-5 rounded-full shadow-sm"
                           onClick={() => setOpenThreadAt(isOpen ? null : idx)}
@@ -250,7 +250,7 @@ function InlineThread({
 
         <div className="flex items-center gap-1.5">
           <Button
-            variant={resolved ? "secondary" : "default"}
+            intent={resolved ? "secondary" : "primary"}
             size="sm"
             onClick={onToggleResolve}
             aria-pressed={resolved}
@@ -259,8 +259,8 @@ function InlineThread({
             {resolved ? "Reopen" : "Resolve"}
           </Button>
           <Button
-            variant="ghost"
-            size="icon"
+            intent="plain"
+            size="sq-xs"
             aria-label="Close thread"
             onClick={onClose}
             className="h-7 w-7"
@@ -274,11 +274,11 @@ function InlineThread({
       <ul className="space-y-1 px-2 py-1.5">
         {comments.map((c) => (
           <li key={c.id} className="flex items-start gap-2">
-            <Avatar className="h-5 w-5">
-              <AvatarFallback className="text-[9px]">
-                {c.initials}
-              </AvatarFallback>
-            </Avatar>
+            <Avatar
+              initials={c.initials}
+              size="xs"
+              className="h-5 w-5 text-[9px]"
+            />
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
                 <p className="truncate text-[12px] font-medium">{c.author}</p>
@@ -310,7 +310,7 @@ function InlineThread({
         />
         <div className="flex items-center justify-end gap-1.5">
           <Button
-            variant="ghost"
+            intent="plain"
             size="sm"
             onClick={onClose}
             className="h-7 px-2 text-[12px]"
@@ -320,7 +320,7 @@ function InlineThread({
           <Button
             size="sm"
             onClick={addComment}
-            disabled={!draft.trim()}
+            isDisabled={!draft.trim()}
             className="h-7 px-2 text-[12px]"
           >
             Comment
