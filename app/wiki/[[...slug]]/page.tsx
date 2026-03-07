@@ -217,7 +217,7 @@ export default async function WikiPage({
 
   return (
     <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_19rem] xl:gap-14 2xl:gap-20">
-      <article className="min-w-0 max-w-3xl flex-1">
+      <article className="min-w-0 flex-1">
         <Breadcrumb className="mb-5">
           <BreadcrumbList>
             {breadcrumbs.map((crumb, index) => {

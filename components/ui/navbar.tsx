@@ -177,7 +177,7 @@ const Navbar = ({
       >
         <div
           data-navbar="content"
-          className="mx-auto flex w-full max-w-(--breakpoint-2xl) items-center"
+          className="flex w-full items-center"
         >
           {children}
         </div>
