@@ -99,7 +99,7 @@ export default function Page() {
         <div className="absolute inset-0 bg-white/12 dark:bg-black/45" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
 
-        <div className="relative z-10 flex h-full flex-col justify-end px-7 pb-[28vh] sm:px-7 sm:pb-[26vh]">
+        <div className="relative z-10 flex h-full flex-col justify-end px-[clamp(1.5rem,4vw,3rem)] pb-[clamp(2rem,5vh,4rem)]">
           <motion.div style={{ opacity: heroContentOpacity, x: heroContentX }} className="max-w-3xl">
             <h1 className="text-balance text-5xl font-black sm:text-6xl lg:text-7xl">Subway Builder Modded</h1>
 
