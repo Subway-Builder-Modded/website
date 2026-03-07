@@ -5,7 +5,6 @@ import {
   GitPullRequestArrow,
   History,
   Tag,
-  Archive,
   type LucideIcon,
 } from "lucide-react"
 
@@ -16,12 +15,19 @@ export type WikiInstanceId =
   | "contributing"
   | "legacy"
 
+export type WikiSidebarOrderItem =
+  | string
+  | {
+      key: string
+      children?: WikiSidebarOrderItem[]
+    }
+
 export type WikiVersion = {
   value: string
   label: string
   icon?: LucideIcon
   deprecated?: boolean
-  sidebarOrder?: string[]
+  sidebarOrder?: WikiSidebarOrderItem[]
 }
 
 export type WikiInstance = {
@@ -36,7 +42,7 @@ export type WikiInstance = {
   versioned: boolean
   latestVersion?: string
   versions?: WikiVersion[]
-  sidebarOrder?: string[]
+  sidebarOrder?: WikiSidebarOrderItem[]
 }
 
 export const WIKI_INSTANCES: WikiInstance[] = [
@@ -58,8 +64,13 @@ export const WIKI_INSTANCES: WikiInstance[] = [
         icon: Tag,
         sidebarOrder: [
           "home",
-          "publishing-projects",
-          "publishing-map-packs"
+          {
+            key: "developers",
+            children: [
+              "publishing-projects",
+              "publishing-map-packs",
+            ],
+          },
         ],
       },
     ],
@@ -80,9 +91,7 @@ export const WIKI_INSTANCES: WikiInstance[] = [
         value: "v1.0",
         label: "v1.0",
         icon: Tag,
-        sidebarOrder: [
-          "home",
-        ],
+        sidebarOrder: ["home"],
       },
     ],
   },
@@ -96,9 +105,7 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     accentSurfaceHoverClassName: "hover:bg-blue-500/18",
     accentIconSurfaceClassName: "bg-blue-950/80 border-blue-700/50",
     versioned: false,
-    sidebarOrder: [
-      "home",
-    ],
+    sidebarOrder: ["home"],
   },
   {
     id: "contributing",
@@ -110,9 +117,7 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     accentSurfaceHoverClassName: "hover:bg-amber-500/18",
     accentIconSurfaceClassName: "bg-amber-950/80 border-amber-700/50",
     versioned: false,
-    sidebarOrder: [
-      "home",
-    ],
+    sidebarOrder: ["home"],
   },
   {
     id: "legacy",
@@ -124,9 +129,7 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     accentSurfaceHoverClassName: "hover:bg-rose-500/18",
     accentIconSurfaceClassName: "bg-rose-950/80 border-rose-700/50",
     versioned: false,
-    sidebarOrder: [
-      "home",
-    ],
+    sidebarOrder: ["home"],
   },
 ]
 
@@ -134,10 +137,14 @@ export function getWikiInstanceById(id: string) {
   return WIKI_INSTANCES.find((instance) => instance.id === id)
 }
 
-export function getSidebarOrder(instance: WikiInstance, version: string | null): string[] {
+export function getSidebarOrder(
+  instance: WikiInstance,
+  version: string | null
+): WikiSidebarOrderItem[] {
   if (instance.versioned && version && instance.versions) {
     const v = instance.versions.find((ver) => ver.value === version)
     return v?.sidebarOrder ?? instance.sidebarOrder ?? []
   }
+
   return instance.sidebarOrder ?? []
 }

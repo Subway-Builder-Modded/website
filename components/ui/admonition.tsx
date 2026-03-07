@@ -9,7 +9,6 @@ import {
   TriangleAlertIcon,
   FlameIcon,
   ShieldAlertIcon,
-  CircleHelpIcon,
   CircleCheckBigIcon,
   BugIcon,
   FlaskConicalIcon,
@@ -20,29 +19,25 @@ import {
 import { cn } from "@/lib/utils"
 
 const admonitionVariants = cva(
-  "my-6 flex gap-3 rounded-lg border-l-[3px] px-4 py-3 text-sm [&>svg]:mt-0.5 [&>svg]:size-4 [&>svg]:shrink-0",
+  "my-6 flex items-start gap-3 rounded-lg border-l-[3px] px-4 py-3 text-sm [&>svg]:mt-[1px] [&>svg]:size-4 [&>svg]:shrink-0",
   {
     variants: {
       variant: {
         note: "border-l-blue-500 bg-blue-500/5 dark:bg-blue-500/10 text-foreground [&>svg]:text-blue-500",
-        tip:
-          "border-l-emerald-500 bg-emerald-500/5 dark:bg-emerald-500/10 text-foreground [&>svg]:text-emerald-500",
+        tip: "border-l-emerald-500 bg-emerald-500/5 dark:bg-emerald-500/10 text-foreground [&>svg]:text-emerald-500",
         important:
           "border-l-purple-500 bg-purple-500/5 dark:bg-purple-500/10 text-foreground [&>svg]:text-purple-500",
         warning:
           "border-l-amber-500 bg-amber-500/5 dark:bg-amber-500/10 text-foreground [&>svg]:text-amber-500",
         caution:
           "border-l-orange-500 bg-orange-500/5 dark:bg-orange-500/10 text-foreground [&>svg]:text-orange-500",
-        danger:
-          "border-l-red-500 bg-red-500/5 dark:bg-red-500/10 text-foreground [&>svg]:text-red-500",
-        info:
-          "border-l-cyan-500 bg-cyan-500/5 dark:bg-cyan-500/10 text-foreground [&>svg]:text-cyan-500",
+        danger: "border-l-red-500 bg-red-500/5 dark:bg-red-500/10 text-foreground [&>svg]:text-red-500",
+        info: "border-l-cyan-500 bg-cyan-500/5 dark:bg-cyan-500/10 text-foreground [&>svg]:text-cyan-500",
         success:
           "border-l-green-500 bg-green-500/5 dark:bg-green-500/10 text-foreground [&>svg]:text-green-500",
         deprecated:
           "border-l-zinc-500 bg-zinc-500/5 dark:bg-zinc-500/10 text-foreground [&>svg]:text-zinc-500",
-        bug:
-          "border-l-pink-500 bg-pink-500/5 dark:bg-pink-500/10 text-foreground [&>svg]:text-pink-500",
+        bug: "border-l-pink-500 bg-pink-500/5 dark:bg-pink-500/10 text-foreground [&>svg]:text-pink-500",
         example:
           "border-l-sky-500 bg-sky-500/5 dark:bg-sky-500/10 text-foreground [&>svg]:text-sky-500",
         announcement:
@@ -55,27 +50,30 @@ const admonitionVariants = cva(
   }
 )
 
-const admonitionTitleVariants = cva("font-semibold", {
-  variants: {
-    variant: {
-      note: "text-foreground",
-      tip: "text-foreground",
-      important: "text-foreground",
-      warning: "text-foreground",
-      caution: "text-foreground",
-      danger: "text-foreground",
-      info: "text-foreground",
-      success: "text-foreground",
-      deprecated: "text-foreground",
-      bug: "text-foreground",
-      example: "text-foreground",
-      announcement: "text-foreground",
+const admonitionTitleVariants = cva(
+  "font-semibold uppercase tracking-[0.03em]",
+  {
+    variants: {
+      variant: {
+        note: "text-foreground",
+        tip: "text-foreground",
+        important: "text-foreground",
+        warning: "text-foreground",
+        caution: "text-foreground",
+        danger: "text-foreground",
+        info: "text-foreground",
+        success: "text-foreground",
+        deprecated: "text-foreground",
+        bug: "text-foreground",
+        example: "text-foreground",
+        announcement: "text-foreground",
+      },
     },
-  },
-  defaultVariants: {
-    variant: "note",
-  },
-})
+    defaultVariants: {
+      variant: "note",
+    },
+  }
+)
 
 type AdmonitionVariant = NonNullable<
   VariantProps<typeof admonitionVariants>["variant"]
@@ -122,6 +120,63 @@ interface AdmonitionProps
   defaultOpen?: boolean
 }
 
+function flattenText(node: React.ReactNode): string {
+  if (node == null || typeof node === "boolean") return ""
+  if (typeof node === "string" || typeof node === "number") return String(node)
+  if (Array.isArray(node)) return node.map(flattenText).join("")
+
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+    return flattenText(node.props.children)
+  }
+
+  return ""
+}
+
+function deriveTitleFromChildren(children: React.ReactNode) {
+  const nodes = React.Children.toArray(children)
+
+  if (nodes.length < 2) {
+    return {
+      derivedTitle: null as string | null,
+      bodyChildren: children,
+    }
+  }
+
+  const first = nodes[0]
+
+  if (!React.isValidElement<{ children?: React.ReactNode }>(first)) {
+    return {
+      derivedTitle: null as string | null,
+      bodyChildren: children,
+    }
+  }
+
+  const text = flattenText(first.props.children).trim()
+
+  if (!text) {
+    return {
+      derivedTitle: null as string | null,
+      bodyChildren: children,
+    }
+  }
+
+  const looksLikeTitle =
+    text.length <= 80 &&
+    !/[.!?]$/.test(text)
+
+  if (!looksLikeTitle) {
+    return {
+      derivedTitle: null as string | null,
+      bodyChildren: children,
+    }
+  }
+
+  return {
+    derivedTitle: text,
+    bodyChildren: nodes.slice(1),
+  }
+}
+
 function Admonition({
   className,
   variant = "note",
@@ -136,6 +191,13 @@ function Admonition({
   const defaultTitle = labels[resolvedVariant]
   const [open, setOpen] = React.useState(defaultOpen)
 
+  const { derivedTitle, bodyChildren } = React.useMemo(
+    () => deriveTitleFromChildren(children),
+    [children]
+  )
+
+  const finalTitle = title ?? derivedTitle ?? defaultTitle
+
   return (
     <div
       data-slot="admonition"
@@ -144,7 +206,7 @@ function Admonition({
       className={cn(admonitionVariants({ variant: resolvedVariant }), className)}
       {...props}
     >
-      <Icon />
+      <Icon aria-hidden="true" />
       <div className="flex-1">
         {collapsible ? (
           <button
@@ -159,7 +221,7 @@ function Admonition({
                 admonitionTitleVariants({ variant: resolvedVariant })
               )}
             >
-              {title ?? defaultTitle}
+              {finalTitle}
             </p>
             <span className="ml-auto text-current/70">{open ? "−" : "+"}</span>
           </button>
@@ -170,13 +232,22 @@ function Admonition({
               admonitionTitleVariants({ variant: resolvedVariant })
             )}
           >
-            {title ?? defaultTitle}
+            {finalTitle}
           </p>
         )}
 
-        {(!collapsible || open) ? (
-          <div className="mt-1.5 text-current/80 [&>p]:leading-relaxed [&>p:first-child]:mt-0">
-            {children}
+        {!collapsible || open ? (
+          <div
+            className={cn(
+              "mt-1.5 text-current/80",
+              "[&>p:first-child]:mt-0",
+              "[&_p]:leading-relaxed",
+              "[&_ul]:my-3 [&_ul]:ml-5 [&_ul]:list-disc",
+              "[&_ol]:my-3 [&_ol]:ml-5 [&_ol]:list-decimal",
+              "[&_li]:mt-1.5"
+            )}
+          >
+            {title || derivedTitle ? bodyChildren : children}
           </div>
         ) : null}
       </div>

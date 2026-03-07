@@ -142,15 +142,42 @@ export async function extractTocHeadings(filePath: string): Promise<WikiTocHeadi
   return headings
 }
 
-function sortEntriesWithOrder(entries: WikiSidebarEntry[], order: string[]) {
-  const orderMap = new Map<string, number>()
-  order.forEach((key, index) => orderMap.set(key, index))
+function getOrderItemKey(item: string | { key: string }) {
+  return typeof item === "string" ? item : item.key
+}
 
-  return entries.sort((a, b) => {
-    const aPos = orderMap.get(a.key) ?? Infinity
-    const bPos = orderMap.get(b.key) ?? Infinity
+function getOrderChildren(
+  order: ReturnType<typeof getSidebarOrder>,
+  localKey: string
+) {
+  const match = order.find((item) => getOrderItemKey(item) === localKey)
+  return typeof match === "string" ? undefined : match?.children
+}
+
+function getLocalEntryKey(entry: WikiSidebarEntry) {
+  const parts = entry.key.split("/").filter(Boolean)
+  return parts[parts.length - 1] ?? entry.key
+}
+
+function sortEntriesWithOrder(
+  entries: WikiSidebarEntry[],
+  order: ReturnType<typeof getSidebarOrder>
+) {
+  const orderMap = new Map<string, number>()
+
+  order.forEach((item, index) => {
+    orderMap.set(getOrderItemKey(item), index)
+  })
+
+  return [...entries].sort((a, b) => {
+    const aLocalKey = getLocalEntryKey(a)
+    const bLocalKey = getLocalEntryKey(b)
+
+    const aPos = orderMap.get(aLocalKey) ?? Infinity
+    const bPos = orderMap.get(bLocalKey) ?? Infinity
 
     if (aPos !== bPos) return aPos - bPos
+
     return a.title.localeCompare(b.title)
   })
 }
@@ -187,7 +214,7 @@ async function buildCategoryEntry(
   pathSegments: string[],
   instance: WikiInstance,
   version: string | null,
-  order: string[]
+  order: ReturnType<typeof getSidebarOrder>
 ): Promise<WikiSidebarCategory | null> {
   const dirPath = path.join(parentDir, categoryName)
   if (!exists(dirPath)) return null
@@ -200,6 +227,7 @@ async function buildCategoryEntry(
   const entries = await fs.promises.readdir(dirPath, { withFileTypes: true })
   const dirNames = new Set(entries.filter((e) => e.isDirectory()).map((e) => e.name))
   const items: WikiSidebarEntry[] = []
+  const localOrder = getOrderChildren(order, categoryName) ?? []
 
   for (const entry of entries) {
     if (entry.isDirectory()) {
@@ -209,7 +237,7 @@ async function buildCategoryEntry(
         [...pathSegments, entry.name],
         instance,
         version,
-        order
+        localOrder
       )
       if (childCategory) items.push(childCategory)
       continue
@@ -233,7 +261,7 @@ async function buildCategoryEntry(
     } satisfies WikiSidebarPage)
   }
 
-  const sortedItems = sortEntriesWithOrder(items, order)
+  const sortedItems = sortEntriesWithOrder(items, localOrder)
 
   if (!categoryPageFile && sortedItems.length === 0) return null
 
