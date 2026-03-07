@@ -31,6 +31,7 @@ import {
 } from "@/lib/wiki.server"
 import { WIKI_INSTANCES } from "@/lib/wiki-config"
 import { buildBaseHomeHref, buildDocHref, resolveWikiRoute } from "@/lib/wiki-shared"
+import { WikiHubPage } from "@/components/wiki/wiki-hub-page"
 
 export const dynamicParams = false
 
@@ -107,31 +108,7 @@ export async function generateMetadata({
 }
 
 function WikiIndexPage() {
-  return (
-    <section className="mx-auto max-w-5xl px-5 py-8 md:px-8 md:py-10">
-      <div className="mb-8">
-        <h1 className="text-4xl font-black tracking-tight">Wiki</h1>
-        <p className="mt-3 text-muted-foreground">
-          Browse documentation for Subway Builder Modded projects.
-        </p>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {WIKI_INSTANCES.map((instance) => (
-          <Link
-            key={instance.id}
-            href={buildBaseHomeHref(instance)}
-            className="rounded-2xl border border-border bg-card p-5 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-sm"
-          >
-            <div className="text-lg font-semibold">{instance.label}</div>
-            <div className="mt-2 text-sm text-muted-foreground">
-              Open the {instance.label} documentation.
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  )
+  return <WikiHubPage />
 }
 
 export default async function WikiPage({

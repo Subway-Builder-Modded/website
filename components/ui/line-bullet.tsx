@@ -54,7 +54,6 @@ export function LineBullet({
           minWidth: s.box,
           height: s.box,
           fontSize: s.text,
-          color: textColor,
           padding: shape === "triangle" ? "0" : "0 0.25rem",
           transform: shape === "diamond" ? "rotate(45deg) scale(0.707107)" : undefined,
         }}
@@ -63,6 +62,7 @@ export function LineBullet({
       >
         <span
           style={{
+            color: textColor,
             lineHeight: "0",
             transform:
               shape === "diamond"

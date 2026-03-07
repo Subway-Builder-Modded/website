@@ -59,7 +59,6 @@ function syncWikiCardRowHeadingHeights(container: HTMLElement) {
       return
     }
 
-    // Group cards by rendered row using their visual top, tolerant to sub-pixel layout values.
     const rowKey = Math.round(card.getBoundingClientRect().top - containerRect.top)
     const rowCards = rows.get(rowKey)
 

@@ -3,6 +3,7 @@
 import * as React from "react"
 import NextLink from "next/link"
 import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
 import { Archive, ChevronDown, PanelLeftCloseIcon, Tag } from "lucide-react"
 
 import {
@@ -25,6 +26,29 @@ import {
   type WikiSidebarTree,
 } from "@/lib/wiki-shared"
 import { WIKI_INSTANCES, type WikiInstance, type WikiVersion } from "@/lib/wiki-config"
+
+// ─── Color helpers ────────────────────────────────────────────────────────────
+
+function hexToRgb(hex: string) {
+  const h = hex.replace("#", "")
+  return {
+    r: parseInt(h.slice(0, 2), 16),
+    g: parseInt(h.slice(2, 4), 16),
+    b: parseInt(h.slice(4, 6), 16),
+  }
+}
+
+function hexAlpha(hex: string, alpha: number) {
+  const { r, g, b } = hexToRgb(hex)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function pickTextColor(hex: string) {
+  const { r, g, b } = hexToRgb(hex)
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.72 ? "#000000" : "#ffffff"
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 type AppWikiSidebarProps = {
   tree?: WikiSidebarTree
@@ -79,12 +103,16 @@ function InstanceIcon({
 
   return (
     <div
-      className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150",
-        instance.accentIconSurfaceClassName
-      )}
+      className="flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150"
+      style={{
+        backgroundColor: hexAlpha(instance.secondaryHex, 0.85),
+        borderColor: hexAlpha(instance.primaryHex, 0.35),
+      }}
     >
-      <Icon className={cn("size-4 transition-colors duration-150", instance.accentClassName)} />
+      <Icon
+        className="size-4 transition-colors duration-150"
+        style={{ color: instance.primaryHex }}
+      />
     </div>
   )
 }
@@ -101,29 +129,31 @@ function VersionIcon({
   const Icon = version.icon ?? (isLatestVersion(instance, version.value) ? Tag : Archive)
   const latest = isLatestVersion(instance, version.value)
 
+  if (latest) {
+    return (
+      <div
+        className="flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150"
+        style={{
+          backgroundColor: hexAlpha(instance.secondaryHex, 0.85),
+          borderColor: hexAlpha(instance.primaryHex, 0.35),
+        }}
+      >
+        <Icon className="size-4 transition-colors duration-150" style={{ color: instance.primaryHex }} />
+      </div>
+    )
+  }
+
   return (
     <div
       className={cn(
         "flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150",
-        dropdown
-          ? latest
-            ? instance.accentIconSurfaceClassName
-            : "border-zinc-500/35 bg-zinc-500/12"
-          : latest
-            ? instance.accentIconSurfaceClassName
-            : "border-sidebar-border/80 bg-muted"
+        dropdown ? "border-zinc-500/35 bg-zinc-500/12" : "border-sidebar-border/80 bg-muted"
       )}
     >
       <Icon
         className={cn(
           "size-4 transition-colors duration-150",
-          dropdown
-            ? latest
-              ? instance.accentClassName
-              : "text-zinc-300"
-            : latest
-              ? instance.accentClassName
-              : "text-muted-foreground"
+          dropdown ? "text-zinc-300" : "text-muted-foreground"
         )}
       />
     </div>
@@ -137,16 +167,24 @@ function StatusBadge({
   kind: "latest" | "deprecated"
   instance: WikiInstance
 }) {
+  if (kind === "latest") {
+    return (
+      <span
+        className="inline-flex h-5 items-center rounded-full border px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
+        style={{
+          backgroundColor: hexAlpha(instance.secondaryHex, 0.9),
+          borderColor: hexAlpha(instance.primaryHex, 0.4),
+          color: instance.primaryHex,
+        }}
+      >
+        Latest
+      </span>
+    )
+  }
+
   return (
-    <span
-      className={cn(
-        "inline-flex h-5 items-center rounded-full border px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em]",
-        kind === "latest"
-          ? cn(instance.accentSurfaceClassName, instance.accentClassName)
-          : "border-zinc-400/25 bg-zinc-500/12 text-zinc-300"
-      )}
-    >
-      {kind === "latest" ? "Latest" : "Deprecated"}
+    <span className="inline-flex h-5 items-center rounded-full border border-zinc-400/25 bg-zinc-500/12 px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-300">
+      Deprecated
     </span>
   )
 }
@@ -155,11 +193,13 @@ function DropdownTrigger({
   open,
   onToggle,
   className,
+  style,
   children,
 }: {
   open: boolean
   onToggle: () => void
   className?: string
+  style?: React.CSSProperties
   children: React.ReactNode
 }) {
   return (
@@ -173,6 +213,7 @@ function DropdownTrigger({
           onToggle()
         }
       }}
+      style={style}
       className={cn(
         "flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-all duration-150 hover:scale-[1.01]",
         open && "scale-[0.995]",
@@ -213,19 +254,85 @@ function DropdownPanel({
   )
 }
 
-function getInstanceRowClassName(instance: WikiInstance) {
-  return cn(
-    "group/dropdown-item flex items-center gap-3 bg-sidebar px-3 py-2 text-foreground transition-all duration-150",
-    instance.accentSurfaceHoverClassName
+function InstanceDropdownRow({
+  instance,
+  isActive,
+  href,
+  isDark,
+}: {
+  instance: WikiInstance
+  isActive: boolean
+  href: string
+  isDark: boolean
+}) {
+  const [hovered, setHovered] = React.useState(false)
+  const hoverBg = isDark ? instance.secondaryHex : instance.primaryHex
+  const hoverText = isDark ? instance.primaryHex : instance.secondaryHex
+
+  return (
+    <NextLink
+      href={href}
+      aria-current={isActive ? "page" : undefined}
+      className="group/dropdown-item flex items-center gap-3 px-3 py-2 transition-colors duration-150"
+      style={
+        hovered
+          ? { backgroundColor: hoverBg, color: hoverText }
+          : { backgroundColor: "transparent", color: "inherit" }
+      }
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <InstanceIcon instance={instance} />
+      <div className="min-w-0 flex-1 pr-1">
+        <div className="text-[15px] font-semibold leading-tight">{instance.label}</div>
+      </div>
+    </NextLink>
   )
 }
 
-function getVersionRowClassName(instance: WikiInstance, version: WikiVersion) {
-  return cn(
-    "group/dropdown-item flex items-center gap-3 bg-sidebar px-3 py-2 text-foreground transition-all duration-150",
-    isLatestVersion(instance, version.value)
-      ? instance.accentSurfaceHoverClassName
-      : "hover:bg-card"
+function VersionDropdownRow({
+  instance,
+  version,
+  isActive,
+  href,
+  isDark,
+}: {
+  instance: WikiInstance
+  version: WikiVersion
+  isActive: boolean
+  href: string
+  isDark: boolean
+}) {
+  const [hovered, setHovered] = React.useState(false)
+  const latest = isLatestVersion(instance, version.value)
+  const hoverBg = latest
+    ? (isDark ? instance.secondaryHex : instance.primaryHex)
+    : undefined
+
+  return (
+    <NextLink
+      href={href}
+      aria-current={isActive ? "page" : undefined}
+      className="group/dropdown-item flex items-center gap-3 px-3 py-2 transition-colors duration-150"
+      style={
+        hovered && hoverBg
+          ? { backgroundColor: hoverBg, color: isDark ? instance.primaryHex : instance.secondaryHex }
+          : hovered
+          ? { backgroundColor: "var(--color-card)" }
+          : { backgroundColor: "transparent", color: "inherit" }
+      }
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <VersionIcon instance={instance} version={version} dropdown />
+      <div className="min-w-0 flex-1 pr-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[15px] font-semibold leading-tight">{version.label}</span>
+          {latest ? <StatusBadge kind="latest" instance={instance} /> : null}
+          {version.deprecated ? <StatusBadge kind="deprecated" instance={instance} /> : null}
+        </div>
+      </div>
+    </NextLink>
   )
 }
 
@@ -358,50 +465,41 @@ function InstanceSwitcher({
   activeInstance,
   open,
   setOpen,
+  isDark,
 }: {
   activeInstance: WikiInstance
   open: boolean
   setOpen: (value: boolean) => void
+  isDark: boolean
 }) {
+  const triggerBg = isDark ? activeInstance.secondaryHex : activeInstance.primaryHex
+  const triggerText = isDark ? activeInstance.primaryHex : activeInstance.secondaryHex
+  const triggerBorder = hexAlpha(triggerText, 0.25)
+
   return (
     <div>
       <DropdownTrigger
         open={open}
         onToggle={() => setOpen(!open)}
-        className={cn(
-          "border-transparent text-white",
-          activeInstance.accentSurfaceClassName,
-          activeInstance.accentSurfaceHoverClassName
-        )}
+        className="transition-opacity duration-150 hover:opacity-90"
+        style={{ backgroundColor: triggerBg, color: triggerText, borderColor: triggerBorder }}
       >
         <InstanceIcon instance={activeInstance} />
         <div className="pr-1">
-          <div className="text-[15px] font-semibold leading-tight text-white">
-            {activeInstance.label}
-          </div>
+          <div className="text-[15px] font-semibold leading-tight">{activeInstance.label}</div>
         </div>
       </DropdownTrigger>
 
       <DropdownPanel open={open}>
-        {WIKI_INSTANCES.map((instance) => {
-          const isActive = instance.id === activeInstance.id
-
-          return (
-            <NextLink
-              key={instance.id}
-              href={buildBaseHomeHref(instance)}
-              aria-current={isActive ? "page" : undefined}
-              className={getInstanceRowClassName(instance)}
-            >
-              <InstanceIcon instance={instance} />
-              <div className="min-w-0 flex-1 pr-1">
-                <div className="text-[15px] font-semibold leading-tight text-foreground">
-                  {instance.label}
-                </div>
-              </div>
-            </NextLink>
-          )
-        })}
+        {WIKI_INSTANCES.map((instance) => (
+          <InstanceDropdownRow
+            key={instance.id}
+            instance={instance}
+            isActive={instance.id === activeInstance.id}
+            href={buildBaseHomeHref(instance)}
+            isDark={isDark}
+          />
+        ))}
       </DropdownPanel>
     </div>
   )
@@ -414,6 +512,7 @@ function VersionSwitcher({
   open,
   setOpen,
   versionDocSlugs,
+  isDark,
 }: {
   activeInstance: WikiInstance
   activeVersion: NonNullable<ReturnType<typeof getActiveVersionFromPathname>>
@@ -421,6 +520,7 @@ function VersionSwitcher({
   open: boolean
   setOpen: (value: boolean) => void
   versionDocSlugs?: Record<string, string[]>
+  isDark: boolean
 }) {
   const currentDocSlug = getDocSlugFromPathname(activeInstance, pathname) ?? "home"
   if (!activeInstance.versioned || !activeInstance.versions?.length) return null
@@ -454,29 +554,16 @@ function VersionSwitcher({
           const targetHref = targetDocSlugs.includes(currentDocSlug)
             ? buildVersionedDocHref(activeInstance, version.value, pathname)
             : buildBaseHomeHref(activeInstance, version.value)
-          const isActive = version.value === activeVersion.value
-          const latest = isLatestVersion(activeInstance, version.value)
 
           return (
-            <NextLink
+            <VersionDropdownRow
               key={version.value}
+              instance={activeInstance}
+              version={version}
+              isActive={version.value === activeVersion.value}
               href={targetHref}
-              aria-current={isActive ? "page" : undefined}
-              className={getVersionRowClassName(activeInstance, version)}
-            >
-              <VersionIcon instance={activeInstance} version={version} dropdown />
-              <div className="min-w-0 flex-1 pr-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[15px] font-semibold leading-tight text-foreground">
-                    {version.label}
-                  </span>
-                  {latest ? <StatusBadge kind="latest" instance={activeInstance} /> : null}
-                  {version.deprecated ? (
-                    <StatusBadge kind="deprecated" instance={activeInstance} />
-                  ) : null}
-                </div>
-              </div>
-            </NextLink>
+              isDark={isDark}
+            />
           )
         })}
       </DropdownPanel>
@@ -631,6 +718,8 @@ function SidebarNavEntry({
 export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
   const pathname = usePathname()
   const { isMobile, state, toggleSidebar } = useSidebar()
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme !== "light"
 
   const activeInstance = React.useMemo(
     () => getActiveInstanceFromPathname(pathname),
@@ -703,6 +792,7 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
               activeInstance={activeInstance}
               open={openDropdown === "instance"}
               setOpen={(value) => setOpenDropdown(value ? "instance" : null)}
+              isDark={isDark}
             />
 
             {activeInstance.versioned && activeVersion ? (
@@ -713,6 +803,7 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
                 open={openDropdown === "version"}
                 setOpen={(value) => setOpenDropdown(value ? "version" : null)}
                 versionDocSlugs={versionDocSlugs}
+                isDark={isDark}
               />
             ) : null}
           </div>

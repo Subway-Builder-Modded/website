@@ -1,8 +1,8 @@
 import * as React from "react"
-import type { MDXComponents } from "mdx/types"
+import type { MDXComponents } from "wiki/types"
 import Link from "next/link"
-import { Tabs, TabItem } from "@/components/mdx/mdx-tabs"
-import { WikiCardGrid, WikiCard } from "@/components/mdx/wiki-home-cards"
+import { Tabs, TabItem } from "@/components/wiki/mdx-tabs"
+import { WikiCardGrid, WikiCard } from "@/components/wiki/wiki-home-cards"
 
 import {
   Admonition,
