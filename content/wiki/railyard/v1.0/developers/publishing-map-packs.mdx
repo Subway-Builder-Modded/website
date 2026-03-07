@@ -1,0 +1,171 @@
+---
+id: publishing-map-packs
+title: Publishing Map Packs
+---
+
+If you are a map creator and have made multiple maps or are planning to, you can host them all on the same repository via a custom `updates.json` file. In this file, you can place all the necessary information required for Railyard to fetch updates for your map.
+
+## Step 1 - Hosting the File {#hosting-the-file}
+In order to make a submission to the Railyard registry, you need to first upload the source code and release to GitHub and link it to Railyard. To do this, create a new GitHub repository. The actual contents can contain the source code for your map/mod.
+
+Once you have the repository set up, create a new release. In this release, place **ALL** the ZIP files containing your maps/mods (as different release assets). They should contain **exactly** files that are used for the map/mod, meaning no nested subfolders. For maps, use the ZIP that you made using the [custom map creation guide](/wiki/creating-custom-maps/latest/creating-custom-maps). For mods, the ZIP should contain everything that will go in the `metro-maker4/mods/<your_mod>` folder.
+
+## Step 2 - Setting Up the Updates Files {#setting-up-the-updates-files}
+The first step is to set up our `update.json` files. You will need several of these, one for every map.
+
+Create a new folder and call it something like `releases` or `railyard`. This is where your `update.json` files will be located. Create a new file for every map and call it `XXX.json`, where `XXX` is your map's city code. Inside each file, you can place the custom update schema found below and update it to match your mod.
+
+### Custom Update Schema Template {#custom-update-schema-template}
+```json
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.0.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.0.0/Paris_MM.zip",
+      "sha256": "<your asset's sha256>"
+    }
+  ]
+}
+```
+
+:::tip
+
+You can find the `sha256` directly on the releases page.
+
+<img width="1000" alt="image" src="/images/wiki/railyard/github-assets-sha256.png" />
+
+:::
+
+To update your mod, simply add a new field in the `versions` array and add your update information there. An example can be seen below:
+
+```json
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.0.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.0.0/Paris_MM.zip",
+      "sha256": "<your asset's sha256>"
+    },
+    {
+      "version": "1.1.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-28",
+      "changelog": "Updated demand data from 2022 data to 2023 data.",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.1.0/Paris_MM.zip",
+      "sha256": "<your asset's sha256>"
+    }
+  ]
+}
+```
+
+Now that you have your `update.json` files set up, you can move on to actually creating the submission ticket on the Railyard registry.
+
+## Step 3 - Submitting to the Registry {#submitting-to-the-registry}
+Now that your files are hosted on GitHub, you are ready to make a submission to the registry. Go to the [registry's issues page](https://github.com/Subway-Builder-Modded/The-Railyard/issues) and click on "`New Issue`". Here, you can create your submission, which will then be reviewed by a Railyard maintainer. Once you have the issue selection screen open, select "`Publish New Map`".
+
+:::important
+
+For map packs, you will be utilizing "`Custom URL`" as your update type. You can ignore "`GitHub Releases`" in the update type drop-down menu and the "`GitHub Repository`" input field.
+
+:::
+
+Once you select "`Publish New Map`", a popup window will appear asking you to input some information about your map. The information should be inputted as follows:
+
+```
+Map ID:       A unique identifier for your map in kebab-case. This is the permanent directory name in the
+              registry and cannot be changed later. Must be unique across all maps, so if another map of the
+              same city already exists, use a distinct ID (e.g. london-detailed, london-mini). Only lowercase
+              letters, numbers, and hyphens allowed.
+
+City Name:    The human-readable city name shown in Railyard. This is the title of the map that people will see when
+              downloading it.
+
+City Code:    2-4 letter IATA/ICAO-style city code used by the game internally. Must be uppercase letters/numbers.
+              Must not clash with vanilla city codes or other registered maps. Check existing maps before choosing
+              a code.
+
+Country Code: ISO 3166-1 alpha-2 country code — two uppercase letters (e.g. US, GB, CA, DE, JP). Used to group maps
+              by country in Railyard. It is REQUIRED that you use ISO codes according to this list:
+              https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes.
+
+Population:   Approximate metropolitan area population. Number only, no commas or separators. Used for display and
+              sorting in Railyard and it doesn't need to be exact.
+
+Description:  A short description of what your map does. This is shown in the map browser. Mention data quality,
+              notable features, or coverage area.
+
+Tags:         Select all tags that apply to your map. These help users find your map in the browser.
+
+Data Source:  Enter the data source used to generate the demand data for your map. The source name
+              should use common abbreviations like LODES/INSEE/ONS etc. (optional, defaults to OSM)
+
+Source URL:   URL to your map's source code repository or download page.
+
+Update Type:  The method used by Railyard to fetch updates for your map. Most maps should use GitHub Releases. Use
+              Custom URL only if you host your own update.json file.
+
+GitHub Repo:  Required ONLY if using GitHub Releases. The owner/repo path (e.g. username/sb-raleigh). The repo must
+              exist, have at least one release, and the latest release must contain a .zip asset. Leave blank if you
+              are using Custom URL.
+
+Custom URL:   Required ONLY if you selected Custom URL. The full URL to your self-hosted update.json file. The file
+              must follow the Railyard update.json schema. Leave blank if using GitHub Releases. The update.json can be
+              found at: https://subwaybuildermodded.com/wiki/railyard/latest/developers/publishing-map-packs#custom-update-schema-template.
+
+Gallery:      Drag and drop screenshots here, or paste image URLs (one per line). These will be displayed in the map
+              browser. At least one image is recommended. (optional)
+```
+
+For `Custom URL`, place a link to your raw `updates.json` file. You can paste the raw link directly copied from your repository, however, it is instead recommended to deploy it to GitHub pages and paste that link there. This can help some users who may be rate limited. To deploy to GitHub pages, create a new file located at `.github/workflows/deploy-releases.yml`. Paste the following into the file:
+
+```yml
+name: Deploy update.json to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: [releases/**]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: releases
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+This will automatically deploy your `update.json` files to GitHub Pages. Once you do this, put the direct link to your `updates.json` file for the corresponding map in the `Custom URL` field. Now every time you update your map (and our `updates.json` file), it will automatically deploy the latest `updates.json` file for Railyard to use.
+
+Once you deploy your `update.json` files and fill out the submission ticket, a Pull Request should automatically be created. A Railyard maintainer will review it and it will be automatically submitted once they do. After that, it will be available on Railyard for everyone to download.
+
+:::tip
+
+If you input a field incorrectly, the vaildation wil fail. If this happens, you can edit the message above automatically created by the fields you set earlier. Once you edit that message, send a new comment simply commenting `revalidate`.
+
+:::

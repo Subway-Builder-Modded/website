@@ -1,6 +1,8 @@
 import * as React from "react"
 import type { MDXComponents } from "mdx/types"
 import Link from "next/link"
+import { Tabs, TabItem } from "@/components/mdx/mdx-tabs"
+import { WikiCardGrid, WikiCard } from "@/components/mdx/wiki-home-cards"
 
 import {
   Admonition,
@@ -115,14 +117,18 @@ const baseComponents: MDXComponents = {
   Bug,
   Example,
   Announcement,
+  Tabs,
+  TabItem,
+  WikiCardGrid,
+  WikiCard,
 
   a: MdxLink,
 
-  h1: ({ children, ...props }) => {
-    const id = slugify(textFromChildren(children))
+  h1: ({ children, id, ...props }) => {
+    const headingId = id ?? slugify(textFromChildren(children))
     return (
       <h1
-        id={id}
+        id={headingId}
         className="scroll-m-20 text-4xl font-black tracking-tight"
         {...props}
       >
@@ -131,11 +137,11 @@ const baseComponents: MDXComponents = {
     )
   },
 
-  h2: ({ children, ...props }) => {
-    const id = slugify(textFromChildren(children))
+  h2: ({ children, id, ...props }) => {
+    const headingId = id ?? slugify(textFromChildren(children))
     return (
       <h2
-        id={id}
+        id={headingId}
         className="mt-10 scroll-m-20 border-b border-border pb-2 text-3xl font-bold tracking-tight first:mt-0"
         {...props}
       >
@@ -144,11 +150,11 @@ const baseComponents: MDXComponents = {
     )
   },
 
-  h3: ({ children, ...props }) => {
-    const id = slugify(textFromChildren(children))
+  h3: ({ children, id, ...props }) => {
+    const headingId = id ?? slugify(textFromChildren(children))
     return (
       <h3
-        id={id}
+        id={headingId}
         className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight"
         {...props}
       >
@@ -157,11 +163,11 @@ const baseComponents: MDXComponents = {
     )
   },
 
-  h4: ({ children, ...props }) => {
-    const id = slugify(textFromChildren(children))
+  h4: ({ children, id, ...props }) => {
+    const headingId = id ?? slugify(textFromChildren(children))
     return (
       <h4
-        id={id}
+        id={headingId}
         className="mt-6 scroll-m-20 text-xl font-semibold tracking-tight"
         {...props}
       >

@@ -3,6 +3,14 @@ import "server-only"
 import fs from "node:fs"
 import path from "node:path"
 import { compileMDX } from "next-mdx-remote/rsc"
+import { remarkHeadingId } from "remark-custom-heading-id"
+import rehypePrettyCode from "rehype-pretty-code"
+import remarkGfm from "remark-gfm"
+import rehypeExternalLinks from "rehype-external-links"
+import rehypeAutolinkHeadings from "rehype-autolink-headings"
+import remarkDirective from "remark-directive"
+import remarkCodeTitles from "remark-code-titles"
+import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
 
 import { WIKI_INSTANCES, getSidebarOrder, type WikiInstance } from "@/lib/wiki-config"
 import {
@@ -68,6 +76,41 @@ async function readFrontmatter(filePath: string) {
     source,
     options: {
       parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [
+          remarkGfm,
+          remarkHeadingId,
+          remarkCodeTitles,
+          remarkDirective,
+          remarkAdmonitionDirectives,
+        ],
+        rehypePlugins: [
+          [
+            rehypePrettyCode,
+            {
+              theme: "github-dark",
+              keepBackground: false,
+            },
+          ],
+          [
+            rehypeExternalLinks,
+            {
+              target: "_blank",
+              rel: ["nofollow", "noopener", "noreferrer"],
+            },
+          ],
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: "append",
+              properties: {
+                className: ["heading-anchor"],
+                ariaLabel: "Link to section",
+              },
+            },
+          ],
+        ],
+      },
     },
   })
   return frontmatter
@@ -79,13 +122,18 @@ export async function extractTocHeadings(filePath: string): Promise<WikiTocHeadi
   const headings: WikiTocHeading[] = []
 
   for (const line of lines) {
-    const match = /^(##|###|####)\s+(.*)$/.exec(line.trim())
+    const match = /^(#{2,4})\s+(.*)$/.exec(line.trim())
     if (!match) continue
 
     const level = match[1].length
-    const text = match[2].trim()
+    const rawText = match[2].trim()
+    const customIdMatch = rawText.match(/\s*\{#([A-Za-z0-9\-_]+)\}\s*$/)
+
+    const text = rawText.replace(/\s*\{#([A-Za-z0-9\-_]+)\}\s*$/, "").trim()
+    const id = customIdMatch ? customIdMatch[1] : slugify(text)
+
     headings.push({
-      id: slugify(text),
+      id,
       text,
       level,
     })

@@ -20,7 +20,7 @@ export default async function WikiCatchAllLayout({
 
   const tree = await getSidebarTree(resolved.instance, resolved.version)
 
-    const allSlugs = await getAllWikiDocSlugs()
+  const allSlugs = await getAllWikiDocSlugs()
 
   const versionDocSlugs = resolved.instance.versioned
     ? Object.fromEntries(
@@ -40,8 +40,8 @@ export default async function WikiCatchAllLayout({
     <section className="w-full">
       <SidebarProvider defaultOpen className="w-full">
         <AppWikiSidebar tree={tree} versionDocSlugs={versionDocSlugs} />
-        <SidebarInset className="min-w-0 md:ml-0">
-          <div className="mx-auto w-full max-w-7xl px-5 py-6 md:px-8 md:py-6">
+        <SidebarInset className="min-w-0 flex-1 md:ml-0">
+          <div className="w-full px-5 py-6 md:px-8 md:py-6 xl:pr-6 2xl:pr-4">
             {children}
           </div>
         </SidebarInset>

@@ -50,25 +50,16 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     accentSurfaceHoverClassName: "hover:bg-emerald-500/18",
     accentIconSurfaceClassName: "bg-emerald-950/80 border-emerald-700/50",
     versioned: true,
-    latestVersion: "v1.1",
+    latestVersion: "v1.0",
     versions: [
-      {
-        value: "v1.1",
-        label: "v1.1",
-        icon: Tag,
-        sidebarOrder: [
-          "home",
-          "text",
-        ],
-      },
       {
         value: "v1.0",
         label: "v1.0",
-        icon: Archive,
-        deprecated: true,
+        icon: Tag,
         sidebarOrder: [
           "home",
-          "text",
+          "publishing-projects",
+          "publishing-map-packs"
         ],
       },
     ],
@@ -83,21 +74,12 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     accentSurfaceHoverClassName: "hover:bg-violet-500/18",
     accentIconSurfaceClassName: "bg-violet-950/80 border-violet-700/50",
     versioned: true,
-    latestVersion: "v1.1",
+    latestVersion: "v1.0",
     versions: [
-      {
-        value: "v1.1",
-        label: "v1.1",
-        icon: Tag,
-        sidebarOrder: [
-          "home",
-        ],
-      },
       {
         value: "v1.0",
         label: "v1.0",
-        icon: Archive,
-        deprecated: true,
+        icon: Tag,
         sidebarOrder: [
           "home",
         ],

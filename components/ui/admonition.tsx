@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import {
@@ -22,29 +24,29 @@ const admonitionVariants = cva(
   {
     variants: {
       variant: {
-        note: "border-l-blue-500 bg-blue-500/5 text-blue-900 dark:bg-blue-500/10 dark:text-blue-200 [&>svg]:text-blue-500",
+        note: "border-l-blue-500 bg-blue-500/5 dark:bg-blue-500/10 text-foreground [&>svg]:text-blue-500",
         tip:
-          "border-l-emerald-500 bg-emerald-500/5 text-emerald-900 dark:bg-emerald-500/10 dark:text-emerald-200 [&>svg]:text-emerald-500",
+          "border-l-emerald-500 bg-emerald-500/5 dark:bg-emerald-500/10 text-foreground [&>svg]:text-emerald-500",
         important:
-          "border-l-purple-500 bg-purple-500/5 text-purple-900 dark:bg-purple-500/10 dark:text-purple-200 [&>svg]:text-purple-500",
+          "border-l-purple-500 bg-purple-500/5 dark:bg-purple-500/10 text-foreground [&>svg]:text-purple-500",
         warning:
-          "border-l-amber-500 bg-amber-500/5 text-amber-900 dark:bg-amber-500/10 dark:text-amber-200 [&>svg]:text-amber-500",
+          "border-l-amber-500 bg-amber-500/5 dark:bg-amber-500/10 text-foreground [&>svg]:text-amber-500",
         caution:
-          "border-l-orange-500 bg-orange-500/5 text-orange-900 dark:bg-orange-500/10 dark:text-orange-200 [&>svg]:text-orange-500",
+          "border-l-orange-500 bg-orange-500/5 dark:bg-orange-500/10 text-foreground [&>svg]:text-orange-500",
         danger:
-          "border-l-red-500 bg-red-500/5 text-red-900 dark:bg-red-500/10 dark:text-red-200 [&>svg]:text-red-500",
+          "border-l-red-500 bg-red-500/5 dark:bg-red-500/10 text-foreground [&>svg]:text-red-500",
         info:
-          "border-l-cyan-500 bg-cyan-500/5 text-cyan-900 dark:bg-cyan-500/10 dark:text-cyan-200 [&>svg]:text-cyan-500",
+          "border-l-cyan-500 bg-cyan-500/5 dark:bg-cyan-500/10 text-foreground [&>svg]:text-cyan-500",
         success:
-          "border-l-green-500 bg-green-500/5 text-green-900 dark:bg-green-500/10 dark:text-green-200 [&>svg]:text-green-500",
+          "border-l-green-500 bg-green-500/5 dark:bg-green-500/10 text-foreground [&>svg]:text-green-500",
         deprecated:
-          "border-l-zinc-500 bg-zinc-500/5 text-zinc-900 dark:bg-zinc-500/10 dark:text-zinc-200 [&>svg]:text-zinc-500",
+          "border-l-zinc-500 bg-zinc-500/5 dark:bg-zinc-500/10 text-foreground [&>svg]:text-zinc-500",
         bug:
-          "border-l-pink-500 bg-pink-500/5 text-pink-900 dark:bg-pink-500/10 dark:text-pink-200 [&>svg]:text-pink-500",
+          "border-l-pink-500 bg-pink-500/5 dark:bg-pink-500/10 text-foreground [&>svg]:text-pink-500",
         example:
-          "border-l-sky-500 bg-sky-500/5 text-sky-900 dark:bg-sky-500/10 dark:text-sky-200 [&>svg]:text-sky-500",
+          "border-l-sky-500 bg-sky-500/5 dark:bg-sky-500/10 text-foreground [&>svg]:text-sky-500",
         announcement:
-          "border-l-fuchsia-500 bg-fuchsia-500/5 text-fuchsia-900 dark:bg-fuchsia-500/10 dark:text-fuchsia-200 [&>svg]:text-fuchsia-500",
+          "border-l-fuchsia-500 bg-fuchsia-500/5 dark:bg-fuchsia-500/10 text-foreground [&>svg]:text-fuchsia-500",
       },
     },
     defaultVariants: {
@@ -56,18 +58,18 @@ const admonitionVariants = cva(
 const admonitionTitleVariants = cva("font-semibold", {
   variants: {
     variant: {
-      note: "text-blue-700 dark:text-blue-300",
-      tip: "text-emerald-700 dark:text-emerald-300",
-      important: "text-purple-700 dark:text-purple-300",
-      warning: "text-amber-700 dark:text-amber-300",
-      caution: "text-orange-700 dark:text-orange-300",
-      danger: "text-red-700 dark:text-red-300",
-      info: "text-cyan-700 dark:text-cyan-300",
-      success: "text-green-700 dark:text-green-300",
-      deprecated: "text-zinc-700 dark:text-zinc-300",
-      bug: "text-pink-700 dark:text-pink-300",
-      example: "text-sky-700 dark:text-sky-300",
-      announcement: "text-fuchsia-700 dark:text-fuchsia-300",
+      note: "text-foreground",
+      tip: "text-foreground",
+      important: "text-foreground",
+      warning: "text-foreground",
+      caution: "text-foreground",
+      danger: "text-foreground",
+      info: "text-foreground",
+      success: "text-foreground",
+      deprecated: "text-foreground",
+      bug: "text-foreground",
+      example: "text-foreground",
+      announcement: "text-foreground",
     },
   },
   defaultVariants: {
@@ -116,6 +118,8 @@ interface AdmonitionProps
   extends React.ComponentProps<"div">,
     VariantProps<typeof admonitionVariants> {
   title?: string
+  collapsible?: boolean
+  defaultOpen?: boolean
 }
 
 function Admonition({
@@ -123,32 +127,58 @@ function Admonition({
   variant = "note",
   title,
   children,
+  collapsible = false,
+  defaultOpen = true,
   ...props
 }: AdmonitionProps) {
   const resolvedVariant = variant ?? "note"
   const Icon = icons[resolvedVariant]
   const defaultTitle = labels[resolvedVariant]
+  const [open, setOpen] = React.useState(defaultOpen)
 
   return (
     <div
       data-slot="admonition"
       data-variant={resolvedVariant}
+      data-open={open ? "true" : "false"}
       className={cn(admonitionVariants({ variant: resolvedVariant }), className)}
       {...props}
     >
       <Icon />
-      <div className="flex-1 space-y-1.5">
-        <p
-          className={cn(
-            "leading-none",
-            admonitionTitleVariants({ variant: resolvedVariant })
-          )}
-        >
-          {title ?? defaultTitle}
-        </p>
-        <div className="text-current/80 [&>p]:leading-relaxed [&>p:first-child]:mt-0">
-          {children}
-        </div>
+      <div className="flex-1">
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            className="flex w-full items-center gap-2 text-left"
+            aria-expanded={open}
+          >
+            <p
+              className={cn(
+                "leading-none",
+                admonitionTitleVariants({ variant: resolvedVariant })
+              )}
+            >
+              {title ?? defaultTitle}
+            </p>
+            <span className="ml-auto text-current/70">{open ? "−" : "+"}</span>
+          </button>
+        ) : (
+          <p
+            className={cn(
+              "leading-none",
+              admonitionTitleVariants({ variant: resolvedVariant })
+            )}
+          >
+            {title ?? defaultTitle}
+          </p>
+        )}
+
+        {(!collapsible || open) ? (
+          <div className="mt-1.5 text-current/80 [&>p]:leading-relaxed [&>p:first-child]:mt-0">
+            {children}
+          </div>
+        ) : null}
       </div>
     </div>
   )

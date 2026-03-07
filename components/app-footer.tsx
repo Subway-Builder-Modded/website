@@ -15,7 +15,7 @@ import {
 
 export default function AppFooter() {
   return (
-    <footer className="bg-background">
+    <footer className="bg-sidebar">
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="grid gap-10 md:grid-cols-[max-content_1fr] md:gap-x-24 md:items-center">
           <div className="flex flex-col items-start gap-3">

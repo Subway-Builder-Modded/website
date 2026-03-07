@@ -3,7 +3,14 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { compileMDX } from "next-mdx-remote/rsc"
-
+import { remarkHeadingId } from "remark-custom-heading-id"
+import rehypePrettyCode from "rehype-pretty-code"
+import remarkGfm from "remark-gfm"
+import remarkCodeTitles from "remark-code-titles"
+import rehypeExternalLinks from "rehype-external-links"
+import rehypeAutolinkHeadings from "rehype-autolink-headings"
+import remarkDirective from "remark-directive"
+import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -165,6 +172,45 @@ export default async function WikiPage({
     source,
     options: {
       parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [
+          remarkGfm,
+          remarkHeadingId,
+          remarkCodeTitles,
+          remarkDirective,
+          remarkAdmonitionDirectives,
+        ],
+        rehypePlugins: [
+          [
+            rehypePrettyCode,
+            {
+              theme: "github-dark",
+              keepBackground: false,
+            },
+          ],
+          [
+            rehypeExternalLinks,
+            {
+              target: "_blank",
+              rel: ["nofollow", "noopener", "noreferrer"],
+            },
+          ],
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: "append",
+              properties: {
+                className: ["heading-anchor"],
+                ariaLabel: "Link to section",
+              },
+              content: {
+                type: "text",
+                value: "#",
+              },
+            },
+          ],
+        ],
+      },
     },
     components: useMDXComponents(),
   })

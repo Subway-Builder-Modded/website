@@ -111,7 +111,7 @@ function VersionIcon({
             : "border-zinc-500/35 bg-zinc-500/12"
           : latest
             ? instance.accentIconSurfaceClassName
-            : "border-border/80 bg-muted"
+            : "border-sidebar-border/80 bg-muted"
       )}
     >
       <Icon
@@ -205,7 +205,7 @@ function DropdownPanel({
       )}
     >
       <div className="min-h-0 overflow-x-visible overflow-y-hidden">
-        <div className="overflow-hidden rounded-xl border border-border bg-popover shadow-xl">
+        <div className="overflow-hidden rounded-xl border border-sidebar-border bg-popover shadow-xl">
           {children}
         </div>
       </div>
@@ -215,17 +215,17 @@ function DropdownPanel({
 
 function getInstanceRowClassName(instance: WikiInstance) {
   return cn(
-    "group/dropdown-item flex items-center gap-3 bg-popover px-3 py-2 text-foreground transition-all duration-150",
+    "group/dropdown-item flex items-center gap-3 bg-sidebar px-3 py-2 text-foreground transition-all duration-150",
     instance.accentSurfaceHoverClassName
   )
 }
 
 function getVersionRowClassName(instance: WikiInstance, version: WikiVersion) {
   return cn(
-    "group/dropdown-item flex items-center gap-3 bg-popover px-3 py-2 text-foreground transition-all duration-150",
+    "group/dropdown-item flex items-center gap-3 bg-sidebar px-3 py-2 text-foreground transition-all duration-150",
     isLatestVersion(instance, version.value)
       ? instance.accentSurfaceHoverClassName
-      : "hover:bg-zinc-500/12"
+      : "hover:bg-card"
   )
 }
 
@@ -430,7 +430,7 @@ function VersionSwitcher({
       <DropdownTrigger
         open={open}
         onToggle={() => setOpen(!open)}
-        className="border-transparent bg-card text-foreground hover:bg-card/90"
+        className="border-sidebar-border bg-sidebar-elevated text-foreground hover:bg-sidebar-hover"
       >
         <VersionIcon instance={activeInstance} version={activeVersion} />
         <div className="pr-1">
@@ -591,7 +591,7 @@ function SidebarNavEntry({
           type="button"
           aria-label={isOpen ? `Collapse ${entry.title}` : `Expand ${entry.title}`}
           onClick={toggle}
-          className="mr-1 flex size-7 items-center justify-center rounded-full text-white/70 transition-all duration-150 hover:bg-muted hover:text-white group-hover:bg-muted group-hover:text-white"
+          className="mr-1 flex size-7 items-center justify-center"
         >
           <ChevronDown
             className={cn("size-4 transition-transform duration-200", isOpen && "rotate-180")}
@@ -676,14 +676,28 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
   const hoverTextClassName = SIDEBAR_HOVER_TEXT_CLASS[activeInstance.id]
   const activeIndicatorClassName = INSTANCE_INDICATOR_BG_CLASS[activeInstance.id]
 
+  const [showExpandButton, setShowExpandButton] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!isMobile && isCollapsed) {
+      const timeout = window.setTimeout(() => {
+        setShowExpandButton(true)
+      }, 200)
+
+      return () => window.clearTimeout(timeout)
+    }
+
+    setShowExpandButton(false)
+  }, [isCollapsed, isMobile])
+
   return (
     <>
       <Sidebar
         collapsible="offcanvas"
         variant="sidebar"
-        className="overflow-visible border-r border-border bg-sidebar"
+        className="overflow-visible border-r border-sidebar-border bg-sidebar"
       >
-        <SidebarHeader className="gap-3 border-b border-border bg-sidebar px-6 pt-3 pb-3">
+        <SidebarHeader className="gap-3 border-b border-sidebar-border bg-sidebar px-6 pt-3 pb-3">
           <div ref={switcherAreaRef} className="space-y-3">
             <InstanceSwitcher
               activeInstance={activeInstance}
@@ -724,24 +738,24 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
           </nav>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-border px-3 py-2">
+        <SidebarFooter className="border-t border-sidebar-border px-3 py-2">
           <button
             type="button"
             aria-label="Collapse sidebar"
             onClick={toggleSidebar}
-            className="ml-auto hidden h-9 w-9 items-center justify-center rounded-lg border border-border bg-card/90 text-muted-foreground shadow-sm transition-colors hover:bg-card hover:text-foreground md:flex"
+            className="ml-auto hidden h-9 w-9 items-center justify-center rounded-lg border border-sidebar-border bg-card/90 text-muted-foreground shadow-sm transition-colors hover:bg-card hover:text-foreground md:flex"
           >
             <PanelLeftCloseIcon className="size-4" />
           </button>
         </SidebarFooter>
       </Sidebar>
 
-      {!isMobile && isCollapsed ? (
+      {!isMobile && showExpandButton ? (
         <button
           type="button"
           aria-label="Expand sidebar"
           onClick={toggleSidebar}
-          className="fixed left-4 z-30 hidden h-10 w-10 items-center justify-center rounded-lg border border-border bg-card/95 text-muted-foreground shadow-md backdrop-blur transition-colors hover:bg-card hover:text-foreground md:flex"
+          className="fixed left-4 z-30 hidden h-10 w-10 items-center justify-center rounded-lg border border-sidebar-border bg-zinc-950/95 text-muted-foreground shadow-md backdrop-blur animate-in fade-in-0 zoom-in-95 duration-150 hover:bg-zinc-900 hover:text-foreground md:flex"
           style={{ bottom: `calc(${footerOffset}px + 1rem)` }}
         >
           <PanelLeftCloseIcon className="size-4 rotate-180" />

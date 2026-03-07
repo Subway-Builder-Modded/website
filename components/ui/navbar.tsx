@@ -82,7 +82,7 @@ const NavbarProvider = ({
       <div
         className={twMerge(
           "peer/navbar group/navbar relative isolate z-50 flex w-full flex-col",
-          "has-data-navbar-inset:min-h-svh has-data-navbar-inset:bg-background dark:has-data-navbar-inset:bg-bg",
+          "has-data-navbar-inset:min-h-svh has-data-navbar-inset:bg-sidebar dark:has-data-navbar-inset:bg-bg",
           className,
         )}
         {...props}
@@ -158,8 +158,8 @@ const Navbar = ({
         "group/navbar-intent relative isolate",
         isSticky &&
           (placement === "bottom"
-            ? "fixed bottom-0 inset-x-0 z-40 bg-background"
-            : "fixed top-0 inset-x-0 z-40 bg-background"),
+            ? "fixed bottom-0 inset-x-0 z-40 bg-sidebar"
+            : "fixed top-0 inset-x-0 z-40 bg-sidebar"),
         placement === "top" && intent === "float" && "md:pt-8",
         placement === "bottom" && intent === "float" && "bottom-0 md:pb-8",
         intent === "float" && "mx-auto w-full max-w-7xl px-4 xl:max-w-(--breakpoint-xl)",
@@ -170,9 +170,9 @@ const Navbar = ({
         className={twMerge(
           "relative isolate hidden py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)] md:block",
           intent === "float" &&
-            "rounded-xl bg-bg py-0 *:data-[navbar=content]:max-w-7xl *:data-[navbar=content]:rounded-xl *:data-[navbar=content]:border *:data-[navbar=content]:bg-background *:data-[navbar=content]:px-4 *:data-[navbar=content]:py-(--navbar-gutter) *:data-[navbar=content]:shadow-xs",
+            "rounded-xl bg-bg py-0 *:data-[navbar=content]:max-w-7xl *:data-[navbar=content]:rounded-xl *:data-[navbar=content]:border *:data-[navbar=content]:bg-sidebar *:data-[navbar=content]:px-4 *:data-[navbar=content]:py-(--navbar-gutter) *:data-[navbar=content]:shadow-xs",
           ["default", "inset"].includes(intent) && "px-4",
-          intent === "default" && "border-b bg-background",
+          intent === "default" && "border-b bg-sidebar",
           className,
         )}
       >
@@ -283,7 +283,7 @@ const NavbarMobile = ({ className, ref, ...props }: React.ComponentProps<"div">)
       data-slot="navbar-mobile"
       className={twMerge(
         "group/navbar-mobile flex items-center gap-x-3 px-4 py-2.5 md:hidden",
-        "group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-background",
+        "group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-sidebar",
         "group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:top-0 group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-b",
         "group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:bottom-0 group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:border-t",
         className,
@@ -298,10 +298,10 @@ const NavbarInset = ({ className, ref, children, ...props }: React.ComponentProp
     <div
       ref={ref}
       data-navbar-inset={true}
-      className={twMerge("flex flex-1 flex-col bg-background pb-2 md:px-2 dark:bg-bg", className)}
+      className={twMerge("flex flex-1 flex-col bg-sidebar pb-2 md:px-2 dark:bg-bg", className)}
       {...props}
     >
-      <div className="grow bg-bg p-6 md:rounded-lg md:p-16 md:shadow-xs md:ring-1 md:ring-fg/15 md:dark:bg-background md:dark:ring-border md:dark:group-has-data-navbar-inset/navbar:bg-muted">
+      <div className="grow bg-bg p-6 md:rounded-lg md:p-16 md:shadow-xs md:ring-1 md:ring-fg/15 md:dark:bg-sidebar md:dark:ring-border md:dark:group-has-data-navbar-inset/navbar:bg-muted">
         <div className="mx-auto max-w-7xl">{children}</div>
       </div>
     </div>
