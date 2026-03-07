@@ -1,8 +1,7 @@
 "use client"
 
 import { Bars2Icon } from "@heroicons/react/20/solid"
-import { LayoutGroup, motion } from "motion/react"
-import { createContext, use, useCallback, useId, useMemo, useState } from "react"
+import { createContext, use, useCallback, useMemo, useState } from "react"
 import type { LinkProps } from "react-aria-components"
 import { Link } from "react-aria-components"
 import { twJoin, twMerge } from "tailwind-merge"
@@ -188,21 +187,17 @@ const Navbar = ({
 }
 
 const NavbarSection = ({ className, ...props }: React.ComponentProps<"div">) => {
-  const id = useId()
-
   return (
-    <LayoutGroup id={id}>
-      <div
-        data-slot="navbar-section"
-        className={twMerge(
-          "col-span-full grid grid-cols-[auto_1fr] flex-col gap-3 gap-y-0.5 md:flex md:flex-none md:grid-cols-none md:flex-row md:items-center md:gap-2.5",
-          className,
-        )}
-        {...props}
-      >
-        {props.children}
-      </div>
-    </LayoutGroup>
+    <div
+      data-slot="navbar-section"
+      className={twMerge(
+        "col-span-full grid grid-cols-[auto_1fr] flex-col gap-3 gap-y-0.5 md:flex md:flex-none md:grid-cols-none md:flex-row md:items-center md:gap-2.5",
+        className,
+      )}
+      {...props}
+    >
+      {props.children}
+    </div>
   )
 }
 
@@ -243,10 +238,8 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
           {typeof props.children === "function" ? props.children(values) : props.children}
 
           {(isCurrent || values.isCurrent) && (
-            <motion.span
+            <span
               data-slot="current-indicator"
-              layoutId="current-indicator"
-              transition={{ type: "spring", stiffness: 500, damping: 40 }}
               className={twJoin(
                 "absolute rounded-full bg-primary [--gutter:--spacing(0.5)]",
                 "inset-y-[calc(var(--navbar-gutter)---spacing(0.5))] -start-4 w-(--gutter) md:inset-y-auto md:w-auto",
