@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { useCallback, useLayoutEffect, useRef, useState } from "react"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
@@ -10,7 +9,6 @@ import { buildBaseHomeHref } from "@/lib/wiki-shared"
 import { cn } from "@/lib/utils"
 
 type WikiExtra = {
-  bulletLetter: string
   bulletColor: string
   bulletTextColor: string
   imageBorderColor: string
@@ -19,7 +17,6 @@ type WikiExtra = {
 
 const WIKI_EXTRA: Record<string, WikiExtra> = {
   railyard: {
-    bulletLetter: "R",
     bulletColor: "#34d399",
     bulletTextColor: "#ffffff",
     imageBorderColor: "#34d399",
@@ -27,7 +24,6 @@ const WIKI_EXTRA: Record<string, WikiExtra> = {
       "The official map distribution platform for Subway Builder. Browse and publish community-made custom maps.",
   },
   "template-mod": {
-    bulletLetter: "T",
     bulletColor: "#a78bfa",
     bulletTextColor: "#ffffff",
     imageBorderColor: "#a78bfa",
@@ -35,7 +31,6 @@ const WIKI_EXTRA: Record<string, WikiExtra> = {
       "TypeScript template and framework documentation for building your own Subway Builder mods.",
   },
   "creating-custom-maps": {
-    bulletLetter: "C",
     bulletColor: "#60a5fa",
     bulletTextColor: "#ffffff",
     imageBorderColor: "#60a5fa",
@@ -43,7 +38,6 @@ const WIKI_EXTRA: Record<string, WikiExtra> = {
       "A complete guide to creating, packaging, and distributing your own custom Subway Builder maps.",
   },
   contributing: {
-    bulletLetter: "Co",
     bulletColor: "#fbbf24",
     bulletTextColor: "#000000",
     imageBorderColor: "#fbbf24",
@@ -51,7 +45,6 @@ const WIKI_EXTRA: Record<string, WikiExtra> = {
       "Learn how to contribute to Subway Builder Modded — from documentation and guides to translations.",
   },
   legacy: {
-    bulletLetter: "L",
     bulletColor: "#fb7185",
     bulletTextColor: "#ffffff",
     imageBorderColor: "#fb7185",
@@ -94,69 +87,17 @@ function WikiCardImagePlaceholder({
 }
 
 function WikiCardRow({ items }: { items: WikiInstance[] }) {
-  const [titleHeight, setTitleHeight] = useState(0)
-  const titleNodes = useRef<Record<string, HTMLDivElement | null>>({})
-
-  const registerTitle = useCallback(
-    (id: string) => (node: HTMLDivElement | null) => {
-      titleNodes.current[id] = node
-    },
-    [],
-  )
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      const heights = items
-        .map((item) => titleNodes.current[item.id]?.offsetHeight ?? 0)
-        .filter(Boolean)
-      if (heights.length) setTitleHeight(Math.max(...heights))
-    }
-
-    measure()
-
-    const observer = new ResizeObserver(measure)
-    items.forEach((item) => {
-      const node = titleNodes.current[item.id]
-      if (node) observer.observe(node)
-    })
-
-    window.addEventListener("resize", measure)
-
-    return () => {
-      observer.disconnect()
-      window.removeEventListener("resize", measure)
-    }
-  }, [items])
-
   return (
     <div className="grid items-stretch justify-center gap-7 [grid-template-columns:repeat(auto-fit,minmax(280px,340px))]">
       {items.map((instance) => {
         const extra = WIKI_EXTRA[instance.id]
-        return (
-          <WikiHubCard
-            key={instance.id}
-            instance={instance}
-            extra={extra}
-            titleHeight={titleHeight}
-            registerTitle={registerTitle(instance.id)}
-          />
-        )
+        return <WikiHubCard key={instance.id} instance={instance} extra={extra} />
       })}
     </div>
   )
 }
 
-function WikiHubCard({
-  instance,
-  extra,
-  titleHeight,
-  registerTitle,
-}: {
-  instance: WikiInstance
-  extra: WikiExtra
-  titleHeight: number
-  registerTitle: (node: HTMLDivElement | null) => void
-}) {
+function WikiHubCard({ instance, extra }: { instance: WikiInstance; extra: WikiExtra }) {
   return (
     <Link href={buildBaseHomeHref(instance)} className="block h-full outline-none">
       <Card
@@ -169,28 +110,15 @@ function WikiHubCard({
         )}
       >
         <div className="flex h-full flex-col px-6 pb-5 pt-4">
-          {/* Line bullet */}
-          <div className="mb-3">
+          {/* Line bullet with instance label as text */}
+          <div className="mb-4">
             <LineBullet
-              bullet={extra.bulletLetter}
+              bullet={instance.label}
               color={extra.bulletColor}
               textColor={extra.bulletTextColor}
               shape="circle"
-              size="sm"
+              size="md"
             />
-          </div>
-
-          {/* Instance title */}
-          <div
-            className="mb-4 flex items-start"
-            style={titleHeight > 0 ? { minHeight: `${titleHeight}px` } : undefined}
-          >
-            <div
-              ref={registerTitle}
-              className={cn("text-xl font-semibold leading-snug", instance.accentClassName)}
-            >
-              {instance.label}
-            </div>
           </div>
 
           {/* Placeholder image */}
