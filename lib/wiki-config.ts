@@ -35,6 +35,10 @@ export type WikiInstance = {
   label: string
   basePath: string
   icon: LucideIcon
+  /** Vibrant/bright color — dark mode text, light mode background */
+  primaryHex: string
+  /** Deep/dark color — dark mode background, light mode text */
+  secondaryHex: string
   accentClassName: string
   accentSurfaceClassName: string
   accentSurfaceHoverClassName: string
@@ -51,6 +55,8 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     label: "Railyard",
     basePath: "/wiki/railyard",
     icon: TrainTrack,
+    primaryHex: "#00D492",
+    secondaryHex: "#032D23",
     accentClassName: "text-emerald-400",
     accentSurfaceClassName: "bg-emerald-500/14 border-emerald-500/30",
     accentSurfaceHoverClassName: "hover:bg-emerald-500/18",
@@ -80,6 +86,8 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     label: "Template Mod",
     basePath: "/wiki/template-mod",
     icon: FolderCode,
+    primaryHex: "#A684FF",
+    secondaryHex: "#311362",
     accentClassName: "text-violet-400",
     accentSurfaceClassName: "bg-violet-500/14 border-violet-500/30",
     accentSurfaceHoverClassName: "hover:bg-violet-500/18",
@@ -108,6 +116,8 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     label: "Creating Custom Maps",
     basePath: "/wiki/creating-custom-maps",
     icon: MapPinPlus,
+    primaryHex: "#51A2FF",
+    secondaryHex: "#192754",
     accentClassName: "text-blue-400",
     accentSurfaceClassName: "bg-blue-500/14 border-blue-500/30",
     accentSurfaceHoverClassName: "hover:bg-blue-500/18",
@@ -124,6 +134,8 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     label: "Contributing",
     basePath: "/wiki/contributing",
     icon: GitPullRequestArrow,
+    primaryHex: "#FFB900",
+    secondaryHex: "#471F07",
     accentClassName: "text-amber-400",
     accentSurfaceClassName: "bg-amber-500/14 border-amber-500/30",
     accentSurfaceHoverClassName: "hover:bg-amber-500/18",
@@ -138,6 +150,8 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     label: "Legacy",
     basePath: "/wiki/legacy",
     icon: History,
+    primaryHex: "#FF637E",
+    secondaryHex: "#4D091C",
     accentClassName: "text-rose-400",
     accentSurfaceClassName: "bg-rose-500/14 border-rose-500/30",
     accentSurfaceHoverClassName: "hover:bg-rose-500/18",
