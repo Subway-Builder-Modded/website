@@ -3,6 +3,7 @@ import type { MDXComponents } from "mdx/types"
 import Link from "next/link"
 import { Tabs, TabItem } from "@/components/wiki/mdx-tabs"
 import { WikiCardGrid, WikiCard } from "@/components/wiki/wiki-home-cards"
+import { UpdateSection } from "@/components/updates/update-section"
 
 import {
   Admonition,
@@ -121,6 +122,7 @@ const baseComponents: MDXComponents = {
   TabItem,
   WikiCardGrid,
   WikiCard,
+  UpdateSection,
 
   a: MdxLink,
 
