@@ -137,7 +137,7 @@ export default async function UpdatePage({
               "font-mta text-2xl font-bold sm:text-3xl",
               "transition-transform duration-200 hover:scale-[1.02]",
             )}
-            style={{ backgroundColor: project.midHex, color: "#E3E3E3" }}
+            style={{ backgroundColor: project.midHex, color: project.secondaryHex }}
           >
             <span>{title}</span>
             <ExternalLink className="size-5 shrink-0 opacity-60" />
@@ -145,7 +145,7 @@ export default async function UpdatePage({
         ) : (
           <div
             className="mb-5 flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold sm:text-3xl"
-            style={{ backgroundColor: project.midHex, color: "#E3E3E3" }}
+            style={{ backgroundColor: project.midHex, color: project.secondaryHex }}
           >
             {title}
           </div>
