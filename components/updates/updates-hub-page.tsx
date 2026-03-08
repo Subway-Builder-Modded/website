@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { Card } from "@/components/ui/card"
+import { LineBullet } from "@/components/ui/line-bullet"
 import { UPDATE_PROJECTS, type UpdateProject } from "@/lib/updates-config"
 import { cn } from "@/lib/utils"
 
@@ -81,12 +82,13 @@ function UpdateHubCard({
       >
         <div className="flex h-full flex-col px-6 pb-5 pt-4">
           <div className="mb-4">
-            <div
-              className="flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold"
-              style={{ backgroundColor: bulletBg, color: bulletText }}
-            >
-              {project.label}
-            </div>
+            <LineBullet
+              bullet={project.label}
+              color={bulletBg}
+              textColor={bulletText}
+              shape="circle"
+              size="md"
+            />
           </div>
 
           <div className="mb-4">
