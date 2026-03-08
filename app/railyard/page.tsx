@@ -28,11 +28,11 @@ interface DownloadEntry {
 }
 
 const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
-  { os: "Windows", arch: "x64", label: "Windows Installer (x64)",  type: ".exe",      size: "—", link: "#", assetName: "railyard-windows-amd64-installer.exe" },
-  { os: "Windows", arch: "x64", label: "Windows Portable (x64)",   type: ".zip",      size: "—", link: "#", assetName: "railyard-windows-amd64-portable.zip" },
-  { os: "macOS",   arch: "universal", label: "macOS (Universal)",   type: ".dmg",      size: "—", link: "#", assetName: "railyard-macos-universal.dmg" },
-  { os: "macOS",   arch: "universal", label: "macOS Zip (Universal)", type: ".zip",    size: "—", link: "#", assetName: "railyard-macos-universal.zip" },
-  { os: "Linux",   arch: "x64", label: "Linux (x64)",              type: ".AppImage", size: "—", link: "#", assetName: "railyard-linux-amd64.AppImage" },
+  { os: "Windows", arch: "x64", label: "Windows Installer (x64)",  type: ".exe",      size: "—", link: "#", assetName: "windows-amd64-installer.exe" },
+  { os: "Windows", arch: "x64", label: "Windows Portable (x64)",   type: ".zip",      size: "—", link: "#", assetName: "windows-amd64-portable.zip" },
+  { os: "macOS",   arch: "universal", label: "macOS (Universal)",   type: ".dmg",      size: "—", link: "#", assetName: "macos-universal.dmg" },
+  { os: "macOS",   arch: "universal", label: "macOS Zip (Universal)", type: ".zip",    size: "—", link: "#", assetName: "macos-universal.zip" },
+  { os: "Linux",   arch: "x64", label: "Linux (x64)",              type: ".AppImage", size: "—", link: "#", assetName: "linux-amd64.AppImage" },
 ]
 
 const RELEASE_API = "https://api.github.com/repos/Subway-Builder-Modded/Railyard/releases/latest"
@@ -46,7 +46,7 @@ function formatBytes(bytes: number): string {
 
 function buildDownloads(releaseAssets: { name: string; browser_download_url: string; size: number }[]): DownloadEntry[] {
   return DOWNLOAD_TEMPLATE.map((entry) => {
-    const asset = releaseAssets.find((a) => a.name === entry.assetName)
+    const asset = releaseAssets.find((a) => a.name.endsWith(entry.assetName))
     if (!asset) return entry
     return { ...entry, link: asset.browser_download_url, size: formatBytes(asset.size) }
   })
