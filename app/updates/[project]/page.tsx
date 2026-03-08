@@ -60,8 +60,8 @@ function TagBadge({ kind }: { kind: UpdateTag | "latest" }) {
         backgroundColor: TAG_COLORS[kind],
         color: "#ffffff",
         height: "auto",
-        padding: "0.2rem 0.65rem",
-        fontSize: "0.8125rem",
+        padding: "0.35rem 0.85rem",
+        fontSize: "0.9375rem",
         lineHeight: "1.4",
       }}
     >
@@ -87,7 +87,7 @@ function VersionCard({
         className={cn(
           // Stacks vertically on small screens, side-by-side on sm+
           "group flex flex-col gap-3 px-6 py-5",
-          "sm:flex-row sm:items-start sm:justify-between sm:gap-6",
+          "sm:flex-row sm:items-center sm:justify-between sm:gap-6",
           "border border-border/60 bg-card/60",
           "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
           "hover:-translate-y-0.5 hover:border-border hover:bg-card",
