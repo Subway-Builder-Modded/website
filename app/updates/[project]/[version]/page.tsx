@@ -190,7 +190,7 @@ export default async function UpdatePage({
       </header>
 
       {/* ── Changelog content ───────────────────────────────────────────────── */}
-      <article className="mx-auto max-w-2xl">
+      <article className="mx-auto max-w-2xl pb-16">
         {content}
       </article>
     </section>
