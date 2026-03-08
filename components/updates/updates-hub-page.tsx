@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useTheme } from "next-themes"
+import { Megaphone } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
 import { UPDATE_PROJECTS, type UpdateProject } from "@/lib/updates-config"
@@ -115,9 +116,12 @@ export function UpdatesHubPage() {
   return (
     <section className="px-7 pb-8 pt-8 sm:pb-8 sm:pt-8">
       <div className="mb-12 text-center">
-        <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
-          Updates &amp; Changelogs
-        </h1>
+        <div className="flex justify-center">
+          <h1 className="inline-flex items-center gap-4 text-4xl font-black tracking-tight sm:text-5xl">
+            <Megaphone aria-hidden="true" className="size-[1.02em]" />
+            <span>Updates &amp; Changelogs</span>
+          </h1>
+        </div>
         <p className="mt-3 text-lg text-muted-foreground">
           Stay up to date with the latest releases from Subway Builder Modded.
         </p>
@@ -131,3 +135,4 @@ export function UpdatesHubPage() {
     </section>
   )
 }
+

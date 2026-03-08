@@ -8,6 +8,8 @@ export interface LineBulletProps extends React.HTMLAttributes<HTMLDivElement> {
   bullet: string
   color: string
   textColor: string
+  hoverColor?: string
+  invertOnHover?: boolean
   shape?: LineBulletShape
   size?: LineBulletSize
 }
@@ -23,6 +25,8 @@ export function LineBullet({
   bullet,
   color,
   textColor,
+  hoverColor,
+  invertOnHover = false,
   shape = "circle",
   size = "sm",
   className,
@@ -30,6 +34,7 @@ export function LineBullet({
   ...props
 }: LineBulletProps) {
   const s = sizeMap[size]
+  const resolvedHoverColor = hoverColor ?? color
 
   return (
     <div
@@ -45,12 +50,17 @@ export function LineBullet({
           "flex items-center justify-center font-bold",
           "select-none overflow-hidden",
           "font-mta",
-          "cursor-pointer hover:opacity-80",
+          "cursor-pointer transition-colors duration-300 ease-out",
           shape === "circle" && "rounded-full",
           shape === "triangle" && "[clip-path:polygon(50%_0%,0%_100%,100%_100%)]",
+          "bg-[var(--line-bullet-bg)] text-[var(--line-bullet-fg)]",
+          "hover:bg-[var(--line-bullet-bg-hover)] hover:text-[var(--line-bullet-fg-hover)]",
         )}
         style={{
-          backgroundColor: color,
+          ["--line-bullet-bg" as string]: invertOnHover ? "#FFFFFF" : color,
+          ["--line-bullet-fg" as string]: invertOnHover ? "#000000" : textColor,
+          ["--line-bullet-bg-hover" as string]: invertOnHover ? resolvedHoverColor : color,
+          ["--line-bullet-fg-hover" as string]: invertOnHover ? "#FFFFFF" : textColor,
           minWidth: s.box,
           height: s.box,
           fontSize: s.text,
@@ -58,11 +68,9 @@ export function LineBullet({
           transform: shape === "diamond" ? "rotate(45deg) scale(0.707107)" : undefined,
         }}
         aria-label={`Route ${bullet}`}
-        title={`Route ${bullet}`}
       >
         <span
           style={{
-            color: textColor,
             lineHeight: "0",
             transform:
               shape === "diamond"

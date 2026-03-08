@@ -86,7 +86,12 @@ export default function CreditsPage() {
   return (
     <section className="px-7 pb-16 pt-8 sm:pb-20 sm:pt-8">
       <div className="mb-12 text-center">
-        <h1 className="text-4xl font-black tracking-tight sm:text-5xl">Credits</h1>
+        <div className="flex justify-center">
+          <h1 className="inline-flex items-center gap-4 text-4xl font-black tracking-tight sm:text-5xl">
+            <Users aria-hidden="true" className="size-[1.02em]" />
+            <span>Credits</span>
+          </h1>
+        </div>
         <p className="mt-3 text-lg text-muted-foreground">
           The people and contributors helping Subway Builder Modded move forward.
         </p>
@@ -100,3 +105,4 @@ export default function CreditsPage() {
     </section>
   )
 }
+

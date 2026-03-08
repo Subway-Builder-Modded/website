@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useTheme } from "next-themes"
+import { BookText } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
@@ -195,7 +196,12 @@ export function WikiHubPage() {
   return (
     <section className="px-7 pb-8 pt-8 sm:pb-8 sm:pt-8">
       <div className="mb-12 text-center">
-        <h1 className="text-4xl font-black tracking-tight sm:text-5xl">Wiki</h1>
+        <div className="flex justify-center">
+          <h1 className="inline-flex items-center gap-4 text-4xl font-black tracking-tight sm:text-5xl">
+            <BookText aria-hidden="true" className="size-[1.02em]" />
+            <span>Wiki</span>
+          </h1>
+        </div>
         <p className="mt-3 text-lg text-muted-foreground">
           Browse documentation for Subway Builder Modded projects.
         </p>
@@ -209,3 +215,4 @@ export function WikiHubPage() {
     </section>
   )
 }
+

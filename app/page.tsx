@@ -2,8 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useMemo, useRef, useState, useLayoutEffect, useCallback } from "react"
-import { useTheme } from "next-themes"
+import { useMemo, useRef, useState, useLayoutEffect, useCallback } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 
 import { Card, CardTitle } from "@/components/ui/card"
@@ -60,13 +59,7 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
 const SUBWAY_BARS = ["#0039A6", "#FF6319", "#00933C", "#FCCC0A", "#752F82"]
 
 export default function Page() {
-  const { resolvedTheme } = useTheme()
-  const heroSrc = resolvedTheme === "dark" ? "/images/home/dark.png" : "/images/home/light.png"
-
   const heroRef = useRef<HTMLElement | null>(null)
-
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
 
   const { scrollY } = useScroll()
 
@@ -88,23 +81,45 @@ export default function Page() {
     <main className="min-h-screen bg-background text-foreground font-sans">
       <section ref={heroRef} className="relative h-svh overflow-hidden">
         <motion.div className="absolute inset-0" style={{ scale: heroScale, y: heroY }} aria-hidden="true">
-          {mounted && <Image src={heroSrc} alt="Subway Builder Modded hero" fill priority className="object-cover" />}
+          <Image
+            src="/images/home/light.png"
+            alt="Subway Builder Modded hero"
+            fill
+            priority
+            className="object-cover dark:hidden"
+          />
+          <Image
+            src="/images/home/dark.png"
+            alt="Subway Builder Modded hero"
+            fill
+            priority
+            className="hidden object-cover dark:block"
+          />
         </motion.div>
 
         <div className="absolute inset-0 bg-white/12 dark:bg-black/45" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
 
-        <div className="relative z-10 flex h-full flex-col justify-end px-[clamp(1.5rem,4vw,3rem)] pb-[clamp(2rem,5vh,4rem)]">
-          <motion.div style={{ opacity: heroContentOpacity, x: heroContentX }} className="max-w-3xl">
-            <h1 className="text-balance text-5xl font-black sm:text-6xl lg:text-7xl">Subway Builder Modded</h1>
+        <div className="relative z-10 flex h-full items-end px-[clamp(1rem,4vw,3rem)] pb-[max(env(safe-area-inset-bottom),clamp(3rem,12svh,8rem))] pt-[clamp(1rem,3svh,2rem)]">
+          <motion.div
+            style={{ opacity: heroContentOpacity, x: heroContentX }}
+            className="w-full max-w-[min(92vw,40rem)]"
+          >
+            <h1 className="text-balance text-[clamp(2rem,min(7.4vw,8.5svh),5.2rem)] font-black leading-[0.92] tracking-[-0.03em]">
+              Subway Builder Modded
+            </h1>
 
-            <p className="mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            <p className="mt-[clamp(0.6rem,1.8svh,1rem)] max-w-[34rem] text-pretty text-[clamp(0.98rem,min(2.2vw,2.4svh),1.22rem)] leading-[1.45] text-muted-foreground">
               The complete hub for everything modded in Subway Builder.
             </p>
 
-            <div className="mt-6 flex items-center gap-2">
+            <div className="mt-[clamp(0.75rem,2svh,1.1rem)] flex flex-wrap items-center gap-2">
               {SUBWAY_BARS.map((c) => (
-                <span key={c} className="h-1.5 w-10 rounded-full" style={{ backgroundColor: c }} />
+                <span
+                  key={c}
+                  className="h-1.5 w-[clamp(1.9rem,4vw,2.5rem)] rounded-full"
+                  style={{ backgroundColor: c }}
+                />
               ))}
             </div>
           </motion.div>
