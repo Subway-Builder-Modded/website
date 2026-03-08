@@ -14,6 +14,7 @@ import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
 import { ArrowLeft, ExternalLink } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { UpdateSection } from "@/components/updates/update-section"
 import { useMDXComponents } from "@/mdx-components"
 import { getUpdateProjectById } from "@/lib/updates-config"
 import {
@@ -95,7 +96,9 @@ export default async function UpdatePage({
         ],
       },
     },
-    components: useMDXComponents(),
+    components: useMDXComponents({
+      UpdateSection: (props) => <UpdateSection {...props} themeId={project.id} />,
+    }),
   })
 
   const title      = frontmatter?.title ?? `${project.label} ${version}`

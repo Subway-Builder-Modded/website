@@ -176,7 +176,7 @@ function WikiHubCard({ instance, isDark }: { instance: WikiInstance; isDark: boo
 
 const WIKI_DESCRIPTIONS: Record<string, string> = {
   railyard:
-    "The official map distribution platform for Subway Builder. Browse and publish community-made custom maps.",
+    "The map and mod distribution platform for Subway Builder. Browse and publish community-made custom maps and mods.",
   "template-mod":
     "TypeScript template and framework documentation for building your own Subway Builder mods.",
   "creating-custom-maps":

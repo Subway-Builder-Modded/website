@@ -55,26 +55,22 @@ export type UpdateSectionType = "features" | "bugfixes" | "upgrades" | "other"
 
 export const UPDATE_SECTION_CONFIG: Record<
   UpdateSectionType,
-  { letter: string; label: string; bulletColor: string }
+  { letter: string; label: string }
 > = {
   features: {
     letter: "F",
-    label: "Features",
-    bulletColor: "#F97316",
+    label: "Features"
   },
   bugfixes: {
     letter: "B",
-    label: "Bugfixes",
-    bulletColor: "#EF4444",
+    label: "Bugfixes"
   },
   upgrades: {
     letter: "U",
-    label: "Upgrades / Changes",
-    bulletColor: "#22C55E",
+    label: "Upgrades / Changes"
   },
   other: {
     letter: "O",
-    label: "Other Notes",
-    bulletColor: "#6B7280",
+    label: "Other Notes"
   },
 }

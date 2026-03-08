@@ -25,7 +25,7 @@ import {
 import {
   BookText,
   Megaphone,
-  Trophy,
+  Users,
   TrainTrack,
   Download,
   Map,
@@ -79,7 +79,7 @@ export default function AppNavbar(props: NavbarProps) {
           </NavbarItem>
 
           <NavbarItem isCurrent={isActive("/credits")} href="/credits">
-            <Trophy data-slot="icon" className="size-5 md:size-4" />
+            <Users data-slot="icon" className="size-5 md:size-4" />
             Credits
           </NavbarItem>
 

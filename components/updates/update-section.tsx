@@ -1,38 +1,30 @@
 import * as React from "react"
-import { cn } from "@/lib/utils"
+
 import { LineBullet } from "@/components/ui/line-bullet"
+import { getLineBulletTheme } from "@/lib/line-bullet-theme"
 import { UPDATE_SECTION_CONFIG, type UpdateSectionType } from "@/lib/updates-config"
+import { cn } from "@/lib/utils"
 
 export interface UpdateSectionProps {
   type: UpdateSectionType
   children?: React.ReactNode
   className?: string
+  themeId?: string
 }
 
-/**
- * MDX component for structured changelog sections.
- *
- * Usage in a `.mdx` update file:
- * ```mdx
- * <UpdateSection type="features">
- * - Initial release
- * - Another new feature
- * </UpdateSection>
- * ```
- *
- * Supported `type` values: `features` | `bugfixes` | `upgrades` | `other`
- */
-export function UpdateSection({ type, children, className }: UpdateSectionProps) {
+export function UpdateSection({ type, children, className, themeId }: UpdateSectionProps) {
   const config = UPDATE_SECTION_CONFIG[type]
   if (!config) return null
+
+  const bulletTheme = getLineBulletTheme(themeId)
 
   return (
     <div className={cn("mb-8 last:mb-0", className)}>
       <div className="mb-3 flex items-center gap-2.5">
         <LineBullet
           bullet={config.letter}
-          color={config.bulletColor}
-          textColor="#ffffff"
+          color={bulletTheme.bulletColor}
+          textColor={bulletTheme.textColor}
           shape="circle"
           size="sm"
         />
@@ -41,7 +33,7 @@ export function UpdateSection({ type, children, className }: UpdateSectionProps)
         </h2>
         <div className="h-px flex-1 bg-border" />
       </div>
-      
+
       <div
         className={cn(
           "[&_ul]:my-0 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1.5",

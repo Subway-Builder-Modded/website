@@ -8,12 +8,12 @@ import { motion, useScroll, useTransform } from "motion/react"
 
 import { Card, CardTitle } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
+import { NON_THEMED_LINE_BULLET } from "@/lib/line-bullet-theme"
 import { cn } from "@/lib/utils"
 
 type HomeItem = {
   id: string
   letter: string
-  bullet: string
   title: string
   description: string
   href: string
@@ -23,7 +23,6 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
   {
     id: "directory",
     letter: "M",
-    bullet: "#9A662F",
     title: "Map Directory",
     description: "Browse community-made maps from cities around the world.",
     href: "/wiki/maps/map-directory",
@@ -31,7 +30,6 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
   {
     id: "install",
     letter: "I",
-    bullet: "#000000",
     title: "Installing Maps",
     description: "Step-by-step guide to installing custom maps using Kronifer's Map Patcher.",
     href: "/wiki/maps/map-installation-guide",
@@ -39,7 +37,6 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
   {
     id: "create",
     letter: "C",
-    bullet: "#0036A7",
     title: "Making Custom Maps",
     description: "The complete guide to creating, packaging, and distributing custom Subway Builder maps.",
     href: "/modding-docs/creating-maps/making-custom-maps",
@@ -47,7 +44,6 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
   {
     id: "updates",
     letter: "U",
-    bullet: "#0C493B",
     title: "Updates & Changelogs",
     description: "Stay up to date with new releases from the Subway Builder Modded Team.",
     href: "/updates",
@@ -55,7 +51,6 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
   {
     id: "modding",
     letter: "D",
-    bullet: "#FF6312",
     title: "Modding Documentation",
     description: "Build your own mods using our Mod Template.",
     href: "/modding-docs/template-mod/getting-started",
@@ -282,8 +277,8 @@ function HomepageCard({
                 >
                   <LineBullet
                     bullet={(item.letter || "").slice(0, 2).toUpperCase()}
-                    color={item.bullet}
-                    textColor={pickTextColor(item.bullet)}
+                    color={NON_THEMED_LINE_BULLET.bulletColor}
+                    textColor={NON_THEMED_LINE_BULLET.textColor}
                     shape="circle"
                     size="sm"
                   />
@@ -304,7 +299,7 @@ function HomepageCard({
 
                   <div
                     className="mt-3 h-[2px] w-16 rounded-full opacity-70"
-                    style={{ backgroundColor: item.bullet }}
+                    style={{ backgroundColor: NON_THEMED_LINE_BULLET.bulletColor }}
                   />
                 </div>
               </div>
@@ -320,21 +315,4 @@ function HomepageCard({
       </Card>
     </Link>
   )
-}
-
-function pickTextColor(hex: string) {
-  const rgb = hexToRgb(hex)
-  if (!rgb) return "#FFFFFF"
-  const luminance = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255
-  return luminance > 0.72 ? "#000000" : "#FFFFFF"
-}
-
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const raw = (hex || "").trim().replace("#", "")
-  if (raw.length !== 6) return null
-  const r = parseInt(raw.slice(0, 2), 16)
-  const g = parseInt(raw.slice(2, 4), 16)
-  const b = parseInt(raw.slice(4, 6), 16)
-  if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) return null
-  return { r, g, b }
 }
