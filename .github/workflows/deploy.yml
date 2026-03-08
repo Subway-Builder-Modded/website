@@ -35,5 +35,5 @@ jobs:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           publish_dir: ./out
           force_orphan: true
-          cname: railyardmods.com
+          cname: subwaybuildermodded.com
           
