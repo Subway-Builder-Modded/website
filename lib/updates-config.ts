@@ -51,7 +51,6 @@ export function getUpdateProjectById(id: string): UpdateProject | undefined {
 
 export type UpdateTag = "release" | "beta" | "alpha"
 
-/** Section types available in individual update MDX pages */
 export type UpdateSectionType = "features" | "bugfixes" | "upgrades" | "other"
 
 export const UPDATE_SECTION_CONFIG: Record<

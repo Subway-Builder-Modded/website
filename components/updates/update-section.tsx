@@ -41,11 +41,7 @@ export function UpdateSection({ type, children, className }: UpdateSectionProps)
         </h2>
         <div className="h-px flex-1 bg-border" />
       </div>
-
-      {/*
-        Children: typically a <ul> produced by MDX from list syntax.
-        Override the global MDX ul/li margins so they sit flush inside the section.
-      */}
+      
       <div
         className={cn(
           "[&_ul]:my-0 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1.5",

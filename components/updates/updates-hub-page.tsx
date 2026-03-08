@@ -6,8 +6,6 @@ import { Card } from "@/components/ui/card"
 import { UPDATE_PROJECTS, type UpdateProject } from "@/lib/updates-config"
 import { cn } from "@/lib/utils"
 
-// ── colour helpers (identical to wiki-hub-page.tsx) ─────────────────────────
-
 function hexToRgb(hex: string) {
   const h = hex.replace("#", "")
   return {
@@ -37,8 +35,6 @@ function getColors(project: UpdateProject, isDark: boolean) {
   return { cardBg, cardText, bulletBg, bulletText, borderColor }
 }
 
-// ── image placeholder (same as wiki) ────────────────────────────────────────
-
 function UpdateCardImagePlaceholder({
   project,
   borderColor,
@@ -63,8 +59,6 @@ function UpdateCardImagePlaceholder({
   )
 }
 
-// ── individual hub card ──────────────────────────────────────────────────────
-
 function UpdateHubCard({
   project,
   isDark,
@@ -86,10 +80,6 @@ function UpdateHubCard({
         style={{ backgroundColor: cardBg, borderColor }}
       >
         <div className="flex h-full flex-col px-6 pb-5 pt-4">
-          {/*
-            Title banner — spans the full card width with rounded-2xl pill,
-            mirrors the LineBullet font and colour treatment from the wiki hub.
-          */}
           <div className="mb-4">
             <div
               className="flex min-h-10 w-full items-center justify-center rounded-2xl px-4 py-2 font-mta text-xl font-bold"
@@ -99,7 +89,6 @@ function UpdateHubCard({
             </div>
           </div>
 
-          {/* Image placeholder */}
           <div className="mb-4">
             <UpdateCardImagePlaceholder
               project={project}
@@ -108,7 +97,6 @@ function UpdateHubCard({
             />
           </div>
 
-          {/* Description */}
           <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: cardText }}>
             {project.description}
           </p>
@@ -117,8 +105,6 @@ function UpdateHubCard({
     </Link>
   )
 }
-
-// ── page ─────────────────────────────────────────────────────────────────────
 
 export function UpdatesHubPage() {
   const { resolvedTheme } = useTheme()

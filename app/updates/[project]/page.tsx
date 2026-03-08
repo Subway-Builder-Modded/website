@@ -62,8 +62,6 @@ function TagBadge({ kind }: { kind: UpdateTag | "latest" }) {
   )
 }
 
-// ── version card ─────────────────────────────────────────────────────────────
-
 function VersionCard({
   update,
   isLatest,
@@ -106,8 +104,6 @@ function VersionCard({
   )
 }
 
-// ── page ─────────────────────────────────────────────────────────────────────
-
 export default async function ProjectHubPage({
   params,
 }: {
@@ -147,7 +143,6 @@ export default async function ProjectHubPage({
         <p className="text-base text-muted-foreground">{project.description}</p>
       </div>
 
-      {/* Version list — max-w-4xl for wider cards across the viewport */}
       {updates.length === 0 ? (
         <p className="text-center text-muted-foreground">No updates published yet.</p>
       ) : (
