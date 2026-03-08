@@ -109,7 +109,7 @@ function UpdateHubCard({
           </div>
 
           {/* Description */}
-          <p className="text-sm leading-relaxed opacity-80" style={{ color: cardText }}>
+          <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: cardText }}>
             {project.description}
           </p>
         </div>

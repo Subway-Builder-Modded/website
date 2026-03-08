@@ -157,21 +157,32 @@ export default async function UpdatePage({
             <p className="text-sm text-muted-foreground">{date}</p>
           ) : null}
 
-          {tag === "beta" ? (
-            <Badge
-              className="border-0 font-semibold"
-              style={{ backgroundColor: "#F5CF46", color: "#000000" }}
-            >
-              beta
-            </Badge>
-          ) : (
-            <Badge
-              className="border-0 font-semibold"
-              style={{ backgroundColor: project.primaryHex, color: project.secondaryHex }}
-            >
-              release
-            </Badge>
-          )}
+          {{
+            release: (
+              <Badge
+                className="border-0 font-semibold"
+                style={{ backgroundColor: "#0969da", color: "#ffffff", height: "auto", padding: "0.2rem 0.65rem", fontSize: "0.8125rem", lineHeight: "1.4" }}
+              >
+                Release
+              </Badge>
+            ),
+            beta: (
+              <Badge
+                className="border-0 font-semibold"
+                style={{ backgroundColor: "#9a6700", color: "#ffffff", height: "auto", padding: "0.2rem 0.65rem", fontSize: "0.8125rem", lineHeight: "1.4" }}
+              >
+                Beta
+              </Badge>
+            ),
+            alpha: (
+              <Badge
+                className="border-0 font-semibold"
+                style={{ backgroundColor: "#cf222e", color: "#ffffff", height: "auto", padding: "0.2rem 0.65rem", fontSize: "0.8125rem", lineHeight: "1.4" }}
+              >
+                Alpha
+              </Badge>
+            ),
+          }[tag]}
         </div>
 
         {/* Separator */}
