@@ -30,14 +30,6 @@ export async function generateMetadata({
   }
 }
 
-// ── GitHub-style tag badge ────────────────────────────────────────────────────
-//
-// Colours from GitHub's Primer design system:
-//   Latest  → green  #1f883d  (GitHub "Latest release" chip)
-//   Release → blue   #0969da  (GitHub default/stable)
-//   Beta    → amber  #9a6700  (GitHub "Pre-release" chip)
-//   Alpha   → red    #cf222e  (GitHub danger/experimental)
-
 const TAG_COLORS: Record<UpdateTag | "latest", string> = {
   latest:  "#1f883d",
   release: "#0969da",
@@ -85,7 +77,6 @@ function VersionCard({
     <Link href={update.href} className="block outline-none">
       <Card
         className={cn(
-          // Stacks vertically on small screens, side-by-side on sm+
           "group flex flex-col gap-3 px-6 py-5",
           "sm:flex-row sm:items-start sm:justify-between sm:gap-6",
           "border border-border/60 bg-card/60",
@@ -96,7 +87,6 @@ function VersionCard({
         )}
         style={{ borderLeftColor: primaryHex, borderLeftWidth: "3px" }}
       >
-        {/* Left — title (large) + date, always left-aligned */}
         <div className="flex min-w-0 flex-col gap-1">
           <span className="text-xl font-bold leading-tight text-foreground">
             {update.title}
@@ -106,7 +96,6 @@ function VersionCard({
           ) : null}
         </div>
 
-        {/* Right — badges inline, right-aligned on sm+ */}
         <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
           {isLatest && <TagBadge kind="latest" />}
           <TagBadge kind={update.tag} />
@@ -132,7 +121,6 @@ export default async function ProjectHubPage({
 
   return (
     <section className="px-7 pb-8 pt-8">
-      {/* Back button */}
       <div className="mb-8">
         <Link
           href="/updates"
@@ -147,13 +135,11 @@ export default async function ProjectHubPage({
           Back
         </Link>
       </div>
-
-      {/* Header — coloured pill is the title; redundant h1 removed */}
-      <div className="mb-10 text-center">
+      <div className="mb-10 -mt-10 text-center">
         <div className="mx-auto mb-4 max-w-xs">
           <div
             className="flex min-h-10 w-full items-center justify-center rounded-2xl px-4 py-2 font-mta text-xl font-bold"
-            style={{ backgroundColor: project.midHex, color: "#E3E3E3" }}
+            style={{ backgroundColor: project.midHex, color: project.secondaryHex }}
           >
             {project.label}
           </div>

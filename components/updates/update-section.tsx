@@ -28,7 +28,6 @@ export function UpdateSection({ type, children, className }: UpdateSectionProps)
 
   return (
     <div className={cn("mb-8 last:mb-0", className)}>
-      {/* Section header: bullet · label · divider line */}
       <div className="mb-3 flex items-center gap-2.5">
         <LineBullet
           bullet={config.letter}

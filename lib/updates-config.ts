@@ -12,11 +12,8 @@ export type UpdateProject = {
   description: string
   basePath: string
   icon: LucideIcon
-  /** Vibrant/bright color — dark mode text, light mode background */
   primaryHex: string
-  /** Deep/dark color — dark mode background, light mode text */
   secondaryHex: string
-  /** Mid-range color for bullets */
   midHex: string
   accentClassName: string
 }
@@ -26,7 +23,7 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     id: "railyard",
     label: "Railyard",
     description:
-      "The official map distribution platform for Subway Builder. Browse and publish community-made custom maps.",
+      "The custom map and mod distribution platform for Subway Builder. Browse and publish community-made custom maps and mods.",
     basePath: "/updates/railyard",
     icon: TrainTrack,
     primaryHex: "#00D492",

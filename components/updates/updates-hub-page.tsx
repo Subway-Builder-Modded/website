@@ -135,7 +135,6 @@ export function UpdatesHubPage() {
         </p>
       </div>
 
-      {/* Same auto-fit grid as wiki hub rows */}
       <div className="grid items-stretch justify-center gap-7 [grid-template-columns:repeat(auto-fit,minmax(280px,340px))]">
         {UPDATE_PROJECTS.map((project) => (
           <UpdateHubCard key={project.id} project={project} isDark={isDark} />
