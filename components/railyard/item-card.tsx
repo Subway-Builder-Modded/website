@@ -1,0 +1,109 @@
+"use client"
+
+import Link from "next/link"
+import { Users, Package, MapPin } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { GalleryImage } from "@/components/railyard/gallery-image"
+import type { ModManifest, MapManifest } from "@/types/registry"
+
+interface ItemCardProps {
+  type: "mods" | "maps"
+  item: ModManifest | MapManifest
+}
+
+function isMapManifest(item: ModManifest | MapManifest): item is MapManifest {
+  return "city_code" in item
+}
+
+export function ItemCard({ type, item }: ItemCardProps) {
+  const isMap = isMapManifest(item)
+
+  return (
+    <Link href={`/railyard/${type}/${item.id}`} className="block h-full">
+      <article
+        className={cn(
+          "group relative bg-card border border-border rounded-lg overflow-hidden cursor-pointer transition-all duration-150 hover:border-foreground/20 hover:shadow-sm h-full flex flex-col"
+        )}
+      >
+        {/* Thumbnail */}
+        <div className="relative aspect-video overflow-hidden bg-muted shrink-0">
+          {/* Type pill */}
+          <div className="absolute top-2 left-2 z-10">
+            <span className="inline-flex items-center gap-1 bg-background/80 backdrop-blur-sm border border-border/50 text-foreground text-xs font-medium px-2 py-0.5 rounded-full">
+              {isMap ? (
+                <MapPin className="h-2.5 w-2.5" aria-hidden="true" />
+              ) : (
+                <Package className="h-2.5 w-2.5" aria-hidden="true" />
+              )}
+              {isMap ? "Map" : "Mod"}
+            </span>
+          </div>
+          <GalleryImage
+            type={type}
+            id={item.id}
+            imagePath={item.gallery?.[0]}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          />
+        </div>
+
+        {/* Card body */}
+        <div className="flex flex-col flex-1 p-4 gap-3">
+          {/* Title row */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-sm leading-snug text-foreground truncate">
+                {item.name}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                by {item.author}
+              </p>
+            </div>
+            {isMap && item.city_code && (
+              <div className="shrink-0 text-right">
+                <span className="block text-xs font-mono font-bold text-foreground leading-none">
+                  {item.city_code}
+                </span>
+                {item.country && (
+                  <span className="text-xs text-muted-foreground">{item.country}</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1">
+            {item.description}
+          </p>
+
+          {/* Footer: population + tags */}
+          <div className="flex items-end justify-between gap-2 mt-auto">
+            {isMap && (item.population ?? 0) > 0 ? (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+                <Users className="h-3 w-3" aria-hidden="true" />
+                <span>Pop. {(item.population as number).toLocaleString()}</span>
+              </div>
+            ) : (
+              <span />
+            )}
+
+            {item.tags && item.tags.length > 0 && (
+              <div className="flex flex-wrap justify-end gap-1">
+                {item.tags.slice(0, 3).map((tag) => (
+                  <Badge key={tag} variant="secondary" className="text-xs px-1.5 py-0 h-auto">
+                    {tag}
+                  </Badge>
+                ))}
+                {item.tags.length > 3 && (
+                  <Badge variant="outline" className="text-xs px-1.5 py-0 h-auto">
+                    +{item.tags.length - 3}
+                  </Badge>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </article>
+    </Link>
+  )
+}
