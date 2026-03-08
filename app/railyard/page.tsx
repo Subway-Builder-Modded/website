@@ -28,11 +28,13 @@ interface DownloadEntry {
 }
 
 const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
-  { os: "Windows", arch: "x64", label: "Windows Installer (x64)",  type: ".exe",      size: "—", link: "#", assetName: "windows-amd64-installer.exe" },
-  { os: "Windows", arch: "x64", label: "Windows Portable (x64)",   type: ".zip",      size: "—", link: "#", assetName: "windows-amd64-portable.zip" },
-  { os: "macOS",   arch: "universal", label: "macOS (Universal)",   type: ".dmg",      size: "—", link: "#", assetName: "macos-universal.dmg" },
-  { os: "macOS",   arch: "universal", label: "macOS Zip (Universal)", type: ".zip",    size: "—", link: "#", assetName: "macos-universal.zip" },
-  { os: "Linux",   arch: "x64", label: "Linux (x64)",              type: ".AppImage", size: "—", link: "#", assetName: "linux-amd64.AppImage" },
+  { os: "Windows", arch: "x64",       label: "Windows Installer (x64)",   type: ".exe",      size: "—", link: "#", assetName: "windows-amd64-installer.exe" },
+  { os: "Windows", arch: "x64",       label: "Windows Portable (x64)",    type: ".zip",      size: "—", link: "#", assetName: "windows-amd64-portable.zip" },
+  { os: "Windows", arch: "arm64",     label: "Windows Installer (ARM64)", type: ".exe",      size: "—", link: "#", assetName: "windows-arm64-installer.exe" },
+  { os: "Windows", arch: "arm64",     label: "Windows Portable (ARM64)",  type: ".zip",      size: "—", link: "#", assetName: "windows-arm64-portable.zip" },
+  { os: "macOS",   arch: "universal", label: "macOS (Universal)",         type: ".dmg",      size: "—", link: "#", assetName: "macos-universal.dmg" },
+  { os: "macOS",   arch: "universal", label: "macOS Zip (Universal)",     type: ".zip",      size: "—", link: "#", assetName: "macos-universal.zip" },
+  { os: "Linux",   arch: "x64",       label: "Linux (x64)",              type: ".AppImage", size: "—", link: "#", assetName: "linux-amd64.AppImage" },
 ]
 
 const RELEASE_API = "https://api.github.com/repos/Subway-Builder-Modded/Railyard/releases/latest"
