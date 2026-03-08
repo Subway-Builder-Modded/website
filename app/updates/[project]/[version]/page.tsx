@@ -50,13 +50,7 @@ export async function generateMetadata({
   }
 }
 
-function hexAlpha(hex: string, alpha: number) {
-  const h = hex.replace("#", "")
-  const r = parseInt(h.slice(0, 2), 16)
-  const g = parseInt(h.slice(2, 4), 16)
-  const b = parseInt(h.slice(4, 6), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
+// ── page ─────────────────────────────────────────────────────────────────────
 
 export default async function UpdatePage({
   params,
@@ -104,22 +98,21 @@ export default async function UpdatePage({
     components: useMDXComponents(),
   })
 
-  const title = frontmatter?.title ?? `${project.label} ${version}`
-  const date = frontmatter?.date
-  const tag = frontmatter?.tag ?? "release"
-  const githubUrl = frontmatter?.githubUrl
-
-  const borderColor = hexAlpha(project.primaryHex, 0.35)
+  const title      = frontmatter?.title ?? `${project.label} ${version}`
+  const date       = frontmatter?.date
+  const tag        = frontmatter?.tag ?? "release"
+  const githubUrl  = frontmatter?.githubUrl
 
   return (
-    <div className="px-7 pb-8 pt-8">
+    <section className="px-7 pb-8 pt-8">
       {/* Back button */}
-      <div className="mb-6">
+      <div className="mb-8">
         <Link
           href={project.basePath}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-2",
-            "text-sm font-semibold text-foreground transition-all duration-200",
+            "inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-1.5",
+            "text-sm font-semibold text-foreground",
+            "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
             "hover:-translate-y-0.5 hover:border-border hover:bg-card hover:shadow-sm",
           )}
         >
@@ -128,63 +121,67 @@ export default async function UpdatePage({
         </Link>
       </div>
 
-      {/* Header */}
-      <div className="mb-8 text-center">
-        {/* Colored title pill — optionally linked to GitHub */}
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <header className="mx-auto mb-8 max-w-2xl text-center">
+        {/*
+          Full-width title banner — mirrors the project hub card's title bar:
+          a coloured pill spanning the content area. Optionally links to GitHub.
+        */}
         {githubUrl ? (
           <a
             href={githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mb-4 inline-flex items-center gap-2 rounded-[20px] px-6 py-3 transition-transform duration-200 hover:scale-105"
-            style={{ backgroundColor: project.midHex }}
+            className={cn(
+              "mb-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-3",
+              "font-mta text-2xl font-bold sm:text-3xl",
+              "transition-transform duration-200 hover:scale-[1.02]",
+            )}
+            style={{ backgroundColor: project.midHex, color: "#E3E3E3" }}
           >
-            <span className="text-2xl font-bold sm:text-3xl" style={{ color: "#E3E3E3" }}>
-              {title}
-            </span>
-            <ExternalLink className="size-4 opacity-70" style={{ color: "#E3E3E3" }} />
+            <span>{title}</span>
+            <ExternalLink className="size-5 shrink-0 opacity-60" />
           </a>
         ) : (
           <div
-            className="mb-4 inline-flex items-center rounded-[20px] px-6 py-3"
-            style={{ backgroundColor: project.midHex }}
+            className="mb-5 flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold sm:text-3xl"
+            style={{ backgroundColor: project.midHex, color: "#E3E3E3" }}
           >
-            <span className="text-2xl font-bold sm:text-3xl" style={{ color: "#E3E3E3" }}>
-              {title}
-            </span>
+            {title}
           </div>
         )}
 
-        {/* Date + badges */}
-        <div className="mt-2 flex items-center justify-center gap-2">
+        {/* Date + tag badge row */}
+        <div className="flex items-center justify-center gap-3">
           {date ? (
-            <p className="text-base text-muted-foreground">{date}</p>
+            <p className="text-sm text-muted-foreground">{date}</p>
           ) : null}
+
           {tag === "beta" ? (
             <Badge
-              className="font-semibold"
-              style={{ backgroundColor: "#F5CF46", color: "#000000", border: "none" }}
+              className="border-0 font-semibold"
+              style={{ backgroundColor: "#F5CF46", color: "#000000" }}
             >
               beta
             </Badge>
           ) : (
             <Badge
-              className="font-semibold"
-              style={{ backgroundColor: project.primaryHex, color: project.secondaryHex, border: "none" }}
+              className="border-0 font-semibold"
+              style={{ backgroundColor: project.primaryHex, color: project.secondaryHex }}
             >
               release
             </Badge>
           )}
         </div>
 
-        {/* Divider */}
-        <hr className="mt-6 border-border" style={{ borderColor }} />
-      </div>
+        {/* Separator */}
+        <hr className="mt-6 border-border" />
+      </header>
 
-      {/* Changelog content */}
-      <article className="mx-auto max-w-2xl space-y-2">
+      {/* ── Changelog content ───────────────────────────────────────────────── */}
+      <article className="mx-auto max-w-2xl">
         {content}
       </article>
-    </div>
+    </section>
   )
 }

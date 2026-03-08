@@ -10,24 +10,26 @@ export interface UpdateSectionProps {
 }
 
 /**
- * MDX component for changelog section headings.
+ * MDX component for structured changelog sections.
  *
- * Usage in MDX:
+ * Usage in a `.mdx` update file:
  * ```mdx
  * <UpdateSection type="features">
  * - Initial release
- * - New feature added
+ * - Another new feature
  * </UpdateSection>
  * ```
+ *
+ * Supported `type` values: `features` | `bugfixes` | `upgrades` | `other`
  */
 export function UpdateSection({ type, children, className }: UpdateSectionProps) {
   const config = UPDATE_SECTION_CONFIG[type]
-
   if (!config) return null
 
   return (
-    <div className={cn("mb-8", className)}>
-      <div className="mb-3 flex items-center gap-3">
+    <div className={cn("mb-8 last:mb-0", className)}>
+      {/* Section header: bullet · label · divider line */}
+      <div className="mb-3 flex items-center gap-2.5">
         <LineBullet
           bullet={config.letter}
           color={config.bulletColor}
@@ -35,14 +37,23 @@ export function UpdateSection({ type, children, className }: UpdateSectionProps)
           shape="circle"
           size="sm"
         />
-        <h2 className="text-xl font-bold uppercase tracking-wide text-muted-foreground">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
           {config.label}
         </h2>
-        <div className="h-0.5 flex-1 rounded-full bg-muted-foreground/25" />
+        <div className="h-px flex-1 bg-border" />
       </div>
 
-      {/* Render children (typically a <ul> from MDX list items) */}
-      <div className="[&_ul]:my-0 [&_ul]:ml-6 [&_ul]:list-disc [&_li]:mt-1.5 [&_li]:leading-7">
+      {/*
+        Children: typically a <ul> produced by MDX from list syntax.
+        Override the global MDX ul/li margins so they sit flush inside the section.
+      */}
+      <div
+        className={cn(
+          "[&_ul]:my-0 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1.5",
+          "[&_li]:leading-7 [&_li]:text-foreground",
+          "[&_p]:my-0 [&_p]:leading-7",
+        )}
+      >
         {children}
       </div>
     </div>

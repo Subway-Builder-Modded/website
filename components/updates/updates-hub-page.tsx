@@ -3,9 +3,10 @@
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { Card } from "@/components/ui/card"
-import { LineBullet } from "@/components/ui/line-bullet"
 import { UPDATE_PROJECTS, type UpdateProject } from "@/lib/updates-config"
 import { cn } from "@/lib/utils"
+
+// ── colour helpers (identical to wiki-hub-page.tsx) ─────────────────────────
 
 function hexToRgb(hex: string) {
   const h = hex.replace("#", "")
@@ -21,17 +22,50 @@ function hexAlpha(hex: string, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
+/**
+ * Dark:  text = primaryHex (bright), bg = secondaryHex (deep)
+ * Light: text = secondaryHex (deep), bg = primaryHex (bright)
+ * mid stays constant – used for the title banner background
+ */
 function getColors(project: UpdateProject, isDark: boolean) {
-  const cardBg = isDark ? project.secondaryHex : project.primaryHex
-  const cardText = isDark ? project.primaryHex : project.secondaryHex
-  const bulletBg = project.midHex
+  const cardBg    = isDark ? project.secondaryHex : project.primaryHex
+  const cardText  = isDark ? project.primaryHex   : project.secondaryHex
+  const bulletBg  = project.midHex
   const bulletText = isDark ? project.secondaryHex : project.primaryHex
   const borderColor = hexAlpha(cardText, 0.3)
 
   return { cardBg, cardText, bulletBg, bulletText, borderColor }
 }
 
-function UpdateProjectCard({
+// ── image placeholder (same as wiki) ────────────────────────────────────────
+
+function UpdateCardImagePlaceholder({
+  project,
+  borderColor,
+  iconColor,
+}: {
+  project: UpdateProject
+  borderColor: string
+  iconColor: string
+}) {
+  const Icon = project.icon
+
+  return (
+    <div
+      className="relative flex w-full aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border-2 bg-black/5 dark:bg-white/5"
+      style={{ borderColor }}
+    >
+      <Icon className="size-8 opacity-40" style={{ color: iconColor }} />
+      <span className="text-xs font-medium opacity-30" style={{ color: iconColor }}>
+        Preview coming soon
+      </span>
+    </div>
+  )
+}
+
+// ── individual hub card ──────────────────────────────────────────────────────
+
+function UpdateHubCard({
   project,
   isDark,
 }: {
@@ -39,7 +73,6 @@ function UpdateProjectCard({
   isDark: boolean
 }) {
   const { cardBg, cardText, bulletBg, bulletText, borderColor } = getColors(project, isDark)
-  const Icon = project.icon
 
   return (
     <Link href={project.basePath} className="block h-full outline-none">
@@ -52,37 +85,31 @@ function UpdateProjectCard({
         )}
         style={{ backgroundColor: cardBg, borderColor }}
       >
-        <div className="flex h-full flex-col px-6 pb-8 pt-6">
-          {/* Header with bullet + title */}
-          <div className="mb-5 flex items-center gap-3">
-            <LineBullet
-              bullet={project.label}
-              color={bulletBg}
-              textColor={bulletText}
-              shape="circle"
-              size="md"
+        <div className="flex h-full flex-col px-6 pb-5 pt-4">
+          {/*
+            Title banner — spans the full card width with rounded-2xl pill,
+            mirrors the LineBullet font and colour treatment from the wiki hub.
+          */}
+          <div className="mb-4">
+            <div
+              className="flex min-h-10 w-full items-center justify-center rounded-2xl px-4 py-2 font-mta text-xl font-bold"
+              style={{ backgroundColor: bulletBg, color: bulletText }}
+            >
+              {project.label}
+            </div>
+          </div>
+
+          {/* Image placeholder */}
+          <div className="mb-4">
+            <UpdateCardImagePlaceholder
+              project={project}
+              borderColor={cardText}
+              iconColor={cardText}
             />
           </div>
 
-          {/* Icon placeholder area */}
-          <div
-            className="relative mb-5 flex aspect-video w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border-2 bg-black/5"
-            style={{ borderColor: hexAlpha(cardText, 0.2) }}
-          >
-            <Icon className="size-10 opacity-35" style={{ color: cardText }} />
-            <span
-              className="text-sm font-medium opacity-25"
-              style={{ color: cardText }}
-            >
-              {project.label}
-            </span>
-          </div>
-
           {/* Description */}
-          <p
-            className="text-sm leading-relaxed opacity-80"
-            style={{ color: cardText }}
-          >
+          <p className="text-sm leading-relaxed opacity-80" style={{ color: cardText }}>
             {project.description}
           </p>
         </div>
@@ -91,12 +118,14 @@ function UpdateProjectCard({
   )
 }
 
+// ── page ─────────────────────────────────────────────────────────────────────
+
 export function UpdatesHubPage() {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme !== "light"
 
   return (
-    <section className="px-7 pb-8 pt-8">
+    <section className="px-7 pb-8 pt-8 sm:pb-8 sm:pt-8">
       <div className="mb-12 text-center">
         <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
           Updates &amp; Changelogs
@@ -106,9 +135,10 @@ export function UpdatesHubPage() {
         </p>
       </div>
 
-      <div className="mx-auto grid max-w-4xl grid-cols-1 gap-7 sm:grid-cols-2">
+      {/* Same auto-fit grid as wiki hub rows */}
+      <div className="grid items-stretch justify-center gap-7 [grid-template-columns:repeat(auto-fit,minmax(280px,340px))]">
         {UPDATE_PROJECTS.map((project) => (
-          <UpdateProjectCard key={project.id} project={project} isDark={isDark} />
+          <UpdateHubCard key={project.id} project={project} isDark={isDark} />
         ))}
       </div>
     </section>
