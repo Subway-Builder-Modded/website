@@ -60,6 +60,8 @@ function slugify(text: string) {
     .replace(/-+/g, "-")
 }
 
+const CUSTOM_HEADING_ID_PATTERN = /\s*\{#([^\s}]+)\}\s*$/
+
 function getInstanceContentDir(instance: WikiInstance, version: string | null) {
   return instance.versioned
     ? path.join(CONTENT_ROOT, instance.id, version ?? "")
@@ -120,16 +122,24 @@ export async function extractTocHeadings(filePath: string): Promise<WikiTocHeadi
   const source = await readSource(filePath)
   const lines = source.split("\n")
   const headings: WikiTocHeading[] = []
+  let inCodeFence = false
 
   for (const line of lines) {
+    if (line.trimStart().startsWith("```")) {
+      inCodeFence = !inCodeFence
+      continue
+    }
+
+    if (inCodeFence) continue
+
     const match = /^(#{2,4})\s+(.*)$/.exec(line.trim())
     if (!match) continue
 
     const level = match[1].length
     const rawText = match[2].trim()
-    const customIdMatch = rawText.match(/\s*\{#([A-Za-z0-9\-_]+)\}\s*$/)
+    const customIdMatch = rawText.match(CUSTOM_HEADING_ID_PATTERN)
 
-    const text = rawText.replace(/\s*\{#([A-Za-z0-9\-_]+)\}\s*$/, "").trim()
+    const text = rawText.replace(CUSTOM_HEADING_ID_PATTERN, "").trim()
     const id = customIdMatch ? customIdMatch[1] : slugify(text)
 
     headings.push({
@@ -437,3 +447,4 @@ export async function getAllWikiDocSlugs(): Promise<string[][]> {
 
   return allSlugs
 }
+

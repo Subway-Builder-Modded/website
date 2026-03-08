@@ -165,7 +165,7 @@ function WikiHubCard({ instance, isDark }: { instance: WikiInstance; isDark: boo
             />
           </div>
 
-          <p className="text-sm leading-relaxed opacity-80" style={{ color: cardText }}>
+          <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: cardText }}>
             {WIKI_DESCRIPTIONS[instance.id]}
           </p>
         </div>

@@ -24,9 +24,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen pt-14">
+          <div className="flex min-h-screen flex-col pt-14">
             <AppNavbar />
-            <main>{children}</main>
+            <main className="flex-1">{children}</main>
             <footer id="site-footer" className="border-t border-border/50 bg-background backdrop-blur-sm">
               <div className="mx-auto flex items-center justify-center">
                 <FooterBars />

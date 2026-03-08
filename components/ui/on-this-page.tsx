@@ -12,12 +12,41 @@ export type TocHeading = {
   level: number
 }
 
+const ACTIVE_HEADING_TOP_OFFSET = 100
+
 const INSTANCE_INDICATOR_BG_CLASS: Record<WikiInstance["id"], string> = {
   railyard: "bg-emerald-400",
   "template-mod": "bg-violet-400",
   "creating-custom-maps": "bg-blue-400",
   contributing: "bg-amber-400",
   legacy: "bg-rose-400",
+}
+
+function getActiveHeadingId(elements: HTMLElement[]) {
+  const viewportHeight = window.innerHeight
+  const visibleHeadings = elements
+    .map((element) => ({ element, rect: element.getBoundingClientRect() }))
+    .filter(
+      ({ rect }) =>
+        rect.bottom > ACTIVE_HEADING_TOP_OFFSET && rect.top < viewportHeight
+    )
+
+  if (visibleHeadings.length > 0) {
+    const topmostVisibleHeading = visibleHeadings.reduce((current, next) =>
+      next.rect.top < current.rect.top ? next : current
+    )
+
+    return topmostVisibleHeading.element.id
+  }
+
+  const lastHeadingAboveOffset = [...elements]
+    .reverse()
+    .find(
+      (element) =>
+        element.getBoundingClientRect().top <= ACTIVE_HEADING_TOP_OFFSET
+    )
+
+  return lastHeadingAboveOffset?.id ?? elements[0]?.id ?? ""
 }
 
 export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
@@ -35,27 +64,28 @@ export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
 
     if (!elements.length) return
 
+    let rafId: number | null = null
+
     function update() {
-      let current = ""
-      for (const el of elements) {
-        const rect = el.getBoundingClientRect()
-        if (rect.top <= 100) {
-          current = el.id
-        } else {
-          break
-        }
-      }
+      if (rafId !== null) return
 
-      if (!current && elements[0]) {
-        current = elements[0].id
-      }
-
-      setActiveId(current)
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null
+        setActiveId(getActiveHeadingId(elements))
+      })
     }
 
     update()
     window.addEventListener("scroll", update, { passive: true })
-    return () => window.removeEventListener("scroll", update)
+    window.addEventListener("resize", update)
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId)
+      }
+
+      window.removeEventListener("scroll", update)
+      window.removeEventListener("resize", update)
+    }
   }, [headings])
 
   if (!headings.length) return null

@@ -41,7 +41,7 @@ export default async function WikiCatchAllLayout({
       <SidebarProvider defaultOpen className="w-full">
         <AppWikiSidebar tree={tree} versionDocSlugs={versionDocSlugs} />
         <SidebarInset className="min-w-0 flex-1 md:ml-0">
-          <div className="w-full px-5 py-6 md:px-8 md:py-6 xl:pr-6 2xl:pr-4">
+          <div className="w-full px-5 pt-6 pb-16 md:px-8 md:pt-6 md:pb-16 xl:pr-6 2xl:pr-4">
             {children}
           </div>
         </SidebarInset>
