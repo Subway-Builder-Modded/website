@@ -27,8 +27,8 @@ export function ThemeToggleMenu({ className }: { className: string }) {
   const { theme, resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
   const [open, setOpen] = React.useState(false)
-  const transitionTimeoutRef = React.useRef<ReturnType<typeof window.setTimeout> | null>(null)
-  const hoverCloseTimeoutRef = React.useRef<ReturnType<typeof window.setTimeout> | null>(null)
+  const transitionTimeoutRef = React.useRef<number | null>(null)
+  const hoverCloseTimeoutRef = React.useRef<number | null>(null)
   const isTriggerHoveredRef = React.useRef(false)
   const isContentHoveredRef = React.useRef(false)
   const isSwitchingThemeRef = React.useRef(false)
@@ -212,5 +212,6 @@ export function ThemeToggleMenu({ className }: { className: string }) {
     </DropdownMenu>
   )
 }
+
 
 
