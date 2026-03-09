@@ -37,6 +37,19 @@ export const CREDIT_SECTIONS: CreditSection[] = [
     ],
   },
   {
+    id: "former-maintainers",
+    title: "Former Maintainers",
+    description: "Former maintainers of the various Subway Builder Modded tools and apps.",
+    icon: "maintainers",
+    people: [
+      {
+        name: "IMB11",
+        role: "Initial creator of the Template Mod and Railyard and contributor to the Subway Builder Modded website.",
+        link: "https://github.com/IMB11",
+      },
+    ],
+  },
+  {
     id: "contributors",
     title: "Contributors",
     description: "Contributors to the Subway Builder Modded projects.",
@@ -46,11 +59,6 @@ export const CREDIT_SECTIONS: CreditSection[] = [
         name: "rslurry",
         role: "Contributor/tester of Railyard and maintainer of the Demand Data Generator.",
         link: "https://github.com/rslurry",
-      },
-      {
-        name: "IMB11",
-        role: "Initial creator of the Template Mod and Railyard and contributor to the Subway Builder Modded website.",
-        link: "https://github.com/IMB11",
       },
     ],
   },
