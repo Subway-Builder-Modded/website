@@ -29,20 +29,19 @@ export function ThemeToggleMenu({ className }: { className: string }) {
   const [open, setOpen] = React.useState(false)
   const transitionTimeoutRef = React.useRef<number | null>(null)
   const hoverCloseTimeoutRef = React.useRef<number | null>(null)
+  const closeLockTimeoutRef = React.useRef<number | null>(null)
   const isTriggerHoveredRef = React.useRef(false)
   const isContentHoveredRef = React.useRef(false)
   const isSwitchingThemeRef = React.useRef(false)
+  const isClosingMenuRef = React.useRef(false)
 
   React.useEffect(() => {
     setMounted(true)
 
     return () => {
-      if (transitionTimeoutRef.current) {
-        window.clearTimeout(transitionTimeoutRef.current)
-      }
-      if (hoverCloseTimeoutRef.current) {
-        window.clearTimeout(hoverCloseTimeoutRef.current)
-      }
+      if (transitionTimeoutRef.current) window.clearTimeout(transitionTimeoutRef.current)
+      if (hoverCloseTimeoutRef.current) window.clearTimeout(hoverCloseTimeoutRef.current)
+      if (closeLockTimeoutRef.current) window.clearTimeout(closeLockTimeoutRef.current)
 
       const root = document.documentElement
       root.classList.remove("theme-transitioning", "theme-switching-menu", "theme-switching-menu-lock")
@@ -86,20 +85,40 @@ export function ThemeToggleMenu({ className }: { className: string }) {
     }
   }, [])
 
+  const clearCloseLock = React.useCallback(() => {
+    if (closeLockTimeoutRef.current) {
+      window.clearTimeout(closeLockTimeoutRef.current)
+      closeLockTimeoutRef.current = null
+    }
+    isClosingMenuRef.current = false
+  }, [])
+
+  const beginCloseLock = React.useCallback(() => {
+    clearCloseLock()
+    isClosingMenuRef.current = true
+    closeLockTimeoutRef.current = window.setTimeout(() => {
+      isClosingMenuRef.current = false
+      closeLockTimeoutRef.current = null
+    }, 220)
+  }, [clearCloseLock])
+
   const scheduleHoverClose = React.useCallback(() => {
     clearHoverClose()
     hoverCloseTimeoutRef.current = window.setTimeout(() => {
       if (!isTriggerHoveredRef.current && !isContentHoveredRef.current) {
+        beginCloseLock()
         setOpen(false)
       }
       hoverCloseTimeoutRef.current = null
     }, 120)
-  }, [clearHoverClose])
+  }, [beginCloseLock, clearHoverClose])
 
   const openMenu = React.useCallback(() => {
+    if (isClosingMenuRef.current) return
     clearHoverClose()
+    clearCloseLock()
     setOpen(true)
-  }, [clearHoverClose])
+  }, [clearCloseLock, clearHoverClose])
 
   const handleThemeChange = React.useCallback(
     (nextTheme: ThemeValue) => {
@@ -131,6 +150,7 @@ export function ThemeToggleMenu({ className }: { className: string }) {
       root.classList.add("theme-switching-menu")
 
       if (typeof doc.startViewTransition === "function") {
+        beginCloseLock()
         setOpen(false)
         const transition = doc.startViewTransition(applyTheme)
         transition.finished.finally(endSwitch)
@@ -138,19 +158,21 @@ export function ThemeToggleMenu({ className }: { className: string }) {
       }
 
       root.classList.add("theme-transitioning")
+      beginCloseLock()
       setOpen(false)
       applyTheme()
       transitionTimeoutRef.current = window.setTimeout(endSwitch, 220)
     },
-    [currentTheme, endSwitch, lockMenuColors, resolvedTheme, setTheme],
+    [beginCloseLock, currentTheme, endSwitch, lockMenuColors, resolvedTheme, setTheme],
   )
 
   const handleOpenChange = React.useCallback((nextOpen: boolean) => {
-    if (!nextOpen && (isTriggerHoveredRef.current || isContentHoveredRef.current)) {
-      return
-    }
+    if (nextOpen && isClosingMenuRef.current) return
+    if (!nextOpen && (isTriggerHoveredRef.current || isContentHoveredRef.current)) return
+    if (!nextOpen) beginCloseLock()
+    if (nextOpen) clearCloseLock()
     setOpen(nextOpen)
-  }, [])
+  }, [beginCloseLock, clearCloseLock])
 
   return (
     <DropdownMenu open={open} onOpenChange={handleOpenChange} modal={false}>
@@ -212,6 +234,3 @@ export function ThemeToggleMenu({ className }: { className: string }) {
     </DropdownMenu>
   )
 }
-
-
-

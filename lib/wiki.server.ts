@@ -90,7 +90,7 @@ async function readFrontmatter(filePath: string) {
           [
             rehypePrettyCode,
             {
-              theme: "github-dark",
+              theme: { dark: "github-dark", light: "github-light" },
               keepBackground: false,
             },
           ],

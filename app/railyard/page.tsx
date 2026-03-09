@@ -73,6 +73,42 @@ function detectPlatform(): { os: DownloadEntry["os"]; arch: DownloadEntry["arch"
   return { os: "Windows", arch: isArm ? "arm64" : "x64" }
 }
 
+async function detectPlatformWithHints() {
+  const fallback = detectPlatform()
+  if (typeof navigator === "undefined") return fallback
+
+  const navWithUAData = navigator as Navigator & {
+    userAgentData?: {
+      platform?: string
+      architecture?: string
+      getHighEntropyValues?: (hints: string[]) => Promise<{ architecture?: string; platform?: string }>
+    }
+  }
+
+  const uaData = navWithUAData.userAgentData
+  if (!uaData) return fallback
+
+  try {
+    const highEntropy = uaData.getHighEntropyValues
+      ? await uaData.getHighEntropyValues(["architecture", "platform"])
+      : undefined
+
+    const platform = (highEntropy?.platform ?? uaData.platform ?? "").toLowerCase()
+    const architecture = (highEntropy?.architecture ?? uaData.architecture ?? "").toLowerCase()
+    const isArm = /arm|aarch64/.test(architecture)
+
+    if (platform.includes("mac")) return { os: "macOS", arch: "universal" as const }
+    if (platform.includes("linux")) return { os: "Linux", arch: "x64" as const }
+    if (platform.includes("win") || fallback.os === "Windows") {
+      return { os: "Windows", arch: isArm ? "arm64" : fallback.arch }
+    }
+  } catch {
+    return fallback
+  }
+
+  return fallback
+}
+
 function pickNativeDownload(downloads: DownloadEntry[]): DownloadEntry {
   const platform = detectPlatform()
   return downloads.find((d) => d.os === platform.os && d.arch === platform.arch)
@@ -167,7 +203,9 @@ export default function RailyardPage() {
 
   useEffect(() => {
     setHasMounted(true)
-    setSelectedOS(detectPlatform().os)
+    void detectPlatformWithHints().then((platform) => {
+      setSelectedOS(platform.os)
+    })
 
     // Fetch latest release assets from GitHub
     fetch(RELEASE_API)

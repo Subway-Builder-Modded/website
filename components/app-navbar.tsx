@@ -85,7 +85,7 @@ export default function AppNavbar(props: NavbarProps) {
           </NavbarItem>
 
           <div className="relative">
-            <NavigationMenu viewport={false} className="max-w-none flex-none">
+            <NavigationMenu viewport={false} className="relative z-20 max-w-none flex-none">
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
@@ -135,7 +135,7 @@ export default function AppNavbar(props: NavbarProps) {
               </NavigationMenuList>
             </NavigationMenu>
             {isActive("/railyard") && (
-              <span className="absolute left-2 right-2 -bottom-[calc(var(--navbar-gutter)+1px)] h-(--gutter) rounded-full bg-primary [--gutter:--spacing(0.5)]" />
+              <span className="absolute left-2 right-2 z-0 -bottom-[calc(var(--navbar-gutter)+1px)] h-(--gutter) rounded-full bg-primary [--gutter:--spacing(0.5)]" />
             )}
           </div>
         </NavbarSection>

@@ -53,7 +53,7 @@ async function readFrontmatter(filePath: string): Promise<UpdateFrontmatter | un
             remarkAdmonitionDirectives,
           ],
           rehypePlugins: [
-            [rehypePrettyCode, { theme: "github-dark", keepBackground: false }],
+            [rehypePrettyCode, { theme: { dark: "github-dark", light: "github-light" }, keepBackground: false }],
             [rehypeExternalLinks, { target: "_blank", rel: ["nofollow", "noopener", "noreferrer"] }],
             [rehypeAutolinkHeadings, { behavior: "append" }],
           ],

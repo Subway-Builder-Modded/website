@@ -8,6 +8,13 @@ import AppFooter from "@/components/app-footer"
 export const metadata: Metadata = {
   title: "Subway Builder Modded",
   description: "The complete hub for everything modded in Subway Builder.",
+  openGraph: {
+    images: [{ url: "/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/logo.png"],
+  },
 }
 
 export default function RootLayout({

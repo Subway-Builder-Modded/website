@@ -6,7 +6,7 @@ type ReleaseTagKind = UpdateTag | "latest"
 const TAG_STYLE: Record<ReleaseTagKind, { label: string; color: string }> = {
   latest: { label: "Latest", color: "#3fb950" },
   release: { label: "Release", color: "#2f81f7" },
-  beta: { label: "Pre-release", color: "#d29922" },
+  beta: { label: "Beta", color: "#d29922" },
   alpha: { label: "Alpha", color: "#f85149" },
 }
 
