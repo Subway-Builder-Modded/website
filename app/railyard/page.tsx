@@ -35,7 +35,7 @@ const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
   { os: "Linux",   arch: "x64",       label: "Linux (x64)",                 type: ".AppImage", size: "—", link: "#", assetName: "linux-amd64.AppImage" },
 ]
 
-const RELEASE_API = "https://api.github.com/repos/Subway-Builder-Modded/Railyard/releases/latest"
+const RELEASE_API = "https://api.github.com/repos/subway-builder-modded/railyard/releases/latest"
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "—"
