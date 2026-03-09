@@ -233,6 +233,17 @@ h6:hover .heading-anchor,
   color: var(--primary);
 }
 
+/* Rehype Pretty Code token colors for both themes */
+[data-rehype-pretty-code-figure] code,
+[data-rehype-pretty-code-figure] [data-line] span {
+  color: var(--shiki-light);
+}
+
+.dark [data-rehype-pretty-code-figure] code,
+.dark [data-rehype-pretty-code-figure] [data-line] span {
+  color: var(--shiki-dark);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

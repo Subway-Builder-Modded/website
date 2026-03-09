@@ -5,9 +5,31 @@ import AppNavbar from "@/components/app-navbar"
 import { FooterBars } from "@/components/ui/footer-bars"
 import AppFooter from "@/components/app-footer"
 
+function resolveMetadataBase() {
+  const fallbackSiteUrl = "https://subwaybuildermodded.com"
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const siteUrl = configuredSiteUrl && configuredSiteUrl.trim().length > 0
+    ? configuredSiteUrl
+    : fallbackSiteUrl
+
+  try {
+    return new URL(siteUrl)
+  } catch {
+    return new URL(fallbackSiteUrl)
+  }
+}
+
 export const metadata: Metadata = {
+  metadataBase: resolveMetadataBase(),
   title: "Subway Builder Modded",
   description: "The complete hub for everything modded in Subway Builder.",
+  openGraph: {
+    images: [{ url: "/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/logo.png"],
+  },
 }
 
 export default function RootLayout({

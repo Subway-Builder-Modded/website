@@ -161,7 +161,7 @@ export default async function WikiPage({
           [
             rehypePrettyCode,
             {
-              theme: "github-dark",
+              theme: { dark: "github-dark", light: "github-light-high-contrast" },
               keepBackground: false,
             },
           ],

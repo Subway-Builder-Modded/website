@@ -25,6 +25,11 @@ interface DownloadEntry {
   assetName: string
 }
 
+type PlatformInfo = {
+  os: DownloadEntry["os"]
+  arch: DownloadEntry["arch"]
+}
+
 const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
   { os: "Windows", arch: "x64",       label: "Windows (x64) - Installer (beta)",   type: ".exe",      size: "—", link: "#", assetName: "windows-amd64-installer.exe" },
   { os: "Windows", arch: "x64",       label: "Windows (x64) - Portable (beta)",    type: ".zip",      size: "—", link: "#", assetName: "windows-amd64-portable.zip" },
@@ -61,7 +66,7 @@ function getDownloadCatalog(downloads: DownloadEntry[]) {
   return Array.from(byOS.entries()).map(([os, items]) => ({ os, downloads: items }))
 }
 
-function detectPlatform(): { os: DownloadEntry["os"]; arch: DownloadEntry["arch"] } {
+function detectPlatform(): PlatformInfo {
   if (typeof navigator === "undefined") return { os: "Windows", arch: "x64" }
 
   const ua = navigator.userAgent.toLowerCase()
@@ -73,8 +78,43 @@ function detectPlatform(): { os: DownloadEntry["os"]; arch: DownloadEntry["arch"
   return { os: "Windows", arch: isArm ? "arm64" : "x64" }
 }
 
-function pickNativeDownload(downloads: DownloadEntry[]): DownloadEntry {
-  const platform = detectPlatform()
+async function detectPlatformWithHints() {
+  const fallback = detectPlatform()
+  if (typeof navigator === "undefined") return fallback
+
+  const navWithUAData = navigator as Navigator & {
+    userAgentData?: {
+      platform?: string
+      architecture?: string
+      getHighEntropyValues?: (hints: string[]) => Promise<{ architecture?: string; platform?: string }>
+    }
+  }
+
+  const uaData = navWithUAData.userAgentData
+  if (!uaData) return fallback
+
+  try {
+    const highEntropy = uaData.getHighEntropyValues
+      ? await uaData.getHighEntropyValues(["architecture", "platform"])
+      : undefined
+
+    const platform = (highEntropy?.platform ?? uaData.platform ?? "").toLowerCase()
+    const architecture = (highEntropy?.architecture ?? uaData.architecture ?? "").toLowerCase()
+    const isArm = /arm|aarch64/.test(architecture)
+
+    if (platform.includes("mac")) return { os: "macOS", arch: "universal" as const }
+    if (platform.includes("linux")) return { os: "Linux", arch: "x64" as const }
+    if (platform.includes("win") || fallback.os === "Windows") {
+      return { os: "Windows", arch: isArm ? "arm64" : fallback.arch }
+    }
+  } catch {
+    return fallback
+  }
+
+  return fallback
+}
+
+function pickNativeDownload(downloads: DownloadEntry[], platform: PlatformInfo): DownloadEntry {
   return downloads.find((d) => d.os === platform.os && d.arch === platform.arch)
     ?? downloads.find((d) => d.os === platform.os)
     ?? downloads[0]
@@ -155,19 +195,25 @@ export default function RailyardPage() {
   const [modCount, setModCount] = useState<number | null>(null)
   const [activeFeature, setActiveFeature] = useState(FEATURES[0].id)
   const [activeStop, setActiveStop] = useState(WORKFLOW_STOPS[0].id)
+  const [detectedPlatform, setDetectedPlatform] = useState<PlatformInfo>(() => detectPlatform())
   const [selectedOS, setSelectedOS] = useState("Windows")
   const [hasMounted, setHasMounted] = useState(false)
 
   const nativeDownload = useMemo(() => {
     if (!hasMounted) return downloads[0]
-    return pickNativeDownload(downloads)
-  }, [downloads, hasMounted])
+    return pickNativeDownload(downloads, detectedPlatform)
+  }, [detectedPlatform, downloads, hasMounted])
   const downloadCatalog = useMemo(() => getDownloadCatalog(downloads), [downloads])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let isMounted = true
     setHasMounted(true)
-    setSelectedOS(detectPlatform().os)
+    void detectPlatformWithHints().then((platform) => {
+      if (!isMounted) return
+      setDetectedPlatform(platform)
+      setSelectedOS(platform.os)
+    })
 
     // Fetch latest release assets from GitHub
     fetch(RELEASE_API)
@@ -196,7 +242,10 @@ export default function RailyardPage() {
       }
     }
     document.addEventListener("mousedown", closeMenu)
-    return () => document.removeEventListener("mousedown", closeMenu)
+    return () => {
+      isMounted = false
+      document.removeEventListener("mousedown", closeMenu)
+    }
   }, [])
 
   const selectedDownloads = useMemo(

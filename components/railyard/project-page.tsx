@@ -311,8 +311,8 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
                     </span>
                     {version.prerelease && (
                       <Badge
-                        variant="outline"
-                        className="ml-2 text-xs px-1.5 py-0 h-auto"
+                        className="ml-2 shrink-0 rounded-full border bg-transparent font-medium tracking-normal text-xs h-auto px-1.5 py-0"
+                        style={{ borderColor: "#d29922", color: "#d29922" }}
                       >
                         Beta
                       </Badge>

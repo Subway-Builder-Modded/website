@@ -691,7 +691,7 @@ function SidebarNavEntry({
                 activeTextClassName={activeTextClassName}
                 activeIndicatorClassName={activeIndicatorClassName}
                 hoverTextClassName={hoverTextClassName}
-              isDark={isDark}
+                isDark={isDark}
               />
             ))}
           </ul>
@@ -779,7 +779,7 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
         className="overflow-visible border-r border-sidebar-border bg-sidebar"
       >
         <SidebarHeader className="gap-3 border-b border-sidebar-border bg-sidebar px-6 pt-3 pb-3">
-          <div ref={switcherAreaRef} className="space-y-3">
+          <div ref={switcherAreaRef} className={cn("space-y-3", !mounted && "invisible")}>
             <InstanceSwitcher
               activeInstance={activeInstance}
               open={openDropdown === "instance"}
@@ -815,7 +815,7 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
                   activeTextClassName={activeInstance.accentClassName}
                   activeIndicatorClassName={activeIndicatorClassName}
                   hoverTextClassName={hoverTextClassName}
-                isDark={isDark}
+                  isDark={isDark}
                 />
               ))}
             </ul>
