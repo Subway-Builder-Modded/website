@@ -4,7 +4,7 @@ import { BrowsePage } from "@/components/railyard/browse-page"
 
 export const metadata: Metadata = {
   title: "Browse | Railyard",
-  description: "Discover and install maps and mods for Subway Builder.",
+  description: "Discover and install maps and mods for Subway Builder..",
 }
 
 export default function BrowseRoutePage() {

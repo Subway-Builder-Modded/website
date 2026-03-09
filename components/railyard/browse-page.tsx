@@ -90,7 +90,7 @@ export function BrowsePage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground text-balance">Browse</h1>
         <p className="text-sm text-muted-foreground mt-0.5">
-          Discover and install maps and mods for Subway Builder
+          Discover and install maps and mods for Subway Builder.
         </p>
       </div>
 
