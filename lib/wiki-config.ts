@@ -75,7 +75,7 @@ export const WIKI_INSTANCES: WikiInstance[] = [
             key: "developers",
             children: [
               "publishing-projects",
-              "publishing-map-packs",
+              "using-custom-url",
             ],
           },
         ],
