@@ -5,6 +5,7 @@ import Link from "next/link"
 import {
   Bug,
   CirclePlus,
+  User,
   CodeXml,
   FolderClock,
   MapPlus,
@@ -22,6 +23,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { cn } from "@/lib/utils"
 
 const ICONS = {
+  User,
   CodeXml,
   CirclePlus,
   PackagePlus,

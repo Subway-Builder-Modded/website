@@ -25,6 +25,11 @@ interface DownloadEntry {
   assetName: string
 }
 
+type PlatformInfo = {
+  os: DownloadEntry["os"]
+  arch: DownloadEntry["arch"]
+}
+
 const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
   { os: "Windows", arch: "x64",       label: "Windows (x64) - Installer (beta)",   type: ".exe",      size: "—", link: "#", assetName: "windows-amd64-installer.exe" },
   { os: "Windows", arch: "x64",       label: "Windows (x64) - Portable (beta)",    type: ".zip",      size: "—", link: "#", assetName: "windows-amd64-portable.zip" },
@@ -61,7 +66,7 @@ function getDownloadCatalog(downloads: DownloadEntry[]) {
   return Array.from(byOS.entries()).map(([os, items]) => ({ os, downloads: items }))
 }
 
-function detectPlatform(): { os: DownloadEntry["os"]; arch: DownloadEntry["arch"] } {
+function detectPlatform(): PlatformInfo {
   if (typeof navigator === "undefined") return { os: "Windows", arch: "x64" }
 
   const ua = navigator.userAgent.toLowerCase()
@@ -109,8 +114,7 @@ async function detectPlatformWithHints() {
   return fallback
 }
 
-function pickNativeDownload(downloads: DownloadEntry[]): DownloadEntry {
-  const platform = detectPlatform()
+function pickNativeDownload(downloads: DownloadEntry[], platform: PlatformInfo): DownloadEntry {
   return downloads.find((d) => d.os === platform.os && d.arch === platform.arch)
     ?? downloads.find((d) => d.os === platform.os)
     ?? downloads[0]
@@ -191,19 +195,23 @@ export default function RailyardPage() {
   const [modCount, setModCount] = useState<number | null>(null)
   const [activeFeature, setActiveFeature] = useState(FEATURES[0].id)
   const [activeStop, setActiveStop] = useState(WORKFLOW_STOPS[0].id)
+  const [detectedPlatform, setDetectedPlatform] = useState<PlatformInfo>(() => detectPlatform())
   const [selectedOS, setSelectedOS] = useState("Windows")
   const [hasMounted, setHasMounted] = useState(false)
 
   const nativeDownload = useMemo(() => {
     if (!hasMounted) return downloads[0]
-    return pickNativeDownload(downloads)
-  }, [downloads, hasMounted])
+    return pickNativeDownload(downloads, detectedPlatform)
+  }, [detectedPlatform, downloads, hasMounted])
   const downloadCatalog = useMemo(() => getDownloadCatalog(downloads), [downloads])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let isMounted = true
     setHasMounted(true)
     void detectPlatformWithHints().then((platform) => {
+      if (!isMounted) return
+      setDetectedPlatform(platform)
       setSelectedOS(platform.os)
     })
 
@@ -234,7 +242,10 @@ export default function RailyardPage() {
       }
     }
     document.addEventListener("mousedown", closeMenu)
-    return () => document.removeEventListener("mousedown", closeMenu)
+    return () => {
+      isMounted = false
+      document.removeEventListener("mousedown", closeMenu)
+    }
   }, [])
 
   const selectedDownloads = useMemo(
