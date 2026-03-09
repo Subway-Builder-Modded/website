@@ -8,7 +8,7 @@ Railyard does not host mods or maps within the service. Instead, Railyard pulls 
 ## Step 1 - Hosting the File {#hosting-the-file}
 In order to make a submission to the Railyard registry, you need to first upload the source code and release to GitHub and link it to Railyard. To do this, create a new GitHub repository. The actual contents can contain the source code for your map/mod.
 
-:::note[Mod Dependencies]
+::::note[Mod Dependencies]
 
 Mods must declare dependencies in their `manifest.json` (the one shipped inside the mod's download ZIP). The `dependencies` field is required and must include a `subway-builder` semver range:
 
@@ -19,11 +19,19 @@ Mods must declare dependencies in their `manifest.json` (the one shipped inside 
 }
 ```
 
-Each key is a mod ID from the Railyard registry (or `subway-builder` for the base game) and the value is a semver range for the minimum required version. Railyard will ensure dependencies are installed before the dependent mod is loaded.
+Each key is a mod ID from the Railyard registry (or `subway-builder` for the base game) and the value is a semver range for the minimum required version.
+
+:::caution
+
+Versions **must** be in [semantic versioning format](https://semver.org/). `1.0`, `abc`, `version-A`, etc. will not work. Your version must be `X.Y.Z` or `vX.Y.Z`.
 
 :::
 
-Once you have the repository set up, create a new release. In this release, place **ALL** the ZIP files containing your maps and mods (as different release assets). The ZIP files should contain **exactly** the files that are used for the map/mods, meaning no nested subfolders. For maps, use the ZIP that you made using the [custom map creation guide](/wiki/creating-custom-maps/creating-custom-maps).
+::::
+
+Once you have the repository set up, create a new release. In this release, place **ALL** the ZIP files containing your various projects (as different release assets). The ZIP files should contain **exactly** the files that are used for the mods, meaning no nested subfolders.
+
+For maps, use the ZIP that you made using the [custom map creation guide](/wiki/creating-custom-maps/creating-custom-maps).
 
 :::important
 
@@ -41,7 +49,7 @@ Now that your files are hosted on GitHub, you are ready to make a submission to 
 
 ::::note
 
-If you want to host multiple projects within a single repository, follow the [using custom URL guide](/wiki/railyard/v0.1/developers/using-custom-url) for further instructions. This will teach you how to set up your custom `update.json` for Railyard to pull from.
+If you want to host multiple projects within a single repository, follow the [using custom URL guide](/wiki/railyard/v0.1/developers/using-custom-url) for further instructions. This will teach you how to set up your custom Update JSON for Railyard to pull from.
 
 :::info
 
@@ -89,15 +97,15 @@ Data Source:  Enter the data source used to generate the demand data for your ma
 Source URL:   URL to your map's source code repository or download page.
 
 Update Type:  The method used by Railyard to fetch updates for your map. Most maps should use GitHub Releases. Use
-              Custom URL only if you host your own update.json file.
+              Custom URL only if you host your own Update JSON file.
 
 GitHub Repo:  Required ONLY if using GitHub Releases. The owner/repo path (e.g. username/sb-raleigh) in plaintext, NOT
               a URL. The repo must exist, have at least one release, and the latest release must contain a .zip asset.
               Leave blank if you are using Custom URL.
 
-Custom URL:   Required ONLY if you selected Custom URL. The full URL to your self-hosted update.json file. The file
-              must follow the Railyard update.json schema. Leave blank if using GitHub Releases. The guide for using an 
-              update.json can be found at: https://subwaybuildermodded.com/wiki/railyard/v0.1/developers/using-custom-url.
+Custom URL:   Required ONLY if you selected Custom URL. The full URL to your self-hosted Update JSON file. The file
+              must follow the Railyard Update JSON schema. Leave blank if using GitHub Releases. The guide for using an 
+              Update JSON can be found at: https://subwaybuildermodded.com/wiki/railyard/v0.1/developers/using-custom-url.
 
 Gallery:      Drag and drop screenshots here, or paste image URLs (one per line). These will be displayed in the map
               browser. At least one image is recommended. (optional)
@@ -124,15 +132,15 @@ Tags:         Select all tags that apply to your mod. These help users find your
 Source URL:   URL to your mod's source code repository or download page.
 
 Update Type:  The method used by Railyard to fetch updates for your mod. Most mods should use GitHub Releases. Use
-              Custom URL only if you host your own update.json file.
+              Custom URL only if you host your own Update JSON file.
 
 GitHub Repo:  Required ONLY if using GitHub Releases. The owner/repo path (e.g. username/better-trains). The repo must
               exist, have at least one release, and the latest release must contain both a .zip asset AND a
               manifest.json asset. Leave blank if you are using Custom URL.
 
-Custom URL:   Required if using Custom URL. The full URL to your self-hosted update.json file. The file must follow
-              the Railyard update.json schema. Leave blank if using GitHub Releases. The guide for using an 
-              update.json can be found at: https://subwaybuildermodded.com/wiki/railyard/v0.1/developers/using-custom-url.
+Custom URL:   Required if using Custom URL. The full URL to your self-hosted Update JSON file. The file must follow
+              the Railyard Update JSON schema. Leave blank if using GitHub Releases. The guide for using an 
+              Update JSON can be found at: https://subwaybuildermodded.com/wiki/railyard/v0.1/developers/using-custom-url.
 
 Manifest URL: Required ONLY if using Custom URL. The full URL to your mod's manifest.json for the current release.
               Railyard fetches this to validate that your mod declares its dependencies correctly. Leave blank if
@@ -147,12 +155,12 @@ Gallery:      Drag and drop screenshots here, or paste image URLs (one per line)
 </Tabs>
 
 <details>
-  <summary>**Using `update.json`**</summary>
+  <summary>**Using the Update JSON**</summary>
   
-  For `Custom URL`, place a link to your raw `update.json` file. You can paste the raw link directly copied from your repository, however, it is instead recommended to deploy it to GitHub pages and paste that link there. This can help some users who may be rate limited. To deploy to GitHub pages, create a new file located at `.github/workflows/deploy-releases.yml`. Paste the following into the file:
+  For `Custom URL`, place a link to your raw Update JSON file. You can paste the raw link directly copied from your repository, however, it is instead recommended to deploy it to GitHub pages and paste that link there. This can help some users who may be rate limited. To deploy to GitHub pages, create a new file located at `.github/workflows/deploy-releases.yml`. Paste the following into the file:
 
   ```yml
-  name: Deploy update.json to GitHub Pages
+  name: Deploy Update JSON to GitHub Pages
 
   on:
     push:
@@ -185,9 +193,7 @@ Gallery:      Drag and drop screenshots here, or paste image URLs (one per line)
           uses: actions/deploy-pages@v4
   ```
 
-  This will automatically deploy your `update.json` files to GitHub Pages. Once you do this, put the direct link to your `update.json` file for the corresponding map in the `Custom URL` field. Now every time you update your map (and our `update.json` file), it will automatically deploy the latest `update.json` file for Railyard to use.
-
-  Once you deploy your `update.json` files and fill out the submission ticket, a Pull Request should automatically be created. A Railyard maintainer will review it and it will be automatically submitted once they do. After that, it will be available on Railyard for everyone to download.
+  This will automatically deploy your Update JSON files to GitHub Pages. Once you do this, put the direct link to your Update JSON file for the corresponding map in the `Custom URL` field. Now every time you update your map (and your Update JSON file), it will automatically deploy the latest Update JSON file for Railyard to use.
 </details>
 
 Once you fill out the submission ticket, a Pull Request should automatically be created. A Railyard maintainer will review it and it will be automatically submitted once they do. After that, it will be available on Railyard for everyone to download.
