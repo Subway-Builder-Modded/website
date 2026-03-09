@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Globe, Sparkles, Users } from "lucide-react"
+import { Globe, Sparkles, Users, Heart } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 const SECTION_ICON_MAP = {
   maintainers: Users,
   translators: Globe,
+  contributors: Heart,
 } as const
 
 function CreditsSectionHeader({ title }: { title: string }) {

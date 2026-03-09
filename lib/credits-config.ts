@@ -8,7 +8,7 @@ export type CreditSection = {
   id: string
   title: string
   description: string
-  icon: "maintainers" | "translators"
+  icon: "maintainers" | "translators" | "contributors"
   people: CreditPerson[]
 }
 
@@ -39,6 +39,14 @@ export const CREDIT_SECTIONS: CreditSection[] = [
         role: "Maintainer of the Template Mod and Railyard and contributor to the Subway Builder Modded website.",
         link: "https://github.com/IMB11",
       },
+    ],
+  },
+  {
+    id: "contributors",
+    title: "Contributors",
+    description: "Contributors to the Subway Builder Modded projects.",
+    icon: "contributors",
+    people: [
       {
         name: "rslurry",
         role: "Contributor/tester of Railyard and maintainer of the Demand Data Generator.",
