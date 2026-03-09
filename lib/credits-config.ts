@@ -39,6 +39,11 @@ export const CREDIT_SECTIONS: CreditSection[] = [
         role: "Maintainer of the Template Mod and Railyard and contributor to the Subway Builder Modded website.",
         link: "https://github.com/IMB11",
       },
+      {
+        name: "rslurry",
+        role: "Contributor/tester of Railyard and maintainer of the Demand Data Generator.",
+        link: "https://github.com/rslurry",
+      }
     ],
   },
   {
