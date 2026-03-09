@@ -62,14 +62,15 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     accentSurfaceHoverClassName: "hover:bg-emerald-500/18",
     accentIconSurfaceClassName: "bg-emerald-950/80 border-emerald-700/50",
     versioned: true,
-    latestVersion: "v1.0",
+    latestVersion: "v0.1",
     versions: [
       {
-        value: "v1.0",
-        label: "v1.0",
+        value: "v0.1",
+        label: "v0.1",
         icon: Tag,
         sidebarOrder: [
           "home",
+          "players",
           {
             key: "developers",
             children: [

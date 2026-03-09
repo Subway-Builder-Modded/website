@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { ProjectPage } from "@/components/railyard/project-page"
 
 const BASE_URL =
@@ -16,5 +17,9 @@ export default async function ModProjectPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  return <ProjectPage type="mods" id={id} />
+  return (
+    <Suspense fallback={null}>
+      <ProjectPage type="mods" id={id} />
+    </Suspense>
+  )
 }
