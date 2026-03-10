@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Globe, Sparkles, Users, Heart } from "lucide-react"
+import Markdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
@@ -17,6 +19,50 @@ const SECTION_ICON_MAP = {
   translators: Globe,
   contributors: Heart,
 } as const
+
+function CreditRoleMarkdown({ content }: { content: string }) {
+  return (
+    <Markdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        p: ({ children }) => <>{children}</>,
+        a: ({ href, children }) => {
+          if (!href) {
+            return <>{children}</>
+          }
+
+          const isInternal = href.startsWith("/")
+
+          if (isInternal) {
+            return (
+              <Link
+                href={href}
+                className="underline decoration-muted-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+              >
+                {children}
+              </Link>
+            )
+          }
+
+          return (
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-muted-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+            >
+              {children}
+            </a>
+          )
+        },
+        strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+        em: ({ children }) => <em className="italic text-foreground/90">{children}</em>,
+      }}
+    >
+      {content}
+    </Markdown>
+  )
+}
 
 function CreditsSectionHeader({ title }: { title: string }) {
   return (
@@ -60,7 +106,11 @@ function CreditPersonCard({ section, person }: { section: CreditSection; person:
           <p className="text-base font-semibold text-foreground">{person.name}</p>
         )}
 
-        {person.role ? <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{person.role}</p> : null}
+        {person.role ? (
+          <div className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            <CreditRoleMarkdown content={person.role} />
+          </div>
+        ) : null}
       </div>
     </Card>
   )

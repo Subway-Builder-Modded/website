@@ -21,18 +21,31 @@ export const CREDIT_SECTIONS: CreditSection[] = [
     people: [
       {
         name: "kaicardenas0618",
-        role: "Nothing of note.",
+        role: `Inventor of the term "history" as well as other terms like "eventful" and "participant".`,
         link: "https://github.com/kaicardenas0618",
       },
       {
         name: "ahkimn",
-        role: "World-renowned diplomat and peace negotiations expert.",
+        role: `Artist of many beautiful art pieces, available at the [art page](/art).`,
         link: "https://github.com/ahkimn",
       },
       {
         name: "Kronifer",
         role: "Prime minister of Canada and surrounding territories.",
         link: "https://github.com/kronifer",
+      },
+    ],
+  },
+  {
+    id: "former-maintainers",
+    title: "Former Maintainers",
+    description: "Former maintainers of the various Subway Builder Modded tools and apps.",
+    icon: "maintainers",
+    people: [
+      {
+        name: "IMB11",
+        role: "Initial creator of the Template Mod and Railyard and contributor to the Subway Builder Modded website.",
+        link: "https://github.com/IMB11",
       },
     ],
   },
@@ -46,11 +59,6 @@ export const CREDIT_SECTIONS: CreditSection[] = [
         name: "rslurry",
         role: "Contributor/tester of Railyard and maintainer of the Demand Data Generator.",
         link: "https://github.com/rslurry",
-      },
-      {
-        name: "IMB11",
-        role: "Initial creator of the Template Mod and Railyard and contributor to the Subway Builder Modded website.",
-        link: "https://github.com/IMB11",
       },
     ],
   },
