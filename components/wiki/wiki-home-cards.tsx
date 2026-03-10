@@ -16,6 +16,8 @@ import {
   Link2,
   Atom,
   SearchCode,
+  ArrowDownToLine,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react"
 
@@ -36,6 +38,8 @@ const ICONS = {
   Link2,
   Atom,
   SearchCode,
+  ArrowDownToLine,
+  ShieldCheck,
 } satisfies Record<string, LucideIcon>
 
 type WikiCardIconName = keyof typeof ICONS

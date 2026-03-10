@@ -70,7 +70,14 @@ export const WIKI_INSTANCES: WikiInstance[] = [
         icon: Tag,
         sidebarOrder: [
           "home",
-          "players",
+          {
+            key: "players",
+            children: [
+              "install-guide-windows",
+              "install-guide-macos",
+              "install-guide-linux",
+            ],
+          },
           {
             key: "developers",
             children: [
