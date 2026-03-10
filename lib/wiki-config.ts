@@ -70,12 +70,20 @@ export const WIKI_INSTANCES: WikiInstance[] = [
         icon: Tag,
         sidebarOrder: [
           "home",
-          "players",
+          {
+            key: "players",
+            children: [
+              "install-guide-windows",
+              "install-guide-macos",
+              "install-guide-linux",
+            ],
+          },
           {
             key: "developers",
             children: [
               "publishing-projects",
               "using-custom-url",
+              "data-quality",
             ],
           },
         ],
@@ -126,7 +134,7 @@ export const WIKI_INSTANCES: WikiInstance[] = [
     versioned: false,
     sidebarOrder: [
       "home",
-      "creating-custom-maps",
+      "creating-custom-maps-us",
       "custom-map-optional-features",
     ],
   },

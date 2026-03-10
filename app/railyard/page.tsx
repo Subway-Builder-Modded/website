@@ -37,7 +37,8 @@ const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
   { os: "Windows", arch: "arm64",     label: "Windows (ARM64) - Portable (beta)",  type: ".zip",      size: "—", link: "#", assetName: "windows-arm64-portable.zip" },
   { os: "macOS",   arch: "universal", label: "macOS - Universal (beta)",           type: ".dmg",      size: "—", link: "#", assetName: "macos-universal.dmg" },
   { os: "macOS",   arch: "universal", label: "macOS (ZIP) - Universal (beta)",     type: ".zip",      size: "—", link: "#", assetName: "macos-universal.zip" },
-  { os: "Linux",   arch: "x64",       label: "Linux (x64) (beta)",                 type: ".AppImage", size: "—", link: "#", assetName: "linux-amd64.AppImage" },
+  { os: "Linux",   arch: "x64",       label: "Linux (x64) - Current (beta)",                 type: ".AppImage", size: "—", link: "#", assetName: "current-linux-amd64.AppImage" },
+  { os: "Linux",   arch: "x64",       label: "Linux (x64) - Legacy (beta)",                 type: ".AppImage", size: "—", link: "#", assetName: "legacy-linux-amd64.AppImage" },
 ]
 
 const RELEASE_API = "https://api.github.com/repos/subway-builder-modded/railyard/releases/latest"
@@ -293,16 +294,35 @@ export default function RailyardPage() {
         <div className="relative z-10 flex h-full items-end px-[clamp(1.5rem,5vw,4rem)] pb-[max(env(safe-area-inset-bottom),clamp(3rem,12svh,8rem))]">
           <motion.div
             style={{ opacity: heroContentOpacity, y: heroContentY }}
-            className="w-full max-w-[min(92vw,44rem)]"
+            className="w-full max-w-[min(92vw,48rem)]"
           >
             {/* Title */}
-            <h1 className="inline-flex items-center gap-4 -translate-y-2 text-[clamp(3rem,min(10vw,12svh),7rem)] font-black leading-[0.9] tracking-[-0.04em]">
+            <h1 className="inline-flex items-center gap-4 -translate-y-1 text-[clamp(2.6rem,min(8vw,9svh),4.8rem)] font-black leading-[1] tracking-[-0.03em]">
               <TrainTrack aria-hidden="true" className="size-[0.72em]" />
               <span>Railyard</span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1.5px solid #d29922",
+                  color: "#d29922",
+                  borderRadius: "9999px",
+                  padding: "0.18em 0.52em 0.28em",
+                  fontSize: "0.42em",
+                  fontWeight: 500,
+                  lineHeight: "1",
+                  letterSpacing: "normal",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}
+              >
+                Beta
+              </span>
             </h1>
 
-            <p className="mt-4 max-w-[30rem] text-pretty text-[clamp(1rem,min(2.2vw,2.4svh),1.2rem)] leading-[1.45] text-muted-foreground">
-              The easiest way to discover, install, and manage Subway Builder community content. Now in beta.
+            <p className="mt-4 max-w-[27rem] text-pretty text-[clamp(1rem,min(2.2vw,2.4svh),1.2rem)] leading-[1.45] text-muted-foreground">
+              The easiest way to discover, install, and manage Subway Builder community content.
             </p>
 
             {/* Download button group */}
