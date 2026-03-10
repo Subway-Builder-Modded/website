@@ -1,0 +1,44 @@
+---
+id: data-quality
+title: Data Quality
+---
+
+To determine your map's data quality, you must first determine the source of your data. As per Railyard's guidelines, 2 dimensions of data quality are considered: source quality and level of detail.
+
+## Source Quality
+
+The standard for quality of data sources is that of the vanilla Subway Builder game. Subway Builder uses real US Census data from 2023. The classifications for source quality are as follows:
+
+| **Source Quality** | **Description**                                         | **Examples** |
+| ------------------ | ------------------------------------------------------- | ------------ |
+| `high-quality`     | Official government sources (on par with vanilla maps)  | LODES, INSEE |
+| `medium-quality`   | OSM data augmented by government or official data       | Using municipal level gov't data but augmenting that with OSM density to distribute |
+| `low-quality`      | Pure OSM unvetted source data                           | Using OSM population counts/positions as is |
+
+:::success[Examples of Government Sources]
+
+ - **LODES** (USA) (https://lehd.ces.census.gov/)
+ - **INSEE** (France) (https://www.insee.fr/)
+ - **ONS** (UK) (https://www.ons.gov.uk/)
+ - **Cyrillic** (Russia) (https://www.gks.ru/)
+ - **統計局** (Japan) (https://www.stat.go.jp/)
+ - **국가데이터처** (South Korea) (https://www.mods.go.kr/)
+
+:::
+
+:::note
+
+If you are using a tool that pulls from real government sources such as [rslurry's US Demand Data Generator](https://github.com/rslurry/subwaybuilder-US-demand-data) (the tool used by the [creating custom US maps guide](/wiki/creating-custom-maps/creating-custom-maps-us)), your data will be considered `high-quality` as the tool uses official US LODES data.
+
+:::
+
+## Level of Detail
+
+The level of detail of your data is determined by the density of the dots on your map (how spread out they are). The classifications for level of detail are as follows:
+
+| **Level of Detail** | **Description**                                                           | **Examples**  |
+| ------------------- | ------------------------------------------------------------------------- | ------------- |
+| `high-detail`       | Dots at the density of the minimal official statistical area/vanilla maps | Census blocks |
+| `medium-detail`     | Dots at the density of higher level statistical areas                     | Census tracts, broad meshes |
+| `low-detail`        | Dots at the density of entire neighborhoods/municipalities                | Some low-quality raw OSM data (present in older maps) |
+
