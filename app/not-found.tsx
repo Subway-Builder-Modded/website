@@ -16,11 +16,11 @@ export default function NotFound() {
         <TrainFront
           aria-hidden="true"
           strokeWidth={1.5}
-          className="h-auto w-[min(88vw,52rem)] text-zinc-400"
+          className="h-auto w-[min(88vw,52rem)] text-muted-foreground"
         />
       </div>
 
-      <section className="relative w-full max-w-3xl rounded-3xl border border-border/45 bg-card/28 p-7 text-center dark:bg-card/18 sm:p-10">
+      <section className="relative w-full max-w-3xl rounded-3xl border border-border/45 bg-card/80 p-7 text-center dark:bg-card/80 sm:p-10">
         <div className="mx-auto flex w-fit items-center gap-2 sm:gap-3">
           {LINES.map((line, index) => (
             <LineBullet
