@@ -1,7 +1,10 @@
 import * as React from "react"
 import type { MDXComponents } from "mdx/types"
 import Link from "next/link"
-import { Tabs, TabItem } from "@/components/wiki/mdx-tabs"
+import * as LucideIcons from "lucide-react"
+import type { LucideIcon, LucideProps } from "lucide-react"
+import { Tabs, TabItem } from "@/components/mdx/mdx-tabs"
+import { IconList, IconItem } from "@/components/mdx/icon-list"
 import { WikiCardGrid, WikiCard } from "@/components/wiki/wiki-home-cards"
 import { UpdateSection } from "@/components/updates/update-section"
 
@@ -16,7 +19,7 @@ import {
   Info,
   Success,
   Deprecated,
-  Bug,
+  Bug as BugAdmonition,
   Example,
   Announcement,
 } from "@/components/ui/admonition"
@@ -104,7 +107,33 @@ function MdxLink({
   )
 }
 
+const lucideComponents: MDXComponents = Object.fromEntries(
+  Object.entries(LucideIcons)
+    .filter(([name, component]) => /^[A-Z]/.test(name) && component)
+    .map(([name, icon]) => {
+      const Icon = icon as LucideIcon
+
+      const InlineLucideIcon = ({
+        className,
+        size = "1em",
+        ...props
+      }: LucideProps) => (
+        <Icon
+          aria-hidden="true"
+          className={`inline-block align-[-0.125em] ${className ?? ""}`.trim()}
+          size={size}
+          {...props}
+        />
+      )
+
+      InlineLucideIcon.displayName = `${name}Inline`
+
+      return [name, InlineLucideIcon]
+    })
+)
+
 const baseComponents: MDXComponents = {
+  ...lucideComponents,
   Admonition,
   Note,
   Tip,
@@ -115,7 +144,7 @@ const baseComponents: MDXComponents = {
   Info,
   Success,
   Deprecated,
-  Bug,
+  BugAdmonition,
   Example,
   Announcement,
   Tabs,
@@ -123,6 +152,8 @@ const baseComponents: MDXComponents = {
   WikiCardGrid,
   WikiCard,
   UpdateSection,
+  IconList,
+  IconItem,
 
   a: MdxLink,
 
