@@ -26,7 +26,13 @@ githubUrl: "https://github.com/Subway-Builder-Modded/railyard/releases/tag/v0.1.
 <UpdateSection type="upgrades">
 	<IconList>
 		<IconItem icon="Sparkles" color="#EEB03D">
-			Added support for `current` and `legacy` Linux distribution versions
+			Fixed an issue where Railyard wouldn't work on some distros due to them not supporting `libwebkit2gtk-4.0` 
+            
+            :::warning
+
+            This means there are now two builds for Linux. `current` is built targeting `libwebkit2gtk-4.1`, whereas `legacy` is built targeting `libwebkit2gtk-4.0`. Make sure you install the correct one!
+
+            :::
 		</IconItem>
 		<IconItem icon="Sparkles" color="#EEB03D">
 			Added an auto-update check (toggleable in settings)
