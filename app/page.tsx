@@ -39,7 +39,7 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
     letter: "M",
     title: "Creating Custom Maps",
     description: "The complete guide to creating, packaging, and distributing custom Subway Builder maps.",
-    href: "/modding-docs/creating-custom-maps/home",
+    href: "/creating-custom-maps/creating-custom-maps/home",
   },
   {
     id: "updates",
