@@ -21,6 +21,16 @@ const sizeMap = {
   xl: { box: "3.5rem", text: "1.75rem" },
 } as const
 
+function isBlackColor(value: string) {
+  const normalized = value.replace(/\s+/g, "").toLowerCase()
+  return normalized === "#000" || normalized === "#000000" || normalized === "black" || normalized === "rgb(0,0,0)"
+}
+
+function isWhiteColor(value: string) {
+  const normalized = value.replace(/\s+/g, "").toLowerCase()
+  return normalized === "#fff" || normalized === "#ffffff" || normalized === "white" || normalized === "rgb(255,255,255)"
+}
+
 export function LineBullet({
   bullet,
   color,
@@ -35,6 +45,14 @@ export function LineBullet({
 }: LineBulletProps) {
   const s = sizeMap[size]
   const resolvedHoverColor = hoverColor ?? color
+  const baseBulletBg = invertOnHover ? "#FFFFFF" : color
+  const baseBulletFg = invertOnHover ? "#000000" : textColor
+  const hoverBulletBg = invertOnHover ? resolvedHoverColor : color
+  const hoverBulletFg = invertOnHover ? "#FFFFFF" : textColor
+  const darkBaseBulletBg = !invertOnHover && isBlackColor(baseBulletBg) ? "#FFFFFF" : baseBulletBg
+  const darkBaseBulletFg = isWhiteColor(darkBaseBulletBg) ? "#000000" : baseBulletFg
+  const darkHoverBulletBg = !invertOnHover && isBlackColor(hoverBulletBg) ? "#FFFFFF" : hoverBulletBg
+  const darkHoverBulletFg = isWhiteColor(darkHoverBulletBg) ? "#000000" : hoverBulletFg
   const bulletLabel =
     typeof bullet === "string" || typeof bullet === "number"
       ? String(bullet)
@@ -58,13 +76,19 @@ export function LineBullet({
           shape === "circle" && "rounded-full",
           shape === "triangle" && "[clip-path:polygon(50%_0%,0%_100%,100%_100%)]",
           "bg-[var(--line-bullet-bg)] text-[var(--line-bullet-fg)]",
+          "dark:bg-[var(--line-bullet-bg-dark)] dark:text-[var(--line-bullet-fg-dark)]",
           "hover:bg-[var(--line-bullet-bg-hover)] hover:text-[var(--line-bullet-fg-hover)]",
+          "dark:hover:bg-[var(--line-bullet-bg-hover-dark)] dark:hover:text-[var(--line-bullet-fg-hover-dark)]",
         )}
         style={{
-          ["--line-bullet-bg" as string]: invertOnHover ? "#FFFFFF" : color,
-          ["--line-bullet-fg" as string]: invertOnHover ? "#000000" : textColor,
-          ["--line-bullet-bg-hover" as string]: invertOnHover ? resolvedHoverColor : color,
-          ["--line-bullet-fg-hover" as string]: invertOnHover ? "#FFFFFF" : textColor,
+          ["--line-bullet-bg" as string]: baseBulletBg,
+          ["--line-bullet-fg" as string]: isWhiteColor(baseBulletBg) ? "#000000" : baseBulletFg,
+          ["--line-bullet-bg-hover" as string]: hoverBulletBg,
+          ["--line-bullet-fg-hover" as string]: isWhiteColor(hoverBulletBg) ? "#000000" : hoverBulletFg,
+          ["--line-bullet-bg-dark" as string]: darkBaseBulletBg,
+          ["--line-bullet-fg-dark" as string]: darkBaseBulletFg,
+          ["--line-bullet-bg-hover-dark" as string]: darkHoverBulletBg,
+          ["--line-bullet-fg-hover-dark" as string]: darkHoverBulletFg,
           minWidth: s.box,
           height: s.box,
           fontSize: s.text,
