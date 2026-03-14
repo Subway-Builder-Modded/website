@@ -20,6 +20,7 @@ type TabsProps = {
 
 const GROUP_STORAGE_PREFIX = "wiki-tabs:"
 
+// Normalize tab values into DOM-safe ID fragments so trigger/content pairs stay stable.
 function toIdPart(value: string) {
   const normalized = value
     .trim()
@@ -30,6 +31,7 @@ function toIdPart(value: string) {
   return normalized || "tab"
 }
 
+// Generate a deterministic per-instance suffix instead of relying on runtime-generated IDs.
 function hashString(value: string) {
   let hash = 2166136261
 
@@ -72,6 +74,8 @@ export function Tabs({
     default: item.props.default,
   }))
 
+  // Resolve the initial tab without touching browser-only storage during render,
+  // so the server output and first client render hydrate to the same markup.
   const initialValue = React.useMemo(() => {
     if (defaultValue !== undefined) return defaultValue ?? undefined
 
@@ -83,6 +87,8 @@ export function Tabs({
 
   const [activeValue, setActiveValue] = React.useState<string | undefined>(initialValue)
 
+  // Build a stable tabset ID from serializable props/content so our aria links are
+  // identical on the server and client.
   const tabsInstanceId = React.useMemo(() => {
     const signature = JSON.stringify({
       groupId: groupId ?? null,
@@ -96,6 +102,8 @@ export function Tabs({
   React.useEffect(() => {
     if (!groupId) return
 
+    // Apply any persisted grouped-tab preference after mount to avoid hydration
+    // mismatches from reading localStorage during the initial render.
     const stored = getStoredGroupValue(groupId)
     if (stored && values.some((v) => v.value === stored)) {
       setActiveValue(stored)
@@ -142,6 +150,8 @@ export function Tabs({
           <TabsPrimitive.Trigger
             key={item.value}
             value={item.value}
+            // Use explicit deterministic IDs so Radix doesn't generate different
+            // trigger/content linkage across server and client renders.
             id={`${tabsInstanceId}-trigger-${toIdPart(item.value)}`}
             aria-controls={`${tabsInstanceId}-content-${toIdPart(item.value)}`}
             className={cn(
