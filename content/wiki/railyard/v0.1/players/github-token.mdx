@@ -10,7 +10,13 @@ This guide will walk you through generating a GitHub token for use with Railyard
 ## Step 1 - Generating a GitHub Token {#generating-github-token}
 Go to https://github.com and create an account if you don't have one already. Head to your settings, then click on "Developer settings" in the sidebar. From there, click on "Personal access tokens", then "Fine-grained tokens". Click on "Generate new token".
 
-From here, input a token name, and set the expiration to "No expiration". Under "Resource owner", select "All repositories". Under "Permissions", add a permission for "Contents" and set it to "Read-only". Finally, click "Generate token".
+From here, input a token name. Under "Resource owner", select "All repositories". Under "Permissions", add a permission for "Contents" and set it to "Read-only". Finally, click "Generate token".
+
+:::note
+
+Once your token expires, you may experience rate limit issues again until you regenerate your token and change it to Railyard.
+
+:::
 
 <img width="1000" alt="image" src="/images/wiki/railyard/github-pat.png" />
 
@@ -24,7 +30,7 @@ Once you have generated the token, copy it to your clipboard. You will need this
 
 :::important
 
-Make sure you save your token somewhere safe, as you will not be able to see it again after you navigate away from the page.
+If you forget your token and need to reinput it into Railyard, you can simply [regenerate it](#regenerating-your-github-token).
 
 :::
 
