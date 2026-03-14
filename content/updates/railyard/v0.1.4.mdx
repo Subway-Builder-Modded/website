@@ -12,13 +12,13 @@ githubUrl: "https://github.com/Subway-Builder-Modded/railyard/releases/tag/v0.1.
 <UpdateSection type="features">
     <IconList>
         <IconItem icon="Plus" color="#48A54B">
-            Added a new multistep loading screen on startup
-        </IconItem>
-        <IconItem icon="Plus" color="#48A54B">
-            Added support for optional Github token to work around Github API limits
+            Added a library page to easily view and manage installed content
         </IconItem>
         <IconItem icon="Plus" color="#48A54B">
             Installs can now be cancelled during the download phase
+        </IconItem>
+        <IconItem icon="Plus" color="#48A54B">
+            Added support for optional Github token to work around Github API limits
         </IconItem>
     </IconList>
 </UpdateSection>
@@ -26,16 +26,19 @@ githubUrl: "https://github.com/Subway-Builder-Modded/railyard/releases/tag/v0.1.
 <UpdateSection type="upgrades">
     <IconList>
         <IconItem icon="Sparkles" color="#EEB03D">
-            Separated download progress toasts and success toasts and added an indicator for how many downloads are in queue
+            Added sorting by country/downloads/last updated (default is now last updated)
+        </IconItem>
+        <IconItem icon="Sparkles" color="#EEB03D">
+            All assets now show download counts on the `Browse` menu, with maps also showing flag icons corresponding to the country of the map
         </IconItem>
         <IconItem icon="Sparkles" color="#EEB03D">
             Search now only show tags when an asset with that tag exists
         </IconItem>
         <IconItem icon="Sparkles" color="#EEB03D">
-            Added sorting by country/downloads/last updated (default is now last updated)
+            Separated download progress toasts and success toasts and added an indicator for how many downloads are in queue
         </IconItem>
         <IconItem icon="Sparkles" color="#EEB03D">
-            All assets now show download counts on the `Browse` menu, with maps also showing flag icons corresponding to the country of the map
+            Added an updated multistep loading screen on startup
         </IconItem>
         <IconItem icon="Sparkles" color="#EEB03D">
             Railyard now launches in fullscreen
@@ -62,6 +65,9 @@ githubUrl: "https://github.com/Subway-Builder-Modded/railyard/releases/tag/v0.1.
         </IconItem>
         <IconItem icon="Bug" color="#EF4444">
             Fixed the in-game mod loader version (appeared as `vv0.1.3`)
+        </IconItem>
+        <IconItem icon="Bug" color="#EF4444">
+            Versions and assets are now filtered by integrity index
         </IconItem>
     </IconList>
 </UpdateSection>
