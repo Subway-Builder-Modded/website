@@ -43,6 +43,15 @@ githubUrl: "https://github.com/Subway-Builder-Modded/railyard/releases/tag/v0.1.
         <IconItem icon="Sparkles" color="#EEB03D">
             Railyard now launches in fullscreen
         </IconItem>
+        <IconItem icon="Sparkles" color="#EEB03D">
+            Linux builds are now through Flatpak. This means you will need to have Flatpak installed in order for the app to function. In addition, this means the autoupdater will be broken for one patch on Linux (you will need to manually install the flatpak included in the v0.1.4 release yourself)
+
+            :::note
+
+            You may not be able to find normal file paths when using the flatpak on linux. This is normal. Your host file system will be mounted on /run/host. You **will** have to update your paths when switching to the flatpak build.
+
+            :::
+        </IconItem>
     </IconList>
 </UpdateSection>
 
