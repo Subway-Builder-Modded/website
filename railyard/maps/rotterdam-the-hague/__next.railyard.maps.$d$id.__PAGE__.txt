@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:"$Sreact.suspense"
+3:I[79659,["/_next/static/chunks/c881e69b56809a22.js","/_next/static/chunks/714cd7489a50d305.js","/_next/static/chunks/a01b305e6fa5ebb9.js","/_next/static/chunks/1eeca3d5f86d92f2.js","/_next/static/chunks/04d87403e0836490.js","/_next/static/chunks/eda1139670679522.js","/_next/static/chunks/51ccc00d378783c3.js","/_next/static/chunks/e773f36a5e07628a.js","/_next/static/chunks/9ae41cafb49804a8.js","/_next/static/chunks/6fd03ce8ad575e2a.js"],"ProjectPage"]
+4:I[36345,["/_next/static/chunks/33074d3ff5d0cd2d.js","/_next/static/chunks/c4d90098b4abc498.js"],"OutletBoundary"]
+0:{"buildId":"jxdEv2_Jjdah_tHxI-y4S","rsc":["$","$1","c",{"children":[["$","$2",null,{"fallback":null,"children":["$","$L3",null,{"type":"maps","id":"rotterdam-the-hague"}]}],[["$","script","script-0",{"src":"/_next/static/chunks/9ae41cafb49804a8.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/6fd03ce8ad575e2a.js","async":true}]],["$","$L4",null,{"children":["$","$2",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null

@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Frailyard\u002Fmaps\u002F[id]","\u002Frailyard\u002Fmods\u002F[id]","\u002Fupdates\u002F[project]","\u002Fupdates\u002F[project]\u002F[version]","\u002Fwiki\u002F[[...slug]]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
