@@ -200,7 +200,7 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
 
   if (itemLoading) {
     return (
-      <main className="px-6 py-8 max-w-screen-xl mx-auto">
+      <main className="railyard-accent px-6 py-8 max-w-screen-xl mx-auto">
         <Skeleton className="h-5 w-64 mb-6" />
         <Skeleton className="h-48 w-full rounded-lg mb-8" />
         <Skeleton className="h-8 w-72 mb-3" />
@@ -215,7 +215,7 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
 
   if (itemError || !item) {
     return (
-      <main className="px-6 py-8 max-w-screen-xl mx-auto">
+      <main className="railyard-accent px-6 py-8 max-w-screen-xl mx-auto">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -243,7 +243,7 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
   }
 
   return (
-    <main className="px-6 py-8 max-w-screen-xl mx-auto">
+    <main className="railyard-accent px-6 py-8 max-w-screen-xl mx-auto">
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>

@@ -211,6 +211,27 @@
   --navbar: 0 0% 16%;
 }
 
+.railyard-accent {
+  --primary: oklch(0.46 0.11 162);
+  --primary-foreground: oklch(0.98 0.01 162);
+  --accent: oklch(0.95 0.025 162);
+  --accent-foreground: oklch(0.28 0.06 162);
+  --ring: oklch(0.58 0.1 162);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-ring: var(--ring);
+}
+
+.dark .railyard-accent {
+  --primary: oklch(0.72 0.13 162);
+  --primary-foreground: oklch(0.18 0.03 162);
+  --accent: oklch(0.25 0.03 162);
+  --accent-foreground: oklch(0.94 0.02 162);
+  --ring: oklch(0.68 0.12 162);
+}
+
 .heading-anchor {
   margin-left: 0.35rem;
   text-decoration: none;

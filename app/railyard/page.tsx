@@ -260,7 +260,7 @@ export default function RailyardPage() {
   const modCountLabel = modCount == null ? "—" : modCount.toLocaleString()
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="railyard-accent min-h-screen bg-background text-foreground">
 
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
       <section ref={heroRef} className="relative h-svh">
@@ -289,7 +289,7 @@ export default function RailyardPage() {
           {/* Overlays */}
           <div className="absolute inset-0 bg-white/8 dark:bg-black/42" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/8 to-transparent pointer-events-none" />
         </div>
 
         {/* Hero content */}
@@ -329,12 +329,12 @@ export default function RailyardPage() {
 
             {/* Download button group */}
             <div ref={dropdownRef} className="relative mt-6 inline-flex z-[120]">
-              <div className="inline-flex overflow-hidden rounded-lg shadow-[0_0_16px_rgba(16,185,129,0.4)]">
+              <div className="inline-flex overflow-hidden rounded-lg shadow-md ring-1 ring-primary/35">
                 <a
                   href={nativeDownload.link}
                   className={cn(
                     "inline-flex items-center px-5 py-2.5 text-sm font-semibold transition-colors",
-                    "bg-emerald-500 text-white hover:bg-emerald-400"
+                    "bg-primary text-primary-foreground hover:bg-primary/90"
                   )}
                 >
                   Download for {nativeDownload.label}
@@ -345,8 +345,8 @@ export default function RailyardPage() {
                   aria-label="More download options"
                   aria-expanded={menuOpen}
                   className={cn(
-                    "flex w-9 items-center justify-center border-l border-emerald-400/50 transition-colors",
-                    "bg-emerald-500 text-white hover:bg-emerald-400"
+                    "flex w-9 items-center justify-center border-l border-primary/40 transition-colors",
+                    "bg-primary text-primary-foreground hover:bg-primary/90"
                   )}
                 >
                   <ChevronDown
@@ -413,7 +413,7 @@ export default function RailyardPage() {
                   className={cn(
                     "relative overflow-hidden cursor-pointer transition-all duration-200 outline-none p-6",
                     "border border-border hover:border-border/70",
-                    active && "border-emerald-400/60 shadow-[0_0_18px_rgba(16,185,129,0.15)] ring-1 ring-emerald-400/40"
+                    active && "border-primary/50 shadow-md ring-1 ring-primary/25"
                   )}
                   onMouseEnter={() => setActiveFeature(feature.id)}
                   onFocus={() => setActiveFeature(feature.id)}
@@ -423,8 +423,8 @@ export default function RailyardPage() {
                   <div className="flex items-start gap-4">
                     <LineBullet
                       bullet={feature.letter}
-                      color="#10B981"
-                      textColor="#FFFFFF"
+                      color="var(--primary)"
+                      textColor="var(--primary-foreground)"
                       shape="circle"
                       size="md"
                       className="shrink-0 mt-0.5"
@@ -435,7 +435,7 @@ export default function RailyardPage() {
                       <ul className="mt-3 space-y-1.5">
                         {feature.bullets.map((bullet) => (
                           <li key={bullet} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <CheckCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-500" aria-hidden="true" />
+                            <CheckCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" aria-hidden="true" />
                             {bullet}
                           </li>
                         ))}
@@ -468,7 +468,7 @@ export default function RailyardPage() {
                   className={cn(
                     "flex h-full flex-col text-left p-5 rounded-xl border transition-all duration-200 outline-none",
                     active
-                      ? "border-emerald-400/60 bg-emerald-500/5 shadow-[0_0_14px_rgba(16,185,129,0.12)] ring-1 ring-emerald-400/40"
+                      ? "border-primary/50 bg-primary/5 shadow-md ring-1 ring-primary/25"
                       : "border-border hover:border-border/80 hover:bg-accent/40"
                   )}
                 >
@@ -476,7 +476,7 @@ export default function RailyardPage() {
                     <span
                       className={cn(
                         "flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold transition-colors",
-                        active ? "bg-emerald-500 text-white" : "bg-muted text-muted-foreground"
+                        active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                       )}
                     >
                       {idx + 1}
@@ -510,7 +510,7 @@ export default function RailyardPage() {
                     className={cn(
                       "w-full text-left px-4 py-3 text-sm font-medium transition-colors",
                       selectedOS === group.os
-                        ? "bg-background text-foreground border-r-2 border-emerald-400 sm:border-r-2 -mr-px"
+                        ? "bg-background text-foreground border-r-2 border-primary sm:border-r-2 -mr-px"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                   >
@@ -530,7 +530,7 @@ export default function RailyardPage() {
                       className={cn(
                         "flex items-center justify-between gap-4 px-4 py-3 rounded-lg border transition-all group",
                         isNative
-                          ? "border-emerald-400/60 bg-emerald-500/5 hover:bg-emerald-500/10"
+                          ? "border-primary/50 bg-primary/5 hover:bg-primary/10"
                           : "border-border hover:border-border/80 hover:bg-accent/40"
                       )}
                     >
