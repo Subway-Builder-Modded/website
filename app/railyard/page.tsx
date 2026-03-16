@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 import { ChevronDown, ArrowRight, Map as MapIcon, Package, CheckCircle, TrainTrack } from "lucide-react"
 
@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { getGithubReleases } from "@/lib/railyard/github-releases"
 import { cn } from "@/lib/utils"
 
 // ─── Data ──────────────────────────────────────────────────────────────────
@@ -39,8 +40,6 @@ const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
   { os: "macOS",   arch: "universal", label: "macOS (ZIP) - Universal (beta)",     type: ".zip",      size: "—", link: "#", assetName: "macos-universal.zip" },
   { os: "Linux",   arch: "x64",       label: "Linux (x64) - (beta)",               type: ".flatpak",  size: "—", link: "#", assetName: "current-linux-amd64.flatpak" },
 ]
-
-const RELEASE_API = "https://api.github.com/repos/subway-builder-modded/railyard/releases/latest"
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "—"
@@ -197,7 +196,11 @@ export default function RailyardPage() {
   const [activeStop, setActiveStop] = useState(WORKFLOW_STOPS[0].id)
   const [detectedPlatform, setDetectedPlatform] = useState<PlatformInfo>(() => detectPlatform())
   const [selectedOS, setSelectedOS] = useState("Windows")
-  const [hasMounted, setHasMounted] = useState(false)
+  const hasMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
 
   const nativeDownload = useMemo(() => {
     if (!hasMounted) return downloads[0]
@@ -208,18 +211,18 @@ export default function RailyardPage() {
 
   useEffect(() => {
     let isMounted = true
-    setHasMounted(true)
     void detectPlatformWithHints().then((platform) => {
       if (!isMounted) return
       setDetectedPlatform(platform)
       setSelectedOS(platform.os)
     })
 
-    // Fetch latest release assets from GitHub
-    fetch(RELEASE_API)
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((release: { assets: { name: string; browser_download_url: string; size: number }[] }) => {
-        setDownloads(buildDownloads(release.assets))
+    // Fetch latest release assets from cache-first GitHub source
+    getGithubReleases("subway-builder-modded/railyard")
+      .then((releases) => {
+        const latest = releases[0]
+        const assets = Array.isArray(latest?.assets) ? latest.assets : []
+        setDownloads(buildDownloads(assets))
       })
       .catch(() => { /* keep template with # links */ })
 

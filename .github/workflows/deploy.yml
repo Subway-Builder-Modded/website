@@ -3,6 +3,13 @@ name: Deploy Subway Builder Site
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-subway-builder-site
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -27,6 +34,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
       - name: Deploy to GitHub Pages
