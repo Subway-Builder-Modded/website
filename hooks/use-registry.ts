@@ -105,6 +105,7 @@ async function fetchGitHubLastUpdatedCandidates(repo: string): Promise<LastUpdat
   if (!response.ok) throw new Error(`Failed to fetch GitHub releases for ${repo}`)
 
   const releases = await response.json() as Array<{
+    tag_name?: string
     published_at?: string
     prerelease?: boolean
   }>
