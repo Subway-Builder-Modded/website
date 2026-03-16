@@ -175,6 +175,13 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
     setLightboxIndex(index)
   }, [])
 
+  const openInRailyard = useCallback(() => {
+    setShowInstallPrompt(false)
+
+    const deepLink = `railyard://open?type=${encodeURIComponent(type)}&id=${encodeURIComponent(id)}`
+    window.location.href = deepLink
+  }, [id, type])
+
   const closeLightbox = useCallback(() => {
     setLightboxIndex(null)
   }, [])
@@ -428,9 +435,17 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
           aria-label="Download Railyard"
         >
           <div
-            className="bg-card border border-border rounded-xl p-6 max-w-sm mx-4 text-center shadow-lg"
+            className="relative bg-card border border-border rounded-xl p-6 max-w-sm mx-4 text-center shadow-lg"
             onClick={(event) => event.stopPropagation()}
           >
+            <button
+              type="button"
+              onClick={() => setShowInstallPrompt(false)}
+              className="absolute top-3 right-3 inline-flex items-center justify-center h-8 w-8 rounded-full bg-muted/70 text-muted-foreground hover:bg-muted transition-colors"
+              aria-label="Close dialog"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
             <ArrowDownToLine className="h-10 w-10 text-muted-foreground mx-auto mb-4" aria-hidden="true" />
             <h3 className="text-lg font-semibold text-foreground mb-2">
               Download Railyard to install this {type === "mods" ? "mod" : "map"}
@@ -439,19 +454,19 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
               Railyard is a free desktop app that lets you browse, install, and manage Subway Builder content.
             </p>
             <div className="flex gap-3 justify-center">
-              <button
-                type="button"
-                onClick={() => setShowInstallPrompt(false)}
-                className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg border border-border"
-              >
-                Cancel
-              </button>
               <Link
                 href="/railyard#all-downloads"
-                className="px-4 py-2 text-sm bg-foreground text-background font-medium rounded-lg hover:opacity-90 transition-opacity"
+                className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-lg border border-border"
               >
                 Get Railyard
               </Link>
+              <button
+                type="button"
+                onClick={openInRailyard}
+                className="px-4 py-2 text-sm bg-foreground text-background font-medium rounded-lg hover:opacity-90 transition-opacity"
+              >
+                Open in Railyard
+              </button>
             </div>
           </div>
         </div>
