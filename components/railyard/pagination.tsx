@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { PER_PAGE_OPTIONS, type PerPage } from "@/lib/railyard/constants"
 import {
   Select,
   SelectContent,
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { PER_PAGE_OPTIONS, type PerPage } from "@/hooks/use-filtered-items"
 
 interface PaginationProps {
   page: number

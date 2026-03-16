@@ -10,6 +10,7 @@ export interface ModManifest {
   name: string
   author: string
   github_id?: number
+  last_updated?: number
   description: string
   tags?: string[]
   gallery?: string[]
@@ -20,14 +21,44 @@ export interface ModManifest {
 export interface MapManifest extends ModManifest {
   city_code?: string
   country?: string
+  location?: string
   population?: number
+  data_source?: string
+  source_quality?: string
+  level_of_detail?: string
+  special_demand?: string[]
 }
 
 export type RegistryItemType = "mods" | "maps"
+export type AssetType = "mod" | "map"
 
 export type TaggedItem =
-  | { type: "mods"; item: ModManifest }
-  | { type: "maps"; item: MapManifest }
+  | { type: "mod"; item: ModManifest }
+  | { type: "map"; item: MapManifest }
+
+export interface IntegrityVersionStatus {
+  complete?: boolean
+  missing_keys?: string[]
+  empty_keys?: string[]
+}
+
+export interface IntegrityListing {
+  has_complete_version: boolean
+  latest_semver_version?: string
+  latest_semver_complete?: boolean
+  complete_versions: string[]
+  incomplete_versions: string[]
+  versions?: Record<string, IntegrityVersionStatus>
+}
+
+export interface RegistryIntegrityReport {
+  schema_version?: number
+  generated_at?: string
+  listings: Record<string, IntegrityListing>
+}
+
+export type DownloadCounts = Record<string, number>
+export type AssetDownloadCountsByVersion = Record<string, DownloadCounts>
 
 export interface VersionInfo {
   version: string
