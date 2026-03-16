@@ -1,7 +1,7 @@
 "use client"
 
 import Fuse from "fuse.js"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import type { AssetType } from "@/lib/railyard/asset-types"
 import {
@@ -349,48 +349,30 @@ export function useFilteredItems({
 	mapDownloadTotals,
 	initialType,
 }: UseFilteredItemsParams) {
-	const initialRef = useRef<PersistedBrowseState | null>(null)
-	if (!initialRef.current) {
-		initialRef.current = getInitialState(initialType)
-	}
+	const [initialState] = useState<PersistedBrowseState>(() =>
+		getInitialState(initialType)
+	)
 
 	const [filters, setFiltersState] = useState<SearchFilterState>(
-		cloneFilterState(initialRef.current.filters)
+		cloneFilterState(initialState.filters)
 	)
-	const [page, setPageState] = useState<number>(initialRef.current.page)
+	const [requestedPage, setRequestedPage] = useState<number>(initialState.page)
 	const [scopedByType, setScopedByType] = useState<FilterByAssetType>(
-		initialRef.current.scopedByType
+		initialState.scopedByType
 	)
 
 	const allItems = useMemo<TaggedItem[]>(() => buildTaggedItems(mods, maps), [mods, maps])
-
-	const didMount = useRef(false)
-	const previousTypeRef = useRef(filters.type)
-	useEffect(() => {
-		if (!didMount.current) {
-			didMount.current = true
-			previousTypeRef.current = filters.type
-			return
-		}
-
-		if (previousTypeRef.current !== filters.type) {
-			previousTypeRef.current = filters.type
-			return
-		}
-
-		setPageState(1)
-	}, [filters])
 
 	useEffect(() => {
 		if (typeof window === "undefined") return
 
 		const payload: PersistedBrowseState = {
 			filters,
-			page,
+			page: requestedPage,
 			scopedByType,
 		}
 		window.localStorage.setItem(BROWSE_STATE_STORAGE_KEY, JSON.stringify(payload))
-	}, [filters, page, scopedByType])
+	}, [filters, requestedPage, scopedByType])
 
 	const filtered = useMemo(() => {
 		return filterAndSortTaggedItems(allItems, filters, modDownloadTotals, mapDownloadTotals)
@@ -399,13 +381,7 @@ export function useFilteredItems({
 	const totalResults = filtered.length
 	const totalPages = Math.max(1, Math.ceil(totalResults / filters.perPage))
 
-	const pageCapped = Math.min(page, totalPages)
-
-	useEffect(() => {
-		if (page !== pageCapped) {
-			setPageState(pageCapped)
-		}
-	}, [page, pageCapped])
+	const pageCapped = Math.min(requestedPage, totalPages)
 
 	const items = useMemo(() => {
 		const start = (pageCapped - 1) * filters.perPage
@@ -415,19 +391,20 @@ export function useFilteredItems({
 	const setFilters = useCallback((updater: SearchFilterUpdater) => {
 		setFiltersState((previous) => {
 			const next = typeof updater === "function" ? updater(previous) : updater
+			setRequestedPage(1)
 			setScopedByType((previousScopedByType) => ({
 				...previousScopedByType,
-				[next.type]: toAssetFilterState(next, page),
+				[next.type]: toAssetFilterState(next, 1),
 			}))
 			return next
 		})
-	}, [page])
+	}, [])
 
 	const setType = useCallback((nextType: AssetType) => {
 		setScopedByType((previousScopedByType) => {
 			const nextScopedByType = {
 				...previousScopedByType,
-				[filters.type]: toAssetFilterState(filters, page),
+				[filters.type]: toAssetFilterState(filters, requestedPage),
 			}
 			const targetState = nextScopedByType[nextType]
 
@@ -446,14 +423,14 @@ export function useFilteredItems({
 				},
 				type: nextType,
 			}))
-			setPageState(targetState.page)
+			setRequestedPage(targetState.page)
 
 			return nextScopedByType
 		})
-	}, [filters, page])
+	}, [filters, requestedPage])
 
 	const setPage = useCallback((nextPage: number) => {
-		setPageState(nextPage)
+		setRequestedPage(nextPage)
 		setScopedByType((previousScopedByType) => ({
 			...previousScopedByType,
 			[filters.type]: toAssetFilterState(filters, nextPage),

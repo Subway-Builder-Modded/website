@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { createElement, useCallback, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import {
@@ -17,6 +17,7 @@ import Markdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
 
 import { GalleryImage } from "@/components/railyard/gallery-image"
+import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
 import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
@@ -38,6 +39,7 @@ import {
 } from "@/components/ui/table"
 import { useRegistryItem } from "@/hooks/use-registry-item"
 import { useVersions } from "@/hooks/use-versions"
+import { getCountryFlagIcon } from "@/lib/railyard/flags"
 import { mergeVersionDownloads, withZeroDownloads } from "@/lib/railyard/version-downloads"
 import { cn } from "@/lib/utils"
 import type {
@@ -120,6 +122,8 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
   const browseLabel = "Browse"
   const isMap = item ? isMapManifest(item) : false
   const mapItem = item as MapManifest | null
+  const mapCountryCode = mapItem?.country?.trim().toUpperCase()
+  const countryFlag = getCountryFlagIcon(mapCountryCode)
   const galleryImages = item?.gallery ?? []
 
   useEffect(() => {
@@ -294,7 +298,12 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
               {mapItem.city_code && (
                 <span className="font-mono font-bold text-foreground text-base">{mapItem.city_code}</span>
               )}
-              {mapItem.country && <span>{mapItem.country}</span>}
+              {mapItem.country && (
+                <span className="inline-flex items-center gap-1">
+                  {countryFlag ? createElement(countryFlag, { className: "h-3.5 w-[18px] rounded-[1px]" }) : null}
+                  <span>{mapItem.country}</span>
+                </span>
+              )}
               {(mapItem.population ?? 0) > 0 && (
                 <span className="flex items-center gap-1">
                   <Users className="h-3.5 w-3.5" aria-hidden="true" />
@@ -376,15 +385,14 @@ export function ProjectPage({ type, id }: ProjectPageProps) {
                   <TableCell>
                     <span className="font-medium text-foreground">{version.version}</span>
                     {version.prerelease && (
-                      <Badge
-                        className="ml-2 shrink-0 rounded-full border bg-transparent font-medium tracking-normal text-xs h-auto px-1.5 py-0"
-                        style={{ borderColor: "#d29922", color: "#d29922" }}
-                      >
-                        Beta
-                      </Badge>
+                      <span className="ml-2 inline-flex align-middle">
+                        <ReleaseTagBadge kind="beta" size="sm" />
+                      </span>
                     )}
                     {latestVersion?.version === version.version && (
-                      <Badge variant="secondary" className="ml-2 text-[10px]">Latest</Badge>
+                      <span className="ml-2 inline-flex align-middle">
+                        <ReleaseTagBadge kind="latest" size="sm" />
+                      </span>
                     )}
                   </TableCell>
                   <TableCell className="text-muted-foreground">{formatDate(version.date)}</TableCell>

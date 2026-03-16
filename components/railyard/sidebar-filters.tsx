@@ -2,6 +2,7 @@
 
 import {
   BadgeCheck,
+  Check,
   GraduationCap,
   Layers3,
   MapPin,
@@ -10,7 +11,6 @@ import {
 } from "lucide-react"
 import type { ComponentType, Dispatch, SetStateAction } from "react"
 
-import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import type { SearchFilterState } from "@/hooks/use-filtered-items"
 import type { AssetType } from "@/lib/railyard/asset-types"
@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils"
 const FILTER_SECTION_TITLE_CLASS =
   "text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1"
 const FILTER_SECTION_OPTION_CLASS =
-  "w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+  "w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-sm transition-colors cursor-pointer select-none"
 const FILTER_SECTION_CLEAR_CLASS =
   "mt-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
 
@@ -227,20 +227,38 @@ function ChecklistFilterSection({
       ) : (
         <div className="space-y-1">
           {visibleValues.map((value) => (
-            <button
+            <div
               key={value}
-              type="button"
+              role="button"
+              tabIndex={0}
               onClick={() => toggle(value)}
-              className={cn(FILTER_SECTION_OPTION_CLASS, "justify-between")}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(value) } }}
+              className={cn(
+                FILTER_SECTION_OPTION_CLASS,
+                "justify-between",
+                selected.includes(value)
+                  ? "text-foreground bg-accent/60"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
+              )}
             >
               <span className="flex items-center gap-2">
-                <Checkbox checked={selected.includes(value)} aria-hidden="true" />
+                <span
+                  className={cn(
+                    "size-4 shrink-0 rounded-sm border border-input flex items-center justify-center transition-colors",
+                    selected.includes(value)
+                      ? "bg-primary border-primary text-primary-foreground"
+                      : "bg-background text-transparent"
+                  )}
+                  aria-hidden="true"
+                >
+                  <Check className="size-3" />
+                </span>
                 <span>{formatValue(value)}</span>
               </span>
               <span className="text-xs tabular-nums text-muted-foreground">
                 {counts[value] ?? 0}
               </span>
-            </button>
+            </div>
           ))}
         </div>
       )}

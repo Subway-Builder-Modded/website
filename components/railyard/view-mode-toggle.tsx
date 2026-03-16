@@ -19,7 +19,7 @@ const options: Array<{ value: SearchViewMode; label: string; icon: typeof Square
 
 export function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
   return (
-    <div className="inline-flex items-center rounded-md border border-input bg-background p-0.5" aria-label="Browse view mode">
+    <div className="inline-flex items-center rounded-md border border-input bg-background p-0.5" aria-label="Browse view mode" role="radiogroup">
       {options.map((option) => {
         const Icon = option.icon
         const selected = value === option.value
@@ -34,10 +34,11 @@ export function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
               "inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs transition-colors",
               selected
                 ? "bg-accent text-accent-foreground"
-                : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
+                : "text-muted-foreground hover:text-foreground"
             )}
             aria-label={`${option.label} view`}
-            aria-pressed={selected}
+            role="radio"
+            aria-checked={selected}
           >
             <Icon className="h-4 w-4" />
             {option.label}

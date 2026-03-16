@@ -1,12 +1,12 @@
 "use client"
 
 import { AlertCircle, SearchX } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { CardSkeletonGrid } from "@/components/railyard/card-skeleton-grid"
 import { EmptyState } from "@/components/railyard/empty-state"
-import { ItemCard } from "@/components/railyard/item-card"
+import { ItemCard } from "./item-card"
 import { Pagination } from "@/components/railyard/pagination"
 import { SearchBar } from "@/components/railyard/search-bar"
 import { SidebarFilters } from "@/components/railyard/sidebar-filters"
@@ -33,6 +33,11 @@ function normalizeType(value: string | null): "mod" | "map" | undefined {
 
 export function BrowsePage() {
   const { mods, maps, loading, error, modDownloadTotals, mapDownloadTotals } = useRegistry()
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
 
   const router = useRouter()
   const pathname = usePathname()
@@ -101,7 +106,7 @@ export function BrowsePage() {
   const resultsLayoutClassName = useMemo(() => {
     if (viewMode === "list") return "space-y-4"
     if (viewMode === "compact") {
-      return "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3"
+      return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
     }
     return "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
   }, [viewMode])
@@ -118,6 +123,20 @@ export function BrowsePage() {
 
   const modCount = mods.length
   const mapCount = maps.length
+
+  if (!isClient) {
+    return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground text-balance">Browse</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Discover and install maps and mods for Subway Builder.
+          </p>
+        </div>
+        <CardSkeletonGrid count={12} />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-5">

@@ -7,6 +7,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { GalleryImage } from "@/components/railyard/gallery-image"
 import { Badge } from "@/components/ui/badge"
 import { type AssetType, assetTypeToListingPath } from "@/lib/railyard/asset-types"
+import { getCountryFlagIcon } from "@/lib/railyard/flags"
 import { formatSourceQuality } from "@/lib/railyard/map-filter-values"
 import { MAX_CARD_BADGES } from "@/lib/railyard/search"
 import type { SearchViewMode } from "@/lib/railyard/search-view-mode"
@@ -27,6 +28,7 @@ interface ItemCardPresentation {
   mapCityCode: string
   mapCountry: string
   mapPopulation?: number
+  CountryFlag: ReturnType<typeof getCountryFlagIcon> | null
   showDownloads: boolean
 }
 
@@ -57,11 +59,20 @@ function buildItemCardPresentation(
     mapCityCode,
     mapCountry,
     mapPopulation: isMap ? item.population : undefined,
+    CountryFlag: isMap ? getCountryFlagIcon(mapCountry) : null,
     showDownloads: typeof totalDownloads === "number",
   }
 }
 
-function MapLocationMeta({ cityCode, country }: { cityCode: string; country: string }) {
+function MapLocationMeta({
+  cityCode,
+  country,
+  CountryFlag,
+}: {
+  cityCode: string
+  country: string
+  CountryFlag: ReturnType<typeof getCountryFlagIcon> | null
+}) {
   if (!cityCode && !country) return null
 
   return (
@@ -73,6 +84,7 @@ function MapLocationMeta({ cityCode, country }: { cityCode: string; country: str
       )}
       {country && (
         <span className="inline-flex items-center justify-end gap-1 text-xs text-muted-foreground">
+          {CountryFlag && <CountryFlag className="h-3 w-4 rounded-[1px]" />}
           <span>{country.toUpperCase()}</span>
         </span>
       )}
@@ -205,7 +217,11 @@ export function ItemCard({
                   <p className="text-xs text-muted-foreground mt-0.5 truncate">by {item.author}</p>
                 </div>
                 {presentation.isMap && (
-                  <MapLocationMeta cityCode={presentation.mapCityCode} country={presentation.mapCountry} />
+                  <MapLocationMeta
+                    cityCode={presentation.mapCityCode}
+                    country={presentation.mapCountry}
+                    CountryFlag={presentation.CountryFlag}
+                  />
                 )}
               </div>
 
@@ -269,7 +285,11 @@ export function ItemCard({
                 <p className="text-[11px] text-muted-foreground mt-0.5 truncate">by {item.author}</p>
               </div>
               {presentation.isMap && (
-                <MapLocationMeta cityCode={presentation.mapCityCode} country={presentation.mapCountry} />
+                <MapLocationMeta
+                  cityCode={presentation.mapCityCode}
+                  country={presentation.mapCountry}
+                  CountryFlag={presentation.CountryFlag}
+                />
               )}
             </div>
 
@@ -335,7 +355,11 @@ export function ItemCard({
               <p className="text-xs text-muted-foreground mt-0.5 truncate">by {item.author}</p>
             </div>
             {presentation.isMap && (
-              <MapLocationMeta cityCode={presentation.mapCityCode} country={presentation.mapCountry} />
+              <MapLocationMeta
+                cityCode={presentation.mapCityCode}
+                country={presentation.mapCountry}
+                CountryFlag={presentation.CountryFlag}
+              />
             )}
           </div>
 

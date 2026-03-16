@@ -30,7 +30,9 @@ export function useVersions(update?: UpdateConfig): UseVersionsResult {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!update) {
+    const currentUpdate = update
+
+    if (!currentUpdate) {
       setLoading(false)
       return
     }
@@ -42,9 +44,9 @@ export function useVersions(update?: UpdateConfig): UseVersionsResult {
         setLoading(true)
         setError(null)
 
-        if (update!.type === "github" && update!.repo) {
+        if (currentUpdate.type === "github" && currentUpdate.repo) {
           const res = await fetch(
-            `https://api.github.com/repos/${update!.repo}/releases`
+            `https://api.github.com/repos/${currentUpdate.repo}/releases`
           )
           if (!res.ok) throw new Error("Failed to fetch GitHub releases")
           const releases: GithubRelease[] = await res.json()
@@ -76,13 +78,20 @@ export function useVersions(update?: UpdateConfig): UseVersionsResult {
           })
 
           if (!cancelled) setVersions(mapped)
-        } else if (update!.url) {
-          const res = await fetch(update!.url)
+        } else if (currentUpdate.url) {
+          const res = await fetch(currentUpdate.url)
           if (!res.ok) throw new Error("Failed to fetch version info")
           const data = await res.json()
 
-          const parsed: VersionInfo[] = Array.isArray(data)
-            ? data.map((entry: Record<string, unknown>) => ({
+          const rawVersions = Array.isArray(data)
+            ? data
+            : Array.isArray((data as { versions?: unknown[] })?.versions)
+              ? (data as { versions: unknown[] }).versions
+              : []
+
+          const parsed: VersionInfo[] = rawVersions
+            .map((entry) => (entry ?? {}) as Record<string, unknown>)
+            .map((entry: Record<string, unknown>) => ({
                 version: (entry.version as string) ?? "",
                 name: (entry.name as string) ?? (entry.version as string) ?? "",
                 changelog: (entry.changelog as string) ?? "",
@@ -94,7 +103,6 @@ export function useVersions(update?: UpdateConfig): UseVersionsResult {
                 manifest: entry.manifest as string | undefined,
                 prerelease: (entry.prerelease as boolean) ?? false,
               }))
-            : []
 
           if (!cancelled) setVersions(parsed)
         }
@@ -111,7 +119,7 @@ export function useVersions(update?: UpdateConfig): UseVersionsResult {
     return () => {
       cancelled = true
     }
-  }, [update?.type, update?.repo, update?.url])
+  }, [update])
 
   return { versions, loading, error }
 }
