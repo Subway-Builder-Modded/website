@@ -27,6 +27,43 @@ export interface CustomVersionEntry {
   prerelease: boolean
 }
 
+interface GithubReleaseCacheFile {
+  schema_version: number
+  generated_at: string
+  repos: Record<string, GithubRelease[]>
+  custom_urls?: Record<string, CustomVersionEntry[]>
+}
+
+const CACHE_URL = "/railyard/github-releases-cache.json"
+let cachePromise: Promise<GithubReleaseCacheFile | null> | null = null
+
+function normalizeRepo(repo: string): string {
+  return repo.trim().toLowerCase()
+}
+
+function normalizeCustomUrl(url: string): string {
+  return url.trim()
+}
+
+async function readReleaseCacheFile(): Promise<GithubReleaseCacheFile | null> {
+  try {
+    const response = await fetch(CACHE_URL, { cache: "no-store" })
+    if (!response.ok) return null
+    const payload = await response.json() as GithubReleaseCacheFile
+    if (!payload || typeof payload !== "object" || !payload.repos) return null
+    return payload
+  } catch {
+    return null
+  }
+}
+
+async function getReleaseCache(): Promise<GithubReleaseCacheFile | null> {
+  if (!cachePromise) {
+    cachePromise = readReleaseCacheFile()
+  }
+  return cachePromise
+}
+
 function sanitizeRelease(input: unknown): GithubRelease {
   const entry = (input ?? {}) as Record<string, unknown>
   const rawAssets = Array.isArray(entry.assets) ? entry.assets : []
@@ -80,34 +117,47 @@ function sanitizeCustomVersion(input: unknown): CustomVersionEntry {
   }
 }
 
-export async function getGithubReleases(repo: string): Promise<GithubRelease[]> {
-  const normalizedRepo = repo.trim()
-  if (!normalizedRepo) return []
-
-  const response = await fetch(`https://api.github.com/repos/${normalizedRepo}/releases`)
+async function fetchGitHubReleasesDirect(repo: string): Promise<GithubRelease[]> {
+  const response = await fetch(`https://api.github.com/repos/${repo}/releases`)
   if (!response.ok) {
-    throw new Error(`Failed to fetch GitHub releases for ${normalizedRepo}`)
+    throw new Error(`Failed to fetch GitHub releases for ${repo}`)
   }
-
   const releases = await response.json() as unknown[]
   return Array.isArray(releases) ? releases.map(sanitizeRelease) : []
 }
 
-export async function getCustomVersions(url: string): Promise<CustomVersionEntry[]> {
-  const normalizedUrl = url.trim()
-  if (!normalizedUrl) return []
-
-  const response = await fetch(normalizedUrl)
+async function fetchCustomVersionsDirect(url: string): Promise<CustomVersionEntry[]> {
+  const response = await fetch(url)
   if (!response.ok) {
-    throw new Error(`Failed to fetch custom versions from ${normalizedUrl}`)
+    throw new Error(`Failed to fetch custom versions from ${url}`)
   }
-
   const data = await response.json() as unknown
   const rawVersions = Array.isArray(data)
     ? data
     : Array.isArray((data as { versions?: unknown[] })?.versions)
       ? (data as { versions: unknown[] }).versions
       : []
-
   return rawVersions.map((entry) => sanitizeCustomVersion(entry))
+}
+
+export async function getGithubReleases(repo: string): Promise<GithubRelease[]> {
+  const normalizedRepo = repo.trim()
+  if (!normalizedRepo) return []
+
+  const cache = await getReleaseCache()
+  const cached = cache?.repos[normalizeRepo(normalizedRepo)]
+  if (Array.isArray(cached)) return cached.map(sanitizeRelease)
+
+  return fetchGitHubReleasesDirect(normalizedRepo)
+}
+
+export async function getCustomVersions(url: string): Promise<CustomVersionEntry[]> {
+  const normalizedUrl = normalizeCustomUrl(url)
+  if (!normalizedUrl) return []
+
+  const cache = await getReleaseCache()
+  const cached = cache?.custom_urls?.[normalizedUrl]
+  if (Array.isArray(cached)) return cached.map(sanitizeCustomVersion)
+
+  return fetchCustomVersionsDirect(normalizedUrl)
 }
