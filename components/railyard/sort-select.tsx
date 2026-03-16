@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect } from "react"
+
 import {
   Select,
   SelectContent,
@@ -7,24 +9,54 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { SortOption } from "@/hooks/use-filtered-items"
+import type { AssetType } from "@/lib/railyard/asset-types"
+import {
+  DEFAULT_SORT_STATE,
+  getSortOptionsForType,
+  SortKey,
+  sortKeyToState,
+  type SortState,
+  sortStateToOptionKey,
+} from "@/lib/railyard/constants"
 
 interface SortSelectProps {
-  value: SortOption
-  onChange: (value: SortOption) => void
-  options: { value: SortOption; label: string }[]
+  value: SortState
+  onChange: (value: SortState) => void
+  tab: AssetType
 }
 
-export function SortSelect({ value, onChange, options }: SortSelectProps) {
+export function SortSelect({ value, onChange, tab }: SortSelectProps) {
+  const sortOptions = getSortOptionsForType(tab)
+  const selectedOptionKey = sortStateToOptionKey(value, tab)
+
+  useEffect(() => {
+    if (!sortOptions.some((option) => option.value === selectedOptionKey)) {
+      const defaultKey = SortKey.fromState(DEFAULT_SORT_STATE)
+      const defaultOption =
+        sortOptions.find((option) => SortKey.equals(option.value, defaultKey)) ??
+        sortOptions[0]
+      if (defaultOption) {
+        onChange(defaultOption.sort)
+      }
+    }
+  }, [onChange, selectedOptionKey, sortOptions])
+
   return (
-    <Select value={value} onValueChange={(v) => onChange(v as SortOption)}>
+    <Select value={selectedOptionKey} onValueChange={(value) => onChange(sortKeyToState(value))}>
       <SelectTrigger className="w-36 h-8 text-xs">
         <SelectValue placeholder="Sort by…" />
       </SelectTrigger>
-      <SelectContent position="popper" side="bottom" sideOffset={6} align="end" className="z-[120]">
-        {options.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value} className="text-xs">
-            {opt.label}
+      <SelectContent
+        side="bottom"
+        sideOffset={4}
+        position="popper"
+        align="end"
+        avoidCollisions={false}
+        className="max-h-72 overflow-y-auto"
+      >
+        {sortOptions.map((option) => (
+          <SelectItem key={option.value} value={option.value} className="text-xs">
+            {option.label}
           </SelectItem>
         ))}
       </SelectContent>

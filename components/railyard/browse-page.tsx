@@ -1,76 +1,115 @@
 "use client"
 
-import { useEffect, useMemo } from "react"
+import { AlertCircle, SearchX } from "lucide-react"
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { SearchX, AlertCircle } from "lucide-react"
-import { useRegistry } from "@/hooks/use-registry"
-import { useFilteredItems, type TypeFilter, getSortOptions } from "@/hooks/use-filtered-items"
+
+import { CardSkeletonGrid } from "@/components/railyard/card-skeleton-grid"
+import { EmptyState } from "@/components/railyard/empty-state"
+import { ItemCard } from "./item-card"
+import { Pagination } from "@/components/railyard/pagination"
 import { SearchBar } from "@/components/railyard/search-bar"
 import { SidebarFilters } from "@/components/railyard/sidebar-filters"
 import { SortSelect } from "@/components/railyard/sort-select"
-import { ItemCard } from "@/components/railyard/item-card"
-import { CardSkeletonGrid } from "@/components/railyard/card-skeleton-grid"
-import { EmptyState } from "@/components/railyard/empty-state"
-import { Pagination } from "@/components/railyard/pagination"
+import { ViewModeToggle } from "@/components/railyard/view-mode-toggle"
+import { createRandomSeed, useFilteredItems } from "@/hooks/use-filtered-items"
+import { useRegistry } from "@/hooks/use-registry"
+import { buildAssetListingCounts } from "@/lib/railyard/listing-counts"
+import { buildSpecialDemandValues } from "@/lib/railyard/map-filter-values"
+import {
+  normalizeSearchViewMode,
+  type SearchViewMode,
+} from "@/lib/railyard/search-view-mode"
+import { cn } from "@/lib/utils"
 
-function normalizeType(value: string | null): TypeFilter {
-  if (value === "maps" || value === "mods") return value
-  return "all"
+const VIEW_MODE_STORAGE_KEY = "railyard:browse:view-mode:v1"
+
+function normalizeType(value: string | null): "mod" | "map" | undefined {
+  if (value === "mod" || value === "map") return value
+  if (value === "mods") return "mod"
+  if (value === "maps") return "map"
+  return undefined
 }
 
 export function BrowsePage() {
-  const { mods, maps, loading, error } = useRegistry()
+  const { mods, maps, loading, error, modDownloadTotals, mapDownloadTotals } = useRegistry()
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
+
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const queryType = normalizeType(searchParams.get("type"))
 
-  const initialType = normalizeType(searchParams.get("type"))
+  const [viewMode, setViewMode] = useState<SearchViewMode>(() => {
+    if (typeof window === "undefined") return "full"
+    return normalizeSearchViewMode(
+      window.localStorage.getItem(VIEW_MODE_STORAGE_KEY),
+      "full"
+    )
+  })
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, viewMode)
+  }, [viewMode])
 
   const allTags = useMemo(() => {
-    const modTags = mods.flatMap((m) => m.tags ?? [])
-    const mapTags = maps.flatMap((m) => m.tags ?? [])
-    return [...new Set([...modTags, ...mapTags])].sort()
-  }, [mods, maps])
+    const modTags = mods.flatMap((manifest) => manifest.tags ?? [])
+    return [...new Set(modTags)].sort()
+  }, [mods])
+
+  const availableSpecialDemand = useMemo(
+    () => buildSpecialDemandValues(maps),
+    [maps]
+  )
+
+  const {
+    modTagCounts,
+    mapLocationCounts,
+    mapSourceQualityCounts,
+    mapLevelOfDetailCounts,
+    mapSpecialDemandCounts,
+  } = useMemo(() => buildAssetListingCounts(mods, maps), [mods, maps])
 
   const {
     items,
     page,
     totalPages,
     totalResults,
-    query,
-    type,
-    selectedTags,
-    sort,
-    perPage,
-    setQuery,
+    filters,
+    setFilters,
     setType,
-    setSelectedTags,
-    setSort,
     setPage,
-    setPerPage,
-  } = useFilteredItems({ mods, maps, initialType })
-
-  const handleTypeChange = (nextType: TypeFilter) => {
-    setType(nextType)
-    if (nextType === "mods" && sort === "population-desc") {
-      setSort("name-asc")
-    }
-    if (nextType === "maps" && type !== "maps") {
-      setSort("population-desc")
-    }
-  }
+  } = useFilteredItems({
+    mods,
+    maps,
+    modDownloadTotals,
+    mapDownloadTotals,
+    initialType: queryType,
+  })
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString())
-    if (type === "all") params.delete("type")
-    else params.set("type", type)
+    params.set("type", filters.type)
 
     const next = params.toString()
     const current = searchParams.toString()
     if (next !== current) {
       router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false })
     }
-  }, [pathname, router, searchParams, type])
+  }, [filters.type, pathname, router, searchParams])
+
+  const resultsLayoutClassName = useMemo(() => {
+    if (viewMode === "list") return "space-y-4"
+    if (viewMode === "compact") {
+      return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+    }
+    return "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+  }, [viewMode])
 
   if (error) {
     return (
@@ -85,6 +124,20 @@ export function BrowsePage() {
   const modCount = mods.length
   const mapCount = maps.length
 
+  if (!isClient) {
+    return (
+      <div className="space-y-5">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground text-balance">Browse</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Discover and install maps and mods for Subway Builder.
+          </p>
+        </div>
+        <CardSkeletonGrid count={12} />
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-5">
       <div>
@@ -94,18 +147,26 @@ export function BrowsePage() {
         </p>
       </div>
 
-      <SearchBar query={query} onQueryChange={setQuery} />
+      <SearchBar
+        query={filters.query}
+        onQueryChange={(value) => setFilters((prev) => ({ ...prev, query: value }))}
+      />
 
       <div className="flex gap-6 items-start">
-        <aside className="w-52 shrink-0 sticky top-20">
+        <aside className="w-52 shrink-0">
           <SidebarFilters
-            type={type}
-            onTypeChange={handleTypeChange}
+            filters={filters}
+            onFiltersChange={setFilters}
+            onTypeChange={setType}
             availableTags={allTags}
-            selectedTags={selectedTags}
-            onTagsChange={setSelectedTags}
-            modCount={loading ? 0 : modCount}
-            mapCount={loading ? 0 : mapCount}
+            availableSpecialDemand={availableSpecialDemand}
+            modTagCounts={modTagCounts}
+            mapLocationCounts={mapLocationCounts}
+            mapSourceQualityCounts={mapSourceQualityCounts}
+            mapLevelOfDetailCounts={mapLevelOfDetailCounts}
+            mapSpecialDemandCounts={mapSpecialDemandCounts}
+            modCount={modCount}
+            mapCount={mapCount}
           />
         </aside>
 
@@ -118,37 +179,57 @@ export function BrowsePage() {
                 <>
                   <span className="font-medium text-foreground">{totalResults}</span>{" "}
                   result{totalResults !== 1 ? "s" : ""}
-                  {query && (
+                  {filters.query && (
                     <span className="ml-1">
-                      for <span className="italic">&quot;{query}&quot;</span>
+                      for <span className="italic">&quot;{filters.query}&quot;</span>
                     </span>
                   )}
                 </>
               )}
             </p>
-            <SortSelect value={sort} onChange={setSort} options={getSortOptions(type)} />
+            <div className="flex items-center gap-2">
+              <ViewModeToggle value={viewMode} onChange={setViewMode} />
+              <SortSelect
+                value={filters.sort}
+                onChange={(value) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    sort: value,
+                    randomSeed:
+                      value.field === "random" ? createRandomSeed() : prev.randomSeed,
+                  }))
+                }
+                tab={filters.type}
+              />
+            </div>
           </div>
 
           {loading ? (
-            <CardSkeletonGrid count={perPage} />
+            <CardSkeletonGrid count={filters.perPage} />
           ) : items.length === 0 ? (
             <EmptyState
               icon={SearchX}
               title="No results found"
               description={
-                query
-                  ? `No items match "${query}"`
+                filters.query
+                  ? `No items match "${filters.query}"`
                   : "No items match the current filters"
               }
             />
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className={cn(resultsLayoutClassName)}>
                 {items.map(({ type: itemType, item }) => (
                   <ItemCard
                     key={`${itemType}-${item.id}`}
                     type={itemType}
                     item={item}
+                    viewMode={viewMode}
+                    totalDownloads={
+                      itemType === "mod"
+                        ? (modDownloadTotals[item.id] ?? 0)
+                        : (mapDownloadTotals[item.id] ?? 0)
+                    }
                   />
                 ))}
               </div>
@@ -156,9 +237,11 @@ export function BrowsePage() {
                 page={page}
                 totalPages={totalPages}
                 totalResults={totalResults}
-                perPage={perPage}
+                perPage={filters.perPage}
                 onPageChange={setPage}
-                onPerPageChange={setPerPage}
+                onPerPageChange={(value) =>
+                  setFilters((prev) => ({ ...prev, perPage: value }))
+                }
               />
             </>
           )}

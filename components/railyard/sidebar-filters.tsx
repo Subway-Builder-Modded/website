@@ -1,66 +1,79 @@
 "use client"
 
-import { useState } from "react"
-import { LayoutGrid, Package, MapPin, Tag, X, Search } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
+import {
+  BadgeCheck,
+  Check,
+  GraduationCap,
+  Layers3,
+  MapPin,
+  Package,
+  Tag,
+} from "lucide-react"
+import type { ComponentType, Dispatch, SetStateAction } from "react"
+
 import { Separator } from "@/components/ui/separator"
-import type { TypeFilter } from "@/hooks/use-filtered-items"
+import type { SearchFilterState } from "@/hooks/use-filtered-items"
+import type { AssetType } from "@/lib/railyard/asset-types"
+import { filterVisibleListingValues } from "@/lib/railyard/listing-counts"
+import {
+  LEVEL_OF_DETAIL_VALUES,
+  LOCATION_TAGS,
+  SOURCE_QUALITY_VALUES,
+  formatSourceQuality,
+} from "@/lib/railyard/map-filter-values"
+import { SEARCH_FILTER_EMPTY_LABELS } from "@/lib/railyard/search"
+import { cn } from "@/lib/utils"
+
+const FILTER_SECTION_TITLE_CLASS =
+  "text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1"
+const FILTER_SECTION_OPTION_CLASS =
+  "w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-sm transition-colors cursor-pointer select-none"
+const FILTER_SECTION_CLEAR_CLASS =
+  "mt-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
 
 interface SidebarFiltersProps {
-  type: TypeFilter
-  onTypeChange: (type: TypeFilter) => void
+  filters: SearchFilterState
+  onFiltersChange: Dispatch<SetStateAction<SearchFilterState>>
+  onTypeChange: (type: AssetType) => void
   availableTags: string[]
-  selectedTags: string[]
-  onTagsChange: (tags: string[]) => void
+  availableSpecialDemand: string[]
+  modTagCounts: Record<string, number>
+  mapLocationCounts: Record<string, number>
+  mapSourceQualityCounts: Record<string, number>
+  mapLevelOfDetailCounts: Record<string, number>
+  mapSpecialDemandCounts: Record<string, number>
   modCount: number
   mapCount: number
 }
 
-const typeOptions: { value: TypeFilter; label: string; icon: typeof LayoutGrid }[] = [
-  { value: "all", label: "All", icon: LayoutGrid },
-  { value: "mods", label: "Mods", icon: Package },
-  { value: "maps", label: "Maps", icon: MapPin },
+const typeOptions = [
+  { value: "map" as const, label: "Maps", icon: MapPin },
+  { value: "mod" as const, label: "Mods", icon: Package },
 ]
 
 export function SidebarFilters({
-  type,
+  filters,
+  onFiltersChange,
   onTypeChange,
   availableTags,
-  selectedTags,
-  onTagsChange,
+  availableSpecialDemand,
+  modTagCounts,
+  mapLocationCounts,
+  mapSourceQualityCounts,
+  mapLevelOfDetailCounts,
+  mapSpecialDemandCounts,
   modCount,
   mapCount,
 }: SidebarFiltersProps) {
-  const [tagsOpen, setTagsOpen] = useState(false)
-  const [tagSearch, setTagSearch] = useState("")
-
-  const counts: Record<TypeFilter, number> = {
-    all: modCount + mapCount,
-    mods: modCount,
-    maps: mapCount,
+  const counts: Record<AssetType, number> = {
+    mod: modCount,
+    map: mapCount,
   }
-
-  const toggleTag = (tag: string) => {
-    onTagsChange(
-      selectedTags.includes(tag)
-        ? selectedTags.filter((t) => t !== tag)
-        : [...selectedTags, tag]
-    )
-  }
-
-  const filteredTags = availableTags.filter((tag) =>
-    tag.toLowerCase().includes(tagSearch.toLowerCase())
-  )
 
   return (
     <div className="space-y-5">
-      {/* Type filter */}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1">
-          Type
-        </p>
+        <FilterSectionTitle title="Type" />
         <nav className="space-y-0.5" aria-label="Content type filter">
           {typeOptions.map(({ value, label, icon: Icon }) => (
             <button
@@ -69,11 +82,11 @@ export function SidebarFilters({
               onClick={() => onTypeChange(value)}
               className={cn(
                 "w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm transition-colors",
-                type === value
+                filters.type === value
                   ? "bg-accent text-accent-foreground font-medium"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
               )}
-              aria-current={type === value ? "true" : undefined}
+              aria-current={filters.type === value ? "true" : undefined}
             >
               <span className="flex items-center gap-2">
                 <Icon className="h-3.5 w-3.5 shrink-0" />
@@ -82,7 +95,7 @@ export function SidebarFilters({
               <span
                 className={cn(
                   "text-xs tabular-nums",
-                  type === value ? "text-foreground" : "text-muted-foreground"
+                  filters.type === value ? "text-foreground" : "text-muted-foreground"
                 )}
               >
                 {counts[value]}
@@ -92,98 +105,182 @@ export function SidebarFilters({
         </nav>
       </div>
 
-      <Separator />
+      {filters.type !== "map" && (
+        <>
+          <Separator />
+          <ChecklistFilterSection
+            title="Tag"
+            icon={Tag}
+            values={availableTags}
+            counts={modTagCounts}
+            selected={filters.mod.tags}
+            onChange={(values) =>
+              onFiltersChange((prev) => ({
+                ...prev,
+                mod: { ...prev.mod, tags: values },
+              }))
+            }
+            emptyLabel={SEARCH_FILTER_EMPTY_LABELS.tags}
+          />
+        </>
+      )}
 
-      {/* Tags filter */}
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1">
-          Tags
-        </p>
-
-        <button
-          type="button"
-          onClick={() => setTagsOpen((v) => !v)}
-          className={cn(
-            "w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md border border-input text-sm transition-colors",
-            tagsOpen
-              ? "bg-accent border-ring"
-              : "bg-transparent hover:bg-accent/60"
-          )}
-          aria-expanded={tagsOpen}
-        >
-          <span className="flex items-center gap-2 text-muted-foreground">
-            <Tag className="h-3.5 w-3.5 shrink-0" />
-            {selectedTags.length > 0 ? `${selectedTags.length} selected` : "Filter by tag"}
-          </span>
-          {selectedTags.length > 0 && (
-            <Badge variant="secondary" className="h-4 px-1.5 text-xs min-h-0">
-              {selectedTags.length}
-            </Badge>
-          )}
-        </button>
-
-        {tagsOpen && (
-          <div className="mt-1.5 border border-border rounded-md bg-card overflow-hidden">
-            <div className="p-2 border-b border-border">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
-                <input
-                  type="text"
-                  placeholder="Search tags…"
-                  value={tagSearch}
-                  onChange={(e) => setTagSearch(e.target.value)}
-                  className="w-full pl-8 pr-2 py-1 text-xs bg-transparent outline-none placeholder:text-muted-foreground"
-                  aria-label="Search tags"
-                />
-              </div>
-            </div>
-            <div className="max-h-48 overflow-y-auto p-1">
-              {filteredTags.length === 0 ? (
-                <p className="px-2 py-3 text-xs text-muted-foreground text-center">No tags found</p>
-              ) : (
-                filteredTags.map((tag) => (
-                  <label
-                    key={tag}
-                    className="flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent"
-                  >
-                    <Checkbox
-                      checked={selectedTags.includes(tag)}
-                      onCheckedChange={() => toggleTag(tag)}
-                      aria-label={`Toggle tag ${tag}`}
-                      className="data-[state=checked]:border-emerald-500 data-[state=checked]:bg-emerald-500 data-[state=checked]:text-white"
-                    />
-                    <span className="text-xs">{tag}</span>
-                  </label>
-                ))
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Active tag chips */}
-        {selectedTags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {selectedTags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                onClick={() => toggleTag(tag)}
-                className="inline-flex items-center gap-1 bg-secondary text-secondary-foreground text-xs px-2 py-0.5 rounded-full hover:bg-secondary/80 transition-colors"
-              >
-                {tag}
-                <X className="h-2.5 w-2.5" aria-label={`Remove ${tag}`} />
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => onTagsChange([])}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Clear all
-            </button>
-          </div>
-        )}
-      </div>
+      {filters.type !== "mod" && (
+        <>
+          <Separator />
+          <ChecklistFilterSection
+            title="Location"
+            icon={MapPin}
+            values={LOCATION_TAGS}
+            counts={mapLocationCounts}
+            selected={filters.map.locations}
+            onChange={(values) =>
+              onFiltersChange((prev) => ({
+                ...prev,
+                map: { ...prev.map, locations: values },
+              }))
+            }
+          />
+          <ChecklistFilterSection
+            title="Source Quality"
+            icon={BadgeCheck}
+            values={SOURCE_QUALITY_VALUES}
+            counts={mapSourceQualityCounts}
+            formatValue={formatSourceQuality}
+            selected={filters.map.sourceQuality}
+            onChange={(values) =>
+              onFiltersChange((prev) => ({
+                ...prev,
+                map: { ...prev.map, sourceQuality: values },
+              }))
+            }
+          />
+          <ChecklistFilterSection
+            title="Level of Detail"
+            icon={Layers3}
+            values={LEVEL_OF_DETAIL_VALUES}
+            counts={mapLevelOfDetailCounts}
+            selected={filters.map.levelOfDetail}
+            onChange={(values) =>
+              onFiltersChange((prev) => ({
+                ...prev,
+                map: { ...prev.map, levelOfDetail: values },
+              }))
+            }
+          />
+          <ChecklistFilterSection
+            title="Special Demand"
+            icon={GraduationCap}
+            values={availableSpecialDemand}
+            counts={mapSpecialDemandCounts}
+            selected={filters.map.specialDemand}
+            onChange={(values) =>
+              onFiltersChange((prev) => ({
+                ...prev,
+                map: { ...prev.map, specialDemand: values },
+              }))
+            }
+            emptyLabel={SEARCH_FILTER_EMPTY_LABELS.specialDemand}
+          />
+        </>
+      )}
     </div>
+  )
+}
+
+interface FilterSectionProperties {
+  title: string
+  values: readonly string[]
+  counts: Record<string, number>
+  selected: string[]
+  icon: ComponentType<{ className?: string }>
+  onChange: (values: string[]) => void
+  emptyLabel?: string
+  formatValue?: (value: string) => string
+}
+
+function ChecklistFilterSection({
+  title,
+  icon: Icon,
+  values,
+  counts,
+  selected,
+  onChange,
+  emptyLabel = SEARCH_FILTER_EMPTY_LABELS.generic,
+  formatValue = (value) => value,
+}: FilterSectionProperties) {
+  const visibleValues = filterVisibleListingValues(values, counts, selected)
+
+  const toggle = (value: string) => {
+    onChange(
+      selected.includes(value)
+        ? selected.filter((selectedValue) => selectedValue !== value)
+        : [...selected, value]
+    )
+  }
+
+  return (
+    <div>
+      <FilterSectionTitle title={title} icon={Icon} />
+      {visibleValues.length === 0 ? (
+        <p className="text-xs text-muted-foreground px-1">{emptyLabel}</p>
+      ) : (
+        <div className="space-y-1">
+          {visibleValues.map((value) => (
+            <div
+              key={value}
+              role="button"
+              tabIndex={0}
+              onClick={() => toggle(value)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(value) } }}
+              className={cn(
+                FILTER_SECTION_OPTION_CLASS,
+                "justify-between",
+                selected.includes(value)
+                  ? "text-foreground bg-accent/60"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
+              )}
+            >
+              <span className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "size-4 shrink-0 rounded-sm border border-input flex items-center justify-center transition-colors",
+                    selected.includes(value)
+                      ? "bg-primary border-primary text-primary-foreground"
+                      : "bg-background text-transparent"
+                  )}
+                  aria-hidden="true"
+                >
+                  <Check className="size-3" />
+                </span>
+                <span>{formatValue(value)}</span>
+              </span>
+              <span className="text-xs tabular-nums text-muted-foreground">
+                {counts[value] ?? 0}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+      {selected.length > 0 && (
+        <button type="button" onClick={() => onChange([])} className={FILTER_SECTION_CLEAR_CLASS}>
+          Clear {title.toLowerCase()}
+        </button>
+      )}
+    </div>
+  )
+}
+
+interface TitleProperties {
+  title: string
+  icon?: ComponentType<{ className?: string }>
+}
+
+function FilterSectionTitle({ title, icon: Icon }: TitleProperties) {
+  return (
+    <p className={cn(FILTER_SECTION_TITLE_CLASS, Icon && "flex items-center gap-1.5")}>
+      {Icon && <Icon className="h-3.5 w-3.5" />}
+      {title}
+    </p>
   )
 }
