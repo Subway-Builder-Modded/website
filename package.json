@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/generate-github-release-cache.mjs",
+    "prebuild": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/generate-github-release-cache.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
