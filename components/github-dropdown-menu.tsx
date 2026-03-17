@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import type { LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { Link } from "@/components/ui/link"
@@ -11,6 +12,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { GITHUB_DROPDOWN_ITEMS, GITHUB_ORG_URL } from "@/lib/github-dropdown-config"
+
+function isMaskIcon(icon: unknown): icon is { type: "mask"; src: string } {
+  return typeof icon === "object" && icon !== null && "type" in icon && (icon as { type?: string }).type === "mask"
+}
 
 export function GitHubDropdownMenu({ className }: { className: string }) {
   const { resolvedTheme } = useTheme()
@@ -102,7 +107,7 @@ export function GitHubDropdownMenu({ className }: { className: string }) {
         className="min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg duration-200 ease-[cubic-bezier(.22,.9,.35,1)] data-open:duration-220 data-open:ease-[cubic-bezier(.22,.9,.35,1)] data-closed:duration-190 data-closed:ease-[cubic-bezier(.3,.0,.2,1)]"
       >
         {GITHUB_DROPDOWN_ITEMS.map((item) => {
-          const Icon = item.icon
+          const Icon = item.icon && !isMaskIcon(item.icon) ? (item.icon as LucideIcon) : undefined
           const hoverColors = item.colors ? (isDark ? item.colors.dark : item.colors.light) : null
           const isItemHovered = hoveredItemId === item.id
 
