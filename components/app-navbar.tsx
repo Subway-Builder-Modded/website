@@ -133,6 +133,15 @@ export default function AppNavbar(props: NavbarProps) {
   }
 
   const renderRightItem = (item: NavbarItem) => {
+    const handleRightItemOpenChange = (nextOpen: boolean) => {
+      if (nextOpen) {
+        setActiveDropdownId(item.id)
+        return
+      }
+
+      setActiveDropdownId((current) => (current === item.id ? null : current))
+    }
+
     if (item.id === "theme") {
       return (
         <ThemeToggleMenu
@@ -140,7 +149,7 @@ export default function AppNavbar(props: NavbarProps) {
           className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")}
           items={item.dropdown}
           open={activeDropdownId === item.id}
-          onOpenChange={(nextOpen) => setActiveDropdownId(nextOpen ? item.id : null)}
+          onOpenChange={handleRightItemOpenChange}
         />
       )
     }
@@ -152,7 +161,7 @@ export default function AppNavbar(props: NavbarProps) {
           item={item}
           className={socialLinkClassName}
           open={activeDropdownId === item.id}
-          onOpenChange={(nextOpen) => setActiveDropdownId(nextOpen ? item.id : null)}
+          onOpenChange={handleRightItemOpenChange}
         />
       )
     }
