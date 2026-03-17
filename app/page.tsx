@@ -88,7 +88,7 @@ const HOMEPAGE_ITEMS: HomeItem[] = [
       type: "mask",
       src: "/assets/discord.svg",
     },
-    title: "Discord",
+    title: "Join the Community",
     description: "Join our Discord server to connect with the community and get support.",
     href: "https://discord.gg/syG9YHMyeG",
   },
