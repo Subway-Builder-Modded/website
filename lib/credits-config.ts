@@ -21,17 +21,17 @@ export const CREDIT_SECTIONS: CreditSection[] = [
     people: [
       {
         name: "kaicardenas0618",
-        role: `Inventor of the term "history" as well as other terms like "eventful" and "participant".`,
+        role: `Maintainer of Railyard and the Subway Builder Modded website.`,
         link: "https://github.com/kaicardenas0618",
       },
       {
         name: "ahkimn",
-        role: `Artist of many beautiful art pieces, available at the [art page](/art).`,
+        role: "Maintainer of Railyard, the Subway Builder Modded website, and the Template Mod.",
         link: "https://github.com/ahkimn",
       },
       {
         name: "Kronifer",
-        role: "Prime minister of Canada and surrounding territories.",
+        role: "Maintainer of Railyard and creator of the legacy Map Manager.",
         link: "https://github.com/kronifer",
       },
     ],

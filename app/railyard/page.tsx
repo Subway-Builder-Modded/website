@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 import type { LucideIcon } from "lucide-react"
-import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack } from "lucide-react"
+import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack, Search, Download } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
@@ -181,9 +181,9 @@ const FEATURES: FeatureItem[] = [
 ]
 
 const WORKFLOW_STOPS = [
-  { id: "find",    title: "Find",    desc: "Browse curated maps and mods from the community." },
-  { id: "install", title: "Install", desc: "Choose what you want and install it quickly." },
-  { id: "manage",  title: "Manage",  desc: "Enable or disable content anytime for each playthrough." },
+  { id: "find",    icon: Search,   title: "Find",    desc: "Browse curated maps and mods from the community." },
+  { id: "install", icon: Download, title: "Install", desc: "Choose what you want and install it quickly." },
+  { id: "manage",  icon: Settings, title: "Manage",  desc: "Enable or disable content anytime for each playthrough." },
 ]
 
 const INDEX_BASE = "https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/refs/heads/main"
@@ -200,7 +200,6 @@ export default function RailyardPage() {
   const [downloads, setDownloads] = useState<DownloadEntry[]>(DOWNLOAD_TEMPLATE)
   const [mapCount, setMapCount] = useState<number | null>(null)
   const [modCount, setModCount] = useState<number | null>(null)
-  const [activeFeature, setActiveFeature] = useState(FEATURES[0].id)
   const [activeStop, setActiveStop] = useState(WORKFLOW_STOPS[0].id)
   const [detectedPlatform, setDetectedPlatform] = useState<PlatformInfo>(() => detectPlatform())
   const [selectedOS, setSelectedOS] = useState("Windows")
@@ -270,7 +269,7 @@ export default function RailyardPage() {
   return (
     <main className="railyard-accent relative min-h-screen text-foreground">
 
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <div className="pointer-events-none fixed -inset-y-[32vh] inset-x-0 z-0 overflow-hidden" aria-hidden="true">
         <motion.div
           className="absolute inset-0"
           style={{ scale: heroScale, y: heroY }}
@@ -296,7 +295,7 @@ export default function RailyardPage() {
       </div>
 
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative z-10 h-svh">
+      <section className="relative z-20 h-svh">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/35" />
         <div className="absolute inset-0 bg-gradient-to-b from-primary/8 to-transparent pointer-events-none" />
 
@@ -333,7 +332,7 @@ export default function RailyardPage() {
             </p>
 
             {/* Download button group */}
-            <div ref={dropdownRef} className="relative mt-6 inline-flex z-[120]">
+            <div ref={dropdownRef} className="relative mt-6 inline-flex z-50">
               <div className="inline-flex overflow-hidden rounded-lg shadow-md ring-1 ring-primary/35">
                 <a
                   href={nativeDownload.link}
@@ -362,7 +361,7 @@ export default function RailyardPage() {
               </div>
 
               {menuOpen && (
-                <div className="absolute left-0 top-full z-[130] mt-1.5 min-w-[320px] rounded-lg border border-border bg-popover py-1 shadow-lg ring-1 ring-foreground/10">
+                <div className="absolute left-0 top-full z-50 mt-1.5 min-w-[320px] rounded-lg border border-border bg-popover py-1 shadow-lg ring-1 ring-foreground/10">
                   {downloads.map((dl) => (
                     <a
                       key={dl.label}
@@ -428,18 +427,13 @@ export default function RailyardPage() {
           <SectionHeader title="Features" />
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
             {FEATURES.map((feature) => {
-              const active = activeFeature === feature.id
               return (
                 <Card
                   key={feature.id}
                   className={cn(
                     "relative overflow-hidden cursor-pointer transition-all duration-200 outline-none p-6",
-                    "border border-border hover:border-border/70",
-                    active && "border-primary/50 shadow-md ring-1 ring-primary/25"
+                    "border border-border hover:border-primary/40 hover:shadow-md hover:ring-1 hover:ring-primary/20"
                   )}
-                  onMouseEnter={() => setActiveFeature(feature.id)}
-                  onFocus={() => setActiveFeature(feature.id)}
-                  tabIndex={0}
                   role="article"
                 >
                   <div className="flex items-start gap-4">
@@ -482,7 +476,7 @@ export default function RailyardPage() {
         <div className="max-w-screen-lg mx-auto">
           <SectionHeader title="From Download to Play in Three Stops" />
           <div className="mt-10 grid sm:grid-cols-3 gap-4">
-            {WORKFLOW_STOPS.map((stop, idx) => {
+            {WORKFLOW_STOPS.map((stop) => {
               const active = activeStop === stop.id
               return (
                 <button
@@ -499,24 +493,18 @@ export default function RailyardPage() {
                   )}
                 >
                   <div className="mb-2 flex min-h-7 items-center gap-3">
-                    <span
-                      className={cn(
-                        "flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold transition-colors",
-                        "bg-[var(--railyard-bullet-bg-light)] text-[var(--railyard-bullet-fg-light)]",
-                        "dark:bg-[var(--railyard-bullet-bg-dark)] dark:text-[var(--railyard-bullet-fg-dark)]",
-                        active
-                          ? "ring-1 ring-primary/35"
-                          : "opacity-85"
-                      )}
-                      style={{
-                        ["--railyard-bullet-bg-light" as string]: RAILYARD_COLORS.primaryHex.light,
-                        ["--railyard-bullet-bg-dark" as string]: RAILYARD_COLORS.primaryHex.dark,
-                        ["--railyard-bullet-fg-light" as string]: RAILYARD_COLORS.textHex.light,
-                        ["--railyard-bullet-fg-dark" as string]: RAILYARD_COLORS.textHex.dark,
-                      }}
-                    >
-                      {idx + 1}
-                    </span>
+                    <LineBullet
+                      bullet={<stop.icon className="size-3.5" aria-hidden="true" />}
+                      color={RAILYARD_COLORS.primaryHex.light}
+                      darkColor={RAILYARD_COLORS.primaryHex.dark}
+                      textColor={RAILYARD_COLORS.textHex.light}
+                      darkTextColor={RAILYARD_COLORS.textHex.dark}
+                      hoverColor={RAILYARD_COLORS.primaryHex.light}
+                      darkHoverColor={RAILYARD_COLORS.primaryHex.dark}
+                      shape="circle"
+                      size="sm"
+                      className={cn("shrink-0", !active && "opacity-85")}
+                    />
                     <h3 className="font-semibold text-foreground">{stop.title}</h3>
                   </div>
                   <p className="pt-0.5 text-sm text-muted-foreground leading-relaxed">{stop.desc}</p>
