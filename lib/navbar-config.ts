@@ -2,9 +2,9 @@ import {
   BookText,
   Download,
   FolderGit2,
+  Package,
   Map,
   Megaphone,
-  MessageCircle,
   Moon,
   Sun,
   SunMoon,
@@ -32,7 +32,12 @@ export type NavbarMaskIcon = {
   src: string
 }
 
-export type NavbarIcon = LucideIcon | NavbarMaskIcon
+export type NavbarImageIcon = {
+  type: "image"
+  src: string
+}
+
+export type NavbarIcon = LucideIcon | NavbarMaskIcon | NavbarImageIcon
 
 export type NavbarDropdownItem = {
   id: string
@@ -119,7 +124,7 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
   },
   {
     id: "discord",
-    href: "https://discord.gg/jrNQpbytUQ",
+    href: "https://discord.gg/syG9YHMyeG",
     icon: {
       type: "mask",
       src: "/assets/discord.svg",
@@ -131,7 +136,7 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
         title: "Subway Builder",
         href: "https://discord.gg/jrNQpbytUQ",
         icon: {
-            type: "mask",
+            type: "image",
             src: "/assets/subway-builder.svg",
         },
       },
@@ -165,38 +170,6 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
           dark: {
             text: "#4ade80",
             background: "#4ADE8033",
-          },
-        },
-      },
-      {
-        id: "registry",
-        title: "Registry",
-        href: "https://github.com/Subway-Builder-Modded/The-Railyard",
-        icon: FolderGit2,
-        colors: {
-          light: {
-            text: "#15803d",
-            background: "#22C55E2E",
-          },
-          dark: {
-            text: "#4ade80",
-            background: "#4ADE8033",
-          },
-        },
-      },
-      {
-        id: "template-mod",
-        title: "Template Mod",
-        href: "https://github.com/Subway-Builder-Modded/template-mod",
-        icon: FolderGit2,
-        colors: {
-          light: {
-            text: "#1d4ed8",
-            background: "#3B82F629",
-          },
-          dark: {
-            text: "#60a5fa",
-            background: "#60A5FA38",
           },
         },
       },

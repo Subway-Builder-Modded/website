@@ -37,6 +37,10 @@ function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask
   return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
 }
 
+function isImageIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "image" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "image"
+}
+
 function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: string }) {
   if (!icon) return null
 
@@ -50,6 +54,10 @@ function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: st
         }}
       />
     )
+  }
+
+  if (isImageIcon(icon)) {
+    return <img src={icon.src} alt="" aria-hidden className={cn("block size-5 object-contain md:size-4", className)} />
   }
 
   const Icon = icon as LucideIcon

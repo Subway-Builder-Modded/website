@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import type { LucideIcon } from "lucide-react"
+import NextLink from "next/link"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import type { NavbarIcon, NavbarItem } from "@/lib/navbar-config"
@@ -17,6 +18,10 @@ function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask
   return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
 }
 
+function isImageIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "image" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "image"
+}
+
 function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: string }) {
   if (!icon) return null
 
@@ -30,6 +35,10 @@ function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: st
         }}
       />
     )
+  }
+
+  if (isImageIcon(icon)) {
+    return <img src={icon.src} alt="" aria-hidden className={cn("block size-5 object-contain md:size-4", className)} />
   }
 
   const Icon = icon as LucideIcon
@@ -182,6 +191,7 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
         {dropdownItems.map((dropdownItem) => {
           const Icon = dropdownItem.icon
           const hoverColors = dropdownItem.colors ? (isDark ? dropdownItem.colors.dark : dropdownItem.colors.light) : null
+          const isExternal = Boolean(dropdownItem.href?.startsWith("http://") || dropdownItem.href?.startsWith("https://"))
 
           return (
             <DropdownMenuItem
@@ -197,18 +207,28 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
               }
               className={cn(
                 "rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-colors duration-250 ease-[cubic-bezier(.22,.9,.35,1)]",
-                hoverColors && "hover:text-[var(--navbar-hover-text)] hover:bg-[var(--navbar-hover-bg)] focus:text-[var(--navbar-hover-text)] focus:bg-[var(--navbar-hover-bg)]",
+                hoverColors && "data-[highlighted]:!text-[var(--navbar-hover-text)] data-[highlighted]:!bg-[var(--navbar-hover-bg)]",
               )}
             >
-              <Link
-                href={dropdownItem.href ?? "#"}
-                target={dropdownItem.href?.startsWith("http") ? "_blank" : undefined}
-                rel={dropdownItem.href?.startsWith("http") ? "noreferrer" : undefined}
-                className="flex items-center gap-2 no-underline !text-inherit"
-              >
-                <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />
-                <span>{dropdownItem.title}</span>
-              </Link>
+              {isExternal ? (
+                <a
+                  href={dropdownItem.href ?? "#"}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 no-underline"
+                >
+                  <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />
+                  <span>{dropdownItem.title}</span>
+                </a>
+              ) : (
+                <NextLink
+                  href={dropdownItem.href ?? "#"}
+                  className="flex items-center gap-2 no-underline"
+                >
+                  <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />
+                  <span>{dropdownItem.title}</span>
+                </NextLink>
+              )}
             </DropdownMenuItem>
           )
         })}
