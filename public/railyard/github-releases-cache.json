@@ -1,0 +1,2182 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-03-17T15:49:24.163Z",
+  "repos": {
+    "kronifer/sb-waterloo-map": [
+      {
+        "tag_name": "1.0.1",
+        "name": "1.0.1",
+        "body": "Actually added the airport demand back.",
+        "published_at": "2026-02-27T04:02:31Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "YKF.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-waterloo-map/releases/download/1.0.1/YKF.zip",
+            "download_count": 71,
+            "size": 35215668
+          }
+        ]
+      },
+      {
+        "tag_name": "1.0.0",
+        "name": "v1.0.0",
+        "body": "Initial release of the Region of Waterloo map for Subway Builder. Please note that this map was not created or endorsed by the development team of the game.",
+        "published_at": "2026-02-27T02:59:25Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "YKF.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-waterloo-map/releases/download/1.0.0/YKF.zip",
+            "download_count": 8,
+            "size": 35214720
+          }
+        ]
+      }
+    ],
+    "crumpetime/sb-maps-msn": [
+      {
+        "tag_name": "3.0.0",
+        "name": "3.0.0",
+        "body": "initial railyard release - reworked map entirely",
+        "published_at": "2026-03-14T01:19:31Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "MSN.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-msn/releases/download/3.0.0/MSN.zip",
+            "download_count": 43,
+            "size": 66706942
+          }
+        ]
+      }
+    ],
+    "soccerjonj/nashville": [
+      {
+        "tag_name": "2.0.0",
+        "name": "2.0.0",
+        "body": "Expanded the map to include nearby population hubs like Franklin, Cool Springs, Goodlettsville, Hendersonville, Gallatin, Lebanon, and Murfreesboro. Total demand in game went from 667,821 to 838,863. Attached is the zipped file for the Subway Builder Railyard",
+        "published_at": "2026-02-21T16:56:42Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Nashville-Railway.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Nashville/releases/download/2.0.0/Nashville-Railway.zip",
+            "download_count": 23,
+            "size": 58841486
+          }
+        ]
+      },
+      {
+        "tag_name": "1.0",
+        "name": "v1.0",
+        "body": "v1.0 of my Subway Builder Nashville mod",
+        "published_at": "2026-02-20T15:53:37Z",
+        "prerelease": false,
+        "assets": []
+      }
+    ],
+    "kronifer/sb-zurich-map": [
+      {
+        "tag_name": "v1.1.0",
+        "name": "v1.1.0",
+        "body": "Added map labels :]",
+        "published_at": "2026-03-04T02:54:38Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "ZRH.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-zurich-map/releases/download/v1.1.0/ZRH.zip",
+            "download_count": 128,
+            "size": 220939390
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.0",
+        "name": "v1.0.0",
+        "body": "Initial release. Includes Airport and University data.",
+        "published_at": "2026-03-02T16:49:20Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "ZRH.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-zurich-map/releases/download/v1.0.0/ZRH.zip",
+            "download_count": 32,
+            "size": 220041613
+          }
+        ]
+      }
+    ],
+    "crumpetime/sb-maps-xna": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "initial release",
+        "published_at": "2026-03-11T06:31:36Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "XNA.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-xna/releases/download/1.0.0/XNA.zip",
+            "download_count": 38,
+            "size": 54855508
+          }
+        ]
+      }
+    ],
+    "soccerjonj/providence": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "v1.0 of my Subway Builder Providence mod. Attached is the zipped file for the Subway Builder Railyard.",
+        "published_at": "2026-02-22T00:48:27Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Providence-Railyard.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Providence/releases/download/1.0.0/Providence-Railyard.zip",
+            "download_count": 41,
+            "size": 30926461
+          }
+        ]
+      }
+    ],
+    "barkuperman/tlv-mod": [
+      {
+        "tag_name": "v2.0.0",
+        "name": "v2.0.0",
+        "body": "Big rehaul of the map using a completely different set of data that has much better resolution and is more accurate.",
+        "published_at": "2026-03-09T18:59:43Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "TLV.zip",
+            "browser_download_url": "https://github.com/BarKuperman/TLV-mod/releases/download/v2.0.0/TLV.zip",
+            "download_count": 44,
+            "size": 53053617
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.3.0",
+        "name": "v1.3.0",
+        "body": "Better labels that now include villages and towns.\r\nFixed thumbnail for Map Manager v1.0.4.",
+        "published_at": "2026-03-02T09:56:22Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "TLV.zip",
+            "browser_download_url": "https://github.com/BarKuperman/TLV-mod/releases/download/v1.3.0/TLV.zip",
+            "download_count": 33,
+            "size": 52213155
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.2.0",
+        "name": "v1.2.0",
+        "body": "TLV map for Subway Builder. To be used with Kronifer's Map Patcher.\r\nInstall guide here: https://subwaybuildermodded.com/",
+        "published_at": "2026-02-25T15:27:28Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "TLV.v1.2.zip",
+            "browser_download_url": "https://github.com/BarKuperman/TLV-mod/releases/download/v1.2.0/TLV.v1.2.zip",
+            "download_count": 10,
+            "size": 52157692
+          }
+        ]
+      }
+    ],
+    "soccerjonj/sacramento": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "v1.0 of my Sacramento Subway Builder Mod. Attached is the zipped file for the Subway Builder Railyard.",
+        "published_at": "2026-02-21T15:12:21Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Sacramento-Railyard.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Sacramento/releases/download/1.0.0/Sacramento-Railyard.zip",
+            "download_count": 34,
+            "size": 78202585
+          }
+        ]
+      }
+    ],
+    "soccerjonj/louisville": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "V1.0 of my Subway Builder Louisville Mod. Attached is the zipped file for the Subway Builder Railyard.",
+        "published_at": "2026-02-23T21:11:00Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Louisville-Railyard.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Louisville/releases/download/1.0.0/Louisville-Railyard.zip",
+            "download_count": 36,
+            "size": 87348505
+          }
+        ]
+      }
+    ],
+    "soccerjonj/colorado-ski-country": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "V1.0 of my Colorado-Ski-Country map. Attached zip file for Subway Builder Railway.",
+        "published_at": "2026-02-25T17:22:35Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Colorado-Ski-Country-Railway.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Colorado-Ski-Country/releases/download/1.0.0/Colorado-Ski-Country-Railway.zip",
+            "download_count": 45,
+            "size": 75537082
+          }
+        ]
+      }
+    ],
+    "danield1909/improvedtwincities": [
+      {
+        "tag_name": "v1.0.0",
+        "name": "1.0.0",
+        "body": "",
+        "published_at": "2026-03-14T06:09:06Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "KMSP.zip",
+            "browser_download_url": "https://github.com/DanielD1909/improvedTwinCities/releases/download/v1.0.0/KMSP.zip",
+            "download_count": 36,
+            "size": 183676738
+          }
+        ]
+      }
+    ],
+    "kronifer/sb-dublin-map": [
+      {
+        "tag_name": "v1.1.0",
+        "name": "v1.1.0",
+        "body": "Fixes some points having negative resident counts.",
+        "published_at": "2026-03-11T17:40:03Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "DUB.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-dublin-map/releases/download/v1.1.0/DUB.zip",
+            "download_count": 52,
+            "size": 73945806
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.0",
+        "name": "v1.0.0",
+        "body": "Initial release",
+        "published_at": "2026-02-26T23:28:11Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "dublin.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-dublin-map/releases/download/v1.0.0/dublin.zip",
+            "download_count": 104,
+            "size": 73855372
+          }
+        ]
+      }
+    ],
+    "barkuperman/jerusalem-sb-map": [
+      {
+        "tag_name": "v0.3.1",
+        "name": "v0.3.1",
+        "body": "Changed folder name to JER be consistent with the 3 letter code in the config, sorry my bad.",
+        "published_at": "2026-03-06T13:25:45Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "JER.zip",
+            "browser_download_url": "https://github.com/BarKuperman/jerusalem-sb-map/releases/download/v0.3.1/JER.zip",
+            "download_count": 51,
+            "size": 25488597
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.3.0",
+        "name": "v0.3.0",
+        "body": "Should have more demand in hospitals, universities and large workplaces.\r\nAlso moved and split a lot of the demand points to be more realistic.",
+        "published_at": "2026-03-05T19:47:48Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "JLM.zip",
+            "browser_download_url": "https://github.com/BarKuperman/jerusalem-sb-map/releases/download/v0.3.0/JLM.zip",
+            "download_count": 13,
+            "size": 25488597
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.2.0",
+        "name": "v0.2.0",
+        "body": "First release, still work in progress so some demand points are not in the correct places and in the future I might add more demand points.\r\nTo be installed with the Map Manager - https://subwaybuildermodded.com/wiki/maps/map-installation-guide",
+        "published_at": "2026-03-05T12:10:40Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "JLM.zip",
+            "browser_download_url": "https://github.com/BarKuperman/jerusalem-sb-map/releases/download/v0.2.0/JLM.zip",
+            "download_count": 9,
+            "size": 25482695
+          }
+        ]
+      }
+    ],
+    "crumpetime/sb-maps-hkg": [
+      {
+        "tag_name": "0.4.0",
+        "name": "0.4.0",
+        "body": "added a couple missing entertainment demand points",
+        "published_at": "2026-03-07T22:14:36Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "HKG.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-hkg/releases/download/0.4.0/HKG.zip",
+            "download_count": 149,
+            "size": 57452165
+          }
+        ]
+      },
+      {
+        "tag_name": "0.3.0",
+        "name": "0.3.0_01",
+        "body": "reupload in (hopefully) correct format",
+        "published_at": "2026-03-02T04:55:43Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "HKG.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-hkg/releases/download/0.3.0/HKG.zip",
+            "download_count": 12,
+            "size": 57448271
+          }
+        ]
+      },
+      {
+        "tag_name": "railyard",
+        "name": "0.3.0",
+        "body": "initial railyard version",
+        "published_at": "2026-03-02T04:45:13Z",
+        "prerelease": false,
+        "assets": []
+      }
+    ],
+    "crumpetime/sb-maps-orf": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.4.0",
+        "body": "initial upload to repo",
+        "published_at": "2026-03-12T03:53:44Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "ORF.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-orf/releases/download/1.0.0/ORF.zip",
+            "download_count": 39,
+            "size": 125607232
+          }
+        ]
+      }
+    ],
+    "barkuperman/transit-overlay-subway-builder-mod": [
+      {
+        "tag_name": "1.5.0",
+        "name": "v1.5",
+        "body": "### **New Maps Added**\r\n*   **US Vanilla Maps:** All vanilla US maps with rapid transit are now available (hopefully!).\r\n*   **Global Additions:** \r\n    *   **Hong Kong**\r\n    *   **Jerusalem** ",
+        "published_at": "2026-03-06T16:21:45Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/BarKuperman/transit-overlay-subway-builder-mod/releases/download/1.5.0/manifest.json",
+            "download_count": 1468,
+            "size": 470
+          },
+          {
+            "name": "transit-overlay.zip",
+            "browser_download_url": "https://github.com/BarKuperman/transit-overlay-subway-builder-mod/releases/download/1.5.0/transit-overlay.zip",
+            "download_count": 194,
+            "size": 5452848
+          }
+        ]
+      }
+    ],
+    "ahkimn/subwaybuilder-regions": [
+      {
+        "tag_name": "v0.4.5",
+        "name": "v0.4.5",
+        "body": "## v0.4.5 - 2026-03-04\n\n_Game version_ v1.1.0\n\n### New Features\n\n- Added GB `wpcs` support for Westminster Parliamentary Constituencies (ONS July 2024 boundaries).\n- Added online fetch support for CA `peds` via hosted `.geojson.gz` source (no longer local-only in runtime fetch flows).\n- Added shared remote compressed GeoJSON loader utility for script pipelines so hosted binary `.geojson.gz` sources can be reused across datasets/countries.\n\n### Other Updates\n\n- GB population attachment is now sourced from NOMIS API for all GB datasets (`districts`, `wpcs`, `bua`, `wards`)\n  - Deprecated local CSV population matching path in GB extraction scripts.\n\n",
+        "published_at": "2026-03-08T20:10:36Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/ahkimn/subwaybuilder-regions/releases/download/v0.4.5/manifest.json",
+            "download_count": 1674,
+            "size": 642
+          },
+          {
+            "name": "subwaybuilder-regions-v0.4.5.zip",
+            "browser_download_url": "https://github.com/ahkimn/subwaybuilder-regions/releases/download/v0.4.5/subwaybuilder-regions-v0.4.5.zip",
+            "download_count": 216,
+            "size": 383768
+          }
+        ]
+      }
+    ],
+    "gio1112/subway-builder-citymapper": [
+      {
+        "tag_name": "0.1.2",
+        "name": "v0.1.2 | Minor efficiency changes",
+        "body": "Made the code more efficient, thats really all, should be better and fix some bugs maybe fps too.",
+        "published_at": "2026-03-15T18:28:25Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "citymapper.zip",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.2/citymapper.zip",
+            "download_count": 37,
+            "size": 14664
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.2/manifest.json",
+            "download_count": 425,
+            "size": 847
+          }
+        ]
+      },
+      {
+        "tag_name": "0.1.0",
+        "name": "Mod",
+        "body": "",
+        "published_at": "2026-03-12T06:35:04Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "citymapper.zip",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.0/citymapper.zip",
+            "download_count": 3,
+            "size": 14886
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.0/manifest.json",
+            "download_count": 427,
+            "size": 847
+          }
+        ]
+      }
+    ],
+    "valdotorium/valdotoriums_trains": [
+      {
+        "tag_name": "v0.1.3",
+        "name": "Railyard support",
+        "body": "",
+        "published_at": "2026-03-15T00:08:58Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.3/manifest.json",
+            "download_count": 569,
+            "size": 346
+          },
+          {
+            "name": "Valdotoriums_Trains_0_1_3.zip",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.3/Valdotoriums_Trains_0_1_3.zip",
+            "download_count": 47,
+            "size": 3670
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.2",
+        "name": "Re-release for Railyard compatibility",
+        "body": "",
+        "published_at": "2026-03-10T20:07:36Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.2/manifest.json",
+            "download_count": 1245,
+            "size": 346
+          },
+          {
+            "name": "Valdotoriums_Trains_0_1_2.zip",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.2/Valdotoriums_Trains_0_1_2.zip",
+            "download_count": 579,
+            "size": 603172
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.1",
+        "name": "v 1.1: Rebalancing and support vor v1.2",
+        "body": "",
+        "published_at": "2026-03-08T08:01:18Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v1.1/manifest.json",
+            "download_count": 802,
+            "size": 346
+          },
+          {
+            "name": "Valdotoriums_Trains_1_1.zip",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v1.1/Valdotoriums_Trains_1_1.zip",
+            "download_count": 17,
+            "size": 118574
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0",
+        "name": "",
+        "body": "Initial Release",
+        "published_at": "2026-03-01T14:52:46Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Valdotoriums_Trains_1_0.zip",
+            "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v1.0/Valdotoriums_Trains_1_0.zip",
+            "download_count": 13,
+            "size": 84049
+          }
+        ]
+      }
+    ],
+    "crumpetime/subway_builder_distance_circles": [
+      {
+        "tag_name": "0.3.3",
+        "name": "0.3.3",
+        "body": "fixed formatting AGAIN to hopefully make sure download works for realer this time (please work please work)",
+        "published_at": "2026-03-14T01:25:11Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "distanceCircles.zip",
+            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.3.3/distanceCircles.zip",
+            "download_count": 103,
+            "size": 4008
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.3.3/manifest.json",
+            "download_count": 737,
+            "size": 300
+          }
+        ]
+      }
+    ],
+    "danield1909/dantrains": [
+      {
+        "tag_name": "v1.0.3",
+        "name": "Version 1.0.3 \"Phoenix\" (Mini Patch)",
+        "body": "- Added support for light mode\r\n- Fixed some glitches with the main-menu individual train registration\r\n- Added an in game notification when trains get registered (does not work for main menu)\r\n- Added a disable of the register button after it's already been pressed to prevent accidental spam\r\n- Sorted trains alphabetically instead of by length",
+        "published_at": "2026-03-16T21:51:35Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "danTrains-1_0_3-Phoenix.zip",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.3/danTrains-1_0_3-Phoenix.zip",
+            "download_count": 19,
+            "size": 81907
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.3/manifest.json",
+            "download_count": 146,
+            "size": 648
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.2",
+        "name": "Version 1.0.2 \"Phoenix\" (Hotfix)",
+        "body": "- Fixed a glitch which led to trains being deleted from a train save file upon re-save\r\n- Added second menu to help recover said deleted trains\r\n- Fixed a duplication error\r\n\r\n**Full Changelog**: https://github.com/DanielD1909/danTrains/compare/v1.0.1...v1.0.2",
+        "published_at": "2026-03-14T22:03:10Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "danTrains-1_0_2-Phoenix.zip",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.2/danTrains-1_0_2-Phoenix.zip",
+            "download_count": 61,
+            "size": 81964
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.2/manifest.json",
+            "download_count": 594,
+            "size": 648
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.1",
+        "name": "Version 1.0.1 \"Phoenix\" Hotfix",
+        "body": "Fixed a major glitch which prevented the build menu from working properly",
+        "published_at": "2026-03-14T01:59:45Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "danTrains-1_0_1-Phoenix.zip",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.1/danTrains-1_0_1-Phoenix.zip",
+            "download_count": 28,
+            "size": 75156
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.1/manifest.json",
+            "download_count": 689,
+            "size": 648
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.0",
+        "name": "Version 1.0.0 \"Phoenix\"",
+        "body": "Welcome to the release of danTrains 1.0.0 \"Phoenix\"!\r\n\r\nThere's been a lot of changes since the last version so here's a broad summary changelog:\r\n- danTrains is now a standalone mod with no other requirements. This was done primarily due to the outdatedness of addTrains.\r\n- Three new menus have been added, two as pop ups in game and one on the main menu. The instructions will explain how to use them.\r\n    - Panel 1 - Train Registration: Allows you to register trains in game\r\n    - Panel 2 - Train Dictionary: Allows you to search through all the train types in more detail in game,\r\n    - Panel 3 - Main Menu Save Loader: Allows saves to not break\r\n- Perth, Australia has been added with 3 trains thanks to Pio from the SubwayBuilder discord\r\n- Tags have been directly made visible\r\n- danTrains has been added to Railyard (unless you were like super quick to this in which case I may be doing it rn)\r\n- Mod structure has been changed to allow easier updating of train data which should provide faster train updates in the future\r\n- Automation, Electrification, Track Gauge, and Loading Gauge are all things you can now choose for all trains when adding them\r\n    - In the future this will affect track compatibility but the game cannot handle that yet\r\n- Train speed on curves has been adjusted to match real life standards (based on track geometry but converted to lateral acceleration bc that is what the game uses)\r\n- All costs have been set to approximate Mediterranean prices\r\n    - I was not able to find good sources on my own so I will admit I asked ChatGPT for Italian prices and then did some scrutinizing\r\n    - If you have better sources let me know\r\n    - Train cost per hour is a very American metric as in Europe they do cost per km per passenger or just cost per km\r\n    - This has basically universally lowered prices which does make the game easier but it is what everyone voted for\r\n    - Commuter Rail is still very expensive tho. Because it is in real life.\r\n- Spreadsheet has not been updated and is no longer a priority due to the existence of the in-game dictionary\r\n- Lateral acceleration limits no longer affected by automation. \r\n- Added 1.2.1 beta compatibility for the new station length feature.\r\n- Once registered, descriptions now include track type and creator. Trying to figure out the best way to do tags.\r\n- Continents have been replaced with Regions since continents are big and hard to define while regions are smaller and slightly easier to define\r\n- Train Dropdown is now typable inside of so you can just start typing and find what you want.\r\n- Various other minor things I cannot remember at this exact moment \r\n\r\nPLEASE NOTE: NEW FEATURES ARE A LITTLE FINNICKY BUT NOTHING SHOULD BE GAMEBREAKING. I OFFER NO GUARANTEES THOUGH, JUST MY EXPERIENCE.\r\n\r\nINSTRUCTIONS:\r\n\r\n1. Registering trains:\r\n    1. To register a train you need to open the registration tab once you are in a game and ensure Automation, Electrification, Track Gauge, and Loading Gauge are all set\r\n    2. Click Preview\r\n    3. Review the stats and see the description and also make sure your train lengths are right\r\n    4. Click register to register\r\n    5. Check to make sure it worked\r\n    6. Save the game with a specific name so you can use it in the future (THINGS DO NOT SAVE WITHOUT AT LEAST AN AUTOSAVE, AND AN AUTOSAVE WILL OVERWRITE ANY OTHER AUTOSAVES)\r\n2. Loading Saves:\r\n    1. Locate the big panel in the main menu that should have \"Dan Trains\" in it\r\n    2. Navigate the dropdown to the save you want to play.\r\n    3. Press the white button\r\n    4. Load your save as normal\r\n3. Managing Save Data:\r\n    1. If you want to delete any data, go to the panel at the front.\r\n    2. Select the save data you want to delete from the dropdown.\r\n    3. Press the red button.\r\n    4. As a failsafe, you need to press a second (formerly dark red, now red) button\r\n    5. If you click on the dropdown you should see that it is gone.\r\n4. IMPORTING LEGACY SAVES:\r\n    1. First, make sure the trains are DanTrains Gen 1 Trains and not from some other mod. I cannot import those ones.\r\n    2. Open SubwayBuilder with the following mods enabled:\r\n        1. [DanTrains Gen1 (0.3.1) (NEW VERSION)](https://github.com/DanielD1909/danTrainsGen1/releases/tag/Final)\r\n        2. addTrains DT (comes with 0.3.1 DanTrains)\r\n        3. DanTrains 1.0.0 Phoenix\r\n    3. Open the game with the correct trains enabled via addTrains.\r\n    4. Save the game (probably with a new name just in case)\r\n    5. Exit to menu and then disable danTrains 0.3.1 and addTrains DT\r\n    6. Open the game\r\n    7. Follow Loading Saves instructions",
+        "published_at": "2026-03-14T00:33:00Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "danTrains-1_0_0-Phoenix.zip",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.0/danTrains-1_0_0-Phoenix.zip",
+            "download_count": 25,
+            "size": 75122
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.0/manifest.json",
+            "download_count": 716,
+            "size": 648
+          }
+        ]
+      }
+    ],
+    "stefanorigano/advanced_analytics": [
+      {
+        "tag_name": "v1.2.1",
+        "name": "v1.2.1",
+        "body": "FIX: Allow TransferSankey to adapt accordingly to its content",
+        "published_at": "2026-03-16T07:25:03Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "advanced_analytics-v1.2.1.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.1/advanced_analytics-v1.2.1.zip",
+            "download_count": 62,
+            "size": 73896
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.1/manifest.json",
+            "download_count": 323,
+            "size": 307
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.2.0",
+        "name": "v1.2.0",
+        "body": "\r\n🆕  Network Stats: SYSTEM LOAD FACTOR and NETWORK HEALTH SCORE (read user guide for more info)\r\n🆕  Transfer Hub Flow (dashboard)\r\n🆕  Commute Flow (route panel) now shows transfer routes\r\n🆕  Picker Dialog: to ease selection routes?station on large systems\r\n⚡ Improved \"Commute Flow \" labelling \r\n⚡  \"Commute Flow \" now show transfers \r\n⚡ Partially Improved \"System Map\" clarity  \r\n⚡ You can now select all routes via dropdown \r\n⚡ Improved performance and navigation by combining Dashboard and Route panel into the same view\r\n⚡ Improved Dropdown design and behavior\r\n🪲  Solved an issue causing the Storage dialogue to be to wide\r\nSeveral bugs and improvements",
+        "published_at": "2026-03-15T22:16:51Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "advanced_analytics-v1.2.0.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.0/advanced_analytics-v1.2.0.zip",
+            "download_count": 39,
+            "size": 73728
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.0/manifest.json",
+            "download_count": 466,
+            "size": 307
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.1.0",
+        "name": "v1.1.0",
+        "body": "Change log:\r\n- AA now remembers your last filters and options, even on game restart.\r\n- Dashboard and route panels now dynamically resize according tho the available room on screen\r\n- Several  bug-fixes and ui optimizations\r\n- ⚠️  Improved compatibly with Railyard :  Breaking Change!\r\n\r\n\r\nTo install the mod manually:\r\n1. Crate the advanced-analytics folder in into your mods directory ( Main Menu > Settings > Mods)\r\n2.  Extract the ZIP content into the advanced-analytics folder you created.\r\n3. Restart the game and activate the \"Advanced Analytics\"",
+        "published_at": "2026-03-09T06:57:10Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "advanced_analytics-v1.1.0.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.1.0/advanced_analytics-v1.1.0.zip",
+            "download_count": 469,
+            "size": 62371
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.1.0/manifest.json",
+            "download_count": 2581,
+            "size": 307
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.1",
+        "name": "v1.0.1",
+        "body": "",
+        "published_at": "2026-03-07T19:40:07Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "advanced_analytics-v1.0.1.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.1/advanced_analytics-v1.0.1.zip",
+            "download_count": 96,
+            "size": 62601
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.1/manifest.json",
+            "download_count": 2766,
+            "size": 306
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.0",
+        "name": "v1.0.0",
+        "body": "",
+        "published_at": "2026-03-06T22:13:27Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "advanced_analytics-v1.0.0.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.0/advanced_analytics-v1.0.0.zip",
+            "download_count": 252,
+            "size": 61367
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.0/manifest.json",
+            "download_count": 2783,
+            "size": 306
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.9.2",
+        "name": "v0.9.2",
+        "body": "Targets SB:\r\n- stable: 1.1.0\r\n- beta: 1.1.5rc",
+        "published_at": "2026-03-04T21:34:48Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "advanced_analytics-v0.9.2.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v0.9.2/advanced_analytics-v0.9.2.zip",
+            "download_count": 18,
+            "size": 62147
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.9.1",
+        "name": "v0.9.1",
+        "body": "",
+        "published_at": "2026-03-03T12:07:13Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "advanced_analytics-v0.9.1.zip",
+            "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v0.9.1/advanced_analytics-v0.9.1.zip",
+            "download_count": 11,
+            "size": 60976
+          }
+        ]
+      },
+      {
+        "tag_name": "target-1.1.0",
+        "name": "v0.9.0b",
+        "body": "",
+        "published_at": "2026-03-02T23:15:42Z",
+        "prerelease": true,
+        "assets": []
+      }
+    ],
+    "subway-builder-modded/railyard": [
+      {
+        "tag_name": "v0.1.5",
+        "name": "v0.1.5",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4...v0.1.5\r\n\r\n## What's Changed\r\n* [Backend] Atomic + transactional writes + profile bootstrapping for missing fields by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/161\r\n* [Hotfix] Fix Sorting Order by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/163\r\n* [Backend] Better filepath normalization by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/164\r\n* Add an option to install chrome-sandbox for Linux by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/166\r\n* Add More Logging and panic when sandbox install improperly called by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/167\r\n* Fix the series of commands to install the sandbox by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/168\r\n* View Mode by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/157\r\n* [BE] Propagate Downloader errors to FE by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/169\r\n* Discover Page by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/170",
+        "published_at": "2026-03-15T23:33:15Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "railyard-v0.1.5-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-current-linux-amd64.flatpak",
+            "download_count": 11,
+            "size": 10445488
+          },
+          {
+            "name": "railyard-v0.1.5-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-macos-universal.dmg",
+            "download_count": 37,
+            "size": 32158868
+          },
+          {
+            "name": "railyard-v0.1.5-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-macos-universal.zip",
+            "download_count": 8,
+            "size": 27473080
+          },
+          {
+            "name": "railyard-v0.1.5-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-windows-amd64-installer.exe",
+            "download_count": 86,
+            "size": 16670672
+          },
+          {
+            "name": "railyard-v0.1.5-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-windows-amd64-portable.zip",
+            "download_count": 1,
+            "size": 14608169
+          },
+          {
+            "name": "railyard-v0.1.5-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-windows-arm64-installer.exe",
+            "download_count": 3,
+            "size": 15182620
+          },
+          {
+            "name": "railyard-v0.1.5-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5/railyard-v0.1.5-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13089300
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.5+rc.3",
+        "name": "v0.1.5 - Release Candidate 3",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.5+rc.2...v0.1.5+rc.3\r\n\r\n## What's Changed\r\n* Fix the series of commands to install the sandbox by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/168",
+        "published_at": "2026-03-15T22:08:50Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.5+rc.3-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-current-linux-amd64.flatpak",
+            "download_count": 1,
+            "size": 10441888
+          },
+          {
+            "name": "railyard-v0.1.5+rc.3-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32139782
+          },
+          {
+            "name": "railyard-v0.1.5+rc.3-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-macos-universal.zip",
+            "download_count": 0,
+            "size": 27459830
+          },
+          {
+            "name": "railyard-v0.1.5+rc.3-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16665069
+          },
+          {
+            "name": "railyard-v0.1.5+rc.3-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14601449
+          },
+          {
+            "name": "railyard-v0.1.5+rc.3-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15179786
+          },
+          {
+            "name": "railyard-v0.1.5+rc.3-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.3/railyard-v0.1.5%2Brc.3-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13085646
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.5+rc.2",
+        "name": "v0.1.5 - Release Candidate 2",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4...v0.1.5+rc.2\r\n\r\n## What's Changed\r\n* [Backend] Atomic + transactional writes + profile bootstrapping for missing fields by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/161\r\n* [Hotfix] Fix Sorting Order by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/163\r\n* [Backend] Better filepath normalization by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/164\r\n* Add an option to install chrome-sandbox for Linux by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/166\r\n* Add More Logging and panic when sandbox install improperly called by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/167",
+        "published_at": "2026-03-15T21:34:22Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.5+rc.2-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-current-linux-amd64.flatpak",
+            "download_count": 2,
+            "size": 10443888
+          },
+          {
+            "name": "railyard-v0.1.5+rc.2-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32138845
+          },
+          {
+            "name": "railyard-v0.1.5+rc.2-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-macos-universal.zip",
+            "download_count": 0,
+            "size": 27459891
+          },
+          {
+            "name": "railyard-v0.1.5+rc.2-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16665112
+          },
+          {
+            "name": "railyard-v0.1.5+rc.2-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14601488
+          },
+          {
+            "name": "railyard-v0.1.5+rc.2-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15179558
+          },
+          {
+            "name": "railyard-v0.1.5+rc.2-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.2/railyard-v0.1.5%2Brc.2-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13085463
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.5+rc.1",
+        "name": "v0.1.5 - Release Candidate 1",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4...v0.1.5+rc.1\r\n\r\n## What's Changed\r\n* [Backend] Atomic + transactional writes + profile bootstrapping for missing fields by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/161\r\n* [Hotfix] Fix Sorting Order by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/163",
+        "published_at": "2026-03-15T21:05:39Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.5+rc.1-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-current-linux-amd64.flatpak",
+            "download_count": 2,
+            "size": 10438144
+          },
+          {
+            "name": "railyard-v0.1.5+rc.1-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32137210
+          },
+          {
+            "name": "railyard-v0.1.5+rc.1-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-macos-universal.zip",
+            "download_count": 0,
+            "size": 27458888
+          },
+          {
+            "name": "railyard-v0.1.5+rc.1-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16664450
+          },
+          {
+            "name": "railyard-v0.1.5+rc.1-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14600551
+          },
+          {
+            "name": "railyard-v0.1.5+rc.1-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15177424
+          },
+          {
+            "name": "railyard-v0.1.5+rc.1-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.5%2Brc.1/railyard-v0.1.5%2Brc.1-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13084576
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4",
+        "name": "v0.1.4",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.3...v0.1.4\r\n\r\n## What's Changed\r\n* [Frontend] Add fuse.js for better searching by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/102\r\n* Frontend UI Tweaks Collection™️ by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/104\r\n* Various Small Tweaks by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/108\r\n* (Probably) fix pnpm store location by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/109\r\n* [Frontend] Add country pills + download counts to map/mod cards on Browse by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/113\r\n* [Frontend/ Backend] Propagate update timestamps to search by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/118\r\n* [Backend] Prevent concurrent instances of Railyard by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/125\r\n* [Backend] Auto-heal on invalid mods/maps | Type agnostic install/uninstall methods by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/124\r\n* Add a Library Page by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/122\r\n* Library (The Third Iteration) by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/131\r\n* Filter Assets and Versions by Integrity Index by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/132\r\n* Add counts to the tags in the Search Sidebar by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/120\r\n* New Linux Build Process by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/140\r\n* [Backend / Frontend] Add optional Github authentication (via Config) + cache versions by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/139\r\n* [Backend / Frontend] Unify UpdateSubscriptions shape + allow in-flight cancellations by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/137\r\n* Fix Updater and Update the Build Script Again by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/142\r\n* `ghp_` --> `github_pat_` by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/143\r\n* [Backend] Update cancel installations to immediately propagate to FE by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/144\r\n* [Backend][Linux] Use flatpak-spawn to launch game by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/149\r\n* [FE] Unify Library/Search filters + keep separate filter state by AssetType by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/148\r\n* [Linux] Fix flatpak permissions in CI by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/150\r\n* [Linux] Reconcile app name (org.SBM.Railyard) by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/151\r\n* Add --no-sandbox option to flatpak-spawn command by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/152\r\n* Update Linux dependencies in release workflow by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/154\r\n* [Frontend / Backend] Prevent stale download progress bar / pending cancellation toasts by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/155",
+        "published_at": "2026-03-15T04:43:13Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-current-linux-amd64.flatpak",
+            "download_count": 2,
+            "size": 10433472
+          },
+          {
+            "name": "railyard-v0.1.4-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-macos-universal.dmg",
+            "download_count": 11,
+            "size": 32112912
+          },
+          {
+            "name": "railyard-v0.1.4-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-macos-universal.zip",
+            "download_count": 3,
+            "size": 27444858
+          },
+          {
+            "name": "railyard-v0.1.4-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-windows-amd64-installer.exe",
+            "download_count": 49,
+            "size": 16656722
+          },
+          {
+            "name": "railyard-v0.1.4-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-windows-amd64-portable.zip",
+            "download_count": 2,
+            "size": 14594042
+          },
+          {
+            "name": "railyard-v0.1.4-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-windows-arm64-installer.exe",
+            "download_count": 3,
+            "size": 15172351
+          },
+          {
+            "name": "railyard-v0.1.4-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4/railyard-v0.1.4-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13081964
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4+rc.9",
+        "name": "v0.1.4 - Release Candidate 9",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4+rc.8...v0.1.4+rc.9\r\n\r\n## What's Changed\r\n* [Frontend / Backend] Prevent stale download progress bar / pending cancellation toasts by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/155",
+        "published_at": "2026-03-15T04:30:33Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4+rc.9-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-current-linux-amd64.flatpak",
+            "download_count": 0,
+            "size": 10433088
+          },
+          {
+            "name": "railyard-v0.1.4+rc.9-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32113025
+          },
+          {
+            "name": "railyard-v0.1.4+rc.9-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-macos-universal.zip",
+            "download_count": 0,
+            "size": 27444794
+          },
+          {
+            "name": "railyard-v0.1.4+rc.9-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16656804
+          },
+          {
+            "name": "railyard-v0.1.4+rc.9-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14594231
+          },
+          {
+            "name": "railyard-v0.1.4+rc.9-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15172061
+          },
+          {
+            "name": "railyard-v0.1.4+rc.9-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.9/railyard-v0.1.4%2Brc.9-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13081637
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4+rc.8",
+        "name": "v0.1.4 - Release Candidate 8",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4+rc6...v0.1.4+rc.8\r\n\r\n## What's Changed\r\n* [Linux] Reconcile app name (org.SBM.Railyard) by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/151\r\n* Add --no-sandbox option to flatpak-spawn command by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/152\r\n* Update Linux dependencies in release workflow by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/154",
+        "published_at": "2026-03-15T03:50:51Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4+rc.8-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.8/railyard-v0.1.4%2Brc.8-current-linux-amd64.flatpak",
+            "download_count": 1,
+            "size": 10432336
+          },
+          {
+            "name": "railyard-v0.1.4+rc.8-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.8/railyard-v0.1.4%2Brc.8-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32112322
+          },
+          {
+            "name": "railyard-v0.1.4+rc.8-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.8/railyard-v0.1.4%2Brc.8-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16656003
+          },
+          {
+            "name": "railyard-v0.1.4+rc.8-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.8/railyard-v0.1.4%2Brc.8-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14594004
+          },
+          {
+            "name": "railyard-v0.1.4+rc.8-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.8/railyard-v0.1.4%2Brc.8-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15171778
+          },
+          {
+            "name": "railyard-v0.1.4+rc.8-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.8/railyard-v0.1.4%2Brc.8-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13081496
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4+rc.5",
+        "name": "v0.1.4 - Release Candidate 5",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4+rc.4...v0.1.4+rc.5\r\n\r\n## What's Changed\r\n* `ghp_` --> `github_pat_` by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/143\r\n* [Backend] Update cancel installations to immediately propagate to FE by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/144\r\n* [Backend][Linux] Use flatpak-spawn to launch game by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/149",
+        "published_at": "2026-03-15T00:58:59Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4+rc.5-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.5/railyard-v0.1.4%2Brc.5-current-linux-amd64.flatpak",
+            "download_count": 3,
+            "size": 10429168
+          },
+          {
+            "name": "railyard-v0.1.4+rc.5-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.5/railyard-v0.1.4%2Brc.5-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32112267
+          },
+          {
+            "name": "railyard-v0.1.4+rc.5-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.5/railyard-v0.1.4%2Brc.5-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16655736
+          },
+          {
+            "name": "railyard-v0.1.4+rc.5-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.5/railyard-v0.1.4%2Brc.5-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14594007
+          },
+          {
+            "name": "railyard-v0.1.4+rc.5-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.5/railyard-v0.1.4%2Brc.5-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15171450
+          },
+          {
+            "name": "railyard-v0.1.4+rc.5-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.5/railyard-v0.1.4%2Brc.5-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13081218
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4+rc.4",
+        "name": "v0.1.4 - Release Candidate 4",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4+rc.2...v0.1.4+rc.4",
+        "published_at": "2026-03-14T21:36:56Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4+rc.4-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.4/railyard-v0.1.4%2Brc.4-current-linux-amd64.flatpak",
+            "download_count": 1,
+            "size": 10421184
+          },
+          {
+            "name": "railyard-v0.1.4+rc.4-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.4/railyard-v0.1.4%2Brc.4-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32093097
+          },
+          {
+            "name": "railyard-v0.1.4+rc.4-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.4/railyard-v0.1.4%2Brc.4-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16649772
+          },
+          {
+            "name": "railyard-v0.1.4+rc.4-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.4/railyard-v0.1.4%2Brc.4-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14592149
+          },
+          {
+            "name": "railyard-v0.1.4+rc.4-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.4/railyard-v0.1.4%2Brc.4-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15166575
+          },
+          {
+            "name": "railyard-v0.1.4+rc.4-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.4/railyard-v0.1.4%2Brc.4-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13075518
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4+rc.2",
+        "name": "v0.1.4 - Release Candidate 2",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.4+rc.1...v0.1.4+rc.2\r\n\r\n## What's Changed\r\n* [Backend / Frontend] Unify UpdateSubscriptions shape + allow in-flight cancellations by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/137\r\n* Fix Updater and Update the Build Script Again by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/142",
+        "published_at": "2026-03-14T20:14:58Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4+rc.2-current-linux-amd64.flatpak",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.2/railyard-v0.1.4%2Brc.2-current-linux-amd64.flatpak",
+            "download_count": 4,
+            "size": 10447272
+          },
+          {
+            "name": "railyard-v0.1.4+rc.2-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.2/railyard-v0.1.4%2Brc.2-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32093101
+          },
+          {
+            "name": "railyard-v0.1.4+rc.2-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.2/railyard-v0.1.4%2Brc.2-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16649772
+          },
+          {
+            "name": "railyard-v0.1.4+rc.2-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.2/railyard-v0.1.4%2Brc.2-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14592149
+          },
+          {
+            "name": "railyard-v0.1.4+rc.2-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.2/railyard-v0.1.4%2Brc.2-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15166578
+          },
+          {
+            "name": "railyard-v0.1.4+rc.2-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.2/railyard-v0.1.4%2Brc.2-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13075520
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.4+rc.1",
+        "name": "v0.1.4 - Release Candidate 1",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.3...v0.1.4+rc.1\r\n\r\n## What's Changed\r\n* [Frontend] Add fuse.js for better searching by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/102\r\n* Frontend UI Tweaks Collection™️ by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/104\r\n* Various Small Tweaks by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/108\r\n* (Probably) fix pnpm store location by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/109\r\n* update by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/113\r\n* [Frontend/ Backend] Propagate update timestamps to search by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/118\r\n* [Backend] Prevent concurrent instances of Railyard by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/125\r\n* [Backend] Auto-heal on invalid mods/maps | Type agnostic install/uninstall methods by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/124\r\n* Add a Library Page by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/122\r\n* Library (The Third Iteration) by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/131\r\n* Filter Assets and Versions by Integrity Index by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/132\r\n* Add counts to the tags in the Search Sidebar by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/120\r\n* New Linux Build Process by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/140",
+        "published_at": "2026-03-14T19:21:10Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.4+rc.1-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.1/railyard-v0.1.4%2Brc.1-macos-universal.dmg",
+            "download_count": 0,
+            "size": 32068300
+          },
+          {
+            "name": "railyard-v0.1.4+rc.1-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.1/railyard-v0.1.4%2Brc.1-macos-universal.zip",
+            "download_count": 0,
+            "size": 27418597
+          },
+          {
+            "name": "railyard-v0.1.4+rc.1-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.1/railyard-v0.1.4%2Brc.1-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16640844
+          },
+          {
+            "name": "railyard-v0.1.4+rc.1-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.1/railyard-v0.1.4%2Brc.1-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14581040
+          },
+          {
+            "name": "railyard-v0.1.4+rc.1-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.1/railyard-v0.1.4%2Brc.1-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15161376
+          },
+          {
+            "name": "railyard-v0.1.4+rc.1-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.4%2Brc.1/railyard-v0.1.4%2Brc.1-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 13069100
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.3",
+        "name": "v0.1.3",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.2...v0.1.3\r\n\r\n## What's Changed\r\n* Minor Fix to extractMod by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/52\r\n* [Backend][Profile] Add update subscriptions to latest endpoint... by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/53\r\n* Check for and install updates on start by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/56\r\n* Light Mode by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/58\r\n* [Backend][Downloader] Graceful handling of downloader warns and enforcement of no-ops by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/59\r\n* Change to Linux Build by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/60\r\n* URGENT: FIX UPDATER FOR ALL PLATFORMS by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/62\r\n* Fix the linux builds by making a current and legacy build by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/63\r\n* Remove Git Credentials Requirement by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/68\r\n* Manual Check for Update Button, Footer displaying current version by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/70\r\n* Update Installed List on Download Queue Task Finish by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/73\r\n* [Backend] Sync registry service schema to The-Railyard + fix download counts by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/71\r\n* auto-tag release candidates as prereleases by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/74\r\n* Initialize Registry before Update Checking by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/75\r\n* Fix the Updater for our new Linux Builds by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/76\r\n* Fix Windows doing everything with UTF-16-LE by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/78\r\n* [Frontend] Flatten search params for new map fields + persist search state by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/77\r\n* Toast on Manual Update Check by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/88",
+        "published_at": "2026-03-11T05:21:03Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "railyard-v0.1.3-current-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-current-linux-amd64.AppImage",
+            "download_count": 12,
+            "size": 85207544
+          },
+          {
+            "name": "railyard-v0.1.3-legacy-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-legacy-linux-amd64.AppImage",
+            "download_count": 5,
+            "size": 85150200
+          },
+          {
+            "name": "railyard-v0.1.3-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-macos-universal.dmg",
+            "download_count": 107,
+            "size": 31913073
+          },
+          {
+            "name": "railyard-v0.1.3-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-macos-universal.zip",
+            "download_count": 24,
+            "size": 27230087
+          },
+          {
+            "name": "railyard-v0.1.3-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-windows-amd64-installer.exe",
+            "download_count": 200,
+            "size": 16544015
+          },
+          {
+            "name": "railyard-v0.1.3-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-windows-amd64-portable.zip",
+            "download_count": 3,
+            "size": 14484518
+          },
+          {
+            "name": "railyard-v0.1.3-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-windows-arm64-installer.exe",
+            "download_count": 10,
+            "size": 15062404
+          },
+          {
+            "name": "railyard-v0.1.3-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3/railyard-v0.1.3-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 12971656
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.3+rc.3",
+        "name": "v0.1.3 - Release Candidate 3",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.3+rc.2...v0.1.3+rc.3\r\n\r\n## What's Changed\r\n* Fix the Updater for our new Linux Builds by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/76\r\n* Fix Windows doing everything with UTF-16-LE by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/78\r\n* [Frontend] Flatten search params for new map fields + persist search state by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/77",
+        "published_at": "2026-03-11T05:00:42Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.3+rc.3-current-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-current-linux-amd64.AppImage",
+            "download_count": 0,
+            "size": 85203448
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-legacy-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-legacy-linux-amd64.AppImage",
+            "download_count": 0,
+            "size": 85150200
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-macos-universal.dmg",
+            "download_count": 1,
+            "size": 31913051
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-macos-universal.zip",
+            "download_count": 0,
+            "size": 27230226
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-windows-amd64-installer.exe",
+            "download_count": 3,
+            "size": 16544226
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-windows-amd64-portable.zip",
+            "download_count": 1,
+            "size": 14484323
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-windows-arm64-installer.exe",
+            "download_count": 1,
+            "size": 15062502
+          },
+          {
+            "name": "railyard-v0.1.3+rc.3-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.3/railyard-v0.1.3%2Brc.3-windows-arm64-portable.zip",
+            "download_count": 1,
+            "size": 12971472
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.3+rc.2",
+        "name": "v0.1.3 - Release Candidate 2",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v1.0.3+rc.1...v0.1.3+rc.2\r\n\r\n## What's Changed\r\n* Remove Git Credentials Requirement by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/68\r\n* Manual Check for Update Button, Footer displaying current version by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/70\r\n* Update Installed List on Download Queue Task Finish by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/73\r\n* [Backend] Sync registry service schema to The-Railyard + fix download counts by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/71\r\n* auto-tag release candidates as prereleases by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/74\r\n* Initialize Registry before Update Checking by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/75",
+        "published_at": "2026-03-11T03:40:29Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.3+rc.2-current-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-current-linux-amd64.AppImage",
+            "download_count": 1,
+            "size": 85215736
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-legacy-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-legacy-linux-amd64.AppImage",
+            "download_count": 1,
+            "size": 85166584
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-macos-universal.dmg",
+            "download_count": 1,
+            "size": 31899508
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-macos-universal.zip",
+            "download_count": 0,
+            "size": 27237975
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-windows-amd64-installer.exe",
+            "download_count": 1,
+            "size": 16549939
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14485682
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-windows-arm64-installer.exe",
+            "download_count": 1,
+            "size": 15068076
+          },
+          {
+            "name": "railyard-v0.1.3+rc.2-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.3%2Brc.2/railyard-v0.1.3%2Brc.2-windows-arm64-portable.zip",
+            "download_count": 1,
+            "size": 12976518
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.2",
+        "name": "v0.1.2",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/railyard/compare/v0.1.1...v0.1.2\r\n\r\n## What's Changed\r\n* [Backend] Add downloading queue by @ahkimn in https://github.com/Subway-Builder-Modded/railyard/pull/40\r\n* Swap map/mod order and add punctuation (for site parity) by @kaicardenas0618 in https://github.com/Subway-Builder-Modded/railyard/pull/45\r\n* Mod File Validation by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/47\r\n* Add an Uninstall Button next to Update Button by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/48\r\n* Remove Population as a sort option when not looking at maps only by @Kronifer in https://github.com/Subway-Builder-Modded/railyard/pull/49",
+        "published_at": "2026-03-09T03:49:27Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "railyard-v0.1.2-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-linux-amd64.AppImage",
+            "download_count": 15,
+            "size": 85105144
+          },
+          {
+            "name": "railyard-v0.1.2-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-macos-universal.dmg",
+            "download_count": 109,
+            "size": 31953258
+          },
+          {
+            "name": "railyard-v0.1.2-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-macos-universal.zip",
+            "download_count": 16,
+            "size": 27166828
+          },
+          {
+            "name": "railyard-v0.1.2-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-windows-amd64-installer.exe",
+            "download_count": 193,
+            "size": 16514419
+          },
+          {
+            "name": "railyard-v0.1.2-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-windows-amd64-portable.zip",
+            "download_count": 12,
+            "size": 14450090
+          },
+          {
+            "name": "railyard-v0.1.2-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-windows-arm64-installer.exe",
+            "download_count": 6,
+            "size": 15033908
+          },
+          {
+            "name": "railyard-v0.1.2-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.2/railyard-v0.1.2-windows-arm64-portable.zip",
+            "download_count": 2,
+            "size": 12941176
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.1",
+        "name": "v0.1.1",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/Railyard/compare/v0.1.0...v0.1.1\r\n\r\n- Added support for ARM windows devices.",
+        "published_at": "2026-03-08T20:14:10Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "railyard-v0.1.1-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-linux-amd64.AppImage",
+            "download_count": 3,
+            "size": 85109240
+          },
+          {
+            "name": "railyard-v0.1.1-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-macos-universal.dmg",
+            "download_count": 23,
+            "size": 31747969
+          },
+          {
+            "name": "railyard-v0.1.1-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-macos-universal.zip",
+            "download_count": 3,
+            "size": 27147259
+          },
+          {
+            "name": "railyard-v0.1.1-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-windows-amd64-installer.exe",
+            "download_count": 59,
+            "size": 16505902
+          },
+          {
+            "name": "railyard-v0.1.1-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-windows-amd64-portable.zip",
+            "download_count": 2,
+            "size": 14444054
+          },
+          {
+            "name": "railyard-v0.1.1-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-windows-arm64-installer.exe",
+            "download_count": 6,
+            "size": 15026497
+          },
+          {
+            "name": "railyard-v0.1.1-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1/railyard-v0.1.1-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 12932939
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.1+rc.1",
+        "name": "v0.1.1 - Release Candidate 1",
+        "body": "- Added arm release\r\n- Release candidate to test CI.\r\n\r\n**Full Changelog**: https://github.com/Subway-Builder-Modded/Railyard/compare/v0.1.0...v0.1.1+rc.1",
+        "published_at": "2026-03-08T20:07:53Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-v0.1.1+rc.1-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-linux-amd64.AppImage",
+            "download_count": 0,
+            "size": 85109240
+          },
+          {
+            "name": "railyard-v0.1.1+rc.1-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-macos-universal.dmg",
+            "download_count": 0,
+            "size": 31747977
+          },
+          {
+            "name": "railyard-v0.1.1+rc.1-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-macos-universal.zip",
+            "download_count": 0,
+            "size": 27147259
+          },
+          {
+            "name": "railyard-v0.1.1+rc.1-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-windows-amd64-installer.exe",
+            "download_count": 0,
+            "size": 16505903
+          },
+          {
+            "name": "railyard-v0.1.1+rc.1-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14444054
+          },
+          {
+            "name": "railyard-v0.1.1+rc.1-windows-arm64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-windows-arm64-installer.exe",
+            "download_count": 0,
+            "size": 15026500
+          },
+          {
+            "name": "railyard-v0.1.1+rc.1-windows-arm64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.1%2Brc.1/railyard-v0.1.1%2Brc.1-windows-arm64-portable.zip",
+            "download_count": 0,
+            "size": 12932939
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.0",
+        "name": "v0.1.0",
+        "body": "We're excited to announce the first public release of **Railyard** - the all-in-one map and mod manager for Subway Builder.\r\n\r\nRailyard is a free, open-source desktop app that makes it easy to discover, install, and manage community-made content for Subway Builder. No more digging through Discord threads or manually dragging files into folders - just browse, click, and play.\r\n\r\n**Download:** <https://subwaybuildermodded.com/railyard>\r\n\r\n*Railyard is still in beta, so please help us out by reporting any problems you have on the GitHub repository!*\r\n## Thank You\r\nRailyard wouldn't exist without the people who built it and the community around Subway Builder. Huge thank you to everyone who contributed:\r\n\r\n- **kaicardenas0618** - Maintainer of the Subway Builder Modded website and Railyard\r\n- **ahkimn** - Maintainer of the Subway Builder Modded website, Template Mod, and Railyard\r\n- **Kronifer** - Creator of the legacy Map Manager and maintainer of Railyard\r\n- and me!\r\n## For Modders & Map Creators\r\nWant your project in Railyard? Host your files on GitHub, fill out a submission form, and a maintainer will review it.\r\n\r\n- Publishing a mod or map: <https://subwaybuildermodded.com/wiki/railyard/latest/developers/publishing-projects>\r\n- Publishing a map pack: <https://subwaybuildermodded.com/wiki/railyard/latest/developers/publishing-map-packs>\r\n\r\nAnd to everyone in the community who has been creating maps, building mods, testing early builds, and giving feedback — thank you. This project is for you! :heart: \r\n\r\n*Railyard is open source - contributions and feedback are welcome on [GitHub](<https://github.com/Subway-Builder-Modded/Railyard>) | Full docs at <https://subwaybuildermodded.com/wiki/railyard/latest/home>*",
+        "published_at": "2026-03-08T19:56:02Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "railyard-v0.1.0-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0/railyard-v0.1.0-linux-amd64.AppImage",
+            "download_count": 0,
+            "size": 85109240
+          },
+          {
+            "name": "railyard-v0.1.0-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0/railyard-v0.1.0-macos-universal.dmg",
+            "download_count": 1,
+            "size": 31747971
+          },
+          {
+            "name": "railyard-v0.1.0-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0/railyard-v0.1.0-macos-universal.zip",
+            "download_count": 0,
+            "size": 27147259
+          },
+          {
+            "name": "railyard-v0.1.0-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0/railyard-v0.1.0-windows-amd64-installer.exe",
+            "download_count": 1,
+            "size": 16505901
+          },
+          {
+            "name": "railyard-v0.1.0-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0/railyard-v0.1.0-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14444054
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.0+rc.3",
+        "name": "v0.1.0 - Release Candidate 3",
+        "body": "**Full Changelog**: https://github.com/Subway-Builder-Modded/Railyard/compare/v0.1.0+rc.2...v0.1.0+rc.3",
+        "published_at": "2026-03-08T19:25:39Z",
+        "prerelease": true,
+        "assets": [
+          {
+            "name": "railyard-linux-amd64.AppImage",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0%2Brc.3/railyard-linux-amd64.AppImage",
+            "download_count": 0,
+            "size": 85109240
+          },
+          {
+            "name": "railyard-macos-universal.dmg",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0%2Brc.3/railyard-macos-universal.dmg",
+            "download_count": 0,
+            "size": 31747971
+          },
+          {
+            "name": "railyard-macos-universal.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0%2Brc.3/railyard-macos-universal.zip",
+            "download_count": 0,
+            "size": 27147259
+          },
+          {
+            "name": "railyard-windows-amd64-installer.exe",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0%2Brc.3/railyard-windows-amd64-installer.exe",
+            "download_count": 3,
+            "size": 16505903
+          },
+          {
+            "name": "railyard-windows-amd64-portable.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.1.0%2Brc.3/railyard-windows-amd64-portable.zip",
+            "download_count": 0,
+            "size": 14444054
+          }
+        ]
+      },
+      {
+        "tag_name": "v0.1.0+rc.2",
+        "name": "v0.1.0 - Release Candidate 2",
+        "body": "- Fixed CI problems and installer issues.",
+        "published_at": "2026-03-08T19:06:46Z",
+        "prerelease": true,
+        "assets": []
+      },
+      {
+        "tag_name": "v0.1.0+rc.1",
+        "name": "v0.1.0 - Release Candidate 1",
+        "body": "Initial release for testing.",
+        "published_at": "2026-03-08T18:50:08Z",
+        "prerelease": true,
+        "assets": []
+      }
+    ]
+  },
+  "custom_urls": {
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/IZO.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/KIJ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/TOY.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/OKA.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/GAJ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/TAK.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/SDJ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/SPK.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/MYJ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/NGS.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/UKY.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/HIJ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/KCZ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/KKJ.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/UKB.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/KOJ.json": [],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YWG-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "aac872d7cd8a65ab69687e446b2be911e388e8fe89faf7a9601631eff19a0b29",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "e82dcc9b83ba529175f8810d0caa3c110a49debc2981613638e4a7ac614836d0",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YVR-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "47b36073c8dee7bca75d90358e17579db4664a33bd7928b4c3b5bd1abdfd0a1c",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "845ce1b80e4c4c18a68337e801752017518eeb08d235c92be19ff1f65961ee0a",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YYZ-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "3d5c457b599b4ee0565fdadb94ffe2ee4116eb6373159c15cc77d2add77a11a2",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "b05ec954c41305a78984b7ab89ea5eb4b8e7303f3e00330ed772b3ec77c36341",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/HKD.json": [],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/FUK.json": [],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/TOR.json": [],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/TPA.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "c5bdc340edfa2f4127d5911951c61e0d8a1bbeb365bec161c9ca0edf11608fcc",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/SBA.json": [
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-12",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "8c7e15c5fa31e73dd3e9b40585fe41ae125d106bba0860a16039425ac7f3383e",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/SAT.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "78aeb78a801abaf5c9d6fcd7851d911539f946e82472bc3aee438be63e3b4b3e",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/ROM.json": [],
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/SIN.json": [],
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/TRD.json": [],
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/WAW.json": [],
+    "https://ryandicicco.github.io/Subway-Builder-Maps/RTM.json": [],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/RIC.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "740281654ca081db1b326d2d7335c4069ed428d81e796db7fe3adaba3b9128ce",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YQB-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "5da6b99b25f7c33abc130963f89441b5b6c60d2a75a4e7552b0fe9759efac2fc",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "99653d4ae692af49a0761a37a535c39da02745739847975bf14faeeabd8f8673",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/ROC.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2022 LODES.",
+        "date": "2026-03-08",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "09f0d2f40418f60af2eea9c26935d83e9403f35d32fd99a22de49cab8d913ba2",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YOW-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "1ad349318afe26e27eefcec044e4376cc6e72411730805781f08f5c8ea7180c5",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "58860a472fd840be1edb8aea229955e04f71a807fa7f15fc43b356c2a37da60d",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/OC.json": [
+      {
+        "version": "1.0.3",
+        "name": "1.0.3",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-01",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "a0a71a638c41799b47f58471cbf6b2571bccda2d84ffd79f5ed55d2bedff63d5",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YUL-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "97a0f08ea48b9c1109b59a736212217593117c21486627bf997fc4575b9aac05",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "86c47eb58306f8fe7eb5a55198ca7f8e2e69a20b61e441d18e93a2ec15b0979c",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/MCO.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "a3e6897d1d89a1ef38a7d71b9e373bac3ee9a3f0c6f9e2e19bc6067c227d2275",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/MIL.json": [],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/NAP.json": [],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/PAL.json": [],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/MEM.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-08",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "87d8f1440c45def305cb017f6c7f4875d15f00014c5bb4700f16ede557162bed",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/LAXM.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-13",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "d09cfce8d8757496ae1c334979fc47d4ec9e4873795c58cab7101cb002ed98d6",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/KNOX.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-08",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "31d89963dfb04413e548b493ff0fb4a326215071832077e7c2cb96d8978ef59c",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/BWI.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-08",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "83309c193d6a7782a38a280d51aab996bfecd9665fe1d358c80e1b0e3d8ad5e2",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/JAX.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-02-28",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "a2dcc37a08f5a857ed92f45f8e45332d7c30e052cead007299cc2b8ddca83795",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/LAX.json": [
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-13",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "c50d68b569eb0edade342fd17d96f6e636be93e0697dee8de39601836a67719a",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/FIR.json": [],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/GEN.json": [],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YYC-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "147f4a279196a0b4d325335fa17644ca4a5612c581e7ccacb6ba1f33d0209cde",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "e7e99a91478887748b873cf4b2a5780b076e6dff136883dbbc1224fd2bf124df",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YEG-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "eb0f18d3e3241f40a99bb2d26e5bcb5ea2d4ac43c86a0dd91f237b53658085f2",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "149b449642ecd453598be4cf9bbe7268e09545d58ab025de08bbac42c9e5d8c3",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/CAT.json": [],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/BOL.json": [],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/DCA.json": [
+      {
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "d153a2fd8469ec820082f13a4891030872e3656dd6f5b4bbaa0d30e6874632aa",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ryandicicco.github.io/Subway-Builder-Maps/AMS.json": [],
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/BER.json": [],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/BAR.json": []
+  }
+}

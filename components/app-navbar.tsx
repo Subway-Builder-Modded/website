@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation"
 import { useMemo, useState } from "react"
 import { ThemeToggleMenu } from "@/components/theme-toggle-menu"
 import { NavbarHoverDropdown } from "@/components/navbar-hover-dropdown"
+import { NavbarAuthSlot } from "@/components/navbar-auth-slot"
 import { Avatar } from "@/components/ui/avatar"
 import { Link } from "@/components/ui/link"
 import {
@@ -219,6 +220,7 @@ export default function AppNavbar(props: NavbarProps) {
 
         <NavbarSection className="max-md:hidden gap-1.5">
           {rightItems.map(renderRightItem)}
+          <NavbarAuthSlot className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")} />
         </NavbarSection>
       </Navbar>
 
@@ -249,6 +251,7 @@ export default function AppNavbar(props: NavbarProps) {
             </Link>
           )
         })}
+        <NavbarAuthSlot className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")} />
       </NavbarMobile>
     </NavbarProvider>
   )
