@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import type { LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import type { NavbarIcon, NavbarItem } from "@/lib/navbar-config"
@@ -12,10 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
+}
+
 function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: string }) {
   if (!icon) return null
 
-  if (typeof icon === "object" && "type" in icon && icon.type === "mask") {
+  if (isMaskIcon(icon)) {
     return (
       <span
         className={cn("block size-5 bg-current", className)}
@@ -27,7 +32,7 @@ function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: st
     )
   }
 
-  const Icon = icon
+  const Icon = icon as LucideIcon
   return <Icon className={cn("size-5 md:size-4", className)} />
 }
 
@@ -178,6 +183,11 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
                 href={dropdownItem.href ?? "#"}
                 target={dropdownItem.href?.startsWith("http") ? "_blank" : undefined}
                 rel={dropdownItem.href?.startsWith("http") ? "noreferrer" : undefined}
+                style={
+                  isItemHovered && hoverColors
+                    ? ({ "--text": hoverColors.text } as React.CSSProperties)
+                    : undefined
+                }
                 className="flex items-center gap-2 no-underline text-inherit"
               >
                 <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />

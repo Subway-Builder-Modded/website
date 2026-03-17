@@ -25,6 +25,7 @@ import {
   NavbarStart,
   NavbarTrigger,
 } from "@/components/ui/navbar"
+import type { LucideIcon } from "lucide-react"
 import type { NavbarIcon, NavbarItem as NavbarConfigItem } from "@/lib/navbar-config"
 import { NAVBAR_ITEMS, NAVBAR_SPECIAL_STYLES } from "@/lib/navbar-config"
 import { cn } from "@/lib/utils"
@@ -32,10 +33,14 @@ import { cn } from "@/lib/utils"
 const socialLinkClassName =
   "group rounded-lg p-2 text-muted-fg no-underline transform-gpu transition-transform duration-180 ease-out hover:scale-[1.04] active:scale-[0.97]"
 
+function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
+}
+
 function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: string }) {
   if (!icon) return null
 
-  if (typeof icon === "object" && "type" in icon && icon.type === "mask") {
+  if (isMaskIcon(icon)) {
     return (
       <span
         className={cn("block size-5 bg-current", className)}
@@ -47,7 +52,7 @@ function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: st
     )
   }
 
-  const Icon = icon
+  const Icon = icon as LucideIcon
   return <Icon className={cn("size-5 md:size-4", className)} />
 }
 
