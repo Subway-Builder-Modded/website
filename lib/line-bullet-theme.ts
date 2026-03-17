@@ -1,3 +1,5 @@
+import { PROJECT_COLOR_SCHEMES } from "@/lib/color-schemes"
+
 const DEFAULT_BULLET_THEME = {
   bulletColor: "#000000",
   textColor: "#FFFFFF",
@@ -5,24 +7,16 @@ const DEFAULT_BULLET_THEME = {
 
 const THEMED_BULLET_COLORS: Record<string, { bulletColor: string; textColor: string }> = {
   railyard: {
-    bulletColor: "#00A97A",
-    textColor: "#FFFFFF",
+    bulletColor: PROJECT_COLOR_SCHEMES.railyard.secondaryHex.light,
+    textColor: PROJECT_COLOR_SCHEMES.railyard.textHex.light,
   },
   "template-mod": {
-    bulletColor: "#7D52E8",
-    textColor: "#FFFFFF",
+    bulletColor: PROJECT_COLOR_SCHEMES["template-mod"].secondaryHex.light,
+    textColor: PROJECT_COLOR_SCHEMES["template-mod"].textHex.light,
   },
   "creating-custom-maps": {
-    bulletColor: "#2E6FCC",
-    textColor: "#FFFFFF",
-  },
-  contributing: {
-    bulletColor: "#C98600",
-    textColor: "#471F07",
-  },
-  legacy: {
-    bulletColor: "#C93A57",
-    textColor: "#FFFFFF",
+    bulletColor: PROJECT_COLOR_SCHEMES["creating-custom-maps"].secondaryHex.light,
+    textColor: PROJECT_COLOR_SCHEMES["creating-custom-maps"].textHex.light,
   },
 } as const
 

@@ -2,9 +2,10 @@
 
 import * as React from "react"
 import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
+import { PROJECT_COLOR_SCHEMES, getModeHex } from "@/lib/color-schemes"
 import { cn } from "@/lib/utils"
 import { getActiveInstanceFromPathname } from "@/lib/wiki-shared"
-import type { WikiInstance } from "@/lib/wiki-config"
 
 export type TocHeading = {
   id: string
@@ -13,14 +14,6 @@ export type TocHeading = {
 }
 
 const ACTIVE_HEADING_TOP_OFFSET = 100
-
-const INSTANCE_INDICATOR_BG_CLASS: Record<WikiInstance["id"], string> = {
-  railyard: "bg-emerald-400",
-  "template-mod": "bg-violet-400",
-  "creating-custom-maps": "bg-blue-400",
-  contributing: "bg-amber-400",
-  legacy: "bg-rose-400",
-}
 
 function getActiveHeadingId(elements: HTMLElement[]) {
   const viewportHeight = window.innerHeight
@@ -51,11 +44,19 @@ function getActiveHeadingId(elements: HTMLElement[]) {
 
 export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
   const pathname = usePathname()
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
   const activeInstance = React.useMemo(
     () => getActiveInstanceFromPathname(pathname),
     [pathname]
   )
   const [activeId, setActiveId] = React.useState<string>("")
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isDark = mounted ? resolvedTheme !== "light" : false
 
   React.useEffect(() => {
     const elements = headings
@@ -91,7 +92,8 @@ export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
   if (!headings.length) return null
 
   const singleHeading = headings.length === 1
-  const activeIndicatorClassName = INSTANCE_INDICATOR_BG_CLASS[activeInstance.id]
+  const activeScheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
+  const lightColor = getModeHex(activeScheme.tertiaryHex, isDark)
 
   return (
     <nav aria-label="On this page" className="xl:w-[19rem] xl:pl-10 2xl:pl-14">
@@ -109,10 +111,9 @@ export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
                 <span
                   className={cn(
                     "absolute top-1.5 bottom-1.5 w-[2px] rounded-full transition-all duration-150",
-                    activeIndicatorClassName,
                     active ? "opacity-100" : "opacity-0"
                   )}
-                  style={{ left: "-16.5px" }}
+                  style={{ left: "-16.5px", backgroundColor: lightColor }}
                 />
                 <a
                   href={`#${heading.id}`}
@@ -121,10 +122,9 @@ export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
                     heading.level <= 2 && "pl-0",
                     heading.level === 3 && "pl-4",
                     heading.level >= 4 && "pl-7",
-                    active
-                      ? cn("font-medium", activeInstance.accentClassName)
-                      : "text-muted-foreground hover:text-foreground"
+                    active ? "font-medium" : "text-muted-foreground hover:text-foreground"
                   )}
+                  style={active ? { color: lightColor } : undefined}
                 >
                   {heading.text}
                 </a>

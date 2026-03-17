@@ -136,19 +136,29 @@ export default async function UpdatePage({
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "mb-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-3",
+              "mb-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-3 bg-[var(--project-secondary-light)] text-[var(--project-primary-light)] dark:bg-[var(--project-secondary-dark)] dark:text-[var(--project-primary-dark)]",
               "font-mta text-2xl font-bold",
               "transition-transform duration-200 hover:scale-[1.02]",
             )}
-            style={{ backgroundColor: project.midHex, color: project.secondaryHex }}
+            style={{
+              ["--project-secondary-light" as string]: project.secondaryHex.light,
+              ["--project-secondary-dark" as string]: project.secondaryHex.dark,
+              ["--project-primary-light" as string]: project.primaryHex.light,
+              ["--project-primary-dark" as string]: project.primaryHex.dark,
+            }}
           >
             <span>{title}</span>
             <ExternalLink className="size-5 shrink-0 opacity-60" />
           </a>
         ) : (
           <div
-            className="mb-5 flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold"
-            style={{ backgroundColor: project.midHex, color: project.secondaryHex }}
+            className="mb-5 flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold bg-[var(--project-secondary-light)] text-[var(--project-primary-light)] dark:bg-[var(--project-secondary-dark)] dark:text-[var(--project-primary-dark)]"
+            style={{
+              ["--project-secondary-light" as string]: project.secondaryHex.light,
+              ["--project-secondary-dark" as string]: project.secondaryHex.dark,
+              ["--project-primary-light" as string]: project.primaryHex.light,
+              ["--project-primary-dark" as string]: project.primaryHex.dark,
+            }}
           >
             {title}
           </div>
