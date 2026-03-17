@@ -15,6 +15,8 @@ export type UpdateProject = {
   icon: LucideIcon
   primaryHex: ModeHex
   secondaryHex: ModeHex
+  tertiaryHex: ModeHex
+  textHex: ModeHex
 }
 
 export const UPDATE_PROJECTS: UpdateProject[] = [
@@ -27,6 +29,8 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     icon: TrainTrack,
     primaryHex: PROJECT_COLOR_SCHEMES.railyard.primaryHex,
     secondaryHex: PROJECT_COLOR_SCHEMES.railyard.secondaryHex,
+    tertiaryHex: PROJECT_COLOR_SCHEMES.railyard.tertiaryHex,
+    textHex: PROJECT_COLOR_SCHEMES.railyard.textHex,
   },
   {
     id: "template-mod",
@@ -37,6 +41,8 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     icon: FolderCode,
     primaryHex: PROJECT_COLOR_SCHEMES["template-mod"].primaryHex,
     secondaryHex: PROJECT_COLOR_SCHEMES["template-mod"].secondaryHex,
+    tertiaryHex: PROJECT_COLOR_SCHEMES["template-mod"].tertiaryHex,
+    textHex: PROJECT_COLOR_SCHEMES["template-mod"].textHex,
   },
 ]
 

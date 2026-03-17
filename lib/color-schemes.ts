@@ -1,7 +1,6 @@
 export type ProjectColorId =
   | "railyard"
   | "template-mod"
-  | "creating-custom-maps"
   | "website"
 
 export type ModeHex = {
@@ -53,24 +52,6 @@ export const PROJECT_COLOR_SCHEMES: Record<ProjectColorId, ThemedColorSet> = {
         dark: "#AE90FE",
     },
     textHex: { 
-        light: "#232323",
-        dark: "#F2F2F2",
-    },
-  },
-  "creating-custom-maps": {
-    primaryHex: {
-        light: "#C7375555",
-        dark: "#D85D7855",
-    },
-    secondaryHex: {
-        light: "#4A0B1A55",
-        dark: "#FF8FA355",
-    },
-    tertiaryHex: {
-        light: "#4A0B1A",
-        dark: "#FF8FA3",
-    },
-    textHex: {
         light: "#232323",
         dark: "#F2F2F2",
     },

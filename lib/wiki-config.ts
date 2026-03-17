@@ -9,7 +9,6 @@ import {
 export type WikiInstanceId =
   | "railyard"
   | "template-mod"
-  | "creating-custom-maps"
 
 export type WikiSidebarOrderItem =
   | string
@@ -69,6 +68,14 @@ export const WIKI_INSTANCES: WikiInstance[] = [
               "data-quality",
             ],
           },
+          {
+            key: "creating-custom-maps",
+            children: [
+              "home",
+              "creating-custom-maps-us",
+              "custom-map-optional-features",
+            ],
+          },
         ],
       },
     ],
@@ -95,18 +102,6 @@ export const WIKI_INSTANCES: WikiInstance[] = [
           "type-reference",
         ],
       },
-    ],
-  },
-  {
-    id: "creating-custom-maps",
-    label: "Creating Custom Maps",
-    basePath: "/wiki/creating-custom-maps",
-    icon: MapPinPlus,
-    versioned: false,
-    sidebarOrder: [
-      "home",
-      "creating-custom-maps-us",
-      "custom-map-optional-features",
     ],
   },
 ]
