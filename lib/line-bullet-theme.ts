@@ -3,20 +3,30 @@ import { PROJECT_COLOR_SCHEMES } from "@/lib/color-schemes"
 const DEFAULT_BULLET_THEME = {
   bulletColor: "#000000",
   textColor: "#FFFFFF",
+  darkBulletColor: "#FFFFFF",
+  darkTextColor: "#000000",
 } as const
 
-const THEMED_BULLET_COLORS: Record<string, { bulletColor: string; textColor: string }> = {
+const THEMED_BULLET_COLORS: Record<
+  string,
+  {
+    bulletColor: string
+    textColor: string
+    darkBulletColor: string
+    darkTextColor: string
+  }
+> = {
   railyard: {
-    bulletColor: PROJECT_COLOR_SCHEMES.railyard.primaryHex.light,
+    bulletColor: PROJECT_COLOR_SCHEMES.railyard.secondaryHex.light,
     textColor: PROJECT_COLOR_SCHEMES.railyard.textHex.light,
+    darkBulletColor: PROJECT_COLOR_SCHEMES.railyard.secondaryHex.dark,
+    darkTextColor: PROJECT_COLOR_SCHEMES.railyard.textHex.dark,
   },
   "template-mod": {
     bulletColor: PROJECT_COLOR_SCHEMES["template-mod"].secondaryHex.light,
     textColor: PROJECT_COLOR_SCHEMES["template-mod"].textHex.light,
-  },
-  "creating-custom-maps": {
-    bulletColor: PROJECT_COLOR_SCHEMES["creating-custom-maps"].secondaryHex.light,
-    textColor: PROJECT_COLOR_SCHEMES["creating-custom-maps"].textHex.light,
+    darkBulletColor: PROJECT_COLOR_SCHEMES["template-mod"].secondaryHex.dark,
+    darkTextColor: PROJECT_COLOR_SCHEMES["template-mod"].textHex.dark,
   },
 } as const
 

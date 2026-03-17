@@ -25,6 +25,8 @@ export function UpdateSection({ type, children, className, themeId }: UpdateSect
           bullet={config.letter}
           color={bulletTheme.bulletColor}
           textColor={bulletTheme.textColor}
+          darkColor={bulletTheme.darkBulletColor}
+          darkTextColor={bulletTheme.darkTextColor}
           shape="circle"
           size="sm"
         />

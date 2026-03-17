@@ -59,10 +59,6 @@ const WIKI_CARD_IMAGES: Record<WikiInstance["id"], { light: string; dark: string
     light: "/images/shared/template-mod-light.png",
     dark: "/images/shared/template-mod-dark.png",
   },
-  "creating-custom-maps": {
-    light: "/images/shared/creating-custom-maps-light.png",
-    dark: "/images/shared/creating-custom-maps-dark.png",
-  },
 }
 
 function getColors(instance: WikiInstance): CardThemeColors {
@@ -203,8 +199,6 @@ const WIKI_DESCRIPTIONS: Record<WikiInstance["id"], string> = {
     "The map and mod distribution platform for Subway Builder. Browse and publish community-made custom maps and mods.",
   "template-mod":
     "TypeScript template and framework documentation for building your own Subway Builder mods.",
-  "creating-custom-maps":
-    "A complete guide to creating, packaging, and distributing your own custom Subway Builder maps.",
 }
 
 export function WikiHubPage() {
