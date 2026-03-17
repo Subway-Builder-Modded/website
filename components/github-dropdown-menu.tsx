@@ -103,7 +103,7 @@ export function GitHubDropdownMenu({ className }: { className: string }) {
       >
         {GITHUB_DROPDOWN_ITEMS.map((item) => {
           const Icon = item.icon
-          const hoverColors = isDark ? item.colors.dark : item.colors.light
+          const hoverColors = item.colors ? (isDark ? item.colors.dark : item.colors.light) : null
           const isItemHovered = hoveredItemId === item.id
 
           return (
@@ -115,7 +115,7 @@ export function GitHubDropdownMenu({ className }: { className: string }) {
               onFocus={() => setHoveredItemId(item.id)}
               onBlur={() => setHoveredItemId((current) => (current === item.id ? null : current))}
               style={
-                isItemHovered
+                isItemHovered && hoverColors
                   ? {
                       color: hoverColors.text,
                       backgroundColor: hoverColors.background,

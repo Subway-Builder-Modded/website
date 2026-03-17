@@ -160,11 +160,11 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
         colors: {
           light: {
             text: "#15803d",
-            background: "rgba(34, 197, 94, 0.18)",
+            background: "#22C55E2E",
           },
           dark: {
             text: "#4ade80",
-            background: "rgba(74, 222, 128, 0.20)",
+            background: "#4ADE8033",
           },
         },
       },
@@ -176,11 +176,11 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
         colors: {
           light: {
             text: "#15803d",
-            background: "rgba(34, 197, 94, 0.18)",
+            background: "#22C55E2E",
           },
           dark: {
             text: "#4ade80",
-            background: "rgba(74, 222, 128, 0.20)",
+            background: "#4ADE8033",
           },
         },
       },
@@ -192,11 +192,11 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
         colors: {
           light: {
             text: "#1d4ed8",
-            background: "rgba(59, 130, 246, 0.16)",
+            background: "#3B82F629",
           },
           dark: {
             text: "#60a5fa",
-            background: "rgba(96, 165, 250, 0.22)",
+            background: "#60A5FA38",
           },
         },
       },

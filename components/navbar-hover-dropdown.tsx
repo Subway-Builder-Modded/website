@@ -48,6 +48,8 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
   const [isTriggerHovered, setIsTriggerHovered] = React.useState(false)
   const [hoveredItemId, setHoveredItemId] = React.useState<string | null>(null)
   const hoverCloseTimeoutRef = React.useRef<number | null>(null)
+  const closeLockTimeoutRef = React.useRef<number | null>(null)
+  const isClosingMenuRef = React.useRef(false)
   const lastOpenAtRef = React.useRef(0)
   const isTriggerHoveredRef = React.useRef(false)
   const isContentHoveredRef = React.useRef(false)
@@ -61,21 +63,45 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
     }
   }, [])
 
+  const clearCloseLock = React.useCallback(() => {
+    if (closeLockTimeoutRef.current) {
+      window.clearTimeout(closeLockTimeoutRef.current)
+      closeLockTimeoutRef.current = null
+    }
+    isClosingMenuRef.current = false
+  }, [])
+
+  const beginCloseLock = React.useCallback(() => {
+    clearCloseLock()
+    isClosingMenuRef.current = true
+    closeLockTimeoutRef.current = window.setTimeout(() => {
+      isClosingMenuRef.current = false
+      closeLockTimeoutRef.current = null
+    }, 210)
+  }, [clearCloseLock])
+
+  const closeMenu = React.useCallback(() => {
+    beginCloseLock()
+    onOpenChange(false)
+  }, [beginCloseLock, onOpenChange])
+
   const scheduleHoverClose = React.useCallback(() => {
     clearHoverClose()
     hoverCloseTimeoutRef.current = window.setTimeout(() => {
       if (!isTriggerHoveredRef.current && !isContentHoveredRef.current) {
-        onOpenChange(false)
+        closeMenu()
       }
       hoverCloseTimeoutRef.current = null
     }, 180)
-  }, [clearHoverClose, onOpenChange])
+  }, [clearHoverClose, closeMenu])
 
   const openMenu = React.useCallback(() => {
+    if (isClosingMenuRef.current) return
     clearHoverClose()
+    clearCloseLock()
     lastOpenAtRef.current = Date.now()
     onOpenChange(true)
-  }, [clearHoverClose, onOpenChange])
+  }, [clearCloseLock, clearHoverClose, onOpenChange])
 
   React.useEffect(() => {
     if (!open) setHoveredItemId(null)
@@ -85,6 +111,9 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
     return () => {
       if (hoverCloseTimeoutRef.current) {
         window.clearTimeout(hoverCloseTimeoutRef.current)
+      }
+      if (closeLockTimeoutRef.current) {
+        window.clearTimeout(closeLockTimeoutRef.current)
       }
     }
   }, [])
@@ -97,6 +126,8 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
       open={open}
       onOpenChange={(nextOpen) => {
         if (nextOpen) {
+          if (isClosingMenuRef.current) return
+          clearCloseLock()
           onOpenChange(true)
         }
       }}
@@ -139,11 +170,11 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
         sideOffset={0}
         onPointerDownOutside={() => {
           clearHoverClose()
-          onOpenChange(false)
+          closeMenu()
         }}
         onEscapeKeyDown={() => {
           clearHoverClose()
-          onOpenChange(false)
+          closeMenu()
         }}
         onPointerEnter={() => {
           isContentHoveredRef.current = true
@@ -184,11 +215,13 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
                 target={dropdownItem.href?.startsWith("http") ? "_blank" : undefined}
                 rel={dropdownItem.href?.startsWith("http") ? "noreferrer" : undefined}
                 style={
-                  isItemHovered && hoverColors
-                    ? ({ "--text": hoverColors.text } as React.CSSProperties)
-                    : undefined
+                  ({
+                    "--text": isItemHovered && hoverColors
+                      ? hoverColors.text
+                      : "hsl(var(--muted-fg))",
+                  } as React.CSSProperties)
                 }
-                className="flex items-center gap-2 no-underline text-inherit"
+                className="flex items-center gap-2 no-underline !text-(--text)"
               >
                 <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />
                 <span>{dropdownItem.title}</span>

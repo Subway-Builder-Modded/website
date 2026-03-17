@@ -144,11 +144,12 @@ export function ThemeToggleMenu({
     clearHoverClose()
     hoverCloseTimeoutRef.current = window.setTimeout(() => {
       if (!isTriggerHoveredRef.current && !isContentHoveredRef.current) {
+        beginCloseLock()
         setMenuOpen(false)
       }
       hoverCloseTimeoutRef.current = null
     }, 180)
-  }, [clearHoverClose, setMenuOpen])
+  }, [beginCloseLock, clearHoverClose, setMenuOpen])
 
   const openMenu = React.useCallback(() => {
     if (isClosingMenuRef.current) return
@@ -247,10 +248,12 @@ export function ThemeToggleMenu({
         data-theme-menu-surface
         onPointerDownOutside={() => {
           clearHoverClose()
+          beginCloseLock()
           setMenuOpen(false)
         }}
         onEscapeKeyDown={() => {
           clearHoverClose()
+          beginCloseLock()
           setMenuOpen(false)
         }}
         onPointerEnter={() => {
