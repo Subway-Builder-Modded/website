@@ -1,9 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { Moon, Sun, SunMoon } from "lucide-react"
+import { Moon, Sun, SunMoon, type LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
+import type { NavbarDropdownItem } from "@/lib/navbar-config"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,17 +24,37 @@ type DocumentWithViewTransition = Document & {
   startViewTransition?: (callback: () => void) => { finished: Promise<void> }
 }
 
-export function ThemeToggleMenu({ className }: { className: string }) {
+export function ThemeToggleMenu({
+  className,
+  open,
+  onOpenChange,
+  items,
+}: {
+  className: string
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  items?: NavbarDropdownItem[]
+}) {
   const { theme, resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
-  const [open, setOpen] = React.useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
   const transitionTimeoutRef = React.useRef<number | null>(null)
   const hoverCloseTimeoutRef = React.useRef<number | null>(null)
+  const lastOpenAtRef = React.useRef(0)
   const closeLockTimeoutRef = React.useRef<number | null>(null)
   const isTriggerHoveredRef = React.useRef(false)
   const isContentHoveredRef = React.useRef(false)
   const isSwitchingThemeRef = React.useRef(false)
   const isClosingMenuRef = React.useRef(false)
+
+  const isControlled = typeof open === "boolean"
+  const menuOpen = isControlled ? open : uncontrolledOpen
+  const setMenuOpen = React.useCallback((nextOpen: boolean) => {
+    if (!isControlled) {
+      setUncontrolledOpen(nextOpen)
+    }
+    onOpenChange?.(nextOpen)
+  }, [isControlled, onOpenChange])
 
   React.useEffect(() => {
     setMounted(true)
@@ -53,6 +74,23 @@ export function ThemeToggleMenu({ className }: { className: string }) {
 
   const currentTheme: ThemeValue =
     mounted && (theme === "light" || theme === "dark" || theme === "system") ? theme : "system"
+
+  const themeOptions = React.useMemo(() => {
+    return themes.map((entry) => {
+      const configured = items?.find((item) => item.id === `theme-${entry.value}`)
+      const configuredIcon = configured?.icon
+      const Icon =
+        configuredIcon && !(typeof configuredIcon === "object" && "type" in configuredIcon)
+          ? (configuredIcon as LucideIcon)
+          : entry.Icon
+
+      return {
+        value: entry.value,
+        label: configured?.title ?? entry.label,
+        Icon,
+      }
+    })
+  }, [items])
 
   const CurrentIcon = currentTheme === "light" ? Sun : currentTheme === "dark" ? Moon : SunMoon
 
@@ -107,23 +145,24 @@ export function ThemeToggleMenu({ className }: { className: string }) {
     hoverCloseTimeoutRef.current = window.setTimeout(() => {
       if (!isTriggerHoveredRef.current && !isContentHoveredRef.current) {
         beginCloseLock()
-        setOpen(false)
+        setMenuOpen(false)
       }
       hoverCloseTimeoutRef.current = null
-    }, 120)
-  }, [beginCloseLock, clearHoverClose])
+    }, 180)
+  }, [beginCloseLock, clearHoverClose, setMenuOpen])
 
   const openMenu = React.useCallback(() => {
     if (isClosingMenuRef.current) return
     clearHoverClose()
     clearCloseLock()
-    setOpen(true)
-  }, [clearCloseLock, clearHoverClose])
+    lastOpenAtRef.current = Date.now()
+    setMenuOpen(true)
+  }, [clearCloseLock, clearHoverClose, setMenuOpen])
 
   const handleThemeChange = React.useCallback(
     (nextTheme: ThemeValue) => {
       if (nextTheme === currentTheme) {
-        setOpen(true)
+        setMenuOpen(true)
         return
       }
 
@@ -133,7 +172,7 @@ export function ThemeToggleMenu({ className }: { className: string }) {
 
       if (currentVisual === nextVisual) {
         setTheme(nextTheme)
-        setOpen(true)
+        setMenuOpen(true)
         return
       }
 
@@ -151,7 +190,7 @@ export function ThemeToggleMenu({ className }: { className: string }) {
 
       if (typeof doc.startViewTransition === "function") {
         beginCloseLock()
-        setOpen(false)
+        setMenuOpen(false)
         const transition = doc.startViewTransition(applyTheme)
         transition.finished.finally(endSwitch)
         return
@@ -159,23 +198,24 @@ export function ThemeToggleMenu({ className }: { className: string }) {
 
       root.classList.add("theme-transitioning")
       beginCloseLock()
-      setOpen(false)
+      setMenuOpen(false)
       applyTheme()
       transitionTimeoutRef.current = window.setTimeout(endSwitch, 220)
     },
-    [beginCloseLock, currentTheme, endSwitch, lockMenuColors, resolvedTheme, setTheme],
+    [beginCloseLock, currentTheme, endSwitch, lockMenuColors, resolvedTheme, setMenuOpen, setTheme],
   )
 
   const handleOpenChange = React.useCallback((nextOpen: boolean) => {
-    if (nextOpen && isClosingMenuRef.current) return
-    if (!nextOpen && (isTriggerHoveredRef.current || isContentHoveredRef.current)) return
-    if (!nextOpen) beginCloseLock()
-    if (nextOpen) clearCloseLock()
-    setOpen(nextOpen)
-  }, [beginCloseLock, clearCloseLock])
+    if (nextOpen) {
+      if (isClosingMenuRef.current) return
+      lastOpenAtRef.current = Date.now()
+      clearCloseLock()
+      setMenuOpen(true)
+    }
+  }, [clearCloseLock, setMenuOpen])
 
   return (
-    <DropdownMenu open={open} onOpenChange={handleOpenChange} modal={false}>
+    <DropdownMenu open={menuOpen} onOpenChange={handleOpenChange} modal={false}>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
@@ -203,9 +243,19 @@ export function ThemeToggleMenu({ className }: { className: string }) {
 
       <DropdownMenuContent
         align="end"
-        sideOffset={8}
+        sideOffset={0}
         data-theme-menu
         data-theme-menu-surface
+        onPointerDownOutside={() => {
+          clearHoverClose()
+          beginCloseLock()
+          setMenuOpen(false)
+        }}
+        onEscapeKeyDown={() => {
+          clearHoverClose()
+          beginCloseLock()
+          setMenuOpen(false)
+        }}
         onPointerEnter={() => {
           isContentHoveredRef.current = true
           openMenu()
@@ -216,7 +266,7 @@ export function ThemeToggleMenu({ className }: { className: string }) {
         }}
         className="min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg duration-200 ease-[cubic-bezier(.22,.9,.35,1)] data-open:duration-220 data-open:ease-[cubic-bezier(.22,.9,.35,1)] data-closed:duration-190 data-closed:ease-[cubic-bezier(.3,.0,.2,1)]"
       >
-        {themes.map(({ value, label, Icon }) => (
+        {themeOptions.map(({ value, label, Icon }) => (
           <DropdownMenuItem
             key={value}
             data-theme-menu

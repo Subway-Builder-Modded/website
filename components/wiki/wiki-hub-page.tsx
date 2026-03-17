@@ -7,6 +7,7 @@ import { BookText } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
+import { PROJECT_COLOR_SCHEMES } from "@/lib/color-schemes"
 import { WIKI_INSTANCES, type WikiInstance } from "@/lib/wiki-config"
 import { buildBaseHomeHref } from "@/lib/wiki-shared"
 import { cn } from "@/lib/utils"
@@ -36,41 +37,6 @@ function mixHex(a: string, b: string, t: number) {
   return `#${toHex(r)}${toHex(g)}${toHex(b2)}`
 }
 
-const INSTANCE_THEME_COLORS = {
-  railyard: {
-    accent: "#00D492",
-    base: "#032D23",
-    mid: "#00A97A",
-  },
-  "template-mod": {
-    accent: "#A684FF",
-    base: "#311362",
-    mid: "#7D52E8",
-  },
-  "creating-custom-maps": {
-    accent: "#51A2FF",
-    base: "#192754",
-    mid: "#2E6FCC",
-  },
-  contributing: {
-    accent: "#FFB900",
-    base: "#471F07",
-    mid: "#C98600",
-  },
-  legacy: {
-    accent: "#FF637E",
-    base: "#4D091C",
-    mid: "#C93A57",
-  },
-} satisfies Record<
-  string,
-  {
-    accent: string
-    base: string
-    mid: string
-  }
->
-
 type CardThemeColors = {
   cardBgLight: string
   cardBgDark: string
@@ -97,31 +63,19 @@ const WIKI_CARD_IMAGES: Record<WikiInstance["id"], { light: string; dark: string
     light: "/images/shared/creating-custom-maps-light.png",
     dark: "/images/shared/creating-custom-maps-dark.png",
   },
-  contributing: {
-    light: "/images/shared/contributing-light.png",
-    dark: "/images/shared/contributing-dark.png",
-  },
-  legacy: {
-    light: "/images/shared/legacy-light.png",
-    dark: "/images/shared/legacy-dark.png",
-  },
 }
 
 function getColors(instance: WikiInstance): CardThemeColors {
-  const theme = INSTANCE_THEME_COLORS[instance.id] ?? {
-    accent: instance.primaryHex,
-    base: instance.secondaryHex,
-    mid: instance.primaryHex,
-  }
+  const theme = PROJECT_COLOR_SCHEMES[instance.id]
 
-  const cardBgLight = theme.accent
-  const cardBgDark = theme.base
-  const titleTextLight = theme.base
-  const titleTextDark = theme.accent
-  const bulletBgLight = mixHex(cardBgLight, titleTextLight, 0.30)
-  const bulletBgDark = mixHex(cardBgDark, titleTextDark, 0.30)
-  const imageBorderLight = bulletBgLight
-  const imageBorderDark = bulletBgDark
+  const cardBgLight = theme.primaryHex.light
+  const cardBgDark = theme.primaryHex.dark
+  const titleTextLight = theme.primaryHex.light
+  const titleTextDark = theme.primaryHex.dark
+  const bulletBgLight = theme.secondaryHex.light
+  const bulletBgDark = theme.secondaryHex.dark
+  const imageBorderLight = theme.secondaryHex.light
+  const imageBorderDark = theme.secondaryHex.dark
   const borderColorLight = hexAlpha(titleTextLight, 0.3)
   const borderColorDark = hexAlpha(titleTextDark, 0.3)
 
@@ -176,6 +130,7 @@ function WikiCardRow({ items }: { items: WikiInstance[] }) {
 }
 
 function WikiHubCard({ instance }: { instance: WikiInstance }) {
+  const theme = PROJECT_COLOR_SCHEMES[instance.id]
   const {
     cardBgLight,
     cardBgDark,
@@ -211,6 +166,8 @@ function WikiHubCard({ instance }: { instance: WikiInstance }) {
             ["--hub-card-border-dark" as string]: borderColorDark,
             ["--hub-card-image-border-light" as string]: imageBorderLight,
             ["--hub-card-image-border-dark" as string]: imageBorderDark,
+            ["--hub-card-text-light" as string]: theme.textHex.light,
+            ["--hub-card-text-dark" as string]: theme.textHex.dark,
           } as CSSProperties
         }
       >
@@ -219,7 +176,7 @@ function WikiHubCard({ instance }: { instance: WikiInstance }) {
             <LineBullet
               bullet={instance.label}
               color="var(--hub-card-bullet)"
-              textColor="var(--foreground)"
+              textColor="var(--hub-card-text)"
               shape="circle"
               size="md"
             />
@@ -232,7 +189,7 @@ function WikiHubCard({ instance }: { instance: WikiInstance }) {
             />
           </div>
 
-          <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: "var(--hub-card-title)" }}>
+          <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: "var(--hub-card-text)" }}>
             {WIKI_DESCRIPTIONS[instance.id]}
           </p>
         </div>
@@ -241,17 +198,13 @@ function WikiHubCard({ instance }: { instance: WikiInstance }) {
   )
 }
 
-const WIKI_DESCRIPTIONS: Record<string, string> = {
+const WIKI_DESCRIPTIONS: Record<WikiInstance["id"], string> = {
   railyard:
     "The map and mod distribution platform for Subway Builder. Browse and publish community-made custom maps and mods.",
   "template-mod":
     "TypeScript template and framework documentation for building your own Subway Builder mods.",
   "creating-custom-maps":
     "A complete guide to creating, packaging, and distributing your own custom Subway Builder maps.",
-  contributing:
-    "Learn how to contribute to Subway Builder Modded — from documentation and guides to translations.",
-  legacy:
-    "Legacy documentation covering older installation methods and compatibility guides for previous releases.",
 }
 
 export function WikiHubPage() {

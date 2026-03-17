@@ -1,6 +1,8 @@
 "use client"
 import { usePathname } from "next/navigation"
+import { useMemo, useState } from "react"
 import { ThemeToggleMenu } from "@/components/theme-toggle-menu"
+import { NavbarHoverDropdown } from "@/components/navbar-hover-dropdown"
 import { Avatar } from "@/components/ui/avatar"
 import { Link } from "@/components/ui/link"
 import {
@@ -23,31 +25,172 @@ import {
   NavbarStart,
   NavbarTrigger,
 } from "@/components/ui/navbar"
-import {
-  BookText,
-  Megaphone,
-  Users,
-  TrainTrack,
-  Download,
-  Map,
-  Unplug,
-} from "lucide-react"
-
-const railyard = [
-  { id: 1, label: "Download App", url: "/railyard" },
-  { id: 2, label: "Browse Maps", url: "/railyard/browse?type=maps" },
-  { id: 3, label: "Browse Mods", url: "/railyard/browse?type=mods" },
-]
+import type { LucideIcon } from "lucide-react"
+import type { NavbarIcon, NavbarItem as NavbarConfigItem } from "@/lib/navbar-config"
+import { NAVBAR_ITEMS, NAVBAR_SPECIAL_STYLES } from "@/lib/navbar-config"
+import { cn } from "@/lib/utils"
 
 const socialLinkClassName =
-  "group rounded-lg p-2 text-muted-fg no-underline transition-all duration-200 ease-[cubic-bezier(.22,.9,.35,1)] hover:bg-secondary/60 hover:text-primary hover:scale-[1.08] active:scale-[0.94]"
+  "group rounded-lg p-2 text-muted-fg no-underline transform-gpu transition-transform duration-180 ease-out hover:scale-[1.04] active:scale-[0.97]"
+
+function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
+}
+
+function isImageIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "image" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "image"
+}
+
+function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: string }) {
+  if (!icon) return null
+
+  if (isMaskIcon(icon)) {
+    return (
+      <span
+        className={cn("block size-5 bg-current", className)}
+        style={{
+          WebkitMask: `url(${icon.src}) center / contain no-repeat`,
+          mask: `url(${icon.src}) center / contain no-repeat`,
+        }}
+      />
+    )
+  }
+
+  if (isImageIcon(icon)) {
+    return <img src={icon.src} alt="" aria-hidden className={cn("block size-5 object-contain md:size-4", className)} />
+  }
+
+  const Icon = icon as LucideIcon
+  return <Icon className={cn("size-5 md:size-4", className)} />
+}
 
 export default function AppNavbar(props: NavbarProps) {
   const pathname = usePathname()
+  const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null)
+
+  const leftItems = useMemo(
+    () => NAVBAR_ITEMS.filter((item) => item.position === "left"),
+    [],
+  )
+
+  const rightItems = useMemo(
+    () => NAVBAR_ITEMS.filter((item) => item.position === "right"),
+    [],
+  )
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
     return pathname === href || pathname.startsWith(`${href}/`)
+  }
+
+  const isExternalHref = (href?: string) => Boolean(href?.startsWith("http://") || href?.startsWith("https://"))
+
+  const renderLeftItem = (item: NavbarConfigItem) => {
+    if (item.dropdown?.length) {
+      const style = NAVBAR_SPECIAL_STYLES[item.id]
+
+      return (
+        <div key={item.id} className="relative">
+          <NavigationMenu
+            viewport={false}
+            value={activeDropdownId === item.id ? item.id : ""}
+            onValueChange={(nextValue) => {
+              setActiveDropdownId(nextValue ? item.id : null)
+            }}
+            className="relative z-20 max-w-none flex-none"
+          >
+            <NavigationMenuList>
+              <NavigationMenuItem value={item.id}>
+                <NavigationMenuTrigger className={style?.triggerClassName}>
+                  <NavbarItemIcon icon={item.icon} className="text-primary" />
+                  {item.title ? <span className="font-semibold tracking-wide">{item.title}</span> : null}
+                </NavigationMenuTrigger>
+
+                <NavigationMenuContent className={cn("min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg", style?.dropdownContentClassName)}>
+                  <ul className="grid gap-y-1 p-1">
+                    {item.dropdown.map((dropdownItem) => (
+                      <li key={dropdownItem.id}>
+                        <NavigationMenuLink
+                          href={dropdownItem.href ?? "#"}
+                          target={isExternalHref(dropdownItem.href) ? "_blank" : undefined}
+                          rel={isExternalHref(dropdownItem.href) ? "noreferrer" : undefined}
+                          className={cn(
+                            "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-all duration-200 ease-[cubic-bezier(.22,.9,.35,1)] hover:bg-secondary/60 hover:text-primary",
+                            style?.dropdownItemClassName,
+                          )}
+                        >
+                          <NavbarItemIcon icon={dropdownItem.icon} className="size-4 shrink-0" />
+                          <span>{dropdownItem.title}</span>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          {item.href && isActive(item.href) && (
+            <span className={style?.activeUnderlineClassName} />
+          )}
+        </div>
+      )
+    }
+
+    return (
+      <NavbarItem key={item.id} isCurrent={item.href ? isActive(item.href) : false} href={item.href ?? "#"}>
+        <NavbarItemIcon icon={item.icon} />
+        {item.title}
+      </NavbarItem>
+    )
+  }
+
+  const renderRightItem = (item: NavbarConfigItem) => {
+    const handleRightItemOpenChange = (nextOpen: boolean) => {
+      if (nextOpen) {
+        setActiveDropdownId(item.id)
+        return
+      }
+
+      setActiveDropdownId((current) => (current === item.id ? null : current))
+    }
+
+    if (item.id === "theme") {
+      return (
+        <ThemeToggleMenu
+          key={item.id}
+          className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")}
+          items={item.dropdown}
+          open={activeDropdownId === item.id}
+          onOpenChange={handleRightItemOpenChange}
+        />
+      )
+    }
+
+    if (item.dropdown?.length) {
+      return (
+        <NavbarHoverDropdown
+          key={item.id}
+          item={item}
+          className={socialLinkClassName}
+          open={activeDropdownId === item.id}
+          onOpenChange={handleRightItemOpenChange}
+        />
+      )
+    }
+
+    return (
+      <Link
+        key={item.id}
+        href={item.href ?? "#"}
+        aria-label={item.title ?? item.id}
+        target={isExternalHref(item.href) ? "_blank" : undefined}
+        rel={isExternalHref(item.href) ? "noreferrer" : undefined}
+        className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")}
+      >
+        <NavbarItemIcon icon={item.icon} />
+      </Link>
+    )
   }
 
   return (
@@ -68,154 +211,44 @@ export default function AppNavbar(props: NavbarProps) {
 
         <NavbarGap />
 
-        <NavbarSection>
-          <NavbarItem isCurrent={isActive("/wiki")} href="/wiki">
-            <BookText data-slot="icon" className="size-5 md:size-4" />
-            Wiki
-          </NavbarItem>
-
-          <NavbarItem isCurrent={isActive("/updates")} href="/updates">
-            <Megaphone data-slot="icon" className="size-5 md:size-4" />
-            Updates
-          </NavbarItem>
-
-          <NavbarItem isCurrent={isActive("/credits")} href="/credits">
-            <Users data-slot="icon" className="size-5 md:size-4" />
-            Credits
-          </NavbarItem>
-
-          <div className="relative">
-            <NavigationMenu viewport={false} className="relative z-20 max-w-none flex-none">
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger
-                    className="
-                      h-auto gap-x-2 rounded-lg px-2 py-2 text-sm font-semibold
-                      transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)]
-                        hover:scale-[1.03]
-                      bg-gradient-to-b from-emerald-400/30 via-emerald-500/20 to-emerald-600/30
-                      text-primary
-                      shadow-[0_0_14px_hsl(var(--primary)/0.35)]
-                      ring-1 ring-primary/60
-                      hover:shadow-[0_0_16px_rgba(16,185,129,0.6)]
-                      hover:ring-emerald-300
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/60
-                      data-[state=open]:bg-emerald-500/20
-                      data-[state=open]:ring-emerald-300
-                    "
-                  >
-                    <TrainTrack className="size-5 md:size-4 text-primary" />
-                    <span className="font-semibold tracking-wide">Railyard</span>
-                  </NavigationMenuTrigger>
-
-                  <NavigationMenuContent className="min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg">
-                    <ul className="grid gap-y-1 p-1">
-                      {railyard.map((item) => {
-                        const Icon = item.id === 1 ? Download : item.id === 2 ? Map : Unplug
-
-                        return (
-                          <li key={item.id}>
-                            <NavigationMenuLink
-                              href={item.url}
-                              className="
-                                flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-fg
-                                transition-all duration-200 ease-[cubic-bezier(.22,.9,.35,1)]
-                                hover:bg-secondary/60 hover:text-primary
-                              "
-                            >
-                              <Icon className="size-4 shrink-0" />
-                              <span>{item.label}</span>
-                            </NavigationMenuLink>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            {isActive("/railyard") && (
-              <span className="absolute left-2 right-2 z-0 -bottom-[calc(var(--navbar-gutter)+1px)] h-(--gutter) rounded-full bg-primary [--gutter:--spacing(0.5)]" />
-            )}
-          </div>
+        <NavbarSection className="gap-1.5">
+          {leftItems.map(renderLeftItem)}
         </NavbarSection>
 
         <NavbarSpacer />
 
-        <NavbarSection className="max-md:hidden">
-          <Link
-            href="https://discord.gg/jrNQpbytUQ"
-            aria-label="Discord"
-            target="_blank"
-            rel="noreferrer"
-            className={socialLinkClassName}
-          >
-            <span
-              className="block size-5 bg-current"
-              style={{
-                WebkitMask: "url(/assets/discord.svg) center / contain no-repeat",
-                mask: "url(/assets/discord.svg) center / contain no-repeat",
-              }}
-            />
-          </Link>
-
-          <Link
-            href="https://github.com/Subway-Builder-Modded"
-            aria-label="GitHub"
-            target="_blank"
-            rel="noreferrer"
-            className={socialLinkClassName}
-          >
-            <span
-              className="block size-5 bg-current"
-              style={{
-                WebkitMask: "url(/assets/github.svg) center / contain no-repeat",
-                mask: "url(/assets/github.svg) center / contain no-repeat",
-              }}
-            />
-          </Link>
-
-          <ThemeToggleMenu className={socialLinkClassName} />
+        <NavbarSection className="max-md:hidden gap-1.5">
+          {rightItems.map(renderRightItem)}
         </NavbarSection>
       </Navbar>
 
       <NavbarMobile>
         <NavbarTrigger />
         <NavbarSpacer />
+        {rightItems.map((item) => {
+          if (item.id === "theme") {
+            return (
+              <ThemeToggleMenu
+                key={item.id}
+                className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")}
+                items={item.dropdown}
+              />
+            )
+          }
 
-        <a
-          href="https://discord.gg/jrNQpbytUQ"
-          aria-label="Discord"
-          target="_blank"
-          rel="noreferrer"
-          className={socialLinkClassName}
-        >
-          <span
-            className="block size-5 bg-current"
-            style={{
-              WebkitMask: "url(/assets/discord.svg) center / contain no-repeat",
-              mask: "url(/assets/discord.svg) center / contain no-repeat",
-            }}
-          />
-        </a>
-
-        <a
-          href="https://github.com/Subway-Builder-Modded"
-          aria-label="GitHub"
-          target="_blank"
-          rel="noreferrer"
-          className={socialLinkClassName}
-        >
-          <span
-            className="block size-5 bg-current"
-            style={{
-              WebkitMask: "url(/assets/github.svg) center / contain no-repeat",
-              mask: "url(/assets/github.svg) center / contain no-repeat",
-            }}
-          />
-        </a>
-
-        <ThemeToggleMenu className={socialLinkClassName} />
+          return (
+            <Link
+              key={item.id}
+              href={item.href ?? "#"}
+              aria-label={item.title ?? item.id}
+              target={isExternalHref(item.href) ? "_blank" : undefined}
+              rel={isExternalHref(item.href) ? "noreferrer" : undefined}
+              className={cn(socialLinkClassName, "hover:bg-secondary/60 hover:text-primary")}
+            >
+              <NavbarItemIcon icon={item.icon} />
+            </Link>
+          )
+        })}
       </NavbarMobile>
     </NavbarProvider>
   )

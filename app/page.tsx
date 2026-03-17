@@ -4,56 +4,93 @@ import Image from "next/image"
 import Link from "next/link"
 import { useMemo, useRef, useState, useLayoutEffect, useCallback } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
-import { TrainTrack } from "lucide-react"
+import { TrainTrack, Package, Megaphone, Users, type LucideIcon } from "lucide-react"
 
 import { Card, CardTitle } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
-import { NON_THEMED_LINE_BULLET } from "@/lib/line-bullet-theme"
+import type { NavbarIcon } from "@/lib/navbar-config"
+import { getLineBulletTheme, NON_THEMED_LINE_BULLET } from "@/lib/line-bullet-theme"
 import { cn } from "@/lib/utils"
 
-type HomeItem = {
+type HomeItemBase = {
   id: string
-  letter: string
   title: string
   description: string
   href: string
 }
 
+type HomeItem = HomeItemBase & (
+  | { letter: string; icon?: never }
+  | { icon: NavbarIcon; letter?: never }
+)
+
+function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
+}
+
+function isImageIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "image" }> {
+  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "image"
+}
+
+function renderHomeItemIcon(icon: NavbarIcon) {
+  if (isMaskIcon(icon)) {
+    return (
+      <span
+        className="block size-3.5 bg-current"
+        style={{
+          WebkitMask: `url(${icon.src}) center / contain no-repeat`,
+          mask: `url(${icon.src}) center / contain no-repeat`,
+        }}
+      />
+    )
+  }
+
+  if (isImageIcon(icon)) {
+    return <img src={icon.src} alt="" aria-hidden className="block size-3.5 object-contain" />
+  }
+
+  const Icon = icon as LucideIcon
+  return <Icon className="size-3.5" aria-hidden="true" />
+}
+
 const HOMEPAGE_ITEMS: HomeItem[] = [
   {
     id: "railyard",
-    letter: "R",
+    icon: TrainTrack,
     title: "Railyard",
     description: "All-in-one Map and Mod Manager for Subway Builder.",
     href: "/railyard",
   },
   {
     id: "template-mod-docs",
-    letter: "T",
+    icon: Package,
     title: "Template Mod Documentation",
     description: "View the docs for the Subway Builder Modded Template Mod.",
     href: "/wiki/template-mod/latest/home",
   },
   {
-    id: "making-custom-maps",
-    letter: "M",
-    title: "Creating Custom Maps",
-    description: "The complete guide to creating, packaging, and distributing custom Subway Builder maps.",
-    href: "/creating-custom-maps/creating-custom-maps/home",
-  },
-  {
     id: "updates",
-    letter: "U",
+    icon: Megaphone,
     title: "Updates & Changelogs",
     description: "Stay up to date with the latest releases from Subway Builder Modded.",
     href: "/updates",
   },
   {
     id: "credits",
-    letter: "C",
+    icon: Users,
     title: "Credits",
     description: "Subway Builder Modded is a community-driven project made possible by dedicated contributors.",
     href: "/credits",
+  },
+  {
+    id: "discord",
+    icon: {
+      type: "mask",
+      src: "/assets/discord.svg",
+    },
+    title: "Discord",
+    description: "Join our Discord server to connect with the community and get support.",
+    href: "https://discord.gg/syG9YHMyeG",
   },
 ]
 
@@ -271,8 +308,10 @@ function HomepageCard({
   registerTitle: (node: HTMLDivElement | null) => void
 }) {
   const isRailyard = item.id === "railyard"
-  const bulletColor = isRailyard ? "#00A97A" : NON_THEMED_LINE_BULLET.bulletColor
-  const bulletTextColor = isRailyard ? "#FFFFFF" : NON_THEMED_LINE_BULLET.textColor
+  const Icon = item.icon
+  const railyardBulletTheme = getLineBulletTheme("railyard")
+  const bulletColor = isRailyard ? railyardBulletTheme.bulletColor : NON_THEMED_LINE_BULLET.bulletColor
+  const bulletTextColor = isRailyard ? railyardBulletTheme.textColor : NON_THEMED_LINE_BULLET.textColor
 
   return (
     <Link href={item.href} className="block h-full outline-none">
@@ -306,7 +345,7 @@ function HomepageCard({
                 >
                   <LineBullet
                     bullet={
-                      isRailyard ? <TrainTrack className="size-3.5" aria-hidden="true" /> : (item.letter || "").slice(0, 2).toUpperCase()
+                      Icon ? renderHomeItemIcon(Icon) : item.letter.slice(0, 2).toUpperCase()
                     }
                     color={bulletColor}
                     textColor={bulletTextColor}

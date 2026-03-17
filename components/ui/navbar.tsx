@@ -226,7 +226,6 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
           "hover:bg-secondary/60 active:bg-secondary/70",
           "text-muted-fg hover:text-primary active:text-primary",
           "transition-all duration-200 ease-[cubic-bezier(.22,.9,.35,1)]",
-          "hover:scale-[1.05]",
           "*:data-[slot=icon]:text-muted-fg hover:*:data-[slot=icon]:text-primary active:*:data-[slot=icon]:text-primary",
         ],
         className,

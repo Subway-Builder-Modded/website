@@ -8,7 +8,10 @@ export interface LineBulletProps extends React.HTMLAttributes<HTMLDivElement> {
   bullet: React.ReactNode
   color: string
   textColor: string
+  darkColor?: string
+  darkTextColor?: string
   hoverColor?: string
+  darkHoverColor?: string
   invertOnHover?: boolean
   shape?: LineBulletShape
   size?: LineBulletSize
@@ -35,7 +38,10 @@ export function LineBullet({
   bullet,
   color,
   textColor,
+  darkColor,
+  darkTextColor,
   hoverColor,
+  darkHoverColor,
   invertOnHover = false,
   shape = "circle",
   size = "sm",
@@ -45,14 +51,20 @@ export function LineBullet({
 }: LineBulletProps) {
   const s = sizeMap[size]
   const resolvedHoverColor = hoverColor ?? color
+  const resolvedDarkColor = darkColor ?? (!invertOnHover && isBlackColor(color) ? "#FFFFFF" : color)
+  const resolvedDarkHoverColor = darkHoverColor ?? darkColor ?? (!invertOnHover && isBlackColor(resolvedHoverColor) ? "#FFFFFF" : resolvedHoverColor)
   const baseBulletBg = invertOnHover ? "#FFFFFF" : color
   const baseBulletFg = invertOnHover ? "#000000" : textColor
   const hoverBulletBg = invertOnHover ? resolvedHoverColor : color
   const hoverBulletFg = invertOnHover ? "#FFFFFF" : textColor
-  const darkBaseBulletBg = !invertOnHover && isBlackColor(baseBulletBg) ? "#FFFFFF" : baseBulletBg
-  const darkBaseBulletFg = isWhiteColor(darkBaseBulletBg) ? "#000000" : baseBulletFg
-  const darkHoverBulletBg = !invertOnHover && isBlackColor(hoverBulletBg) ? "#FFFFFF" : hoverBulletBg
-  const darkHoverBulletFg = isWhiteColor(darkHoverBulletBg) ? "#000000" : hoverBulletFg
+  const darkBaseBulletBg = invertOnHover ? "#FFFFFF" : resolvedDarkColor
+  const darkBaseBulletFg = invertOnHover
+    ? "#000000"
+    : darkTextColor ?? (isWhiteColor(darkBaseBulletBg) ? "#000000" : baseBulletFg)
+  const darkHoverBulletBg = invertOnHover ? resolvedDarkHoverColor : resolvedDarkHoverColor
+  const darkHoverBulletFg = invertOnHover
+    ? "#FFFFFF"
+    : darkTextColor ?? (isWhiteColor(darkHoverBulletBg) ? "#000000" : hoverBulletFg)
   const bulletLabel =
     typeof bullet === "string" || typeof bullet === "number"
       ? String(bullet)

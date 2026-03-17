@@ -25,6 +25,7 @@ import {
   type WikiSidebarEntry,
   type WikiSidebarTree,
 } from "@/lib/wiki-shared"
+import { PROJECT_COLOR_SCHEMES, getModeHex } from "@/lib/color-schemes"
 import { WIKI_INSTANCES, type WikiInstance, type WikiVersion } from "@/lib/wiki-config"
 
 // ─── Color helpers ────────────────────────────────────────────────────────────
@@ -51,22 +52,6 @@ type AppWikiSidebarProps = {
 }
 
 type OpenDropdown = "instance" | "version" | null
-
-const SIDEBAR_HOVER_TEXT_CLASS: Record<WikiInstance["id"], string> = {
-  railyard: "hover:text-emerald-400",
-  "template-mod": "hover:text-violet-400",
-  "creating-custom-maps": "hover:text-blue-400",
-  contributing: "hover:text-amber-400",
-  legacy: "hover:text-rose-400",
-}
-
-const INSTANCE_INDICATOR_BG_CLASS: Record<WikiInstance["id"], string> = {
-  railyard: "bg-emerald-400",
-  "template-mod": "bg-violet-400",
-  "creating-custom-maps": "bg-blue-400",
-  contributing: "bg-amber-400",
-  legacy: "bg-rose-400",
-}
 
 function normalizePath(path: string) {
   if (path === "/") return path
@@ -97,18 +82,21 @@ function InstanceIcon({
   isDark: boolean
 }) {
   const Icon = instance.icon
+  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
+  const accent = getModeHex(scheme.primaryHex, isDark)
+  const text = getModeHex(scheme.tertiaryHex, isDark)
 
   return (
     <div
       className="flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150"
       style={{
-        backgroundColor: isDark ? instance.secondaryHex : instance.primaryHex,
-        borderColor: isDark ? hexAlpha(instance.primaryHex, 0.35) : hexAlpha(instance.secondaryHex, 0.7),
+        backgroundColor: accent,
+        borderColor: hexAlpha(text, 0.35),
       }}
     >
       <Icon
         className="size-4 transition-colors duration-150"
-        style={{ color: isDark ? instance.primaryHex : instance.secondaryHex }}
+        style={{ color: text }}
       />
     </div>
   )
@@ -124,18 +112,21 @@ function VersionIcon({
   isDark: boolean
 }) {
   const Icon = version.icon ?? (isLatestVersion(instance, version.value) ? Tag : Archive)
+  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
+  const accent = getModeHex(scheme.primaryHex, isDark)
+  const text = getModeHex(scheme.tertiaryHex, isDark)
 
   return (
     <div
       className="flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150"
       style={{
-        backgroundColor: isDark ? instance.secondaryHex : instance.primaryHex,
-        borderColor: isDark ? hexAlpha(instance.primaryHex, 0.35) : hexAlpha(instance.secondaryHex, 0.7),
+        backgroundColor: accent,
+        borderColor: hexAlpha(text, 0.35),
       }}
     >
       <Icon
         className="size-4 transition-colors duration-150"
-        style={{ color: isDark ? instance.primaryHex : instance.secondaryHex }}
+        style={{ color: text }}
       />
     </div>
   )
@@ -150,14 +141,18 @@ function StatusBadge({
   instance: WikiInstance
   isDark: boolean
 }) {
+  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
+  const text = getModeHex(scheme.tertiaryHex, isDark)
+  const mid = getModeHex(scheme.secondaryHex, isDark)
+
   if (kind === "latest") {
     return (
       <span
         className="inline-flex h-5 items-center rounded-full border px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
         style={{
-          backgroundColor: isDark ? hexAlpha(instance.secondaryHex, 0.9) : hexAlpha(instance.primaryHex, 0.9),
-          borderColor: isDark ? hexAlpha(instance.primaryHex, 0.4) : hexAlpha(instance.secondaryHex, 0.45),
-          color: isDark ? instance.primaryHex : instance.secondaryHex,
+          backgroundColor: mid,
+          borderColor: hexAlpha(text, 0.35),
+          color: text,
         }}
       >
         Latest
@@ -166,7 +161,14 @@ function StatusBadge({
   }
 
   return (
-    <span className="inline-flex h-5 items-center rounded-full border border-zinc-400/25 bg-zinc-500/12 px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-zinc-300">
+    <span
+      className="inline-flex h-5 items-center rounded-full border px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
+      style={{
+        borderColor: hexAlpha(text, 0.25),
+        backgroundColor: "transparent",
+        color: text,
+      }}
+    >
       Deprecated
     </span>
   )
@@ -209,6 +211,7 @@ function DropdownTrigger({
           "ml-auto size-4 shrink-0 transition-transform duration-200",
           open && "rotate-180"
         )}
+        style={{ color: "currentColor" }}
       />
     </button>
   )
@@ -249,8 +252,10 @@ function InstanceDropdownRow({
   isDark: boolean
 }) {
   const [hovered, setHovered] = React.useState(false)
-  const hoverBg = isDark ? instance.secondaryHex : instance.primaryHex
-  const hoverText = isDark ? instance.primaryHex : instance.secondaryHex
+  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
+  const accent = getModeHex(scheme.primaryHex, isDark)
+  const text = getModeHex(scheme.tertiaryHex, isDark)
+  const hoverBg = accent
 
   return (
     <NextLink
@@ -259,8 +264,8 @@ function InstanceDropdownRow({
       className="group/dropdown-item flex items-center gap-3 px-3 py-2 transition-colors duration-150"
       style={
         hovered
-          ? { backgroundColor: hoverBg, color: hoverText }
-          : { backgroundColor: "transparent", color: "inherit" }
+          ? { backgroundColor: hoverBg, color: text }
+          : { backgroundColor: "transparent", color: text }
       }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -287,10 +292,11 @@ function VersionDropdownRow({
   isDark: boolean
 }) {
   const [hovered, setHovered] = React.useState(false)
+  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
+  const accent = getModeHex(scheme.primaryHex, isDark)
+  const text = getModeHex(scheme.tertiaryHex, isDark)
+  const hoverBg = accent
   const latest = isLatestVersion(instance, version.value)
-  const hoverBg = latest
-    ? (isDark ? instance.secondaryHex : instance.primaryHex)
-    : undefined
 
   return (
     <NextLink
@@ -298,11 +304,9 @@ function VersionDropdownRow({
       aria-current={isActive ? "page" : undefined}
       className="group/dropdown-item flex items-center gap-3 px-3 py-2 transition-colors duration-150"
       style={
-        hovered && hoverBg
-          ? { backgroundColor: hoverBg, color: isDark ? instance.primaryHex : instance.secondaryHex }
-          : hovered
-          ? { backgroundColor: "var(--color-card)" }
-          : { backgroundColor: "transparent", color: "inherit" }
+        hovered
+          ? { backgroundColor: hoverBg, color: text }
+          : { backgroundColor: "transparent", color: text }
       }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -455,8 +459,10 @@ function InstanceSwitcher({
   setOpen: (value: boolean) => void
   isDark: boolean
 }) {
-  const triggerBg = isDark ? activeInstance.secondaryHex : activeInstance.primaryHex
-  const triggerText = isDark ? activeInstance.primaryHex : activeInstance.secondaryHex
+  const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
+  const accent = getModeHex(scheme.primaryHex, isDark)
+  const triggerBg = accent
+  const triggerText = getModeHex(scheme.tertiaryHex, isDark)
   const triggerBorder = hexAlpha(triggerText, 0.25)
 
   return (
@@ -508,17 +514,27 @@ function VersionSwitcher({
   const currentDocSlug = getDocSlugFromPathname(activeInstance, pathname) ?? "home"
   if (!activeInstance.versioned || !activeInstance.versions?.length) return null
 
+  const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
+  const triggerBg = getModeHex(scheme.primaryHex, isDark)
+  const triggerText = getModeHex(scheme.tertiaryHex, isDark)
+  const triggerBorder = hexAlpha(triggerText, 0.25)
+
   return (
     <div>
       <DropdownTrigger
         open={open}
         onToggle={() => setOpen(!open)}
-        className="border-sidebar-border bg-sidebar-elevated text-foreground hover:bg-sidebar-hover"
+        className="transition-opacity duration-150 hover:opacity-90"
+        style={{
+          backgroundColor: triggerBg,
+          color: triggerText,
+          borderColor: triggerBorder,
+        }}
       >
         <VersionIcon instance={activeInstance} version={activeVersion} isDark={isDark} />
         <div className="pr-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[15px] font-semibold leading-tight text-foreground">
+            <span className="text-[15px] font-semibold leading-tight">
               {activeVersion.label}
             </span>
             {isLatestVersion(activeInstance, activeVersion.value) ? (
@@ -754,8 +770,8 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
 
   const footerOffset = useFooterOffset()
   const isCollapsed = state === "collapsed"
-  const hoverTextClassName = SIDEBAR_HOVER_TEXT_CLASS[activeInstance.id]
-  const activeIndicatorClassName = INSTANCE_INDICATOR_BG_CLASS[activeInstance.id]
+  const activeScheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
+  const lightColor = getModeHex(activeScheme.tertiaryHex, isDark)
 
   const [showExpandButton, setShowExpandButton] = React.useState(false)
 
@@ -801,7 +817,16 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
           </div>
         </SidebarHeader>
 
-        <SidebarContent className="min-h-0 pl-4 pr-0 py-4">
+        <SidebarContent
+          className="min-h-0 pl-4 pr-0 py-4"
+          style={
+            {
+              ["--wiki-hover-color" as string]: lightColor,
+              ["--wiki-active-color" as string]: lightColor,
+              ["--wiki-indicator-color" as string]: lightColor,
+            } as React.CSSProperties
+          }
+        >
           <nav aria-label="Wiki navigation">
             <ul className="space-y-0.5">
               {(tree?.entries ?? []).map((entry) => (
@@ -812,9 +837,9 @@ export function AppWikiSidebar({ tree, versionDocSlugs }: AppWikiSidebarProps) {
                   openKeys={openKeys}
                   setOpenKeys={setOpenKeys}
                   activeIndicatorKey={activeIndicatorKey}
-                  activeTextClassName={activeInstance.accentClassName}
-                  activeIndicatorClassName={activeIndicatorClassName}
-                  hoverTextClassName={hoverTextClassName}
+                  activeTextClassName="text-[var(--wiki-active-color)]"
+                  activeIndicatorClassName="bg-[var(--wiki-indicator-color)]"
+                  hoverTextClassName="hover:text-[var(--wiki-hover-color)]"
                   isDark={isDark}
                 />
               ))}

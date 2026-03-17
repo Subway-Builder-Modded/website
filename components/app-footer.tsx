@@ -114,7 +114,7 @@ export default function AppFooter() {
 
           <div className="flex items-center gap-4 md:mr-12">
             <Link
-                href="https://discord.gg/jrNQpbytUQ"
+                href="https://discord.gg/syG9YHMyeG"
                 aria-label="Discord"
                 target="_blank"
                 rel="noreferrer"

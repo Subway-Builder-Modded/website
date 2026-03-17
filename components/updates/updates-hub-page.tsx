@@ -6,6 +6,7 @@ import type { CSSProperties } from "react"
 import { Megaphone } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
+import { PROJECT_COLOR_SCHEMES } from "@/lib/color-schemes"
 import { UPDATE_PROJECTS, type UpdateProject } from "@/lib/updates-config"
 import { cn } from "@/lib/utils"
 
@@ -59,14 +60,14 @@ const UPDATE_CARD_IMAGES: Record<UpdateProject["id"], { light: string; dark: str
 }
 
 function getColors(project: UpdateProject): CardThemeColors {
-  const cardBgLight = project.primaryHex
-  const cardBgDark = project.secondaryHex
-  const titleTextLight = project.secondaryHex
-  const titleTextDark = project.primaryHex
-  const bulletBgLight = mixHex(cardBgLight, titleTextLight, 0.30)
-  const bulletBgDark = mixHex(cardBgDark, titleTextDark, 0.30)
-  const imageBorderLight = bulletBgLight
-  const imageBorderDark = bulletBgDark
+  const cardBgLight = project.primaryHex.light
+  const cardBgDark = project.primaryHex.dark
+  const titleTextLight = project.primaryHex.light
+  const titleTextDark = project.primaryHex.dark
+  const bulletBgLight = project.secondaryHex.light
+  const bulletBgDark = project.secondaryHex.dark
+  const imageBorderLight = project.secondaryHex.light
+  const imageBorderDark = project.secondaryHex.dark
   const borderColorLight = hexAlpha(titleTextLight, 0.3)
   const borderColorDark = hexAlpha(titleTextDark, 0.3)
 
@@ -109,6 +110,7 @@ function UpdateHubCard({
 }: {
   project: UpdateProject
 }) {
+  const theme = PROJECT_COLOR_SCHEMES[project.id]
   const {
     cardBgLight,
     cardBgDark,
@@ -144,6 +146,8 @@ function UpdateHubCard({
             ["--hub-card-border-dark" as string]: borderColorDark,
             ["--hub-card-image-border-light" as string]: imageBorderLight,
             ["--hub-card-image-border-dark" as string]: imageBorderDark,
+            ["--hub-card-text-light" as string]: theme.textHex.light,
+            ["--hub-card-text-dark" as string]: theme.textHex.dark,
           } as CSSProperties
         }
       >
@@ -152,7 +156,7 @@ function UpdateHubCard({
             <LineBullet
               bullet={project.label}
               color="var(--hub-card-bullet)"
-              textColor="var(--foreground)"
+              textColor="var(--hub-card-text)"
               shape="circle"
               size="md"
             />
@@ -165,7 +169,7 @@ function UpdateHubCard({
             />
           </div>
 
-          <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: "var(--hub-card-title)" }}>
+          <p className="text-center text-sm leading-relaxed opacity-80" style={{ color: "var(--hub-card-text)" }}>
             {project.description}
           </p>
         </div>
