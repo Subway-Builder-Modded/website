@@ -22,7 +22,7 @@ function isImageIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "ima
   return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "image"
 }
 
-function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: string }) {
+function NavbarItemIcon({ icon, className, style }: { icon?: NavbarIcon; className?: string; style?: React.CSSProperties }) {
   if (!icon) return null
 
   if (isMaskIcon(icon)) {
@@ -32,17 +32,18 @@ function NavbarItemIcon({ icon, className }: { icon?: NavbarIcon; className?: st
         style={{
           WebkitMask: `url(${icon.src}) center / contain no-repeat`,
           mask: `url(${icon.src}) center / contain no-repeat`,
+          ...style,
         }}
       />
     )
   }
 
   if (isImageIcon(icon)) {
-    return <img src={icon.src} alt="" aria-hidden className={cn("block size-5 object-contain md:size-4", className)} />
+    return <img src={icon.src} alt="" aria-hidden className={cn("block size-5 object-contain md:size-4", className)} style={style} />
   }
 
   const Icon = icon as LucideIcon
-  return <Icon className={cn("size-5 md:size-4", className)} />
+  return <Icon className={cn("size-5 md:size-4", className)} style={style} />
 }
 
 type NavbarHoverDropdownProps = {
@@ -55,6 +56,7 @@ type NavbarHoverDropdownProps = {
 export function NavbarHoverDropdown({ item, className, open, onOpenChange }: NavbarHoverDropdownProps) {
   const { resolvedTheme } = useTheme()
   const [isTriggerHovered, setIsTriggerHovered] = React.useState(false)
+  const [hoveredDropdownItemId, setHoveredDropdownItemId] = React.useState<string | null>(null)
   const hoverCloseTimeoutRef = React.useRef<number | null>(null)
   const closeLockTimeoutRef = React.useRef<number | null>(null)
   const isClosingMenuRef = React.useRef(false)
@@ -184,6 +186,7 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
         }}
         onPointerLeave={() => {
           isContentHoveredRef.current = false
+          setHoveredDropdownItemId(null)
           scheduleHoverClose()
         }}
         className="min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg duration-200 ease-[cubic-bezier(.22,.9,.35,1)] data-open:duration-220 data-open:ease-[cubic-bezier(.22,.9,.35,1)] data-closed:duration-190 data-closed:ease-[cubic-bezier(.3,.0,.2,1)]"
@@ -191,6 +194,14 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
         {dropdownItems.map((dropdownItem) => {
           const Icon = dropdownItem.icon
           const hoverColors = dropdownItem.colors ? (isDark ? dropdownItem.colors.dark : dropdownItem.colors.light) : null
+          const isHovered = hoveredDropdownItemId === dropdownItem.id
+          const hoveredIconStyle =
+            isHovered && hoverColors
+              ? {
+                  color: hoverColors.text,
+                  stroke: hoverColors.text,
+                } satisfies React.CSSProperties
+              : undefined
           const isExternal = Boolean(dropdownItem.href?.startsWith("http://") || dropdownItem.href?.startsWith("https://"))
 
           return (
@@ -207,7 +218,8 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
               }
               className={cn(
                 "rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-colors duration-250 ease-[cubic-bezier(.22,.9,.35,1)]",
-                hoverColors && "data-[highlighted]:!text-[var(--navbar-hover-text)] data-[highlighted]:!bg-[var(--navbar-hover-bg)]",
+                hoverColors &&
+                  "hover:!text-[var(--navbar-hover-text)] hover:!bg-[var(--navbar-hover-bg)] data-[highlighted]:!text-[var(--navbar-hover-text)] data-[highlighted]:!bg-[var(--navbar-hover-bg)]",
               )}
             >
               {isExternal ? (
@@ -215,18 +227,50 @@ export function NavbarHoverDropdown({ item, className, open, onOpenChange }: Nav
                   href={dropdownItem.href ?? "#"}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 no-underline"
+                  className="flex w-full items-center gap-2 no-underline"
+                  style={
+                    isHovered && hoverColors
+                      ? {
+                          color: hoverColors.text,
+                          backgroundColor: hoverColors.background,
+                        }
+                      : undefined
+                  }
+                  onPointerEnter={() => setHoveredDropdownItemId(dropdownItem.id)}
+                  onPointerLeave={() => setHoveredDropdownItemId((current) => (current === dropdownItem.id ? null : current))}
+                  onMouseEnter={() => setHoveredDropdownItemId(dropdownItem.id)}
+                  onMouseLeave={() => setHoveredDropdownItemId((current) => (current === dropdownItem.id ? null : current))}
                 >
-                  <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />
-                  <span>{dropdownItem.title}</span>
+                  <NavbarItemIcon
+                    icon={Icon}
+                    className="size-4 shrink-0"
+                    style={hoveredIconStyle}
+                  />
+                  <span style={isHovered && hoverColors ? { color: hoverColors.text } : undefined}>{dropdownItem.title}</span>
                 </a>
               ) : (
                 <NextLink
                   href={dropdownItem.href ?? "#"}
-                  className="flex items-center gap-2 no-underline"
+                  className="flex w-full items-center gap-2 no-underline"
+                  style={
+                    isHovered && hoverColors
+                      ? {
+                          color: hoverColors.text,
+                          backgroundColor: hoverColors.background,
+                        }
+                      : undefined
+                  }
+                  onPointerEnter={() => setHoveredDropdownItemId(dropdownItem.id)}
+                  onPointerLeave={() => setHoveredDropdownItemId((current) => (current === dropdownItem.id ? null : current))}
+                  onMouseEnter={() => setHoveredDropdownItemId(dropdownItem.id)}
+                  onMouseLeave={() => setHoveredDropdownItemId((current) => (current === dropdownItem.id ? null : current))}
                 >
-                  <NavbarItemIcon icon={Icon} className="size-4 shrink-0" />
-                  <span>{dropdownItem.title}</span>
+                  <NavbarItemIcon
+                    icon={Icon}
+                    className="size-4 shrink-0"
+                    style={hoveredIconStyle}
+                  />
+                  <span style={isHovered && hoverColors ? { color: hoverColors.text } : undefined}>{dropdownItem.title}</span>
                 </NextLink>
               )}
             </DropdownMenuItem>
