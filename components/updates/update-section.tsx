@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { LineBullet } from "@/components/ui/line-bullet"
-import { UPDATE_SECTION_CONFIG, type UpdateSectionType } from "@/lib/updates-config"
+import { UPDATE_SECTION_CONFIG, type UpdateSectionType } from "@/config/content/updates"
 import { cn } from "@/lib/utils"
 
 export interface UpdateSectionProps {

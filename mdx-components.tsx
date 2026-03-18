@@ -5,7 +5,7 @@ import * as LucideIcons from "lucide-react"
 import type { LucideIcon, LucideProps } from "lucide-react"
 import { Tabs, TabItem } from "@/components/mdx/mdx-tabs"
 import { IconList, IconItem } from "@/components/mdx/icon-list"
-import { WikiCardGrid, WikiCard } from "@/components/wiki/wiki-home-cards"
+import { DocsCardGrid, DocsCard } from "@/components/docs/docs-home-cards"
 import { UpdateSection } from "@/components/updates/update-section"
 
 import {
@@ -149,8 +149,8 @@ const baseComponents: MDXComponents = {
   Announcement,
   Tabs,
   TabItem,
-  WikiCardGrid,
-  WikiCard,
+  DocsCardGrid,
+  DocsCard,
   UpdateSection,
   IconList,
   IconItem,
@@ -284,3 +284,4 @@ export function useMDXComponents(
     ...components,
   }
 }
+

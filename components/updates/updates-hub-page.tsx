@@ -6,34 +6,9 @@ import type { CSSProperties } from "react"
 import { Megaphone } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
-import { PROJECT_COLOR_SCHEMES } from "@/lib/color-schemes"
-import { UPDATE_PROJECTS, type UpdateProject } from "@/lib/updates-config"
+import { PROJECT_COLOR_SCHEMES } from "@/config/theme/colors"
+import { UPDATE_PROJECTS, type UpdateProject } from "@/config/content/updates"
 import { cn } from "@/lib/utils"
-
-function hexToRgb(hex: string) {
-  const h = hex.replace("#", "")
-  return {
-    r: parseInt(h.slice(0, 2), 16),
-    g: parseInt(h.slice(2, 4), 16),
-    b: parseInt(h.slice(4, 6), 16),
-  }
-}
-
-function hexAlpha(hex: string, alpha: number) {
-  const { r, g, b } = hexToRgb(hex)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-function mixHex(a: string, b: string, t: number) {
-  const ca = hexToRgb(a)
-  const cb = hexToRgb(b)
-  const clampT = Math.max(0, Math.min(1, t))
-  const toHex = (v: number) => Math.round(v).toString(16).padStart(2, "0")
-  const r = ca.r + (cb.r - ca.r) * clampT
-  const g = ca.g + (cb.g - ca.g) * clampT
-  const b2 = ca.b + (cb.b - ca.b) * clampT
-  return `#${toHex(r)}${toHex(g)}${toHex(b2)}`
-}
 
 type CardThemeColors = {
   cardBgLight: string

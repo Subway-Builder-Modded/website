@@ -3,9 +3,9 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
-import { PROJECT_COLOR_SCHEMES, getModeHex } from "@/lib/color-schemes"
+import { PROJECT_COLOR_SCHEMES, getModeHex } from "@/config/theme/colors"
 import { cn } from "@/lib/utils"
-import { getActiveInstanceFromPathname } from "@/lib/wiki-shared"
+import { getActiveInstanceFromPathname } from "@/lib/docs/shared"
 
 export type TocHeading = {
   id: string
@@ -42,7 +42,7 @@ function getActiveHeadingId(elements: HTMLElement[]) {
   return lastHeadingAboveOffset?.id ?? elements[0]?.id ?? ""
 }
 
-export function WikiOnThisPage({ headings }: { headings: TocHeading[] }) {
+export function DocsOnThisPage({ headings }: { headings: TocHeading[] }) {
   const pathname = usePathname()
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)

@@ -16,7 +16,7 @@ import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
 import { cn } from "@/lib/utils"
 import { UpdateSection } from "@/components/updates/update-section"
 import { useMDXComponents } from "@/mdx-components"
-import { getUpdateProjectById } from "@/lib/updates-config"
+import { getUpdateProjectById } from "@/config/content/updates"
 import {
   getAllUpdateParams,
   getUpdateFilePath,

@@ -5,7 +5,7 @@ import { ArrowLeft, ChevronRight } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
 import { cn } from "@/lib/utils"
-import { getUpdateProjectById, UPDATE_PROJECTS } from "@/lib/updates-config"
+import { getUpdateProjectById, UPDATE_PROJECTS } from "@/config/content/updates"
 import { getAllUpdatesForProject, type UpdateMeta } from "@/lib/updates.server"
 
 export const dynamicParams = false

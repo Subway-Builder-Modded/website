@@ -1,13 +1,13 @@
 import { permanentRedirect } from "next/navigation"
-import { WIKI_INSTANCES } from "@/lib/wiki-config"
-import { getAllWikiDocSlugs } from "@/lib/wiki.server"
+import { DOCS_INSTANCES } from "@/config/content/docs"
+import { getAllDocsDocSlugs } from "@/lib/docs/server"
 
 export const dynamicParams = false
 
 export async function generateStaticParams() {
-  const slugs = await getAllWikiDocSlugs()
+  const slugs = await getAllDocsDocSlugs()
 
-  const baseRouteSlugs = WIKI_INSTANCES.flatMap((instance) => {
+  const baseRouteSlugs = DOCS_INSTANCES.flatMap((instance) => {
     if (!instance.versioned) return [[instance.id]]
 
     const versionRoots = (instance.versions ?? []).flatMap((version) => [
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
     return [[instance.id], ...versionRoots]
   })
 
-  const latestAliasSlugs = WIKI_INSTANCES.flatMap((instance) => {
+  const latestAliasSlugs = DOCS_INSTANCES.flatMap((instance) => {
     if (!instance.versioned) return []
 
     return slugs
@@ -43,7 +43,7 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function LegacyWikiRedirectPage({
+export default async function LegacyDocsRedirectPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>

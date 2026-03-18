@@ -18,7 +18,7 @@ type TabsProps = {
   className?: string
 }
 
-const GROUP_STORAGE_PREFIX = "wiki-tabs:"
+const GROUP_STORAGE_PREFIX = "Docs-tabs:"
 
 // Normalize tab values into DOM-safe ID fragments so trigger/content pairs stay stable.
 function toIdPart(value: string) {

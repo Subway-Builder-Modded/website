@@ -12,7 +12,7 @@ import rehypePrettyCode from "rehype-pretty-code"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 
-import { UPDATE_PROJECTS, type UpdateTag } from "@/lib/updates-config"
+import { UPDATE_PROJECTS, type UpdateTag } from "@/config/content/updates"
 
 const UPDATES_ROOT = path.join(process.cwd(), "content", "updates")
 

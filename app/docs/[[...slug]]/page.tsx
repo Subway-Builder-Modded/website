@@ -19,26 +19,26 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { WikiOnThisPage } from "@/components/ui/on-this-page"
+import { DocsOnThisPage } from "@/components/ui/on-this-page"
 import { useMDXComponents } from "@/mdx-components"
 import {
   extractTocHeadings,
-  getWikiBreadcrumbs,
-  getWikiDocTitle,
-  getAllWikiDocSlugs,
-  resolveWikiDocFilePath,
-  type WikiFrontmatter,
-} from "@/lib/wiki.server"
-import { WIKI_INSTANCES } from "@/lib/wiki-config"
-import { buildBaseHomeHref, buildDocHref, resolveWikiRoute } from "@/lib/wiki-shared"
-import { WikiHubPage } from "@/components/wiki/wiki-hub-page"
+  getDocsBreadcrumbs,
+  getDocsDocTitle,
+  getAllDocsDocSlugs,
+  resolveDocsDocFilePath,
+  type DocsFrontmatter,
+} from "@/lib/docs/server"
+import { DOCS_INSTANCES } from "@/config/content/docs"
+import { buildBaseHomeHref, buildDocHref, resolveDocsRoute } from "@/lib/docs/shared"
+import { DocsHubPage } from "@/components/docs/docs-hub-page"
 
 export const dynamicParams = false
 
 export async function generateStaticParams() {
-  const slugs = await getAllWikiDocSlugs()
+  const slugs = await getAllDocsDocSlugs()
 
-  const baseRouteSlugs = WIKI_INSTANCES.flatMap((instance) => {
+  const baseRouteSlugs = DOCS_INSTANCES.flatMap((instance) => {
     if (!instance.versioned) return [[instance.id]]
 
     const versionRoots = (instance.versions ?? []).flatMap((version) => [
@@ -49,7 +49,7 @@ export async function generateStaticParams() {
     return [[instance.id], ...versionRoots]
   })
 
-  const latestAliasSlugs = WIKI_INSTANCES.flatMap((instance) => {
+  const latestAliasSlugs = DOCS_INSTANCES.flatMap((instance) => {
     if (!instance.versioned) return []
 
     return slugs
@@ -88,7 +88,7 @@ export async function generateMetadata({
     }
   }
 
-  const resolved = resolveWikiRoute(normalizedSlug)
+  const resolved = resolveDocsRoute(normalizedSlug)
 
   if (!resolved?.docSlug) {
     return {
@@ -98,7 +98,7 @@ export async function generateMetadata({
     }
   }
 
-  const title = await getWikiDocTitle(normalizedSlug)
+  const title = await getDocsDocTitle(normalizedSlug)
 
   return {
     title: title
@@ -107,11 +107,11 @@ export async function generateMetadata({
   }
 }
 
-function WikiIndexPage() {
-  return <WikiHubPage />
+function DocsIndexPage() {
+  return <DocsHubPage />
 }
 
-export default async function WikiPage({
+export default async function DocsPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>
@@ -120,10 +120,10 @@ export default async function WikiPage({
   const normalizedSlug = slug?.filter(Boolean)
 
   if (!normalizedSlug?.length) {
-    return <WikiIndexPage />
+    return <DocsIndexPage />
   }
 
-  const resolved = resolveWikiRoute(normalizedSlug)
+  const resolved = resolveDocsRoute(normalizedSlug)
   if (!resolved) notFound()
 
   if (resolved.instance.versioned && resolved.requestedVersion === "latest") {
@@ -138,14 +138,14 @@ export default async function WikiPage({
     redirect(buildBaseHomeHref(resolved.instance, resolved.version))
   }
 
-  const filePath = await resolveWikiDocFilePath(normalizedSlug)
+  const filePath = await resolveDocsDocFilePath(normalizedSlug)
   if (!filePath) notFound()
 
   const source = await fs.readFile(filePath, "utf8")
-  const breadcrumbs = await getWikiBreadcrumbs(normalizedSlug)
+  const breadcrumbs = await getDocsBreadcrumbs(normalizedSlug)
   const toc = await extractTocHeadings(filePath)
 
-  const { content, frontmatter } = await compileMDX<WikiFrontmatter>({
+  const { content, frontmatter } = await compileMDX<DocsFrontmatter>({
     source,
     options: {
       parseFrontmatter: true,
@@ -231,7 +231,7 @@ export default async function WikiPage({
 
       <aside className="hidden xl:block">
         <div className="sticky top-20 max-h-[calc(100svh-5rem)] overflow-y-auto">
-          <WikiOnThisPage headings={toc} />
+          <DocsOnThisPage headings={toc} />
         </div>
       </aside>
     </div>

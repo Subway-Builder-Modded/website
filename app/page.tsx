@@ -4,121 +4,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { useMemo, useRef, useState, useLayoutEffect, useCallback } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
-import { TrainTrack, Package, Megaphone, Users, type LucideIcon } from "lucide-react"
 
 import { Card, CardTitle } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
-import type { NavbarIcon } from "@/lib/navbar-config"
+import { AppIcon } from "@/components/common/app-icon"
+import { HOME_SUBWAY_BARS, HOMEPAGE_ITEMS, type HomeItem } from "@/config/site/homepage"
 import { getLineBulletTheme } from "@/lib/line-bullet-theme"
 import { cn } from "@/lib/utils"
-
-type HomeItemBase = {
-  id: string
-  title: string
-  description: string
-  href: string
-  lineBulletTextColor: {
-    light: string
-    dark: string
-  }
-}
-
-type HomeItem = HomeItemBase & (
-  | { letter: string; icon?: never }
-  | { icon: NavbarIcon; letter?: never }
-)
-
-function isMaskIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "mask" }> {
-  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "mask"
-}
-
-function isImageIcon(icon: NavbarIcon): icon is Extract<NavbarIcon, { type: "image" }> {
-  return typeof icon === "object" && icon !== null && "type" in icon && icon.type === "image"
-}
-
-function renderHomeItemIcon(icon: NavbarIcon) {
-  if (isMaskIcon(icon)) {
-    return (
-      <span
-        className="block size-3.5 bg-current"
-        style={{
-          WebkitMask: `url(${icon.src}) center / contain no-repeat`,
-          mask: `url(${icon.src}) center / contain no-repeat`,
-        }}
-      />
-    )
-  }
-
-  if (isImageIcon(icon)) {
-    return <img src={icon.src} alt="" aria-hidden className="block size-3.5 object-contain" />
-  }
-
-  const Icon = icon as LucideIcon
-  return <Icon className="size-3.5" aria-hidden="true" />
-}
-
-const HOMEPAGE_ITEMS: HomeItem[] = [
-  {
-    id: "railyard",
-    icon: TrainTrack,
-    title: "Railyard",
-    description: "All-in-one Map and Mod Manager for Subway Builder.",
-    href: "/railyard",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#FFFFFF",
-    },
-  },
-  {
-    id: "template-mod-docs",
-    icon: Package,
-    title: "Template Mod Documentation",
-    description: "View the docs for the Subway Builder Modded Template Mod.",
-    href: "/docs/template-mod/latest/home",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
-  },
-  {
-    id: "updates",
-    icon: Megaphone,
-    title: "Updates & Changelogs",
-    description: "Stay up to date with the latest releases from Subway Builder Modded.",
-    href: "/updates",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
-  },
-  {
-    id: "credits",
-    icon: Users,
-    title: "Credits",
-    description: "Subway Builder Modded is a community-driven project made possible by dedicated contributors.",
-    href: "/credits",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
-  },
-  {
-    id: "discord",
-    icon: {
-      type: "mask",
-      src: "/assets/discord.svg",
-    },
-    title: "Join the Community",
-    description: "Join our Discord server to connect with the community and get support.",
-    href: "https://discord.gg/syG9YHMyeG",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
-  },
-]
-
-const SUBWAY_BARS = ["#0039A6", "#FF6319", "#00933C", "#FCCC0A", "#752F82"]
 
 export default function Page() {
   const heroRef = useRef<HTMLElement | null>(null)
@@ -176,7 +68,7 @@ export default function Page() {
             </p>
 
             <div className="mt-[clamp(0.75rem,2svh,1.1rem)] flex flex-wrap items-center gap-2">
-              {SUBWAY_BARS.map((c) => (
+              {HOME_SUBWAY_BARS.map((c) => (
                 <span
                   key={c}
                   className="h-1.5 w-[clamp(1.9rem,4vw,2.5rem)] rounded-full"
@@ -374,7 +266,7 @@ function HomepageCard({
                 >
                   <LineBullet
                     theme={isRailyard ? "railyard" : "default"}
-                    icon={Icon ? renderHomeItemIcon(Icon) : undefined}
+                    icon={Icon ? <AppIcon icon={Icon} className="size-3.5" /> : undefined}
                     text={Icon ? undefined : item.letter.slice(0, 2).toUpperCase()}
                     colorRole="primaryHex"
                     textRole="textHexInverted"

@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm"
 
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
-import { CREDIT_SECTIONS, type CreditSection } from "@/lib/credits-config"
+import { CREDIT_SECTIONS, type CreditSection } from "@/config/content/credits"
 
 export const metadata: Metadata = {
   title: "Credits | Subway Builder Modded",

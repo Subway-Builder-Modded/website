@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge"
-import type { UpdateTag } from "@/lib/updates-config"
+import type { UpdateTag } from "@/config/content/updates"
 
 type ReleaseTagKind = UpdateTag | "latest"
 

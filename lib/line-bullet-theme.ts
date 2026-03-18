@@ -1,4 +1,4 @@
-import { PROJECT_COLOR_SCHEMES, type ModeHex } from "@/lib/color-schemes"
+import { PROJECT_COLOR_SCHEMES, type ModeHex } from "@/config/theme/colors"
 
 export type LineBulletThemeId = "default" | "railyard" | "template-mod"
 export type LineBulletColorRole = "primaryHex" | "secondaryHex" | "tertiaryHex"
