@@ -1,23 +1,21 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Globe, Sparkles, Users, Heart } from "lucide-react"
+import { ExternalLink, type LucideIcon } from "lucide-react"
 import Markdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 
-import { Card } from "@/components/ui/card"
-import { LineBullet } from "@/components/ui/line-bullet"
+import { HubPageHeader } from "@/components/hub/hub-page-header"
 import { CREDIT_SECTIONS, type CreditSection } from "@/config/content/credits"
+import { CREDITS_PAGE_CONTENT } from "@/config/ui/site-content"
+import { hexAlpha } from "@/lib/color"
 
 export const metadata: Metadata = {
   title: "Credits | Subway Builder Modded",
   description: "Subway Builder Modded is a community-driven project made possible by dedicated contributors.",
 }
 
-const SECTION_ICON_MAP = {
-  maintainers: Users,
-  translators: Globe,
-  contributors: Heart,
-} as const
+const SECTION_ICON_MAP = CREDITS_PAGE_CONTENT.sectionIcons
+const CREDITS_ACCENT = CREDITS_PAGE_CONTENT.accentHex
 
 function CreditRoleMarkdown({ content }: { content: string }) {
   return (
@@ -26,30 +24,21 @@ function CreditRoleMarkdown({ content }: { content: string }) {
       components={{
         p: ({ children }) => <>{children}</>,
         a: ({ href, children }) => {
-          if (!href) {
-            return <>{children}</>
-          }
+          if (!href) return <>{children}</>
 
-          const isInternal = href.startsWith("/")
+          const className =
+            "underline decoration-muted-foreground/55 underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
 
-          if (isInternal) {
+          if (href.startsWith("/")) {
             return (
-              <Link
-                href={href}
-                className="underline decoration-muted-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
-              >
+              <Link href={href} className={className}>
                 {children}
               </Link>
             )
           }
 
           return (
-            <a
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              className="underline decoration-muted-foreground/50 underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
-            >
+            <a href={href} target="_blank" rel="noreferrer" className={className}>
               {children}
             </a>
           )
@@ -63,18 +52,20 @@ function CreditRoleMarkdown({ content }: { content: string }) {
   )
 }
 
-function CreditsSectionHeader({ title }: { title: string }) {
+function CreditsSectionHeader({ title, icon: Icon }: { title: string; icon: LucideIcon }) {
   return (
-    <div className="mb-4 flex items-center gap-2.5">
-      <LineBullet
-        theme="default"
-        text={title.slice(0, 1).toUpperCase()}
-        colorRole="accentColor"
-        textRole="textColor"
-        shape="circle"
-        size="sm"
-      />
-      <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">{title}</h2>
+    <div className="mb-5 flex items-center gap-3">
+      <span
+        className="inline-flex size-8 items-center justify-center rounded-md border"
+        style={{
+          borderColor: hexAlpha(CREDITS_ACCENT, 0.5),
+          backgroundColor: hexAlpha(CREDITS_ACCENT, 0.12),
+          color: CREDITS_ACCENT,
+        }}
+      >
+        <Icon className="size-4" />
+      </span>
+      <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-muted-foreground">{title}</h2>
       <div className="h-px flex-1 bg-border" />
     </div>
   )
@@ -84,14 +75,30 @@ function CreditPersonCard({ section, person }: { section: CreditSection; person:
   const Icon = SECTION_ICON_MAP[section.icon]
 
   return (
-    <Card
-      className="flex h-full items-start gap-3 border border-border/70 bg-card/70 p-4 will-change-transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-white/5"
+    <article
+      className="group relative flex h-full items-start gap-3 overflow-hidden rounded-xl border border-border/70 bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-transparent hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30"
     >
-      <div className="mt-0.5 rounded-full border border-border/60 bg-muted/60 p-2">
-        <Icon className="size-4 text-muted-foreground" />
+      <span
+        className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-[color:var(--credits-ring)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ ["--credits-ring" as string]: hexAlpha(CREDITS_ACCENT, 0.45) }}
+      />
+      <span
+        className="pointer-events-none absolute -right-14 -top-14 size-28 rounded-full blur-2xl"
+        style={{ backgroundColor: hexAlpha(CREDITS_ACCENT, 0.2) }}
+      />
+
+      <div
+        className="mt-0.5 rounded-md border p-2"
+        style={{
+          borderColor: hexAlpha(CREDITS_ACCENT, 0.5),
+          backgroundColor: hexAlpha(CREDITS_ACCENT, 0.14),
+          color: CREDITS_ACCENT,
+        }}
+      >
+        <Icon className="size-4" />
       </div>
 
-      <div className="min-w-0">
+      <div className="relative min-w-0">
         {person.link ? (
           <Link
             href={person.link}
@@ -100,7 +107,7 @@ function CreditPersonCard({ section, person }: { section: CreditSection; person:
             className="inline-flex items-center gap-1.5 text-base font-semibold text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline"
           >
             {person.name}
-            <Sparkles className="size-3.5 opacity-70" />
+            <ExternalLink className="size-3.5 opacity-70" />
           </Link>
         ) : (
           <p className="text-base font-semibold text-foreground">{person.name}</p>
@@ -112,14 +119,16 @@ function CreditPersonCard({ section, person }: { section: CreditSection; person:
           </div>
         ) : null}
       </div>
-    </Card>
+    </article>
   )
 }
 
 function CreditsSection({ section }: { section: CreditSection }) {
+  const Icon = SECTION_ICON_MAP[section.icon]
+
   return (
     <section>
-      <CreditsSectionHeader title={section.title} />
+      <CreditsSectionHeader title={section.title} icon={Icon} />
       <p className="mb-5 text-sm leading-relaxed text-muted-foreground">{section.description}</p>
 
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -135,25 +144,20 @@ function CreditsSection({ section }: { section: CreditSection }) {
 
 export default function CreditsPage() {
   return (
-    <section className="px-7 pb-16 pt-8 sm:pb-20 sm:pt-8">
-      <div className="mb-12 text-center">
-        <div className="flex justify-center">
-          <h1 className="inline-flex items-center gap-4 text-4xl font-black tracking-tight sm:text-5xl">
-            <Users aria-hidden="true" className="size-[1.02em]" />
-            <span>Credits</span>
-          </h1>
-        </div>
-        <p className="mt-3 text-lg text-muted-foreground">
-          The people and contributors helping Subway Builder Modded move forward.
-        </p>
-      </div>
+    <section className="relative px-5 pb-14 pt-8 sm:px-8 sm:pt-10">
+      <div className="mx-auto w-full max-w-screen-xl">
+        <HubPageHeader
+          icon={CREDITS_PAGE_CONTENT.icon}
+          title={CREDITS_PAGE_CONTENT.title}
+          description={CREDITS_PAGE_CONTENT.description}
+        />
 
-      <div className="mx-auto flex max-w-6xl flex-col gap-10">
-        {CREDIT_SECTIONS.map((section) => (
-          <CreditsSection key={section.id} section={section} />
-        ))}
+        <div className="mx-auto flex max-w-6xl flex-col gap-10">
+          {CREDIT_SECTIONS.map((section) => (
+            <CreditsSection key={section.id} section={section} />
+          ))}
+        </div>
       </div>
     </section>
   )
 }
-

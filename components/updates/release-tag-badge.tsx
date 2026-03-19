@@ -1,14 +1,8 @@
 import { Badge } from "@/components/ui/badge"
 import type { UpdateTag } from "@/config/content/updates"
+import { UPDATE_TAG_STYLES } from "@/config/ui/site-content"
 
 type ReleaseTagKind = UpdateTag | "latest"
-
-const TAG_STYLE: Record<ReleaseTagKind, { label: string; color: string }> = {
-  latest: { label: "Latest", color: "#3fb950" },
-  release: { label: "Release", color: "#2f81f7" },
-  beta: { label: "Beta", color: "#d29922" },
-  alpha: { label: "Alpha", color: "#f85149" },
-}
 
 interface ReleaseTagBadgeProps {
   kind: ReleaseTagKind
@@ -16,7 +10,7 @@ interface ReleaseTagBadgeProps {
 }
 
 export function ReleaseTagBadge({ kind, size = "md" }: ReleaseTagBadgeProps) {
-  const { label, color } = TAG_STYLE[kind]
+  const { label, color } = UPDATE_TAG_STYLES[kind]
   const compact = size === "sm"
 
   return (

@@ -325,21 +325,3 @@ h6:hover .heading-anchor,
   view-transition-name: none;
 }
 
-
-
-.hub-theme-card {
-  background-color: var(--hub-card-bg-light);
-  border-color: var(--hub-card-border-light);
-  --hub-card-title: var(--hub-card-title-light);
-  --hub-card-bullet: var(--hub-card-bullet-light);
-  --hub-card-image-border: var(--hub-card-image-border-light);
-}
-
-.dark .hub-theme-card {
-  background-color: var(--hub-card-bg-dark);
-  border-color: var(--hub-card-border-dark);
-  --hub-card-title: var(--hub-card-title-dark);
-  --hub-card-bullet: var(--hub-card-bullet-dark);
-  --hub-card-image-border: var(--hub-card-image-border-dark);
-}
-

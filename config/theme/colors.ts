@@ -1,4 +1,4 @@
-export type ProjectColorId = "railyard" | "template-mod" | "website"
+export type ProjectColorId = "railyard" | "registry" | "template-mod" | "website"
 
 export type ModeHex = {
   light: string
@@ -247,6 +247,11 @@ export const PROJECT_COLOR_SCHEMES: Record<ProjectColorId, ThemedColorSet> = {
     accentColor: createModeColorFromDarkAccent("#19D89C"),
     primaryColor: createModeColorFromDarkVibrant("#42AD7F55"),
     secondaryColor: createModeColorFromDarkVibrant("#19D89C55"),
+  }),
+  registry: withSharedTextColors({
+    accentColor: createModeColorFromDarkAccent("#C77DFF"),
+    primaryColor: createModeColorFromDarkVibrant("#9D4EDD55"),
+    secondaryColor: createModeColorFromDarkVibrant("#C77DFF55"),
   }),
   "template-mod": withSharedTextColors({
     accentColor: createModeColorFromDarkAccent("#93C5FD"),

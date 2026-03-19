@@ -50,21 +50,17 @@ export function getUpdateProjectById(id: string): UpdateProject | undefined {
 export type UpdateTag = "release" | "beta" | "alpha"
 export type UpdateSectionType = "features" | "bugfixes" | "upgrades" | "other"
 
-export const UPDATE_SECTION_CONFIG: Record<UpdateSectionType, { letter: string; label: string }> = {
+export const UPDATE_SECTION_CONFIG: Record<UpdateSectionType, { label: string }> = {
   features: {
-    letter: "F",
     label: "Features",
   },
   bugfixes: {
-    letter: "B",
     label: "Bugfixes",
   },
   upgrades: {
-    letter: "U",
-    label: "Upgrades / Changes",
+    label: "Upgrades & Changes",
   },
   other: {
-    letter: "O",
     label: "Other Notes",
   },
 }

@@ -1,4 +1,4 @@
-import { FolderCode, Tag, TrainTrack, type LucideIcon } from "lucide-react"
+import { Package, Tag, TrainTrack, type LucideIcon } from "lucide-react"
 
 export type DocsInstanceId = "railyard" | "template-mod"
 
@@ -63,7 +63,7 @@ export const DOCS_INSTANCES: DocsInstance[] = [
     id: "template-mod",
     label: "Template Mod",
     basePath: "/docs/template-mod",
-    icon: FolderCode,
+    icon: Package,
     versioned: true,
     latestVersion: "v1.0",
     versions: [

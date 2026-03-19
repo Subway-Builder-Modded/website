@@ -3,20 +3,23 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { compileMDX } from "next-mdx-remote/rsc"
-import { remarkHeadingId } from "remark-custom-heading-id"
-import rehypePrettyCode from "rehype-pretty-code"
-import remarkGfm from "remark-gfm"
-import remarkFlexibleCodeTitles from "remark-flexible-code-titles"
-import rehypeExternalLinks from "rehype-external-links"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import remarkDirective from "remark-directive"
-import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
+import rehypeExternalLinks from "rehype-external-links"
+import rehypePrettyCode from "rehype-pretty-code"
 import { ArrowLeft, ExternalLink } from "lucide-react"
+import remarkDirective from "remark-directive"
+import remarkFlexibleCodeTitles from "remark-flexible-code-titles"
+import remarkGfm from "remark-gfm"
+import { remarkHeadingId } from "remark-custom-heading-id"
+import type { CSSProperties } from "react"
+
 import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
-import { cn } from "@/lib/utils"
 import { UpdateSection } from "@/components/updates/update-section"
-import { useMDXComponents } from "@/mdx-components"
 import { getUpdateProjectById } from "@/config/content/updates"
+import { UPDATES_PAGE_COPY } from "@/config/ui/site-content"
+import { hexAlpha } from "@/lib/color"
+import { useMDXComponents as getMDXComponents } from "@/mdx-components"
+import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
 import {
   getAllUpdateParams,
   getUpdateFilePath,
@@ -51,8 +54,6 @@ export async function generateMetadata({
   }
 }
 
-// ── page ─────────────────────────────────────────────────────────────────────
-
 export default async function UpdatePage({
   params,
 }: {
@@ -66,7 +67,6 @@ export default async function UpdatePage({
   if (!filePath) notFound()
 
   const source = await fs.readFile(filePath, "utf8")
-
   const { content, frontmatter } = await compileMDX<UpdateFrontmatter>({
     source,
     options: {
@@ -96,101 +96,73 @@ export default async function UpdatePage({
         ],
       },
     },
-    components: useMDXComponents({
+    components: getMDXComponents({
       UpdateSection: (props) => <UpdateSection {...props} themeId={project.id} />,
     }),
   })
 
-  const title      = frontmatter?.title ?? `${project.label} ${version}`
-  const date       = frontmatter?.date
-  const tag        = frontmatter?.tag ?? "release"
-  const githubUrl  = frontmatter?.githubUrl
+  const title = frontmatter?.title ?? `${project.label} ${version}`
+  const date = frontmatter?.date
+  const tag = frontmatter?.tag ?? "release"
+  const githubUrl = frontmatter?.githubUrl
 
   return (
-    <section className="px-7 pb-8 pt-8">
-      {/* Back button */}
-      <div className="mb-8">
-        <Link
-          href={project.basePath}
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-card/60 px-3 py-1.5",
-            "text-sm font-semibold text-foreground",
-            "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
-            "hover:-translate-y-0.5 hover:border-border hover:bg-card hover:shadow-sm",
-          )}
-        >
-          <ArrowLeft className="size-4" />
-          Back
-        </Link>
-      </div>
-
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="mx-auto mb-8 -mt-10 max-w-2xl text-center">
-        {/*
-          Full-width title banner — mirrors the project hub card's title bar:
-          a coloured pill spanning the content area. Optionally links to GitHub.
-        */}
-        {githubUrl ? (
-          <a
-            href={githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              "mb-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 py-3 bg-[var(--project-secondary-light)] text-[var(--project-text-light)] dark:bg-[var(--project-secondary-dark)] dark:text-[var(--project-text-dark)]",
-              "font-mta text-2xl font-bold",
-              "transition-transform duration-200 hover:scale-[1.02]",
-            )}
-            style={{
-              ["--project-secondary-light" as string]: project.accentColor.light,
-              ["--project-secondary-dark" as string]: project.accentColor.dark,
-              ["--project-text-light" as string]: project.textColorInverted.light,
-              ["--project-text-dark" as string]: project.textColorInverted.dark,
-            }}
+    <section className="relative px-5 pb-12 pt-8 sm:px-8 sm:pt-10">
+      <div className="mx-auto w-full max-w-screen-xl">
+        <div className="mb-7">
+          <Link
+            href={project.basePath}
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-border/70 bg-card px-3 text-sm font-semibold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:shadow-sm"
           >
-            <span>{title}</span>
-            <ExternalLink className="size-5 shrink-0 opacity-60" />
-          </a>
-        ) : (
-          <div
-            className="mb-5 flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold bg-[var(--project-secondary-light)] text-[var(--project-text-light)] dark:bg-[var(--project-secondary-dark)] dark:text-[var(--project-text-dark)]"
-            style={{
-              ["--project-secondary-light" as string]: project.primaryColor.light,
-              ["--project-secondary-dark" as string]: project.primaryColor.dark,
-              ["--project-text-light" as string]: project.textColor.light,
-              ["--project-text-dark" as string]: project.textColor.dark,
-            }}
-          >
-            {title}
-          </div>
-        )}
-
-        {/* Date + tag badge row */}
-        <div className="flex items-center justify-center gap-3">
-          {date ? (
-            <p className="text-sm text-muted-foreground">{date}</p>
-          ) : null}
-
-          {{
-            release: (
-              <ReleaseTagBadge kind="release" size="sm" />
-            ),
-            beta: (
-              <ReleaseTagBadge kind="beta" size="sm" />
-            ),
-            alpha: (
-              <ReleaseTagBadge kind="alpha" size="sm" />
-            ),
-          }[tag]}
+            <ArrowLeft className="size-4" />
+            {UPDATES_PAGE_COPY.backLabel}
+          </Link>
         </div>
 
-        {/* Separator */}
-        <hr className="mt-6 border-border" />
-      </header>
+        <header
+          className="relative mx-auto mb-8 max-w-4xl overflow-hidden rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6"
+          style={
+            {
+              ["--update-accent-light" as string]: project.accentColor.light,
+              ["--update-accent-dark" as string]: project.accentColor.dark,
+              ["--update-soft-light" as string]: hexAlpha(project.accentColor.light, 0.22),
+              ["--update-soft-dark" as string]: hexAlpha(project.accentColor.dark, 0.26),
+            } as CSSProperties
+          }
+        >
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-[var(--update-accent-light)] dark:bg-[var(--update-accent-dark)]" />
+          <span className="pointer-events-none absolute -right-16 -top-20 size-40 rounded-full bg-[var(--update-soft-light)] blur-3xl dark:bg-[var(--update-soft-dark)]" />
 
-      {/* ── Changelog content ───────────────────────────────────────────────── */}
-      <article className="mx-auto max-w-2xl pb-16">
-        {content}
-      </article>
+          <div className="relative">
+            {githubUrl ? (
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 text-3xl font-black tracking-tight text-foreground transition-colors hover:text-primary sm:text-4xl"
+              >
+                <span>{title}</span>
+                <ExternalLink className="size-5 opacity-65 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            ) : (
+              <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl">{title}</h1>
+            )}
+
+            <div className="mt-4 flex flex-wrap items-center gap-2.5">
+              {date ? <p className="text-sm text-muted-foreground">{date}</p> : null}
+              {{
+                release: <ReleaseTagBadge kind="release" size="sm" />,
+                beta: <ReleaseTagBadge kind="beta" size="sm" />,
+                alpha: <ReleaseTagBadge kind="alpha" size="sm" />,
+              }[tag]}
+            </div>
+          </div>
+        </header>
+
+        <article className="prose prose-zinc prose-code:before:content-none prose-code:after:content-none mx-auto max-w-4xl rounded-2xl border border-border/60 bg-card/55 p-5 shadow-sm dark:prose-invert sm:p-7">
+          {content}
+        </article>
+      </div>
     </section>
   )
 }

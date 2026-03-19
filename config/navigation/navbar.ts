@@ -85,7 +85,7 @@ export type NavbarSpecialStyle = {
 export const NAVBAR_SPECIAL_STYLES: Record<string, NavbarSpecialStyle> = {
   railyard: {
     triggerClassName:
-      "h-auto gap-x-2 rounded-lg border px-2 py-2 text-sm font-semibold transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:scale-[1.03] !bg-[#51BD8E55] !border-[#28E6AA55] !text-[#232323] dark:!bg-[#42AD7F55] dark:!border-[#19D89C55] dark:!text-[#F2F2F2] hover:!bg-[#51BD8E55] hover:!text-[#232323] hover:!border-[#28E6AA55] dark:hover:!bg-[#42AD7F55] dark:hover:!text-[#F2F2F2] dark:hover:!border-[#19D89C55] focus:!bg-[#51BD8E55] focus:!text-[#232323] focus:!border-[#28E6AA55] dark:focus:!bg-[#42AD7F55] dark:focus:!text-[#F2F2F2] dark:focus:!border-[#19D89C55] data-open:!bg-[#51BD8E55] data-open:!text-[#232323] data-open:!border-[#28E6AA55] dark:data-open:!bg-[#42AD7F55] dark:data-open:!text-[#F2F2F2] dark:data-open:!border-[#19D89C55] data-popup-open:!bg-[#51BD8E55] data-popup-open:!text-[#232323] data-popup-open:!border-[#28E6AA55] dark:data-popup-open:!bg-[#42AD7F55] dark:data-popup-open:!text-[#F2F2F2] dark:data-popup-open:!border-[#19D89C55] shadow-[0_0_14px_hsl(var(--primary)/0.35)] ring-1 ring-[#28E6AA55] dark:ring-[#19D89C55] hover:shadow-[0_0_16px_hsl(var(--primary)/0.45)] focus-visible:outline-none focus-visible:ring-2",
+      "relative isolate overflow-hidden h-auto gap-x-2 rounded-lg border border-border/80 px-2 py-2 text-sm font-semibold !text-foreground bg-card shadow-sm transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:border-transparent hover:shadow-xl hover:shadow-black/12 dark:hover:shadow-black/35 data-open:-translate-y-0.5 data-popup-open:-translate-y-0.5 data-open:border-transparent data-popup-open:border-transparent data-open:shadow-xl data-popup-open:shadow-xl data-open:shadow-black/12 data-popup-open:shadow-black/12 dark:data-open:shadow-black/35 dark:data-popup-open:shadow-black/35 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-[#28E6AA] dark:before:bg-[#19D89C] after:pointer-events-none after:absolute after:-right-8 after:-top-8 after:size-20 after:rounded-full after:bg-[#28E6AA]/20 dark:after:bg-[#19D89C]/24 after:blur-2xl after:opacity-80 after:transition-opacity after:duration-300 hover:after:opacity-100 data-open:after:opacity-100 data-popup-open:after:opacity-100 hover:ring-1 hover:ring-[#28E6AA66] dark:hover:ring-[#19D89C66] data-open:ring-1 data-popup-open:ring-1 data-open:ring-[#28E6AA66] data-popup-open:ring-[#28E6AA66] dark:data-open:ring-[#19D89C66] dark:data-popup-open:ring-[#19D89C66] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28E6AA88] dark:focus-visible:ring-[#19D89C88]",
     activeUnderlineClassName:
       "absolute left-2 right-2 z-0 -bottom-[calc(var(--navbar-gutter)+1px)] h-(--gutter) rounded-full bg-primary [--gutter:--spacing(0.5)]",
   },
@@ -187,7 +187,7 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
         title: "Registry",
         href: "https://github.com/Subway-Builder-Modded/The-Railyard",
         icon: FolderGit2,
-        colors: getGithubHoverColors("railyard"),
+        colors: getGithubHoverColors("registry"),
       },
       {
         id: "template-mod",

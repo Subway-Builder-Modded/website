@@ -25,9 +25,9 @@ import {
   type DocsSidebarEntry,
   type DocsSidebarTree,
 } from "@/lib/docs/shared"
-import { PROJECT_COLOR_SCHEMES, getModeHex } from "@/config/theme/colors"
 import { DOCS_INSTANCES, type DocsInstance, type DocsVersion } from "@/config/content/docs"
 import { normalizePath } from "@/lib/url"
+import { PROJECT_COLOR_SCHEMES, getModeHex } from "@/config/theme/colors"
 
 type AppDocsSidebarProps = {
   tree?: DocsSidebarTree
@@ -35,6 +35,35 @@ type AppDocsSidebarProps = {
 }
 
 type OpenDropdown = "instance" | "version" | null
+
+function withAlpha(color: string, alpha: number) {
+  const normalized = color.trim()
+
+  if (!normalized.startsWith("#")) {
+    return color
+  }
+
+  const hex = normalized.slice(1)
+  const fullHex =
+    hex.length === 3
+      ? hex.split("").map((char) => `${char}${char}`).join("")
+      : hex.length === 6
+        ? hex
+        : null
+
+  if (!fullHex) {
+    return color
+  }
+
+  const r = Number.parseInt(fullHex.slice(0, 2), 16)
+  const g = Number.parseInt(fullHex.slice(2, 4), 16)
+  const b = Number.parseInt(fullHex.slice(4, 6), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function getInstanceAccent(instance: DocsInstance, isDark: boolean) {
+  return getModeHex(PROJECT_COLOR_SCHEMES[instance.id].accentColor, isDark)
+}
 
 function useOnClickOutside(
   ref: React.RefObject<HTMLElement | null>,
@@ -54,103 +83,85 @@ function useOnClickOutside(
 
 function InstanceIcon({
   instance,
-  isDark,
-  variant = "trigger",
-  transparentBackground = false,
+  accent,
+  active,
 }: {
   instance: DocsInstance
-  isDark: boolean
-  variant?: "trigger" | "dropdown"
-  transparentBackground?: boolean
+  accent: string
+  active?: boolean
 }) {
   const Icon = instance.icon
-  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
-
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const tertiary = getModeHex(scheme.secondaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
 
   return (
-    <div
-      className="flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150"
-      style={{
-        backgroundColor:
-          variant === "dropdown" && !transparentBackground
-            ? secondary
-            : "transparent",
-        borderColor: tertiary,
-      }}
+    <span
+      className={cn(
+        "flex size-7 shrink-0 items-center justify-center rounded-md border bg-background text-muted-foreground",
+        active && "text-foreground"
+      )}
+      style={
+        active
+          ? {
+              borderColor: withAlpha(accent, 0.5),
+              backgroundColor: withAlpha(accent, 0.12),
+              color: accent,
+            }
+          : undefined
+      }
     >
-      <Icon
-        className="size-4 transition-colors duration-150"
-        style={{ color: text }}
-      />
-    </div>
+      <Icon className="size-3.5" />
+    </span>
   )
 }
 
 function VersionIcon({
   instance,
   version,
-  isDark,
-  variant = "trigger",
-  transparentBackground = false,
+  accent,
+  active,
 }: {
   instance: DocsInstance
   version: DocsVersion
-  isDark: boolean
-  variant?: "trigger" | "dropdown"
-  transparentBackground?: boolean
+  accent: string
+  active?: boolean
 }) {
   const Icon = version.icon ?? (isLatestVersion(instance, version.value) ? Tag : Archive)
-  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
-
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const tertiary = getModeHex(scheme.secondaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
 
   return (
-    <div
-      className="flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors duration-150"
-      style={{
-        backgroundColor:
-          variant === "dropdown" && !transparentBackground
-            ? secondary
-            : "transparent",
-        borderColor: tertiary,
-      }}
+    <span
+      className={cn(
+        "flex size-7 shrink-0 items-center justify-center rounded-md border bg-background text-muted-foreground",
+        active && "text-foreground"
+      )}
+      style={
+        active
+          ? {
+              borderColor: withAlpha(accent, 0.5),
+              backgroundColor: withAlpha(accent, 0.12),
+              color: accent,
+            }
+          : undefined
+      }
     >
-      <Icon
-        className="size-4 transition-colors duration-150"
-        style={{ color: text }}
-      />
-    </div>
+      <Icon className="size-3.5" />
+    </span>
   )
 }
 
 function StatusBadge({
   kind,
-  instance,
-  isDark,
+  accent,
 }: {
   kind: "latest" | "deprecated"
-  instance: DocsInstance
-  isDark: boolean
+  accent: string
 }) {
-  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
-
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const tertiary = getModeHex(scheme.secondaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
-
   if (kind === "latest") {
     return (
       <span
-        className="inline-flex h-5 items-center rounded-full border px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
+        className="inline-flex h-4.5 items-center rounded-full border px-1.5 text-[9px] font-semibold uppercase tracking-[0.08em]"
         style={{
-          backgroundColor: secondary,
-          borderColor: tertiary,
-          color: text,
+          borderColor: withAlpha(accent, 0.45),
+          backgroundColor: withAlpha(accent, 0.1),
+          color: accent,
         }}
       >
         Latest
@@ -159,14 +170,7 @@ function StatusBadge({
   }
 
   return (
-    <span
-      className="inline-flex h-5 items-center rounded-full border px-1.5 text-[10px] font-semibold uppercase tracking-[0.08em]"
-      style={{
-        backgroundColor: secondary,
-        borderColor: tertiary,
-        color: text,
-      }}
-    >
+    <span className="inline-flex h-4.5 items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-amber-500">
       Deprecated
     </span>
   )
@@ -174,17 +178,13 @@ function StatusBadge({
 
 function DropdownTrigger({
   open,
+  accent,
   onToggle,
-  className,
-  style,
-  chevronColor,
   children,
 }: {
   open: boolean
+  accent: string
   onToggle: () => void
-  className?: string
-  style?: React.CSSProperties
-  chevronColor?: string
   children: React.ReactNode
 }) {
   return (
@@ -198,20 +198,19 @@ function DropdownTrigger({
           onToggle()
         }
       }}
-      style={style}
-      className={cn(
-        "flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-all duration-150 hover:scale-[1.01]",
-        open && "scale-[0.995]",
-        className
-      )}
+      className="flex h-10 w-full items-center gap-2 rounded-lg border bg-card px-2.5 text-left text-sm shadow-xs transition-colors hover:bg-accent/45"
+      style={{
+        borderColor: open ? withAlpha(accent, 0.5) : undefined,
+        backgroundColor: open ? withAlpha(accent, 0.08) : undefined,
+      }}
     >
       {children}
       <ChevronDown
         className={cn(
-          "ml-auto size-4 shrink-0 transition-transform duration-200",
+          "ml-auto size-4 shrink-0 text-muted-foreground transition-transform duration-150",
           open && "rotate-180"
         )}
-        style={{ color: chevronColor ?? "currentColor" }}
+        style={open ? { color: accent } : undefined}
       />
     </button>
   )
@@ -228,11 +227,11 @@ function DropdownPanel({
     <div
       className={cn(
         "grid transition-all duration-200 ease-out",
-        open ? "mt-2 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
+        open ? "mt-1.5 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"
       )}
     >
       <div className="min-h-0 overflow-x-visible overflow-y-hidden">
-        <div className="overflow-hidden rounded-xl border border-sidebar-border bg-popover shadow-xl">
+        <div className="overflow-hidden rounded-lg border border-border bg-popover p-1 shadow-md ring-1 ring-foreground/8">
           {children}
         </div>
       </div>
@@ -251,34 +250,30 @@ function InstanceDropdownRow({
   href: string
   isDark: boolean
 }) {
+  const accent = getInstanceAccent(instance, isDark)
   const [hovered, setHovered] = React.useState(false)
-  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
-  
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
+  const highlighted = isActive || hovered
 
   return (
     <NextLink
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className="group/dropdown-item flex items-center gap-3 px-3 py-2 transition-colors duration-150"
+      className="flex h-9 items-center gap-2 rounded-md px-2 text-sm transition-colors"
       style={
-        hovered
-          ? { backgroundColor: secondary, color: text }
-          : { backgroundColor: "transparent", color: text }
+        highlighted
+          ? {
+              backgroundColor: withAlpha(accent, 0.12),
+              color: accent,
+            }
+          : undefined
       }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
     >
-      <InstanceIcon
-        instance={instance}
-        isDark={isDark}
-        variant="dropdown"
-        transparentBackground={hovered}
-      />
-      <div className="min-w-0 flex-1 pr-1">
-        <div className="text-[15px] font-semibold leading-tight">{instance.label}</div>
-      </div>
+      <InstanceIcon instance={instance} accent={accent} active={highlighted} />
+      <span className="truncate font-medium">{instance.label}</span>
     </NextLink>
   )
 }
@@ -296,38 +291,35 @@ function VersionDropdownRow({
   href: string
   isDark: boolean
 }) {
-  const [hovered, setHovered] = React.useState(false)
-  const scheme = PROJECT_COLOR_SCHEMES[instance.id]
-
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
+  const accent = getInstanceAccent(instance, isDark)
   const latest = isLatestVersion(instance, version.value)
+  const [hovered, setHovered] = React.useState(false)
+  const highlighted = isActive || hovered
 
   return (
     <NextLink
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className="group/dropdown-item flex items-center gap-3 px-3 py-2 transition-colors duration-150"
+      className="flex min-h-9 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
       style={
-        hovered
-          ? { backgroundColor: secondary, color: text }
-          : { backgroundColor: "transparent", color: text }
+        highlighted
+          ? {
+              backgroundColor: withAlpha(accent, 0.12),
+              color: accent,
+            }
+          : undefined
       }
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
     >
-      <VersionIcon
-        instance={instance}
-        version={version}
-        isDark={isDark}
-        variant="dropdown"
-        transparentBackground={hovered}
-      />
-      <div className="min-w-0 flex-1 pr-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[15px] font-semibold leading-tight">{version.label}</span>
-          {latest ? <StatusBadge kind="latest" instance={instance} isDark={isDark} /> : null}
-          {version.deprecated ? <StatusBadge kind="deprecated" instance={instance} isDark={isDark} /> : null}
+      <VersionIcon instance={instance} version={version} accent={accent} active={highlighted} />
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="truncate font-medium">{version.label}</span>
+          {latest ? <StatusBadge kind="latest" accent={accent} /> : null}
+          {version.deprecated ? <StatusBadge kind="deprecated" accent={accent} /> : null}
         </div>
       </div>
     </NextLink>
@@ -435,27 +427,27 @@ function findActiveEntry(
 
 function SidebarActiveIndicator({
   active,
-  className,
+  accent,
 }: {
   active: boolean
-  className: string
+  accent: string
 }) {
   return (
     <span
       className={cn(
-        "absolute top-1.5 right-0 bottom-1.5 w-[2px] rounded-full transition-all duration-200",
-        className,
+        "absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-full transition-opacity duration-200",
         active ? "opacity-100" : "opacity-0"
       )}
+      style={{ backgroundColor: accent }}
     />
   )
 }
 
 function getSidebarDepthClassName(depth: number) {
   if (depth <= 0) return ""
-  if (depth === 1) return "pl-6"
-  if (depth === 2) return "pl-9"
-  if (depth === 3) return "pl-12"
+  if (depth === 1) return "pl-5"
+  if (depth === 2) return "pl-8"
+  if (depth === 3) return "pl-11"
   return "pl-13"
 }
 
@@ -470,37 +462,27 @@ function InstanceSwitcher({
   setOpen: (value: boolean) => void
   isDark: boolean
 }) {
-  const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
-
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const tertiary = getModeHex(scheme.secondaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
+  const accent = getInstanceAccent(activeInstance, isDark)
 
   return (
     <div>
-      <DropdownTrigger
-        open={open}
-        onToggle={() => setOpen(!open)}
-        chevronColor={text}
-        className="transition-opacity duration-150 hover:opacity-90"
-        style={{ backgroundColor: secondary, color: text, borderColor: tertiary }}
-      >
-        <InstanceIcon instance={activeInstance} isDark={isDark} />
-        <div className="pr-1">
-          <div className="text-[15px] font-semibold leading-tight">{activeInstance.label}</div>
-        </div>
+      <DropdownTrigger open={open} accent={accent} onToggle={() => setOpen(!open)}>
+        <InstanceIcon instance={activeInstance} accent={accent} active />
+        <span className="truncate text-sm font-medium">{activeInstance.label}</span>
       </DropdownTrigger>
 
       <DropdownPanel open={open}>
-        {DOCS_INSTANCES.map((instance) => (
-          <InstanceDropdownRow
-            key={instance.id}
-            instance={instance}
-            isActive={instance.id === activeInstance.id}
-            href={buildBaseHomeHref(instance)}
-            isDark={isDark}
-          />
-        ))}
+        <div className="space-y-0.5">
+          {DOCS_INSTANCES.map((instance) => (
+            <InstanceDropdownRow
+              key={instance.id}
+              instance={instance}
+              isActive={instance.id === activeInstance.id}
+              href={buildBaseHomeHref(instance)}
+              isDark={isDark}
+            />
+          ))}
+        </div>
       </DropdownPanel>
     </div>
   )
@@ -526,59 +508,45 @@ function VersionSwitcher({
   const currentDocSlug = getDocSlugFromPathname(activeInstance, pathname) ?? "home"
   if (!activeInstance.versioned || !activeInstance.versions?.length) return null
 
-  const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
-
-  const secondary = getModeHex(scheme.primaryColor, isDark)
-  const tertiary = getModeHex(scheme.secondaryColor, isDark)
-  const text = getModeHex(scheme.textColor, isDark)
+  const accent = getInstanceAccent(activeInstance, isDark)
 
   return (
     <div>
-      <DropdownTrigger
-        open={open}
-        onToggle={() => setOpen(!open)}
-        chevronColor={text}
-        className="transition-opacity duration-150 hover:opacity-90"
-        style={{
-          backgroundColor: secondary,
-          color: text,
-          borderColor: tertiary,
-        }}
-      >
-        <VersionIcon instance={activeInstance} version={activeVersion} isDark={isDark} />
-        <div className="pr-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[15px] font-semibold leading-tight">
-              {activeVersion.label}
-            </span>
+      <DropdownTrigger open={open} accent={accent} onToggle={() => setOpen(!open)}>
+        <VersionIcon instance={activeInstance} version={activeVersion} accent={accent} active />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="truncate text-sm font-medium">{activeVersion.label}</span>
             {isLatestVersion(activeInstance, activeVersion.value) ? (
-              <StatusBadge kind="latest" instance={activeInstance} isDark={isDark} />
+              <StatusBadge kind="latest" accent={accent} />
             ) : null}
             {activeVersion.deprecated ? (
-              <StatusBadge kind="deprecated" instance={activeInstance} isDark={isDark} />
+              <StatusBadge kind="deprecated" accent={accent} />
             ) : null}
           </div>
         </div>
       </DropdownTrigger>
 
       <DropdownPanel open={open}>
-        {activeInstance.versions.map((version) => {
-          const targetDocSlugs = versionDocSlugs?.[version.value] ?? []
-          const targetHref = targetDocSlugs.includes(currentDocSlug)
-            ? buildVersionedDocHref(activeInstance, version.value, pathname)
-            : buildBaseHomeHref(activeInstance, version.value)
+        <div className="space-y-0.5">
+          {activeInstance.versions.map((version) => {
+            const targetDocSlugs = versionDocSlugs?.[version.value] ?? []
+            const targetHref = targetDocSlugs.includes(currentDocSlug)
+              ? buildVersionedDocHref(activeInstance, version.value, pathname)
+              : buildBaseHomeHref(activeInstance, version.value)
 
-          return (
-            <VersionDropdownRow
-              key={version.value}
-              instance={activeInstance}
-              version={version}
-              isActive={version.value === activeVersion.value}
-              href={targetHref}
-              isDark={isDark}
-            />
-          )
-        })}
+            return (
+              <VersionDropdownRow
+                key={version.value}
+                instance={activeInstance}
+                version={version}
+                isActive={version.value === activeVersion.value}
+                href={targetHref}
+                isDark={isDark}
+              />
+            )
+          })}
+        </div>
       </DropdownPanel>
     </div>
   )
@@ -589,42 +557,50 @@ function SidebarNavEntry({
   pathname,
   openKeys,
   setOpenKeys,
+  accent,
   depth = 0,
   activeIndicatorKey,
-  activeTextClassName,
-  activeIndicatorClassName,
-  hoverTextClassName,
-  isDark,
 }: {
   entry: DocsSidebarEntry
   pathname: string
   openKeys: Set<string>
   setOpenKeys: React.Dispatch<React.SetStateAction<Set<string>>>
+  accent: string
   depth?: number
   activeIndicatorKey: string | null
-  activeTextClassName: string
-  activeIndicatorClassName: string
-  hoverTextClassName: string
-  isDark: boolean
 }) {
   if (entry.kind === "page") {
     const showIndicator = activeIndicatorKey === entry.key
+    const activeStyle = showIndicator
+      ? {
+          backgroundColor: withAlpha(accent, 0.1),
+          color: accent,
+        }
+      : undefined
 
     return (
       <li className="relative">
-        <SidebarActiveIndicator active={showIndicator} className={activeIndicatorClassName} />
-        <NextLink
-          href={entry.href}
+        <SidebarActiveIndicator active={showIndicator} accent={accent} />
+        <div
           className={cn(
-            "relative block rounded-md px-3 py-1.5 pr-5 text-[15px] transition-colors",
-            getSidebarDepthClassName(depth),
-            showIndicator
-              ? cn("font-medium", activeTextClassName)
-              : cn(isDark ? "text-white" : "text-foreground", hoverTextClassName)
+            "relative flex w-full items-center rounded-md transition-colors",
+            showIndicator ? "text-foreground" : "text-muted-foreground hover:bg-accent/45 hover:text-foreground"
           )}
+          style={activeStyle}
         >
-          <span className="block truncate">{entry.title}</span>
-        </NextLink>
+          <NextLink
+            href={entry.href}
+            className={cn("min-w-0 flex-1 px-2.5 py-1.5 pr-3 text-sm", getSidebarDepthClassName(depth))}
+          >
+            <span className="block truncate">{entry.title}</span>
+          </NextLink>
+          <span
+            aria-hidden="true"
+            className="mr-1 flex size-6 items-center justify-center rounded-sm text-transparent"
+          >
+            <ChevronDown className="size-3.5 opacity-0" />
+          </span>
+        </div>
       </li>
     )
   }
@@ -666,25 +642,43 @@ function SidebarNavEntry({
     })
   }
 
-  const labelClassName = cn(
-    "min-w-0 flex-1 rounded-md px-3 py-1.5 pr-5 text-left text-[15px] transition-colors",
-    getSidebarDepthClassName(depth),
-    showIndicator
-      ? cn("font-medium", activeTextClassName)
-      : cn(isDark ? "text-white" : "text-foreground", hoverTextClassName)
+  const rowClassName = cn(
+    "group relative flex w-full items-center rounded-md transition-colors",
+    showIndicator ? "text-foreground" : "text-muted-foreground hover:bg-accent/45 hover:text-foreground"
   )
+
+  const labelClassName = cn(
+    "min-w-0 flex-1 px-2.5 py-1.5 pr-3 text-left text-sm",
+    getSidebarDepthClassName(depth),
+    showIndicator ? "font-medium" : ""
+  )
+
+  const activeStyle = showIndicator
+    ? {
+        backgroundColor: withAlpha(accent, 0.1),
+        color: accent,
+      }
+    : undefined
 
   return (
     <li>
-      <div className="group relative flex w-full items-center">
-        <SidebarActiveIndicator active={showIndicator} className={activeIndicatorClassName} />
+      <div className={rowClassName} style={activeStyle}>
+        <SidebarActiveIndicator active={showIndicator} accent={accent} />
 
         {entry.href ? (
-          <NextLink href={entry.href} onClick={onMainClick} className={labelClassName}>
+          <NextLink
+            href={entry.href}
+            onClick={onMainClick}
+            className={labelClassName}
+          >
             <span className="truncate">{entry.title}</span>
           </NextLink>
         ) : (
-          <button type="button" onClick={onMainClick} className={labelClassName}>
+          <button
+            type="button"
+            onClick={onMainClick}
+            className={labelClassName}
+          >
             <span className="truncate">{entry.title}</span>
           </button>
         )}
@@ -693,14 +687,11 @@ function SidebarNavEntry({
           type="button"
           aria-label={isOpen ? `Collapse ${entry.title}` : `Expand ${entry.title}`}
           onClick={toggle}
-          className="mr-1 flex size-7 items-center justify-center"
+          className="mr-1 flex size-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ChevronDown
-            className={cn(
-              "size-4 transition-transform duration-200",
-              showIndicator && "text-[var(--Docs-active-color)]",
-              isOpen && "rotate-180"
-            )}
+            className={cn("size-3.5 transition-transform duration-200", isOpen && "rotate-180")}
+            style={showIndicator ? { color: accent } : undefined}
           />
         </button>
       </div>
@@ -712,7 +703,7 @@ function SidebarNavEntry({
         )}
       >
         <div className="min-h-0 overflow-hidden">
-          <ul className="space-y-0.5 py-1">
+          <ul className="space-y-0.5 py-0.5">
             {entry.items.map((child) => (
               <SidebarNavEntry
                 key={child.key}
@@ -722,10 +713,7 @@ function SidebarNavEntry({
                 setOpenKeys={setOpenKeys}
                 depth={depth + 1}
                 activeIndicatorKey={activeIndicatorKey}
-                activeTextClassName={activeTextClassName}
-                activeIndicatorClassName={activeIndicatorClassName}
-                hoverTextClassName={hoverTextClassName}
-                isDark={isDark}
+                accent={accent}
               />
             ))}
           </ul>
@@ -788,8 +776,7 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
 
   const footerOffset = useFooterOffset()
   const isCollapsed = state === "collapsed"
-  const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
-  const color = getModeHex(scheme.accentColor, isDark)
+  const accent = getInstanceAccent(activeInstance, isDark)
 
   const [showExpandButton, setShowExpandButton] = React.useState(false)
 
@@ -812,8 +799,8 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
         variant="sidebar"
         className="overflow-visible border-r border-sidebar-border bg-sidebar"
       >
-        <SidebarHeader className="gap-3 border-b border-sidebar-border bg-sidebar px-6 pt-3 pb-3">
-          <div ref={switcherAreaRef} className={cn("space-y-3", !mounted && "invisible")}>
+        <SidebarHeader className="gap-2 border-b border-sidebar-border bg-sidebar px-3 pt-2.5 pb-2.5">
+          <div ref={switcherAreaRef} className={cn("space-y-2", !mounted && "invisible")}>
             <InstanceSwitcher
               activeInstance={activeInstance}
               open={openDropdown === "instance"}
@@ -835,16 +822,7 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
           </div>
         </SidebarHeader>
 
-        <SidebarContent
-          className="min-h-0 pl-4 pr-0 py-4"
-          style={
-            {
-              ["--Docs-hover-color" as string]: color,
-              ["--Docs-active-color" as string]: color,
-              ["--Docs-indicator-color" as string]: color,
-            } as React.CSSProperties
-          }
-        >
+        <SidebarContent className="min-h-0 pl-2.5 pr-1.5 py-2.5">
           <nav aria-label="Docs navigation">
             <ul className="space-y-0.5">
               {(tree?.entries ?? []).map((entry) => (
@@ -855,22 +833,19 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
                   openKeys={openKeys}
                   setOpenKeys={setOpenKeys}
                   activeIndicatorKey={activeIndicatorKey}
-                  activeTextClassName="text-[var(--Docs-active-color)]"
-                  activeIndicatorClassName="bg-[var(--Docs-indicator-color)]"
-                  hoverTextClassName="hover:text-[var(--Docs-hover-color)]"
-                  isDark={isDark}
+                  accent={accent}
                 />
               ))}
             </ul>
           </nav>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-sidebar-border px-3 py-2">
+        <SidebarFooter className="border-t border-sidebar-border px-2.5 py-2">
           <button
             type="button"
             aria-label="Collapse sidebar"
             onClick={toggleSidebar}
-            className="ml-auto hidden h-9 w-9 items-center justify-center rounded-lg border border-sidebar-border bg-card/90 text-muted-foreground shadow-sm transition-colors hover:bg-card hover:text-foreground md:flex"
+            className="ml-auto hidden h-8 w-8 items-center justify-center rounded-md border border-sidebar-border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-foreground md:flex"
           >
             <PanelLeftCloseIcon className="size-4" />
           </button>
@@ -882,13 +857,12 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
           type="button"
           aria-label="Expand sidebar"
           onClick={toggleSidebar}
-          className="fixed left-4 z-30 hidden h-10 w-10 items-center justify-center rounded-lg border border-sidebar-border bg-zinc-950/95 text-muted-foreground shadow-md backdrop-blur animate-in fade-in-0 zoom-in-95 duration-150 hover:bg-zinc-900 hover:text-foreground md:flex"
+          className="fixed left-4 z-30 hidden h-9 w-9 items-center justify-center rounded-md border border-sidebar-border bg-sidebar text-muted-foreground shadow-md backdrop-blur animate-in fade-in-0 zoom-in-95 duration-150 hover:bg-accent hover:text-foreground md:flex"
           style={{ bottom: `calc(${footerOffset}px + 1rem)` }}
         >
-          <PanelLeftCloseIcon className="size-4 rotate-180" />
+          <PanelLeftCloseIcon className="size-4 rotate-180" style={{ color: accent }} />
         </button>
       ) : null}
     </>
   )
 }
-

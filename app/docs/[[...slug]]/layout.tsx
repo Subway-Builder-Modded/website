@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { AppDocsSidebar } from "@/components/docs-sidebar"
+import { AppDocsSidebar } from "@/components/docs/docs-sidebar"
 import { resolveDocsRoute } from "@/lib/docs/shared"
 import { getAllDocsDocSlugs, getSidebarTree } from "@/lib/docs/server"
 

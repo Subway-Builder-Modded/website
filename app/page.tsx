@@ -1,327 +1,178 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
-import { useMemo, useRef, useState, useLayoutEffect, useCallback, useEffect } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
-import { useTheme } from "next-themes"
+import type { ReactNode } from "react"
 
-import { Card, CardTitle } from "@/components/ui/card"
-import { LineBullet } from "@/components/ui/line-bullet"
-import { AppIcon } from "@/components/common/app-icon"
-import { getModeHex, PROJECT_COLOR_SCHEMES } from "@/config/theme/colors"
-import { HOME_SUBWAY_BARS, HOMEPAGE_ITEMS, type HomeItem } from "@/config/site/homepage"
-import { resolveLineBulletModeHex } from "@/lib/line-bullet-theme"
-import { cn } from "@/lib/utils"
+import { HomeLinkButton } from "@/components/home/home-link-button"
+import { HomeProjectCardView } from "@/components/home/home-project-card"
+import {
+  HOME_COMMUNITY_SECTION,
+  HOME_HERO,
+  HOME_OPEN_SOURCE_SECTION,
+  HOME_PROJECT_SECTION,
+  HOME_SUBWAY_BARS,
+  HOME_THEME,
+} from "@/config/site/homepage"
 
-export default function Page() {
-  const heroRef = useRef<HTMLElement | null>(null)
-
-  const { scrollY } = useScroll()
-
-  const heroScale = useTransform(scrollY, [0, 900], [1, 1.32])
-  const heroY = useTransform(scrollY, [0, 900], [0, -140])
-
-  const { scrollYProgress: heroExitProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  })
-
-  const heroContentOpacity = useTransform(heroExitProgress, [0.22, 0.42], [1, 0])
-  const heroContentX = useTransform(heroExitProgress, [0.22, 0.42], [0, -28])
-
-  const items = useMemo(() => HOMEPAGE_ITEMS, [])
-  const rows = useMemo(() => chunkRows(items, 3), [items])
-
+function SectionShell({
+  title,
+  description,
+  children,
+}: {
+  title: string
+  description?: string
+  children: ReactNode
+}) {
   return (
-    <main className="min-h-screen bg-background text-foreground font-sans">
-      <section ref={heroRef} className="relative h-svh overflow-hidden">
-        <motion.div className="absolute inset-0" style={{ scale: heroScale, y: heroY }} aria-hidden="true">
-          <Image
-            src="/images/home/light.png"
-            alt="Subway Builder Modded hero"
-            fill
-            priority
-            className="object-cover dark:hidden"
-          />
-          <Image
-            src="/images/home/dark.png"
-            alt="Subway Builder Modded hero"
-            fill
-            priority
-            className="hidden object-cover dark:block"
-          />
-        </motion.div>
-
-        <div className="absolute inset-0 bg-white/12 dark:bg-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/90" />
-
-        <div className="relative z-10 flex h-full items-end px-[clamp(1rem,4vw,3rem)] pb-[max(env(safe-area-inset-bottom),clamp(3rem,12svh,8rem))] pt-[clamp(1rem,3svh,2rem)]">
-          <motion.div
-            style={{ opacity: heroContentOpacity, x: heroContentX }}
-            className="w-full max-w-[min(92vw,40rem)]"
-          >
-            <h1 className="text-balance text-[clamp(2rem,min(7.4vw,8.5svh),5.2rem)] font-black leading-[0.92] tracking-[-0.03em]">
-              Subway Builder Modded
-            </h1>
-
-            <p className="mt-[clamp(0.6rem,1.8svh,1rem)] max-w-[34rem] text-pretty text-[clamp(0.98rem,min(2.2vw,2.4svh),1.22rem)] leading-[1.45] text-muted-foreground">
-              The complete hub for everything modded in Subway Builder.
-            </p>
-
-            <div className="mt-[clamp(0.75rem,2svh,1.1rem)] flex flex-wrap items-center gap-2">
-              {HOME_SUBWAY_BARS.map((c) => (
-                <span
-                  key={c}
-                  className="h-1.5 w-[clamp(1.9rem,4vw,2.5rem)] rounded-full"
-                  style={{ backgroundColor: c }}
-                />
-              ))}
-            </div>
-          </motion.div>
+    <section className="relative z-10 px-[clamp(1.25rem,4.5vw,3.5rem)]">
+      <div className="mx-auto max-w-screen-xl overflow-hidden rounded-[2rem] border border-border/70 bg-gradient-to-br from-background/96 via-background/90 to-background/84 px-[clamp(1.1rem,3.6vw,2.4rem)] py-14 shadow-md backdrop-blur-md sm:py-16">
+        <div className="mx-auto max-w-screen-lg">
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+          {description ? <p className="mt-3 max-w-3xl text-sm text-muted-foreground sm:text-base">{description}</p> : null}
+          <div className="mt-8">{children}</div>
         </div>
-      </section>
-
-      <section className="px-7 pt-16 pb-4 sm:px-7 sm:pt-24 sm:pb-12">
-        <div className="mt-10 space-y-7">
-          {rows.map((row, rowIdx) => (
-            <AnimatedRow key={rowIdx}>
-              <HomepageCardRow items={row} />
-            </AnimatedRow>
-          ))}
-        </div>
-      </section>
-    </main>
+      </div>
+    </section>
   )
 }
 
-function chunkRows<T>(arr: T[], size: number) {
-  const out: T[][] = []
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size))
-  return out
-}
-
-function AnimatedRow({ children }: { children: React.ReactNode }) {
-  const rowRef = useRef<HTMLDivElement | null>(null)
-
-  const { scrollYProgress: inProgressRaw } = useScroll({
-    target: rowRef,
-    offset: ["start 100%", "start 72%"],
-  })
-
-  const { scrollYProgress: outProgress } = useScroll({
-    target: rowRef,
-    offset: ["end 10%", "end 0%"],
-  })
-
-  const inProgress = useTransform(inProgressRaw, [0.14, 1], [0, 1])
-
-  const inOpacity = useTransform(inProgress, [0, 1], [0, 1])
-  const inX = useTransform(inProgress, [0, 1], [28, 0])
-
-  const outOpacity = useTransform(outProgress, [0, 1], [1, 0])
-  const outX = useTransform(outProgress, [0, 1], [0, -28])
-
-  const opacity = useTransform(() => Math.min(inOpacity.get(), outOpacity.get()))
-  const x = useTransform(() => {
-    const a = inX.get()
-    const b = outX.get()
-    return b < 0 ? b : a
-  })
-
+function SectionDivider() {
   return (
-    <motion.div ref={rowRef} style={{ opacity, x }}>
-      {children}
-    </motion.div>
-  )
-}
-
-function HomepageCardRow({ items }: { items: HomeItem[] }) {
-  const [headingHeight, setHeadingHeight] = useState(0)
-  const [titleHeight, setTitleHeight] = useState(0)
-
-  const headingNodes = useRef<Record<string, HTMLDivElement | null>>({})
-  const titleNodes = useRef<Record<string, HTMLDivElement | null>>({})
-
-  const registerHeading = useCallback(
-    (id: string) => (node: HTMLDivElement | null) => {
-      headingNodes.current[id] = node
-    },
-    [],
-  )
-
-  const registerTitle = useCallback(
-    (id: string) => (node: HTMLDivElement | null) => {
-      titleNodes.current[id] = node
-    },
-    [],
-  )
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      const headingHeights = items
-        .map((item) => headingNodes.current[item.id]?.offsetHeight ?? 0)
-        .filter(Boolean)
-
-      const titleHeights = items
-        .map((item) => titleNodes.current[item.id]?.offsetHeight ?? 0)
-        .filter(Boolean)
-
-      if (headingHeights.length) {
-        setHeadingHeight(Math.max(...headingHeights))
-      }
-
-      if (titleHeights.length) {
-        setTitleHeight(Math.max(...titleHeights))
-      }
-    }
-
-    measure()
-
-    const observer = new ResizeObserver(measure)
-
-    items.forEach((item) => {
-      const headingNode = headingNodes.current[item.id]
-      const titleNode = titleNodes.current[item.id]
-
-      if (headingNode) observer.observe(headingNode)
-      if (titleNode) observer.observe(titleNode)
-    })
-
-    window.addEventListener("resize", measure)
-
-    return () => {
-      observer.disconnect()
-      window.removeEventListener("resize", measure)
-    }
-  }, [items])
-
-  return (
-    <div className="grid items-stretch justify-center gap-7 [grid-template-columns:repeat(auto-fit,minmax(280px,340px))]">
-      {items.map((item) => (
-        <HomepageCard
-          key={item.id}
-          item={item}
-          headingHeight={headingHeight}
-          titleHeight={titleHeight}
-          registerHeading={registerHeading(item.id)}
-          registerTitle={registerTitle(item.id)}
-        />
-      ))}
+    <div className="relative z-10 px-[clamp(1.25rem,4.5vw,3.5rem)] py-7 sm:py-8" aria-hidden="true">
+      <div className="mx-auto max-w-screen-xl">
+        <div className="h-px bg-border/70" />
+      </div>
     </div>
   )
 }
 
-function HomepageCard({
-  item,
-  headingHeight,
-  titleHeight,
-  registerHeading,
-  registerTitle,
-}: {
-  item: HomeItem
-  headingHeight: number
-  titleHeight: number
-  registerHeading: (node: HTMLDivElement | null) => void
-  registerTitle: (node: HTMLDivElement | null) => void
-}) {
-  const { resolvedTheme } = useTheme()
-  const [hasMounted, setHasMounted] = useState(false)
-
-  useEffect(() => {
-    setHasMounted(true)
-  }, [])
-
-  const isDark = hasMounted && resolvedTheme === "dark"
-  const isRailyard = item.id === "railyard"
-  const Icon = item.icon
-  const bulletTheme = item.lineBulletTheme
-  const bulletHex = resolveLineBulletModeHex(bulletTheme, "accentColor")
-  const bulletColor = getModeHex(bulletHex, isDark)
-
-  const railyardCardColors = {
-    background: getModeHex(PROJECT_COLOR_SCHEMES.railyard.primaryColor, isDark),
-    border: getModeHex(PROJECT_COLOR_SCHEMES.railyard.secondaryColor, isDark),
-    text: getModeHex(PROJECT_COLOR_SCHEMES.railyard.textColor, isDark),
-  }
+export default function Page() {
+  const { scrollY } = useScroll()
+  const heroScale = useTransform(scrollY, [-240, 0, 900], [1, 1, 1.32])
+  const heroY = useTransform(scrollY, [-240, 0, 900], [0, 0, -140])
 
   return (
-    <Link href={item.href} className="block h-full outline-none">
-      <Card
-        className={cn(
-          "group relative isolate h-full overflow-hidden border border-border bg-card will-change-transform",
-          "transition-transform duration-300",
-          !isRailyard && "hover:-translate-y-1 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-white/5",
-          "focus-visible:ring-2 focus-visible:ring-ring/40",
-          isRailyard && [
-            "ring-1 shadow-[0_0_14px_hsl(var(--primary)/0.3)]",
-            "hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/35 dark:hover:shadow-emerald-300/25",
-            "focus-visible:ring-emerald-300/70",
-          ],
-        )}
-        style={
-          isRailyard
-            ? {
-                backgroundColor: railyardCardColors.background,
-                borderColor: railyardCardColors.border,
-                color: railyardCardColors.text,
-                boxShadow: `0 0 0 1px ${railyardCardColors.border}`,
-              }
-            : undefined
-        }
-      >
-        <div className="relative z-10 flex h-full flex-col px-6 pb-2 pt-3">
-          <div
-            className="flex items-center"
-            style={headingHeight > 0 ? { minHeight: `${headingHeight}px` } : undefined}
-          >
-            <div ref={registerHeading} className="w-full">
-              <div className="flex gap-3">
-                <div
-                  className="flex shrink-0 items-center"
-                  style={titleHeight > 0 ? { height: `${titleHeight}px` } : undefined}
-                >
-                  <LineBullet
-                    theme={bulletTheme}
-                    preset="title"
-                    icon={Icon ? <AppIcon icon={Icon} className="size-3.5" /> : undefined}
-                    text={Icon ? undefined : item.letter.slice(0, 2).toUpperCase()}
-                  />
-                </div>
+    <main
+      className="relative min-h-screen text-foreground"
+      style={{
+        ["--home-accent-light" as string]: HOME_THEME.accent.light,
+        ["--home-accent-dark" as string]: HOME_THEME.accent.dark,
+      }}
+    >
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+        <motion.div className="absolute inset-0" style={{ scale: heroScale, y: heroY }}>
+          <Image
+            src={HOME_HERO.backgroundImage.light}
+            alt={HOME_HERO.backgroundImage.alt}
+            fill
+            priority
+            className="object-cover brightness-[1.12] blur-[6px] dark:hidden"
+          />
+          <Image
+            src={HOME_HERO.backgroundImage.dark}
+            alt={HOME_HERO.backgroundImage.alt}
+            fill
+            priority
+            className="hidden object-cover brightness-[0.72] blur-[6px] dark:block"
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-white/14 dark:bg-black/30" />
+      </div>
 
-                <div className="min-w-0 flex-1">
-                  <div
-                    className="flex items-center"
-                    style={titleHeight > 0 ? { minHeight: `${titleHeight}px` } : undefined}
-                  >
-                    <CardTitle
-                      ref={registerTitle}
-                      className={cn(
-                        "pb-[2px] text-xl font-semibold leading-[1.18] sm:text-2xl",
-                        isRailyard && "text-inherit",
-                      )}
-                    >
-                      {item.title}
-                    </CardTitle>
-                  </div>
+      <section className="relative z-20 h-[calc(100svh-clamp(3.75rem,6vh,4.75rem))] overflow-hidden px-[clamp(0.85rem,3.5vw,2.4rem)] pt-[clamp(2.25rem,4.3vh,3.8rem)] pb-[clamp(0.45rem,1vh,0.85rem)] mb-[clamp(4rem,9vh,8.5rem)]">
+        <div className="mx-auto grid h-full w-full max-w-screen-xl grid-rows-[minmax(0,1fr)_auto] gap-[clamp(0.4rem,1vh,0.75rem)] overflow-visible -translate-y-[clamp(0.6rem,1.8vh,1.5rem)]">
+          <div className="relative z-30 flex min-h-0 items-center justify-center overflow-visible">
+            <div className="relative z-30 flex w-full max-w-[min(92vw,45rem)] flex-col items-center text-center">
+              <h1 className="text-balance text-[clamp(2rem,min(7.4vw,8.5svh),5.2rem)] font-black leading-[0.92] tracking-[-0.03em]">
+                {HOME_HERO.title}
+              </h1>
 
-                  <div
-                    className="mt-3 h-[2px] w-16 rounded-full opacity-70"
-                    style={{ backgroundColor: bulletColor }}
+              <p className="mt-[clamp(0.6rem,1.8svh,1rem)] max-w-[36rem] text-pretty text-[clamp(0.98rem,min(2.2vw,2.4svh),1.18rem)] leading-[1.45] text-muted-foreground">
+                {HOME_HERO.description}
+              </p>
+
+              <div className="mt-[clamp(0.75rem,2svh,1.1rem)] flex flex-wrap items-center justify-center gap-2">
+                {HOME_SUBWAY_BARS.map((color) => (
+                  <span
+                    key={color}
+                    className="h-1.5 w-[clamp(1.9rem,4vw,2.5rem)] rounded-full"
+                    style={{ backgroundColor: color }}
                   />
-                </div>
+                ))}
+              </div>
+
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+                {HOME_HERO.primaryActions.map((action) => (
+                  <HomeLinkButton
+                    key={action.label}
+                    link={action}
+                  />
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="mt-3 flex-1">
-            <p className={cn("text-lg font-medium leading-relaxed", isRailyard ? "text-inherit" : "text-muted-foreground")}>
-              <span className="line-clamp-3">{item.description}</span>
-            </p>
+        </div>
+      </section>
+
+      <SectionShell title={HOME_PROJECT_SECTION.title} description={HOME_PROJECT_SECTION.description}>
+        <div className="flex flex-wrap items-stretch justify-center gap-5">
+          {HOME_PROJECT_SECTION.cards.map((card) => (
+            <HomeProjectCardView
+              key={card.id}
+              card={card}
+              className="w-full max-w-[34rem] md:basis-[calc(50%-0.625rem)]"
+            />
+          ))}
+        </div>
+      </SectionShell>
+
+      <SectionDivider />
+
+      <SectionShell title={HOME_OPEN_SOURCE_SECTION.title} description={HOME_OPEN_SOURCE_SECTION.description}>
+        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-xl border border-border/70 bg-card/70 p-5">
+            <ul className="space-y-2.5 text-sm text-muted-foreground sm:text-base">
+              {HOME_OPEN_SOURCE_SECTION.points.map((point) => (
+                <li key={point} className="flex items-start gap-2.5">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-black dark:bg-white" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-border/70 bg-card/70 p-5">
+            <div className="flex flex-col gap-2.5">
+              {HOME_OPEN_SOURCE_SECTION.links.map((link) => (
+                <HomeLinkButton
+                  key={link.label}
+                  link={link}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </Card>
-    </Link>
+      </SectionShell>
+
+      <SectionDivider />
+
+      <SectionShell title={HOME_COMMUNITY_SECTION.title} description={HOME_COMMUNITY_SECTION.description}>
+        <div className="flex flex-wrap items-center justify-start gap-3">
+          {HOME_COMMUNITY_SECTION.links.map((link) => (
+            <HomeLinkButton
+              key={link.label}
+              link={link}
+            />
+          ))}
+        </div>
+      </SectionShell>
+
+      <div className="h-16" />
+    </main>
   )
 }
-

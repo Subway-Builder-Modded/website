@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import "./global.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme/theme-provider"
 import AppNavbar from "@/components/navigation/app-navbar"
+import { ScrollRestoration } from "@/components/navigation/scroll-restoration"
 import { FooterBars } from "@/components/ui/footer-bars"
 import AppFooter from "@/components/layout/app-footer"
 import { resolveSiteMetadataBase, SITE_DESCRIPTION, SITE_LOGO_PATH, SITE_NAME } from "@/config/site/metadata"
@@ -36,6 +37,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ScrollRestoration />
           <div className="flex min-h-screen flex-col pt-14">
             <AppNavbar />
             <main className="flex-1">{children}</main>

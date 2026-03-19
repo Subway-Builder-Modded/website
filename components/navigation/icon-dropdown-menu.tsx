@@ -7,7 +7,6 @@ import { getNavbarThemeColors } from "@/lib/navbar-colors"
 import { cn } from "@/lib/utils"
 import { isExternalHref } from "@/lib/url"
 import type { NavbarItem } from "@/config/navigation/navbar"
-import { Link } from "@/components/ui/link"
 import { AppIcon } from "@/components/common/app-icon"
 import {
   DropdownMenu,
@@ -19,8 +18,8 @@ import {
 type NavigationDropdownMenuProps = {
   item: NavbarItem
   className: string
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export function NavigationDropdownMenu({ item, className, open, onOpenChange }: NavigationDropdownMenuProps) {
@@ -93,24 +92,27 @@ export function NavigationDropdownMenu({ item, className, open, onOpenChange }: 
 
   const dropdownItems = item.dropdown ?? []
   const triggerHoverColors = getNavbarThemeColors(item, isDark)
+  const isControlled = typeof open === "boolean" && typeof onOpenChange === "function"
 
   return (
     <DropdownMenu
-      open={open}
-      onOpenChange={(nextOpen) => {
-        if (nextOpen) {
-          clearCloseLock()
-          onOpenChange(true)
-        }
-      }}
+      {...(isControlled
+        ? {
+            open,
+            onOpenChange: (nextOpen: boolean) => {
+              if (nextOpen) {
+                clearCloseLock()
+                onOpenChange?.(true)
+              }
+            },
+          }
+        : {})}
       modal={false}
     >
       <DropdownMenuTrigger asChild>
-        <Link
-          href={item.href ?? "#"}
+        <button
+          type="button"
           aria-label={item.title ?? item.id}
-          target="_blank"
-          rel="noreferrer"
           className={cn("outline-none", className, !triggerHoverColors && "hover:bg-secondary/60 hover:text-primary")}
           style={
             isTriggerHovered && triggerHoverColors
@@ -134,7 +136,7 @@ export function NavigationDropdownMenu({ item, className, open, onOpenChange }: 
           onBlur={() => setIsTriggerHovered(false)}
         >
           <AppIcon icon={item.icon} />
-        </Link>
+        </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent

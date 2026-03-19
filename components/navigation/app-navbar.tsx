@@ -311,6 +311,16 @@ export default function AppNavbar(props: NavbarProps) {
             )
           }
 
+          if (item.dropdown?.length) {
+            return (
+              <NavigationDropdownMenu
+                key={item.id}
+                item={item}
+                className={socialLinkClassName}
+              />
+            )
+          }
+
           return (
             <Link
               key={item.id}

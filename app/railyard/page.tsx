@@ -330,7 +330,7 @@ export default function RailyardPage() {
       <section className="relative z-20 h-[calc(100svh-clamp(3.75rem,6vh,4.75rem))] overflow-hidden px-[clamp(0.85rem,3.5vw,2.4rem)] pt-[clamp(2.25rem,4.3vh,3.8rem)] pb-[clamp(0.45rem,1vh,0.85rem)] mb-[clamp(4rem,9vh,8.5rem)]">
         <div className="mx-auto grid h-full w-full max-w-screen-xl grid-rows-[minmax(0,1fr)_auto] gap-[clamp(0.4rem,1vh,0.75rem)] overflow-visible -translate-y-[clamp(0.6rem,1.8vh,1.5rem)]">
           <div className="relative z-30 flex min-h-0 items-center justify-center overflow-visible">
-            <div className="relative z-30 flex w-full max-w-[min(92vw,43rem)] scale-[1.35] flex-col items-center text-center origin-center">
+            <div className="relative z-30 flex w-full max-w-[min(92vw,43rem)] scale-[1.25] flex-col items-center text-center origin-center">
               <h1 className="inline-flex items-center gap-3 text-[clamp(1.72rem,5.7vw,3.55rem)] font-black leading-[0.98] tracking-[-0.03em] max-[420px]:text-[clamp(1.5rem,5.7vw,2.05rem)]">
                 <TrainTrack aria-hidden="true" className="size-[0.68em]" />
                 <span>Railyard</span>
@@ -458,14 +458,34 @@ export default function RailyardPage() {
 
             <div className="pt-[clamp(0.35rem,1.1vh,0.95rem)]">
             {registryLoading ? (
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="h-[8.9rem] animate-pulse rounded-xl border border-border/70 bg-muted/50"
-                  />
-                ))}
-              </div>
+              <Marquee
+                className="rounded-xl"
+                speed={24}
+                autoFill
+                pauseOnHover
+                pauseOnKeyboard
+                gap="0.625rem"
+              >
+                <MarqueeContent>
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <MarqueeItem key={`discover-skeleton-${index}`} className="w-[13.25rem] sm:w-[14.25rem] lg:w-[15.1rem] max-[420px]:w-[12.4rem] scale-y-[0.9] origin-top">
+                      <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
+                        <div className="aspect-[16/10] w-full animate-pulse bg-muted/50" />
+                        <div className="space-y-2.5 p-3">
+                          <div className="h-3.5 w-3/4 animate-pulse rounded bg-muted/50" />
+                          <div className="h-3 w-2/5 animate-pulse rounded bg-muted/45" />
+                          <div className="space-y-1.5 pt-0.5">
+                            <div className="h-2.5 w-full animate-pulse rounded bg-muted/45" />
+                            <div className="h-2.5 w-4/5 animate-pulse rounded bg-muted/45" />
+                          </div>
+                        </div>
+                      </div>
+                    </MarqueeItem>
+                  ))}
+                </MarqueeContent>
+                <MarqueeEdge side="left" size="sm" />
+                <MarqueeEdge side="right" size="sm" />
+              </Marquee>
             ) : recentProjects.length === 0 ? (
               <div className="rounded-xl border border-border/70 bg-muted/30 px-4 py-4 text-xs text-muted-foreground sm:text-sm">
                 {registryError ? "Unable to load the recent registry feed right now." : "No recent projects are available yet."}
