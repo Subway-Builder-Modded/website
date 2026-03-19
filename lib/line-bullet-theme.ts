@@ -1,17 +1,17 @@
 import { PROJECT_COLOR_SCHEMES, type ModeHex } from "@/config/theme/colors"
 
 export type LineBulletThemeId = "default" | "railyard" | "template-mod"
-export type LineBulletColorRole = "primaryHex" | "secondaryHex" | "tertiaryHex"
-export type LineBulletTextRole = "textHex" | "textHexInverted"
+export type LineBulletColorRole = "accentColor" | "primaryColor" | "secondaryColor"
+export type LineBulletTextRole = "textColor" | "textColorInverted"
 export type LineBulletShape = "circle" | "diamond" | "triangle"
 export type LineBulletSize = "sm" | "md" | "lg" | "xl"
 
 export type LineBulletThemePalette = {
-  primaryHex: ModeHex
-  secondaryHex: ModeHex
-  tertiaryHex: ModeHex
-  textHex: ModeHex
-  textHexInverted: ModeHex
+  accentColor: ModeHex
+  primaryColor: ModeHex
+  secondaryColor: ModeHex
+  textColor: ModeHex
+  textColorInverted: ModeHex
 }
 
 export type LineBulletPreset = {
@@ -25,11 +25,11 @@ export type LineBulletPreset = {
 
 export const LINE_BULLET_THEMES: Record<LineBulletThemeId, LineBulletThemePalette> = {
   default: {
-    primaryHex: { light: "#000000", dark: "#FFFFFF" },
-    secondaryHex: { light: "#1F2937", dark: "#E5E7EB" },
-    tertiaryHex: { light: "#111827", dark: "#F3F4F6" },
-    textHex: { light: "#232323", dark: "#F2F2F2" },
-    textHexInverted: { light: "#FFFFFF", dark: "#232323" },
+    accentColor: { light: "#000000", dark: "#FFFFFF" },
+    primaryColor: { light: "#1F2937", dark: "#E5E7EB" },
+    secondaryColor: { light: "#111827", dark: "#F3F4F6" },
+    textColor: { light: "#F2F2F2", dark: "#232323" },
+    textColorInverted: { light: "#F2F2F2", dark: "#232323" },
   },
   railyard: PROJECT_COLOR_SCHEMES.railyard,
   "template-mod": PROJECT_COLOR_SCHEMES["template-mod"],
@@ -39,34 +39,34 @@ export const LINE_BULLET_PRESETS: Record<string, LineBulletPreset> = {
   title: {
     shape: "circle",
     size: "sm",
-    colorRole: "primaryHex",
-    textRole: "textHexInverted",
+    colorRole: "accentColor",
+    textRole: "textColorInverted",
   },
   "hub-title": {
     shape: "circle",
     size: "md",
-    colorRole: "tertiaryHex",
-    textRole: "textHex",
+    colorRole: "secondaryColor",
+    textRole: "textColor",
   },
   "railyard-feature": {
     shape: "circle",
     size: "md",
-    colorRole: "primaryHex",
-    textRole: "textHexInverted",
-    hoverColorRole: "primaryHex",
+    colorRole: "accentColor",
+    textRole: "textColor",
+    hoverColorRole: "accentColor",
   },
   "railyard-workflow": {
     shape: "circle",
     size: "sm",
-    colorRole: "primaryHex",
-    textRole: "textHexInverted",
-    hoverColorRole: "primaryHex",
+    colorRole: "accentColor",
+    textRole: "textColor",
+    hoverColorRole: "accentColor",
   },
   "route-chip": {
     shape: "circle",
     size: "sm",
     invertOnHover: true,
-    textRole: "textHexInverted",
+    textRole: "textColorInverted",
   },
 }
 

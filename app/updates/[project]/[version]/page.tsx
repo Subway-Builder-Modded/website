@@ -141,10 +141,10 @@ export default async function UpdatePage({
               "transition-transform duration-200 hover:scale-[1.02]",
             )}
             style={{
-              ["--project-secondary-light" as string]: project.primaryHex.light,
-              ["--project-secondary-dark" as string]: project.primaryHex.dark,
-              ["--project-text-light" as string]: project.textHexInverted.light,
-              ["--project-text-dark" as string]: project.textHexInverted.dark,
+              ["--project-secondary-light" as string]: project.accentColor.light,
+              ["--project-secondary-dark" as string]: project.accentColor.dark,
+              ["--project-text-light" as string]: project.textColorInverted.light,
+              ["--project-text-dark" as string]: project.textColorInverted.dark,
             }}
           >
             <span>{title}</span>
@@ -154,10 +154,10 @@ export default async function UpdatePage({
           <div
             className="mb-5 flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold bg-[var(--project-secondary-light)] text-[var(--project-text-light)] dark:bg-[var(--project-secondary-dark)] dark:text-[var(--project-text-dark)]"
             style={{
-              ["--project-secondary-light" as string]: project.secondaryHex.light,
-              ["--project-secondary-dark" as string]: project.secondaryHex.dark,
-              ["--project-text-light" as string]: project.textHex.light,
-              ["--project-text-dark" as string]: project.textHex.dark,
+              ["--project-secondary-light" as string]: project.primaryColor.light,
+              ["--project-secondary-dark" as string]: project.primaryColor.dark,
+              ["--project-text-light" as string]: project.textColor.light,
+              ["--project-text-dark" as string]: project.textColor.dark,
             }}
           >
             {title}

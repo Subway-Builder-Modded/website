@@ -69,8 +69,8 @@ function CreditsSectionHeader({ title }: { title: string }) {
       <LineBullet
         theme="default"
         text={title.slice(0, 1).toUpperCase()}
-        colorRole="primaryHex"
-        textRole="textHexInverted"
+        colorRole="accentColor"
+        textRole="textColor"
         shape="circle"
         size="sm"
       />

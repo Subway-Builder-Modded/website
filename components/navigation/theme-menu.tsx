@@ -4,6 +4,7 @@ import * as React from "react"
 import { Moon, Sun, SunMoon, type LucideIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
+import { getNavbarConfiguredColors, getNavbarThemeColors } from "@/lib/navbar-colors"
 import type { NavbarDropdownItem } from "@/config/navigation/navbar"
 import {
   DropdownMenu,
@@ -38,13 +39,11 @@ export function ThemeMenu({
   const { theme, resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
+  const [hoveredThemeValue, setHoveredThemeValue] = React.useState<ThemeValue | null>(null)
   const transitionTimeoutRef = React.useRef<number | null>(null)
-  const hoverCloseTimeoutRef = React.useRef<number | null>(null)
-  const lastOpenAtRef = React.useRef(0)
   const closeLockTimeoutRef = React.useRef<number | null>(null)
   const isTriggerHoveredRef = React.useRef(false)
   const isContentHoveredRef = React.useRef(false)
-  const isSwitchingThemeRef = React.useRef(false)
   const isClosingMenuRef = React.useRef(false)
 
   const isControlled = typeof open === "boolean"
@@ -57,11 +56,16 @@ export function ThemeMenu({
   }, [isControlled, onOpenChange])
 
   React.useEffect(() => {
+    if (!menuOpen) {
+      setHoveredThemeValue(null)
+    }
+  }, [menuOpen])
+
+  React.useEffect(() => {
     setMounted(true)
 
     return () => {
       if (transitionTimeoutRef.current) window.clearTimeout(transitionTimeoutRef.current)
-      if (hoverCloseTimeoutRef.current) window.clearTimeout(hoverCloseTimeoutRef.current)
       if (closeLockTimeoutRef.current) window.clearTimeout(closeLockTimeoutRef.current)
 
       const root = document.documentElement
@@ -74,28 +78,33 @@ export function ThemeMenu({
 
   const currentTheme: ThemeValue =
     mounted && (theme === "light" || theme === "dark" || theme === "system") ? theme : "system"
+  const isDark = resolvedTheme === "dark"
 
   const themeOptions = React.useMemo(() => {
     return themes.map((entry) => {
       const configured = items?.find((item) => item.id === `theme-${entry.value}`)
+      const configuredColors = getNavbarConfiguredColors(configured)
       const configuredIcon = configured?.icon
       const Icon =
         configuredIcon && !(typeof configuredIcon === "object" && "type" in configuredIcon)
           ? (configuredIcon as LucideIcon)
           : entry.Icon
 
+      const optionIsDark = isDark
+
       return {
         value: entry.value,
         label: configured?.title ?? entry.label,
         Icon,
+        configuredColors,
+        hoverColors: getNavbarThemeColors(configured, optionIsDark),
       }
     })
-  }, [items])
+  }, [isDark, items])
 
   const CurrentIcon = currentTheme === "light" ? Sun : currentTheme === "dark" ? Moon : SunMoon
 
   const endSwitch = React.useCallback(() => {
-    isSwitchingThemeRef.current = false
     const root = document.documentElement
     root.classList.remove("theme-transitioning", "theme-switching-menu", "theme-switching-menu-lock")
     root.style.removeProperty("--theme-menu-lock-bg")
@@ -116,13 +125,6 @@ export function ThemeMenu({
     root.classList.add("theme-switching-menu-lock")
   }, [])
 
-  const clearHoverClose = React.useCallback(() => {
-    if (hoverCloseTimeoutRef.current) {
-      window.clearTimeout(hoverCloseTimeoutRef.current)
-      hoverCloseTimeoutRef.current = null
-    }
-  }, [])
-
   const clearCloseLock = React.useCallback(() => {
     if (closeLockTimeoutRef.current) {
       window.clearTimeout(closeLockTimeoutRef.current)
@@ -140,23 +142,10 @@ export function ThemeMenu({
     }, 220)
   }, [clearCloseLock])
 
-  const scheduleHoverClose = React.useCallback(() => {
-    clearHoverClose()
-    hoverCloseTimeoutRef.current = window.setTimeout(() => {
-      if (!isTriggerHoveredRef.current && !isContentHoveredRef.current) {
-        beginCloseLock()
-        setMenuOpen(false)
-      }
-      hoverCloseTimeoutRef.current = null
-    }, 180)
-  }, [beginCloseLock, clearHoverClose, setMenuOpen])
-
   const openMenu = React.useCallback(() => {
-    clearHoverClose()
     clearCloseLock()
-    lastOpenAtRef.current = Date.now()
     setMenuOpen(true)
-  }, [clearCloseLock, clearHoverClose, setMenuOpen])
+  }, [clearCloseLock, setMenuOpen])
 
   const handleThemeChange = React.useCallback(
     (nextTheme: ThemeValue) => {
@@ -179,7 +168,6 @@ export function ThemeMenu({
         window.clearTimeout(transitionTimeoutRef.current)
       }
 
-      isSwitchingThemeRef.current = true
       const applyTheme = () => setTheme(nextTheme)
       const doc = document as DocumentWithViewTransition
       const root = document.documentElement
@@ -206,7 +194,6 @@ export function ThemeMenu({
 
   const handleOpenChange = React.useCallback((nextOpen: boolean) => {
     if (nextOpen) {
-      lastOpenAtRef.current = Date.now()
       clearCloseLock()
       setMenuOpen(true)
     }
@@ -224,7 +211,6 @@ export function ThemeMenu({
           }}
           onPointerLeave={() => {
             isTriggerHoveredRef.current = false
-            scheduleHoverClose()
           }}
           className={cn(
             "relative [view-transition-name:none] outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none",
@@ -245,12 +231,10 @@ export function ThemeMenu({
         data-theme-menu
         data-theme-menu-surface
         onPointerDownOutside={() => {
-          clearHoverClose()
           beginCloseLock()
           setMenuOpen(false)
         }}
         onEscapeKeyDown={() => {
-          clearHoverClose()
           beginCloseLock()
           setMenuOpen(false)
         }}
@@ -260,24 +244,87 @@ export function ThemeMenu({
         }}
         onPointerLeave={() => {
           isContentHoveredRef.current = false
-          scheduleHoverClose()
         }}
         className="min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg duration-200 ease-[cubic-bezier(.22,.9,.35,1)] data-open:duration-220 data-open:ease-[cubic-bezier(.22,.9,.35,1)] data-closed:duration-190 data-closed:ease-[cubic-bezier(.3,.0,.2,1)]"
       >
-        {themeOptions.map(({ value, label, Icon }) => (
-          <DropdownMenuItem
-            key={value}
-            data-theme-menu
-            onSelect={(event) => {
-              event.preventDefault()
-            }}
-            onClick={() => handleThemeChange(value)}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-colors duration-250 ease-[cubic-bezier(.22,.9,.35,1)] hover:bg-secondary/60 hover:text-primary"
-          >
-            <Icon className="size-4 shrink-0" />
-            <span>{label}</span>
-          </DropdownMenuItem>
-        ))}
+        {themeOptions.map(({ value, label, Icon, hoverColors, configuredColors }) => {
+          const isHovered = hoveredThemeValue === value
+          const isSystemGradient =
+            value === "system" &&
+            configuredColors &&
+            typeof configuredColors.light.background === "string" &&
+            typeof configuredColors.dark.background === "string"
+
+          return (
+            <DropdownMenuItem
+              key={value}
+              data-theme-menu
+              onSelect={(event) => {
+                event.preventDefault()
+              }}
+              onClick={() => handleThemeChange(value)}
+              onPointerEnter={() => setHoveredThemeValue(value)}
+              onPointerLeave={() => setHoveredThemeValue((current) => (current === value ? null : current))}
+              onMouseEnter={() => setHoveredThemeValue(value)}
+              onMouseLeave={() => setHoveredThemeValue((current) => (current === value ? null : current))}
+              onFocus={() => setHoveredThemeValue(value)}
+              onBlur={() => setHoveredThemeValue((current) => (current === value ? null : current))}
+              style={
+                isSystemGradient && isHovered
+                  ? {
+                      backgroundImage: `linear-gradient(to right, ${configuredColors.light.background}, ${configuredColors.dark.background})`,
+                      color: "var(--foreground)",
+                    } as React.CSSProperties
+                  : isHovered && hoverColors
+                  ? {
+                      "--navbar-hover-text": hoverColors.text,
+                      "--navbar-hover-bg": hoverColors.background,
+                      color: hoverColors.text,
+                      backgroundColor: hoverColors.background,
+                    } as React.CSSProperties
+                  : hoverColors
+                    ? ({
+                        "--navbar-hover-text": hoverColors.text,
+                        "--navbar-hover-bg": hoverColors.background,
+                      } as React.CSSProperties)
+                    : undefined
+              }
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-colors duration-250 ease-[cubic-bezier(.22,.9,.35,1)] hover:bg-secondary/60 hover:text-primary",
+                !isSystemGradient &&
+                  hoverColors &&
+                  "hover:!text-[var(--navbar-hover-text)] hover:!bg-[var(--navbar-hover-bg)] data-[highlighted]:!text-[var(--navbar-hover-text)] data-[highlighted]:!bg-[var(--navbar-hover-bg)]",
+                isSystemGradient && "hover:!text-foreground data-[highlighted]:!text-foreground",
+              )}
+            >
+              <Icon
+                className="size-4 shrink-0"
+                style={
+                  isSystemGradient
+                    ? isHovered
+                      ? { color: "var(--foreground)", stroke: "var(--foreground)" }
+                      : undefined
+                    : isHovered && hoverColors
+                      ? { color: hoverColors.text, stroke: hoverColors.text }
+                      : undefined
+                }
+              />
+              <span
+                style={
+                  isSystemGradient
+                    ? isHovered
+                      ? { color: "var(--foreground)" }
+                      : undefined
+                    : isHovered && hoverColors
+                      ? { color: hoverColors.text }
+                      : undefined
+                }
+              >
+                {label}
+              </span>
+            </DropdownMenuItem>
+          )
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   )

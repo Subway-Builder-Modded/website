@@ -7,11 +7,16 @@ import { motion, useScroll, useTransform } from "motion/react"
 import type { LucideIcon } from "lucide-react"
 import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack, Search, Download } from "lucide-react"
 
+import { ItemCard } from "@/components/railyard/item-card"
+import { Marquee, MarqueeContent, MarqueeEdge, MarqueeItem } from "@/components/ui/marquee"
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { useRegistry } from "@/hooks/use-registry"
+import { DEFAULT_SORT_STATE } from "@/lib/railyard/constants"
 import { getGithubReleases } from "@/lib/railyard/github-releases"
+import { buildTaggedItems, compareItems } from "@/lib/railyard/tagged-items"
 import { cn } from "@/lib/utils"
 
 // ─── Data ──────────────────────────────────────────────────────────────────
@@ -83,7 +88,8 @@ function detectPlatform(): PlatformInfo {
 
   const ua = navigator.userAgent.toLowerCase()
   const platform = navigator.platform.toLowerCase()
-  const isArm = /arm|aarch64/.test(ua) || /arm|aarch64/.test(platform)
+  // Check user agent for ARM indicators: WOW64, ARM64, aarch64, ARM
+  const isArm = /arm64|aarch64|wow64.*arm/.test(ua) || /arm|aarch64/.test(platform)
 
   if (ua.includes("mac")) return { os: "macOS", arch: "universal" }
   if (ua.includes("linux")) return { os: "Linux", arch: "x64" }
@@ -112,12 +118,13 @@ async function detectPlatformWithHints() {
 
     const platform = (highEntropy?.platform ?? uaData.platform ?? "").toLowerCase()
     const architecture = (highEntropy?.architecture ?? uaData.architecture ?? "").toLowerCase()
-    const isArm = /arm|aarch64/.test(architecture)
+    // Use user agent detection for ARM as fallback since some browsers hide it in userAgentData
+    const isArm = /arm|aarch64/.test(architecture) || fallback.arch === "arm64"
 
     if (platform.includes("mac")) return { os: "macOS", arch: "universal" as const }
     if (platform.includes("linux")) return { os: "Linux", arch: "x64" as const }
     if (platform.includes("win") || fallback.os === "Windows") {
-      return { os: "Windows", arch: isArm ? "arm64" : fallback.arch }
+      return { os: "Windows", arch: isArm ? "arm64" : "x64" }
     }
   } catch {
     return fallback
@@ -191,8 +198,16 @@ const INDEX_BASE = "https://raw.githubusercontent.com/Subway-Builder-Modded/The-
 
 export default function RailyardPage() {
   const { scrollY } = useScroll()
-  const heroScale = useTransform(scrollY, [0, 900], [1, 1.32])
-  const heroY = useTransform(scrollY, [0, 900], [0, -140])
+  const heroScale = useTransform(scrollY, [-240, 0, 900], [1, 1, 1.32])
+  const heroY = useTransform(scrollY, [-240, 0, 900], [0, 0, -140])
+  const {
+    mods,
+    maps,
+    modDownloadTotals,
+    mapDownloadTotals,
+    loading: registryLoading,
+    error: registryError,
+  } = useRegistry()
 
   const [menuOpen, setMenuOpen] = useState(false)
   const [downloads, setDownloads] = useState<DownloadEntry[]>(DOWNLOAD_TEMPLATE)
@@ -261,13 +276,29 @@ export default function RailyardPage() {
     [downloads, selectedOS]
   )
 
+  const recentProjects = useMemo(() => {
+    const allItems = buildTaggedItems(mods, maps)
+
+    return [...allItems]
+      .sort((left, right) =>
+        compareItems(left, right, DEFAULT_SORT_STATE, modDownloadTotals, mapDownloadTotals)
+      )
+      .slice(0, 7)
+  }, [maps, mapDownloadTotals, modDownloadTotals, mods])
+
   const mapCountLabel = mapCount == null ? "—" : mapCount.toLocaleString()
   const modCountLabel = modCount == null ? "—" : modCount.toLocaleString()
 
   return (
-    <main className="railyard-accent relative min-h-screen text-foreground">
+    <main
+      className={cn(
+        "railyard-accent relative min-h-screen text-foreground",
+        "[--ry-accent:#28E6AA] [--ry-primary:#51BD8E55] [--ry-secondary:#28E6AA55] [--ry-text:#232323] [--ry-text-inverted:#F2F2F2]",
+        "dark:[--ry-accent:#19D89C] dark:[--ry-primary:#42AD7F55] dark:[--ry-secondary:#19D89C55] dark:[--ry-text:#F2F2F2] dark:[--ry-text-inverted:#232323]",
+      )}
+    >
 
-      <div className="pointer-events-none fixed -inset-y-[32vh] inset-x-0 z-0 overflow-hidden" aria-hidden="true">
+      <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
         <motion.div
           className="absolute inset-0"
           style={{ scale: heroScale, y: heroY }}
@@ -277,142 +308,196 @@ export default function RailyardPage() {
             alt=""
             fill
             priority
-            className="object-cover brightness-[1] saturate-[1] contrast-[1.08] dark:hidden"
+            className="object-cover brightness-[1.26] saturate-[1.08] contrast-[1.12] blur-[2px] dark:hidden"
           />
           <Image
             src="/images/railyard/main-dark.png"
             alt=""
             fill
             priority
-            className="hidden object-cover brightness-[1] saturate-[1] contrast-[1.2] dark:block"
+            className="hidden object-cover brightness-[0.52] saturate-[1.02] contrast-[1.18] blur-[2px] dark:block"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-white/45 dark:bg-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/50 via-white/20 to-transparent dark:from-black/55 dark:via-black/18 dark:to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/28 via-transparent to-background/22 dark:from-black/28 dark:to-background/65" />
+        <div className="absolute inset-0 bg-white/30 dark:bg-black/62" />
+        <div className="absolute inset-0 bg-white/6 dark:bg-black/16 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/38 via-white/12 to-transparent dark:from-black/52 dark:via-black/18 dark:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--ry-secondary)]/62 via-[var(--ry-secondary)]/28 to-[var(--ry-secondary)]/18" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/4 to-white/12 dark:via-black/8 dark:to-black/18" />
       </div>
 
-      {/* ─── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative z-20 h-svh">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/35" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/8 to-transparent pointer-events-none" />
-
-        {/* Hero content */}
-        <div className="relative z-10 flex h-full items-end px-[clamp(1.5rem,5vw,4rem)] pb-[max(env(safe-area-inset-bottom),clamp(3rem,12svh,8rem))]">
-          <div className="w-full max-w-[min(92vw,48rem)]">
-            {/* Title */}
-            <h1 className="inline-flex items-center gap-4 -translate-y-1 text-[clamp(2.6rem,min(8vw,9svh),4.8rem)] font-black leading-[1] tracking-[-0.03em]">
-              <TrainTrack aria-hidden="true" className="size-[0.72em]" />
-              <span>Railyard</span>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "1.5px solid #d29922",
-                  color: "#d29922",
-                  borderRadius: "9999px",
-                  padding: "0.18em 0.52em 0.28em",
-                  fontSize: "0.42em",
-                  fontWeight: 500,
-                  lineHeight: "1",
-                  letterSpacing: "normal",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                }}
-              >
-                Beta
-              </span>
-            </h1>
-
-            <p className="mt-4 max-w-[27rem] text-pretty text-[clamp(1rem,min(2.2vw,2.4svh),1.2rem)] leading-[1.45] text-foreground">
-              The easiest way to discover, install, and manage Subway Builder community content.
-            </p>
-
-            {/* Download button group */}
-            <div ref={dropdownRef} className="relative mt-6 inline-flex z-50">
-              <div className="inline-flex overflow-hidden rounded-lg shadow-md ring-1 ring-primary/35">
-                <a
-                  href={nativeDownload.link}
-                  className={cn(
-                    "inline-flex items-center px-5 py-2.5 text-sm font-semibold transition-colors",
-                    "bg-primary text-primary-foreground hover:bg-primary/90"
-                  )}
+      {/* ─── Hero + Recently Updated (Initial Viewport) ────────────────── */}
+      <section className="relative z-20 h-[calc(100svh-clamp(3.75rem,6vh,4.75rem))] overflow-hidden px-[clamp(0.85rem,3.5vw,2.4rem)] pt-[clamp(2.25rem,4.3vh,3.8rem)] pb-[clamp(0.45rem,1vh,0.85rem)] mb-[clamp(4rem,9vh,8.5rem)]">
+        <div className="mx-auto grid h-full w-full max-w-screen-xl grid-rows-[minmax(0,1fr)_auto] gap-[clamp(0.4rem,1vh,0.75rem)] overflow-visible -translate-y-[clamp(0.6rem,1.8vh,1.5rem)]">
+          <div className="relative z-30 flex min-h-0 items-center justify-center overflow-visible">
+            <div className="relative z-30 flex w-full max-w-[min(92vw,43rem)] scale-[1.35] flex-col items-center text-center origin-center">
+              <h1 className="inline-flex items-center gap-3 text-[clamp(1.72rem,5.7vw,3.55rem)] font-black leading-[0.98] tracking-[-0.03em] max-[420px]:text-[clamp(1.5rem,5.7vw,2.05rem)]">
+                <TrainTrack aria-hidden="true" className="size-[0.68em]" />
+                <span>Railyard</span>
+                <span
+                  className="self-center border-[#A87400] text-[#A87400] dark:border-[#d29922] dark:text-[#d29922]"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transform: "translateY(0.12em)",
+                    borderWidth: "1.5px",
+                    borderStyle: "solid",
+                    borderRadius: "9999px",
+                    padding: "0.22em 0.52em",
+                    fontSize: "0.42em",
+                    fontWeight: 500,
+                    lineHeight: "1",
+                    letterSpacing: "normal",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                  }}
                 >
-                  Download for {nativeDownload.label}
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen((v) => !v)}
-                  aria-label="More download options"
-                  aria-expanded={menuOpen}
-                  className={cn(
-                    "flex w-9 items-center justify-center border-l border-primary/40 transition-colors",
-                    "bg-primary text-primary-foreground hover:bg-primary/90"
-                  )}
-                >
-                  <ChevronDown
-                    className={cn("h-4 w-4 transition-transform", menuOpen && "rotate-180")}
-                    aria-hidden="true"
-                  />
-                </button>
+                  <span style={{ transform: "translateY(-0.03em)" }}>Beta</span>
+                </span>
+              </h1>
+
+              <div className="mt-2 h-px w-[min(66vw,17rem)] bg-gradient-to-r from-transparent via-[var(--ry-accent)]/80 to-transparent" />
+
+              <div ref={dropdownRef} className="relative z-[70] mt-4 inline-flex max-[560px]:mt-3">
+                <div className="inline-flex overflow-hidden rounded-lg border shadow-md" style={{ borderColor: "var(--ry-secondary)" }}>
+                  <a
+                    href={nativeDownload.link}
+                    className={cn(
+                      "inline-flex items-center px-3.5 py-1.5 text-xs font-semibold transition-opacity hover:opacity-90 sm:px-4 sm:py-2 sm:text-sm"
+                    )}
+                    style={{ backgroundColor: "var(--ry-accent)", color: "var(--ry-text-inverted)" }}
+                  >
+                    Download for {nativeDownload.label}
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setMenuOpen((v) => !v)}
+                    aria-label="More download options"
+                    aria-expanded={menuOpen}
+                    className={cn(
+                      "flex w-9 items-center justify-center border-l transition-opacity hover:opacity-90"
+                    )}
+                    style={{ borderLeftColor: "var(--ry-secondary)", backgroundColor: "var(--ry-accent)", color: "var(--ry-text-inverted)" }}>
+                    <ChevronDown
+                      className={cn("h-4 w-4 transition-transform", menuOpen && "rotate-180")}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+
+                {menuOpen && (
+                  <div className="absolute left-1/2 top-full z-[80] mt-1.5 min-w-[290px] -translate-x-1/2 rounded-lg border border-border bg-popover py-1 shadow-lg ring-1 ring-foreground/10 sm:left-0 sm:translate-x-0">
+                    {downloads.map((dl) => (
+                      <a
+                        key={dl.label}
+                        href={dl.link}
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center justify-between gap-4 px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                      >
+                        <span>{dl.label}</span>
+                        <span className="text-xs text-muted-foreground">{dl.type}</span>
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {menuOpen && (
-                <div className="absolute left-0 top-full z-50 mt-1.5 min-w-[320px] rounded-lg border border-border bg-popover py-1 shadow-lg ring-1 ring-foreground/10">
-                  {downloads.map((dl) => (
-                    <a
-                      key={dl.label}
-                      href={dl.link}
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center justify-between gap-4 px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-                    >
-                      <span>{dl.label}</span>
-                      <span className="text-xs text-muted-foreground">{dl.type}</span>
-                    </a>
-                  ))}
-                </div>
-              )}
+              <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-[560px]:mt-2.5 max-[560px]:gap-1.5">
+                <Link
+                  href="/railyard/browse?type=maps"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group sm:px-3 sm:py-1.5"
+                >
+                  <MapIcon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
+                  <span>
+                    <span className="text-xs font-bold tabular-nums sm:text-sm">{mapCountLabel}</span>
+                    <span className="ml-1 text-[11px] text-muted-foreground sm:text-xs">Maps</span>
+                  </span>
+                </Link>
+                <Link
+                  href="/railyard/browse?type=mods"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group sm:px-3 sm:py-1.5"
+                >
+                  <Package className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
+                  <span>
+                    <span className="text-xs font-bold tabular-nums sm:text-sm">{modCountLabel}</span>
+                    <span className="ml-1 text-[11px] text-muted-foreground sm:text-xs">Mods</span>
+                  </span>
+                </Link>
+                <a
+                  href="https://discord.gg/syG9YHMyeG"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Join the Subway Builder Modded Discord"
+                  className="flex size-9 items-center justify-center rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group sm:size-10"
+                >
+                  <Image
+                    src="/assets/discord.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="size-4 dark:invert sm:size-5"
+                    aria-hidden="true"
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 -translate-y-[clamp(2.2rem,2.75vh,2.6rem)] rounded-2xl border border-border/80 bg-background/88 px-2.5 py-2 shadow-sm backdrop-blur-md sm:px-3 sm:py-2.5 max-[420px]:px-2 max-[420px]:py-1.5">
+            <div className="mb-1.5 flex items-center justify-between gap-3">
+              <h2 className="text-md font-semibold tracking-tight text-foreground">Discover</h2>
+              <Link
+                href="/railyard/browse"
+                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                View all
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
             </div>
 
-            {/* Stats strip */}
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <Link
-                href="/railyard/browse?type=maps"
-                className="flex items-center gap-2.5 px-4 py-2 rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group"
+            <div className="pt-[clamp(0.35rem,1.1vh,0.95rem)]">
+            {registryLoading ? (
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-[8.9rem] animate-pulse rounded-xl border border-border/70 bg-muted/50"
+                  />
+                ))}
+              </div>
+            ) : recentProjects.length === 0 ? (
+              <div className="rounded-xl border border-border/70 bg-muted/30 px-4 py-4 text-xs text-muted-foreground sm:text-sm">
+                {registryError ? "Unable to load the recent registry feed right now." : "No recent projects are available yet."}
+              </div>
+            ) : (
+              <Marquee
+                className="rounded-xl"
+                speed={24}
+                autoFill
+                pauseOnHover
+                pauseOnKeyboard
+                gap="0.625rem"
               >
-                <MapIcon className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
-                <span>
-                  <span className="text-base font-bold tabular-nums">{mapCountLabel}</span>
-                  <span className="ml-1.5 text-sm text-muted-foreground">Maps Available</span>
-                </span>
-              </Link>
-              <Link
-                href="/railyard/browse?type=mods"
-                className="flex items-center gap-2.5 px-4 py-2 rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group"
-              >
-                <Package className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
-                <span>
-                  <span className="text-base font-bold tabular-nums">{modCountLabel}</span>
-                  <span className="ml-1.5 text-sm text-muted-foreground">Mods Available</span>
-                </span>
-              </Link>
-              <a
-                href="https://discord.gg/syG9YHMyeG"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Join the Subway Builder Modded Discord"
-                className="flex size-10 items-center justify-center rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group"
-              >
-                <Image
-                  src="/assets/discord.svg"
-                  alt=""
-                  width={20}
-                  height={20}
-                  className="size-5 dark:invert"
-                  aria-hidden="true"
-                />
-              </a>
+                <MarqueeContent>
+                  {recentProjects.map(({ type, item }) => (
+                    <MarqueeItem key={`${type}-${item.id}`} className="w-[13.25rem] sm:w-[14.25rem] lg:w-[15.1rem] max-[420px]:w-[12.4rem] scale-y-[0.9] origin-top">
+                      <ItemCard
+                        type={type}
+                        item={item}
+                        viewMode="compact"
+                        totalDownloads={
+                          type === "mod"
+                            ? (modDownloadTotals[item.id] ?? 0)
+                            : (mapDownloadTotals[item.id] ?? 0)
+                        }
+                      />
+                    </MarqueeItem>
+                  ))}
+                </MarqueeContent>
+                <MarqueeEdge side="left" size="sm" />
+                <MarqueeEdge side="right" size="sm" />
+              </Marquee>
+            )}
             </div>
           </div>
         </div>
@@ -430,7 +515,7 @@ export default function RailyardPage() {
                   key={feature.id}
                   className={cn(
                     "relative overflow-hidden cursor-pointer transition-all duration-200 outline-none p-6",
-                    "border border-border hover:border-primary/40 hover:shadow-md hover:ring-1 hover:ring-primary/20"
+                    "border border-border hover:border-[var(--ry-accent)] hover:shadow-md hover:ring-1 hover:ring-[var(--ry-primary)]"
                   )}
                   role="article"
                 >
@@ -439,8 +524,8 @@ export default function RailyardPage() {
                       theme="railyard"
                       icon={feature.icon ? <feature.icon className="size-4" aria-hidden="true" /> : undefined}
                       text={feature.icon ? undefined : feature.letter}
-                      colorRole="primaryHex"
-                      textRole="textHexInverted"
+                      colorRole="accentColor"
+                      textRole="textColorInverted"
                       shape="circle"
                       size="md"
                       className="shrink-0 mt-0.5"
@@ -451,7 +536,7 @@ export default function RailyardPage() {
                       <ul className="mt-3 space-y-1.5">
                         {feature.bullets.map((bullet) => (
                           <li key={bullet} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <CheckCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                            <CheckCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-[var(--ry-accent)]" aria-hidden="true" />
                             {bullet}
                           </li>
                         ))}
@@ -486,7 +571,7 @@ export default function RailyardPage() {
                   className={cn(
                     "flex h-full flex-col text-left p-5 rounded-xl border transition-all duration-200 outline-none",
                     active
-                      ? "border-primary/50 bg-primary/5 shadow-md ring-1 ring-primary/25"
+                      ? "border-[var(--ry-accent)] bg-[var(--ry-secondary)] shadow-md ring-1 ring-[var(--ry-primary)]"
                       : "border-border hover:border-border/80 hover:bg-accent/40"
                   )}
                 >
@@ -494,8 +579,8 @@ export default function RailyardPage() {
                     <LineBullet
                       theme="railyard"
                       icon={<stop.icon className="size-3.5" aria-hidden="true" />}
-                      colorRole="primaryHex"
-                      textRole="textHexInverted"
+                      colorRole="accentColor"
+                      textRole="textColorInverted"
                       shape="circle"
                       size="sm"
                       className={cn("shrink-0", !active && "opacity-85")}
@@ -527,9 +612,9 @@ export default function RailyardPage() {
                 target="_blank"
                 rel="noreferrer"
                 className={cn(
-                  "mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold shadow-md ring-1 ring-primary/35 transition-colors",
-                  "bg-primary text-primary-foreground hover:bg-primary/90"
+                  "mt-6 inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold shadow-md border transition-opacity hover:opacity-90"
                 )}
+                style={{ borderColor: "var(--ry-secondary)", backgroundColor: "var(--ry-accent)", color: "var(--ry-text-inverted)" }}
               >
                 <Image src="/assets/discord.svg" alt="" width={18} height={18} className="size-[18px] invert dark:invert-0" aria-hidden="true" />
                 <span>Join the Discord</span>
@@ -559,7 +644,7 @@ export default function RailyardPage() {
                     className={cn(
                       "w-full text-left px-4 py-3 text-sm font-medium transition-colors",
                       selectedOS === group.os
-                        ? "bg-background text-foreground border-r-2 border-primary sm:border-r-2 -mr-px"
+                        ? "bg-background text-[var(--ry-accent)] border-r-2 border-[var(--ry-accent)] sm:border-r-2 -mr-px"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                   >
@@ -579,7 +664,7 @@ export default function RailyardPage() {
                       className={cn(
                         "flex items-center justify-between gap-4 px-4 py-3 rounded-lg border transition-all group",
                         isNative
-                          ? "border-primary/50 bg-primary/5 hover:bg-primary/10"
+                          ? "border-[var(--ry-accent)] bg-[var(--ry-primary)] hover:bg-[var(--ry-secondary)]"
                           : "border-border hover:border-border/80 hover:bg-accent/40"
                       )}
                     >
@@ -595,7 +680,10 @@ export default function RailyardPage() {
                         </span>
                       </div>
                       <ArrowRight
-                        className="h-4 w-4 text-muted-foreground group-hover:translate-x-0.5 group-hover:text-foreground transition-all shrink-0"
+                        className={cn(
+                          "h-4 w-4 transition-all shrink-0 group-hover:translate-x-0.5",
+                          isNative ? "text-[var(--ry-accent)]" : "text-muted-foreground group-hover:text-foreground",
+                        )}
                         aria-hidden="true"
                       />
                     </a>
@@ -614,11 +702,11 @@ export default function RailyardPage() {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
-function SectionHeader({ title }: { title: string }) {
+function SectionHeader({ title, accent = false }: { title: string; accent?: boolean }) {
   return (
     <div className="flex items-center gap-4">
       <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
-      <div className="flex-1 h-px bg-border" />
+      <div className={cn("flex-1 h-px", accent ? "bg-[var(--ry-accent)]" : "bg-border")} />
     </div>
   )
 }

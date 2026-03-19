@@ -1,15 +1,13 @@
 import { Megaphone, Package, TrainTrack, Users } from "lucide-react"
 import type { NavbarIcon } from "@/config/navigation/navbar"
+import type { LineBulletThemeId } from "@/lib/line-bullet-theme"
 
 export type HomeItemBase = {
   id: string
   title: string
   description: string
   href: string
-  lineBulletTextColor: {
-    light: string
-    dark: string
-  }
+  lineBulletTheme: LineBulletThemeId
 }
 
 export type HomeItem = HomeItemBase &
@@ -22,10 +20,7 @@ export const HOMEPAGE_ITEMS: HomeItem[] = [
     title: "Railyard",
     description: "All-in-one Map and Mod Manager for Subway Builder.",
     href: "/railyard",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#FFFFFF",
-    },
+    lineBulletTheme: "railyard",
   },
   {
     id: "template-mod-docs",
@@ -33,10 +28,7 @@ export const HOMEPAGE_ITEMS: HomeItem[] = [
     title: "Template Mod Documentation",
     description: "View the docs for the Subway Builder Modded Template Mod.",
     href: "/docs/template-mod/latest/home",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
+    lineBulletTheme: "default",
   },
   {
     id: "updates",
@@ -44,10 +36,7 @@ export const HOMEPAGE_ITEMS: HomeItem[] = [
     title: "Updates & Changelogs",
     description: "Stay up to date with the latest releases from Subway Builder Modded.",
     href: "/updates",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
+    lineBulletTheme: "default",
   },
   {
     id: "credits",
@@ -55,10 +44,7 @@ export const HOMEPAGE_ITEMS: HomeItem[] = [
     title: "Credits",
     description: "Subway Builder Modded is a community-driven project made possible by dedicated contributors.",
     href: "/credits",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
+    lineBulletTheme: "default",
   },
   {
     id: "discord",
@@ -69,10 +55,7 @@ export const HOMEPAGE_ITEMS: HomeItem[] = [
     title: "Join the Community",
     description: "Join our Discord server to connect with the community and get support.",
     href: "https://discord.gg/syG9YHMyeG",
-    lineBulletTextColor: {
-      light: "#FFFFFF",
-      dark: "#000000",
-    },
+    lineBulletTheme: "default",
   },
 ]
 

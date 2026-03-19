@@ -2,14 +2,16 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useMemo, useRef, useState, useLayoutEffect, useCallback } from "react"
+import { useMemo, useRef, useState, useLayoutEffect, useCallback, useEffect } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
+import { useTheme } from "next-themes"
 
 import { Card, CardTitle } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
 import { AppIcon } from "@/components/common/app-icon"
+import { getModeHex, PROJECT_COLOR_SCHEMES } from "@/config/theme/colors"
 import { HOME_SUBWAY_BARS, HOMEPAGE_ITEMS, type HomeItem } from "@/config/site/homepage"
-import { getLineBulletTheme } from "@/lib/line-bullet-theme"
+import { resolveLineBulletModeHex } from "@/lib/line-bullet-theme"
 import { cn } from "@/lib/utils"
 
 export default function Page() {
@@ -223,16 +225,25 @@ function HomepageCard({
   registerHeading: (node: HTMLDivElement | null) => void
   registerTitle: (node: HTMLDivElement | null) => void
 }) {
+  const { resolvedTheme } = useTheme()
+  const [hasMounted, setHasMounted] = useState(false)
+
+  useEffect(() => {
+    setHasMounted(true)
+  }, [])
+
+  const isDark = hasMounted && resolvedTheme === "dark"
   const isRailyard = item.id === "railyard"
   const Icon = item.icon
-  const activeBulletTheme = getLineBulletTheme(isRailyard ? "railyard" : "default")
-  const bulletColor = activeBulletTheme.primaryHex.light
-  const textOverride = isRailyard
-    ? {
-        light: item.lineBulletTextColor.light,
-        dark: item.lineBulletTextColor.dark,
-      }
-    : undefined
+  const bulletTheme = item.lineBulletTheme
+  const bulletHex = resolveLineBulletModeHex(bulletTheme, "accentColor")
+  const bulletColor = getModeHex(bulletHex, isDark)
+
+  const railyardCardColors = {
+    background: getModeHex(PROJECT_COLOR_SCHEMES.railyard.primaryColor, isDark),
+    border: getModeHex(PROJECT_COLOR_SCHEMES.railyard.secondaryColor, isDark),
+    text: getModeHex(PROJECT_COLOR_SCHEMES.railyard.textColor, isDark),
+  }
 
   return (
     <Link href={item.href} className="block h-full outline-none">
@@ -243,15 +254,21 @@ function HomepageCard({
           !isRailyard && "hover:-translate-y-1 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-white/5",
           "focus-visible:ring-2 focus-visible:ring-ring/40",
           isRailyard && [
-            "border-emerald-400/70 bg-gradient-to-b from-emerald-400/30 via-emerald-500/20 to-emerald-600/30",
-            "ring-1 ring-emerald-400/70 shadow-[0_0_14px_hsl(var(--primary)/0.3)]",
+            "ring-1 shadow-[0_0_14px_hsl(var(--primary)/0.3)]",
             "hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/35 dark:hover:shadow-emerald-300/25",
-            "hover:ring-emerald-300/80",
-            "before:pointer-events-none before:absolute before:inset-x-5 before:top-1 before:h-10 before:rounded-full before:bg-gradient-to-b before:from-white/35 before:to-transparent before:blur-md",
-            "after:pointer-events-none after:absolute after:inset-[1px] after:rounded-[inherit] after:border after:border-emerald-200/25",
             "focus-visible:ring-emerald-300/70",
           ],
         )}
+        style={
+          isRailyard
+            ? {
+                backgroundColor: railyardCardColors.background,
+                borderColor: railyardCardColors.border,
+                color: railyardCardColors.text,
+                boxShadow: `0 0 0 1px ${railyardCardColors.border}`,
+              }
+            : undefined
+        }
       >
         <div className="relative z-10 flex h-full flex-col px-6 pb-2 pt-3">
           <div
@@ -265,14 +282,10 @@ function HomepageCard({
                   style={titleHeight > 0 ? { height: `${titleHeight}px` } : undefined}
                 >
                   <LineBullet
-                    theme={isRailyard ? "railyard" : "default"}
+                    theme={bulletTheme}
+                    preset="title"
                     icon={Icon ? <AppIcon icon={Icon} className="size-3.5" /> : undefined}
                     text={Icon ? undefined : item.letter.slice(0, 2).toUpperCase()}
-                    colorRole="primaryHex"
-                    textRole="textHexInverted"
-                    textOverride={textOverride}
-                    shape="circle"
-                    size="sm"
                   />
                 </div>
 
@@ -285,7 +298,7 @@ function HomepageCard({
                       ref={registerTitle}
                       className={cn(
                         "pb-[2px] text-xl font-semibold leading-[1.18] sm:text-2xl",
-                        isRailyard && "text-foreground",
+                        isRailyard && "text-inherit",
                       )}
                     >
                       {item.title}
@@ -302,7 +315,7 @@ function HomepageCard({
           </div>
 
           <div className="mt-3 flex-1">
-            <p className={cn("text-lg font-medium leading-relaxed", isRailyard ? "text-foreground" : "text-muted-foreground")}>
+            <p className={cn("text-lg font-medium leading-relaxed", isRailyard ? "text-inherit" : "text-muted-foreground")}>
               <span className="line-clamp-3">{item.description}</span>
             </p>
           </div>

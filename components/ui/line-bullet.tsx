@@ -65,8 +65,8 @@ export function LineBullet({
   const presetConfig = getLineBulletPreset(preset)
   const resolvedShape = shape ?? presetConfig.shape ?? "circle"
   const resolvedSize = size ?? presetConfig.size ?? "sm"
-  const resolvedColorRole = colorRole ?? presetConfig.colorRole ?? "primaryHex"
-  const resolvedTextRole = textRole ?? presetConfig.textRole ?? "textHexInverted"
+  const resolvedColorRole = colorRole ?? presetConfig.colorRole ?? "accentColor"
+  const resolvedTextRole = textRole ?? presetConfig.textRole ?? "textColor"
   const resolvedHoverColorRole = hoverColorRole ?? presetConfig.hoverColorRole
   const resolvedInvertOnHover = invertOnHover ?? presetConfig.invertOnHover ?? false
 

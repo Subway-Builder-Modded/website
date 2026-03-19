@@ -27,8 +27,8 @@ export default function NotFound() {
               key={`${line.id}-${index}`}
               theme="default"
               text={line.id}
-              colorRole="primaryHex"
-              textRole="textHexInverted"
+              colorRole="accentColor"
+              textRole="textColorInverted"
               colorOverride={{ light: line.color, dark: line.color }}
               hoverColorOverride={{ light: line.color, dark: line.color }}
               invertOnHover

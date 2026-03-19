@@ -21,8 +21,8 @@ export function UpdateSection({ type, children, className, themeId }: UpdateSect
         <LineBullet
           theme={themeId}
           text={config.letter}
-          colorRole="primaryHex"
-          textRole="textHexInverted"
+          colorRole="accentColor"
+          textRole="textColorInverted"
           shape="circle"
           size="sm"
         />

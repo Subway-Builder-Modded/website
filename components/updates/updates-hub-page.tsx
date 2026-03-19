@@ -35,16 +35,16 @@ const UPDATE_CARD_IMAGES: Record<UpdateProject["id"], { light: string; dark: str
 }
 
 function getColors(project: UpdateProject): CardThemeColors {
-  const cardBgLight = project.secondaryHex.light
-  const cardBgDark = project.secondaryHex.dark
-  const titleTextLight = project.textHex.light
-  const titleTextDark = project.textHex.dark
-  const bulletBgLight = project.tertiaryHex.light
-  const bulletBgDark = project.tertiaryHex.dark
-  const imageBorderLight = project.tertiaryHex.light
-  const imageBorderDark = project.tertiaryHex.dark
-  const borderColorLight = project.tertiaryHex.light
-  const borderColorDark = project.tertiaryHex.dark
+  const cardBgLight = project.primaryColor.light
+  const cardBgDark = project.primaryColor.dark
+  const titleTextLight = project.textColor.light
+  const titleTextDark = project.textColor.dark
+  const bulletBgLight = project.secondaryColor.light
+  const bulletBgDark = project.secondaryColor.dark
+  const imageBorderLight = project.secondaryColor.light
+  const imageBorderDark = project.secondaryColor.dark
+  const borderColorLight = project.secondaryColor.light
+  const borderColorDark = project.secondaryColor.dark
 
   return {
     cardBgLight,
@@ -121,8 +121,8 @@ function UpdateHubCard({
             ["--hub-card-border-dark" as string]: borderColorDark,
             ["--hub-card-image-border-light" as string]: imageBorderLight,
             ["--hub-card-image-border-dark" as string]: imageBorderDark,
-            ["--hub-card-text-light" as string]: theme.textHex.light,
-            ["--hub-card-text-dark" as string]: theme.textHex.dark,
+            ["--hub-card-text-light" as string]: theme.textColor.light,
+            ["--hub-card-text-dark" as string]: theme.textColor.dark,
           } as CSSProperties
         }
       >
@@ -131,8 +131,8 @@ function UpdateHubCard({
             <LineBullet
               theme={project.id}
               text={project.label}
-              colorRole="tertiaryHex"
-              textRole="textHex"
+              colorRole="secondaryColor"
+              textRole="textColor"
               colorOverride={{ light: "var(--hub-card-bullet)", dark: "var(--hub-card-bullet)" }}
               textOverride={{ light: "var(--hub-card-text)", dark: "var(--hub-card-text)" }}
               shape="circle"

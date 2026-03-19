@@ -39,16 +39,16 @@ const DOCS_CARD_IMAGES: Record<DocsInstance["id"], { light: string; dark: string
 function getColors(instance: DocsInstance): CardThemeColors {
   const theme = PROJECT_COLOR_SCHEMES[instance.id]
 
-  const cardBgLight = theme.secondaryHex.light
-  const cardBgDark = theme.secondaryHex.dark
-  const titleTextLight = theme.textHex.light
-  const titleTextDark = theme.textHex.dark
-  const bulletBgLight = theme.tertiaryHex.light
-  const bulletBgDark = theme.tertiaryHex.dark
-  const imageBorderLight = theme.tertiaryHex.light
-  const imageBorderDark = theme.tertiaryHex.dark
-  const borderColorLight = theme.tertiaryHex.light
-  const borderColorDark = theme.tertiaryHex.dark
+  const cardBgLight = theme.primaryColor.light
+  const cardBgDark = theme.primaryColor.dark
+  const titleTextLight = theme.textColor.light
+  const titleTextDark = theme.textColor.dark
+  const bulletBgLight = theme.secondaryColor.light
+  const bulletBgDark = theme.secondaryColor.dark
+  const imageBorderLight = theme.secondaryColor.light
+  const imageBorderDark = theme.secondaryColor.dark
+  const borderColorLight = theme.secondaryColor.light
+  const borderColorDark = theme.secondaryColor.dark
 
   return {
     cardBgLight,
@@ -137,8 +137,8 @@ function DocsHubCard({ instance }: { instance: DocsInstance }) {
             ["--hub-card-border-dark" as string]: borderColorDark,
             ["--hub-card-image-border-light" as string]: imageBorderLight,
             ["--hub-card-image-border-dark" as string]: imageBorderDark,
-            ["--hub-card-text-light" as string]: theme.textHex.light,
-            ["--hub-card-text-dark" as string]: theme.textHex.dark,
+            ["--hub-card-text-light" as string]: theme.textColor.light,
+            ["--hub-card-text-dark" as string]: theme.textColor.dark,
           } as CSSProperties
         }
       >
@@ -147,8 +147,8 @@ function DocsHubCard({ instance }: { instance: DocsInstance }) {
             <LineBullet
               theme={instance.id}
               text={instance.label}
-              colorRole="tertiaryHex"
-              textRole="textHex"
+              colorRole="secondaryColor"
+              textRole="textColor"
               colorOverride={{ light: "var(--hub-card-bullet)", dark: "var(--hub-card-bullet)" }}
               textOverride={{ light: "var(--hub-card-text)", dark: "var(--hub-card-text)" }}
               shape="circle"

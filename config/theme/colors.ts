@@ -5,83 +5,257 @@ export type ModeHex = {
   dark: string
 }
 
-export type ThemedColorSet = {
-  primaryHex: ModeHex
-  secondaryHex: ModeHex
-  tertiaryHex: ModeHex
-  textHex: ModeHex
-  textHexInverted: ModeHex
+export type ThemedColorSetBase = {
+  accentColor: ModeHex
+  primaryColor: ModeHex
+  secondaryColor: ModeHex
+}
+
+export type ThemedColorSet = ThemedColorSetBase & {
+  textColor: ModeHex
+  textColorInverted: ModeHex
 }
 
 export function getModeHex(value: ModeHex, isDark: boolean) {
   return isDark ? value.dark : value.light
 }
 
+export const SHARED_TEXT_COLOR: ModeHex = {
+  light: "#232323",
+  dark: "#F2F2F2",
+}
+
+export const SHARED_TEXT_COLOR_INVERTED: ModeHex = {
+  light: "#F2F2F2",
+  dark: "#232323",
+}
+
+const LIGHT_MODE_BACKGROUND_HEX = "#FAFAFA"
+const DARK_MODE_BACKGROUND_HEX = "#1C1C1C"
+const LIGHT_MODE_SATURATION_BOOST = 2
+
+type Rgb = { r: number; g: number; b: number }
+type Rgba = Rgb & { a?: number }
+
+function clamp01(value: number) {
+  return Math.min(1, Math.max(0, value))
+}
+
+function clamp255(value: number) {
+  return Math.min(255, Math.max(0, Math.round(value)))
+}
+
+function parseHexToRgba(hex: string): Rgba {
+  const normalized = hex.trim().replace(/^#/, "")
+
+  if (normalized.length !== 6 && normalized.length !== 8) {
+    throw new Error(`Invalid hex color: ${hex}`)
+  }
+
+  const r = Number.parseInt(normalized.slice(0, 2), 16)
+  const g = Number.parseInt(normalized.slice(2, 4), 16)
+  const b = Number.parseInt(normalized.slice(4, 6), 16)
+  const a = normalized.length === 8 ? Number.parseInt(normalized.slice(6, 8), 16) / 255 : undefined
+
+  return { r, g, b, a }
+}
+
+function toHex(value: number) {
+  return clamp255(value).toString(16).padStart(2, "0").toUpperCase()
+}
+
+function rgbaToHex({ r, g, b, a }: Rgba) {
+  const rgbHex = `#${toHex(r)}${toHex(g)}${toHex(b)}`
+  if (typeof a !== "number") return rgbHex
+  return `${rgbHex}${toHex(clamp01(a) * 255)}`
+}
+
+function rgbToHsl({ r, g, b }: Rgb) {
+  const red = r / 255
+  const green = g / 255
+  const blue = b / 255
+
+  const max = Math.max(red, green, blue)
+  const min = Math.min(red, green, blue)
+  const delta = max - min
+
+  let h = 0
+  const l = (max + min) / 2
+  const s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1))
+
+  if (delta !== 0) {
+    if (max === red) {
+      h = ((green - blue) / delta) % 6
+    } else if (max === green) {
+      h = (blue - red) / delta + 2
+    } else {
+      h = (red - green) / delta + 4
+    }
+  }
+
+  const hue = (h * 60 + 360) % 360
+  return { h: hue, s, l }
+}
+
+function hslToRgb(h: number, s: number, l: number): Rgb {
+  const hue = ((h % 360) + 360) % 360
+  const chroma = (1 - Math.abs(2 * l - 1)) * s
+  const x = chroma * (1 - Math.abs((hue / 60) % 2 - 1))
+  const m = l - chroma / 2
+
+  let red = 0
+  let green = 0
+  let blue = 0
+
+  if (hue < 60) {
+    red = chroma
+    green = x
+  } else if (hue < 120) {
+    red = x
+    green = chroma
+  } else if (hue < 180) {
+    green = chroma
+    blue = x
+  } else if (hue < 240) {
+    green = x
+    blue = chroma
+  } else if (hue < 300) {
+    red = x
+    blue = chroma
+  } else {
+    red = chroma
+    blue = x
+  }
+
+  return {
+    r: clamp255((red + m) * 255),
+    g: clamp255((green + m) * 255),
+    b: clamp255((blue + m) * 255),
+  }
+}
+
+function toLinear(channel: number) {
+  const value = channel / 255
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+}
+
+function relativeLuminance({ r, g, b }: Rgb) {
+  const red = toLinear(r)
+  const green = toLinear(g)
+  const blue = toLinear(b)
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+}
+
+function contrastRatio(a: number, b: number) {
+  const lighter = Math.max(a, b)
+  const darker = Math.min(a, b)
+  return (lighter + 0.05) / (darker + 0.05)
+}
+
+type VibrantLightDeriveOptions = {
+  saturationBoost?: number
+  lightnessBase?: number
+  saturationLightnessFactor?: number
+}
+
+function deriveLightHexFromDarkVibrant(darkHex: string, options: VibrantLightDeriveOptions = {}) {
+  const darkRgba = parseHexToRgba(darkHex)
+  const darkRgb = { r: darkRgba.r, g: darkRgba.g, b: darkRgba.b }
+  const { h, s } = rgbToHsl(darkRgb)
+
+  const saturationBoost = options.saturationBoost ?? 1.40
+  const lightnessBase = options.lightnessBase ?? 0.48
+  const saturationLightnessFactor = options.saturationLightnessFactor ?? 0.03
+
+  const targetSaturation = clamp01(s * saturationBoost)
+  const targetLightness = clamp01(lightnessBase - targetSaturation * saturationLightnessFactor)
+  
+  const lightCandidate = hslToRgb(h, targetSaturation, targetLightness)
+  return rgbaToHex({ ...lightCandidate, a: darkRgba.a })
+}
+
+function deriveLightHexFromDarkByContrast(
+  darkHex: string,
+  lightBackgroundHex = LIGHT_MODE_BACKGROUND_HEX,
+  darkBackgroundHex = DARK_MODE_BACKGROUND_HEX,
+) {
+  const darkRgba = parseHexToRgba(darkHex)
+  const darkRgb = { r: darkRgba.r, g: darkRgba.g, b: darkRgba.b }
+  const darkBackground = parseHexToRgba(darkBackgroundHex)
+  const lightBackground = parseHexToRgba(lightBackgroundHex)
+
+  const targetContrast = contrastRatio(relativeLuminance(darkRgb), relativeLuminance(darkBackground))
+  const { h, s } = rgbToHsl(darkRgb)
+  const boostedSaturation = clamp01(s * LIGHT_MODE_SATURATION_BOOST)
+  const lightBackgroundLum = relativeLuminance(lightBackground)
+
+  let low = 0
+  let high = 1
+  let bestRgb = darkRgb
+  let bestDelta = Number.POSITIVE_INFINITY
+
+  for (let iteration = 0; iteration < 40; iteration += 1) {
+    const mid = (low + high) / 2
+    const candidate = hslToRgb(h, boostedSaturation, mid)
+    const candidateLum = relativeLuminance(candidate)
+    const ratio = contrastRatio(candidateLum, lightBackgroundLum)
+    const delta = Math.abs(ratio - targetContrast)
+
+    if (delta < bestDelta) {
+      bestDelta = delta
+      bestRgb = candidate
+    }
+
+    if (ratio > targetContrast) {
+      low = mid
+    } else {
+      high = mid
+    }
+  }
+
+  return rgbaToHex({ ...bestRgb, a: darkRgba.a })
+}
+
+function createModeColorFromDarkAccent(darkHex: string): ModeHex {
+  return {
+    dark: darkHex,
+    light: deriveLightHexFromDarkVibrant(darkHex, {
+      saturationBoost: 1.34,
+      lightnessBase: 0.46,
+      saturationLightnessFactor: 0.028,
+    }),
+  }
+}
+
+function createModeColorFromDarkVibrant(darkHex: string): ModeHex {
+  return {
+    dark: darkHex,
+    light: deriveLightHexFromDarkVibrant(darkHex),
+  }
+}
+
+function withSharedTextColors(colors: ThemedColorSetBase): ThemedColorSet {
+  return {
+    ...colors,
+    textColor: SHARED_TEXT_COLOR,
+    textColorInverted: SHARED_TEXT_COLOR_INVERTED,
+  }
+}
+
 export const PROJECT_COLOR_SCHEMES: Record<ProjectColorId, ThemedColorSet> = {
-  railyard: {
-    primaryHex: {
-      light: "#0B6B52",
-      dark: "#19D89C",
-    },
-    secondaryHex: {
-      light: "#0FA67855",
-      dark: "#42AD7F55",
-    },
-    tertiaryHex: {
-      light: "#0B6B5255",
-      dark: "#19D89C55",
-    },
-    textHex: {
-      light: "#232323",
-      dark: "#F2F2F2",
-    },
-    textHexInverted: {
-      light: "#F2F2F2",
-      dark: "#232323",
-    },
-  },
-  "template-mod": {
-    primaryHex: {
-      light: "#1D4ED8",
-      dark: "#93C5FD",
-    },
-    secondaryHex: {
-      light: "#2563EB55",
-      dark: "#60A5FA55",
-    },
-    tertiaryHex: {
-      light: "#1D4ED855",
-      dark: "#93C5FD55",
-    },
-    textHex: {
-      light: "#232323",
-      dark: "#F2F2F2",
-    },
-    textHexInverted: {
-      light: "#F2F2F2",
-      dark: "#232323",
-    },
-  },
-  website: {
-    primaryHex: {
-      light: "#C2410C",
-      dark: "#FFBE73",
-    },
-    secondaryHex: {
-      light: "#F9731655",
-      dark: "#F2992E55",
-    },
-    tertiaryHex: {
-      light: "#C2410C55",
-      dark: "#FFBE7355",
-    },
-    textHex: {
-      light: "#232323",
-      dark: "#F2F2F2",
-    },
-    textHexInverted: {
-      light: "#F2F2F2",
-      dark: "#232323",
-    },
-  },
+  railyard: withSharedTextColors({
+    accentColor: createModeColorFromDarkAccent("#19D89C"),
+    primaryColor: createModeColorFromDarkVibrant("#42AD7F55"),
+    secondaryColor: createModeColorFromDarkVibrant("#19D89C55"),
+  }),
+  "template-mod": withSharedTextColors({
+    accentColor: createModeColorFromDarkAccent("#93C5FD"),
+    primaryColor: createModeColorFromDarkVibrant("#60A5FA55"),
+    secondaryColor: createModeColorFromDarkVibrant("#93C5FD55"),
+  }),
+  website: withSharedTextColors({
+    accentColor: createModeColorFromDarkAccent("#FFBE73"),
+    primaryColor: createModeColorFromDarkVibrant("#F2992E55"),
+    secondaryColor: createModeColorFromDarkVibrant("#FFBE7355"),
+  }),
 }

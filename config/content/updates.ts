@@ -9,11 +9,11 @@ export type UpdateProject = {
   description: string
   basePath: string
   icon: LucideIcon
-  primaryHex: ModeHex
-  secondaryHex: ModeHex
-  tertiaryHex: ModeHex
-  textHex: ModeHex
-  textHexInverted: ModeHex
+  accentColor: ModeHex
+  primaryColor: ModeHex
+  secondaryColor: ModeHex
+  textColor: ModeHex
+  textColorInverted: ModeHex
 }
 
 export const UPDATE_PROJECTS: UpdateProject[] = [
@@ -23,11 +23,11 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     description: "All-in-one Map and Mod Manager for Subway Builder.",
     basePath: "/updates/railyard",
     icon: TrainTrack,
-    primaryHex: PROJECT_COLOR_SCHEMES.railyard.primaryHex,
-    secondaryHex: PROJECT_COLOR_SCHEMES.railyard.secondaryHex,
-    tertiaryHex: PROJECT_COLOR_SCHEMES.railyard.tertiaryHex,
-    textHex: PROJECT_COLOR_SCHEMES.railyard.textHex,
-    textHexInverted: PROJECT_COLOR_SCHEMES["template-mod"].textHexInverted,
+    accentColor: PROJECT_COLOR_SCHEMES.railyard.accentColor,
+    primaryColor: PROJECT_COLOR_SCHEMES.railyard.primaryColor,
+    secondaryColor: PROJECT_COLOR_SCHEMES.railyard.secondaryColor,
+    textColor: PROJECT_COLOR_SCHEMES.railyard.textColor,
+    textColorInverted: PROJECT_COLOR_SCHEMES["template-mod"].textColorInverted,
   },
   {
     id: "template-mod",
@@ -35,11 +35,11 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     description: "Documented TypeScript template to create your own mods for Subway Builder.",
     basePath: "/updates/template-mod",
     icon: FolderCode,
-    primaryHex: PROJECT_COLOR_SCHEMES["template-mod"].primaryHex,
-    secondaryHex: PROJECT_COLOR_SCHEMES["template-mod"].secondaryHex,
-    tertiaryHex: PROJECT_COLOR_SCHEMES["template-mod"].tertiaryHex,
-    textHex: PROJECT_COLOR_SCHEMES["template-mod"].textHex,
-    textHexInverted: PROJECT_COLOR_SCHEMES["template-mod"].textHexInverted,
+    accentColor: PROJECT_COLOR_SCHEMES["template-mod"].accentColor,
+    primaryColor: PROJECT_COLOR_SCHEMES["template-mod"].primaryColor,
+    secondaryColor: PROJECT_COLOR_SCHEMES["template-mod"].secondaryColor,
+    textColor: PROJECT_COLOR_SCHEMES["template-mod"].textColor,
+    textColorInverted: PROJECT_COLOR_SCHEMES["template-mod"].textColorInverted,
   },
 ]
 

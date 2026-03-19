@@ -3,6 +3,7 @@
 import * as React from "react"
 import NextLink from "next/link"
 import { useTheme } from "next-themes"
+import { getNavbarThemeColors } from "@/lib/navbar-colors"
 import { cn } from "@/lib/utils"
 import { isExternalHref } from "@/lib/url"
 import type { NavbarItem } from "@/config/navigation/navbar"
@@ -91,7 +92,7 @@ export function NavigationDropdownMenu({ item, className, open, onOpenChange }: 
   }, [])
 
   const dropdownItems = item.dropdown ?? []
-  const triggerHoverColors = item.colors ? (isDark ? item.colors.dark : item.colors.light) : null
+  const triggerHoverColors = getNavbarThemeColors(item, isDark)
 
   return (
     <DropdownMenu
@@ -110,7 +111,7 @@ export function NavigationDropdownMenu({ item, className, open, onOpenChange }: 
           aria-label={item.title ?? item.id}
           target="_blank"
           rel="noreferrer"
-          className={cn("outline-none", className, !item.colors && "hover:bg-secondary/60 hover:text-primary")}
+          className={cn("outline-none", className, !triggerHoverColors && "hover:bg-secondary/60 hover:text-primary")}
           style={
             isTriggerHovered && triggerHoverColors
               ? {
@@ -159,7 +160,7 @@ export function NavigationDropdownMenu({ item, className, open, onOpenChange }: 
         className="min-w-56 !bg-background ring-1 ring-border rounded-xl shadow-lg duration-200 ease-[cubic-bezier(.22,.9,.35,1)] data-open:duration-220 data-open:ease-[cubic-bezier(.22,.9,.35,1)] data-closed:duration-190 data-closed:ease-[cubic-bezier(.3,.0,.2,1)]"
       >
         {dropdownItems.map((dropdownItem) => {
-          const hoverColors = dropdownItem.colors ? (isDark ? dropdownItem.colors.dark : dropdownItem.colors.light) : null
+          const hoverColors = getNavbarThemeColors(dropdownItem, isDark)
           const isHovered = hoveredDropdownItemId === dropdownItem.id
           const hoveredIconStyle =
             isHovered && hoverColors

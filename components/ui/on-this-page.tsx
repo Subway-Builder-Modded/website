@@ -93,7 +93,7 @@ export function DocsOnThisPage({ headings }: { headings: TocHeading[] }) {
 
   const singleHeading = headings.length === 1
   const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
-  const color = getModeHex(scheme.primaryHex, isDark)
+  const color = getModeHex(scheme.accentColor, isDark)
 
   return (
     <nav aria-label="On this page" className="xl:w-[19rem] xl:pl-10 2xl:pl-14">

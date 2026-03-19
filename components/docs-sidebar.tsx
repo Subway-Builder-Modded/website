@@ -66,9 +66,9 @@ function InstanceIcon({
   const Icon = instance.icon
   const scheme = PROJECT_COLOR_SCHEMES[instance.id]
 
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const tertiary = getModeHex(scheme.tertiaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const tertiary = getModeHex(scheme.secondaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
 
   return (
     <div
@@ -105,9 +105,9 @@ function VersionIcon({
   const Icon = version.icon ?? (isLatestVersion(instance, version.value) ? Tag : Archive)
   const scheme = PROJECT_COLOR_SCHEMES[instance.id]
 
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const tertiary = getModeHex(scheme.tertiaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const tertiary = getModeHex(scheme.secondaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
 
   return (
     <div
@@ -139,9 +139,9 @@ function StatusBadge({
 }) {
   const scheme = PROJECT_COLOR_SCHEMES[instance.id]
 
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const tertiary = getModeHex(scheme.tertiaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const tertiary = getModeHex(scheme.secondaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
 
   if (kind === "latest") {
     return (
@@ -254,8 +254,8 @@ function InstanceDropdownRow({
   const [hovered, setHovered] = React.useState(false)
   const scheme = PROJECT_COLOR_SCHEMES[instance.id]
   
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
 
   return (
     <NextLink
@@ -299,8 +299,8 @@ function VersionDropdownRow({
   const [hovered, setHovered] = React.useState(false)
   const scheme = PROJECT_COLOR_SCHEMES[instance.id]
 
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
   const latest = isLatestVersion(instance, version.value)
 
   return (
@@ -472,9 +472,9 @@ function InstanceSwitcher({
 }) {
   const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
 
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const tertiary = getModeHex(scheme.tertiaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const tertiary = getModeHex(scheme.secondaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
 
   return (
     <div>
@@ -528,9 +528,9 @@ function VersionSwitcher({
 
   const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
 
-  const secondary = getModeHex(scheme.secondaryHex, isDark)
-  const tertiary = getModeHex(scheme.tertiaryHex, isDark)
-  const text = getModeHex(scheme.textHex, isDark)
+  const secondary = getModeHex(scheme.primaryColor, isDark)
+  const tertiary = getModeHex(scheme.secondaryColor, isDark)
+  const text = getModeHex(scheme.textColor, isDark)
 
   return (
     <div>
@@ -789,7 +789,7 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
   const footerOffset = useFooterOffset()
   const isCollapsed = state === "collapsed"
   const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id]
-  const color = getModeHex(scheme.primaryHex, isDark)
+  const color = getModeHex(scheme.accentColor, isDark)
 
   const [showExpandButton, setShowExpandButton] = React.useState(false)
 

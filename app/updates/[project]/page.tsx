@@ -33,11 +33,11 @@ export async function generateMetadata({
 function VersionCard({
   update,
   isLatest,
-  primaryHex,
+  primaryColor,
 }: {
   update: UpdateMeta
   isLatest: boolean
-  primaryHex: { light: string; dark: string }
+  primaryColor: { light: string; dark: string }
 }) {
   return (
     <Link href={update.href} className="block outline-none">
@@ -52,8 +52,8 @@ function VersionCard({
           "focus-visible:ring-2 focus-visible:ring-ring/40",
         )}
         style={{
-          ["--version-card-border-left-light" as string]: primaryHex.light,
-          ["--version-card-border-left-dark" as string]: primaryHex.dark,
+          ["--version-card-border-left-light" as string]: primaryColor.light,
+          ["--version-card-border-left-dark" as string]: primaryColor.dark,
         }}
       >
         <div className="flex min-w-0 flex-col gap-1">
@@ -107,10 +107,10 @@ export default async function ProjectHubPage({
           <div
             className="flex min-h-12 w-full items-center justify-center rounded-2xl px-6 py-3 font-mta text-2xl font-bold bg-[var(--project-secondary-light)] text-[var(--project-text-light)] dark:bg-[var(--project-secondary-dark)] dark:text-[var(--project-text-dark)]"
             style={{
-              ["--project-secondary-light" as string]: project.primaryHex.light,
-              ["--project-secondary-dark" as string]: project.primaryHex.dark,
-              ["--project-text-light" as string]: project.textHexInverted.light,
-              ["--project-text-dark" as string]: project.textHexInverted.dark,
+              ["--project-secondary-light" as string]: project.accentColor.light,
+              ["--project-secondary-dark" as string]: project.accentColor.dark,
+              ["--project-text-light" as string]: project.textColorInverted.light,
+              ["--project-text-dark" as string]: project.textColorInverted.dark,
             }}
           >
             {project.label}
@@ -128,7 +128,7 @@ export default async function ProjectHubPage({
               key={update.version}
               update={update}
               isLatest={idx === 0}
-              primaryHex={project.primaryHex}
+              primaryColor={project.accentColor}
             />
           ))}
         </div>
