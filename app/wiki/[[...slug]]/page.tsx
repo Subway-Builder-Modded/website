@@ -1,6 +1,7 @@
 import { permanentRedirect } from "next/navigation"
-import { DOCS_INSTANCES } from "@/config/content/docs"
+import { DOCS_INSTANCES, getDocsInstanceById } from "@/config/content/docs"
 import { getAllDocsDocSlugs } from "@/lib/docs/server"
+import { buildBaseHomeHref } from "@/lib/docs/shared"
 
 export const dynamicParams = false
 
@@ -51,9 +52,20 @@ export default async function LegacyDocsRedirectPage({
   const { slug } = await params
   const normalizedSlug = slug?.filter(Boolean)
 
-  const destination = normalizedSlug?.length
-    ? `/docs/${normalizedSlug.join("/")}`
-    : "/docs"
+  if (!normalizedSlug?.length) {
+    permanentRedirect(buildBaseHomeHref(DOCS_INSTANCES[0]))
+  }
+
+  const [instanceId, ...rest] = normalizedSlug
+  const instance = getDocsInstanceById(instanceId)
+
+  if (!instance) {
+    permanentRedirect(buildBaseHomeHref(DOCS_INSTANCES[0]))
+  }
+
+  const destination = rest.length
+    ? `${instance.basePath}/${rest.join("/")}`
+    : instance.basePath
 
   permanentRedirect(destination)
 }

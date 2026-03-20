@@ -32,7 +32,7 @@ export const DOCS_INSTANCES: DocsInstance[] = [
   {
     id: "railyard",
     label: "Railyard",
-    basePath: "/docs/railyard",
+    basePath: "/railyard/docs",
     icon: TrainTrack,
     versioned: true,
     latestVersion: "v0.1",
@@ -62,7 +62,7 @@ export const DOCS_INSTANCES: DocsInstance[] = [
   {
     id: "template-mod",
     label: "Template Mod",
-    basePath: "/docs/template-mod",
+    basePath: "/template-mod/docs",
     icon: Package,
     versioned: true,
     latestVersion: "v1.0",

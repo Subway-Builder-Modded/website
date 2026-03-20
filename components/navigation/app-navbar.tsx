@@ -1,5 +1,6 @@
 "use client"
 import { usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useMemo, useState, type CSSProperties } from "react"
 import { useTheme } from "next-themes"
 import { ThemeMenu } from "@/components/navigation/theme-menu"
@@ -28,7 +29,7 @@ import {
   NavbarTrigger,
 } from "@/components/ui/navbar"
 import type { NavbarItem as NavbarConfigItem } from "@/config/navigation/navbar"
-import { NAVBAR_ITEMS, NAVBAR_SPECIAL_STYLES } from "@/config/navigation/navbar"
+import { NAVBAR_ITEMS } from "@/config/navigation/navbar"
 import { getNavbarThemeColors } from "@/lib/navbar-colors"
 import { isExternalHref } from "@/lib/url"
 import { cn } from "@/lib/utils"
@@ -38,6 +39,7 @@ const socialLinkClassName =
 
 export default function AppNavbar(props: NavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const { resolvedTheme } = useTheme()
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null)
   const [hoveredNavbarItemId, setHoveredNavbarItemId] = useState<string | null>(null)
@@ -53,6 +55,13 @@ export default function AppNavbar(props: NavbarProps) {
     return pathname === href || pathname.startsWith(`${href}/`)
   }
 
+  const isCurrentNavbarItem = (item: NavbarConfigItem) => {
+    if (item.href) return isActive(item.href)
+
+    const inferredRoot = `/${item.id}`
+    return pathname === inferredRoot || pathname.startsWith(`${inferredRoot}/`)
+  }
+
   const toHoverStyle = (colors?: { text: string; background: string }): CSSProperties | undefined => {
     if (!colors) return undefined
 
@@ -65,12 +74,18 @@ export default function AppNavbar(props: NavbarProps) {
   const renderLeftItem = (item: NavbarConfigItem) => {
     const itemHoverColors = getNavbarThemeColors(item, isDark)
     const isTopItemHovered = hoveredNavbarItemId === item.id
+    const isCurrentItem = isCurrentNavbarItem(item)
 
     if (item.dropdown?.length) {
-      const style = NAVBAR_SPECIAL_STYLES[item.id]
+      const style = item.specialStyle
+      const styleVars = item.styleVars
 
       return (
-        <div key={item.id} className="relative">
+        <div
+          key={item.id}
+          className="relative"
+          style={styleVars as CSSProperties | undefined}
+        >
           <NavigationMenu
             viewport={false}
             value={activeDropdownId === item.id ? item.id : ""}
@@ -90,6 +105,11 @@ export default function AppNavbar(props: NavbarProps) {
                   style={isTopItemHovered && itemHoverColors ? { ...toHoverStyle(itemHoverColors), color: itemHoverColors.text } : toHoverStyle(itemHoverColors)}
                   onPointerEnter={() => setHoveredNavbarItemId(item.id)}
                   onPointerLeave={() => setHoveredNavbarItemId((current) => (current === item.id ? null : current))}
+                  onClick={() => {
+                    if (item.href) {
+                      router.push(item.href)
+                    }
+                  }}
                 >
                   <AppIcon
                     icon={item.icon}
@@ -165,7 +185,7 @@ export default function AppNavbar(props: NavbarProps) {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {item.href && isActive(item.href) && <span className={style?.activeUnderlineClassName} />}
+          {isCurrentItem && <span className={style?.activeUnderlineClassName} />}
         </div>
       )
     }
@@ -173,7 +193,7 @@ export default function AppNavbar(props: NavbarProps) {
     return (
       <NavbarItem
         key={item.id}
-        isCurrent={item.href ? isActive(item.href) : false}
+        isCurrent={isCurrentItem}
         href={item.href ?? "#"}
         className={cn(
           itemHoverColors &&

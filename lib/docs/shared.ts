@@ -50,6 +50,16 @@ export function resolveDocsRoute(slug?: string[]): ResolvedDocsRoute | null {
   const parts = slug ?? []
   const [instanceId, maybeVersion, ...rest] = parts
 
+  return resolveDocsRouteForInstance(instanceId, [maybeVersion, ...rest].filter(Boolean))
+}
+
+export function resolveDocsRouteForInstance(
+  instanceId: string | undefined,
+  slug?: string[]
+): ResolvedDocsRoute | null {
+  const parts = slug ?? []
+  const [maybeVersion, ...rest] = parts
+
   if (!instanceId) return null
 
   const instance = getDocsInstanceById(instanceId)

@@ -111,7 +111,7 @@ export async function getAllUpdatesForProject(projectId: string): Promise<Update
       date: frontmatter?.date ?? "",
       tag: frontmatter?.tag ?? "release",
       githubUrl: frontmatter?.githubUrl,
-      href: `/updates/${projectId}/${version}`,
+      href: `/${projectId}/updates/${version}`,
     })
   }
 

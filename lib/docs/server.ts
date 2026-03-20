@@ -361,9 +361,9 @@ export async function resolveDocsDocFilePath(slug?: string[]) {
 
 export async function getDocsBreadcrumbs(slug?: string[]): Promise<DocsBreadcrumbItem[]> {
   const resolved = resolveDocsRoute(slug)
-  if (!resolved) return [{ label: "Docs", href: "/docs" }]
+  if (!resolved) return [{ label: "Docs" }]
 
-  const items: DocsBreadcrumbItem[] = [{ label: "Docs", href: "/docs" }]
+  const items: DocsBreadcrumbItem[] = [{ label: "Docs", href: resolved.instance.basePath }]
 
   const isHomePage = resolved.docSlug === "home"
 

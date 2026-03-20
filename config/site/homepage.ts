@@ -144,6 +144,7 @@ export const HOME_PROJECT_SECTION = {
         {
           label: "Visit",
           href: "https://github.com/Subway-Builder-Modded/The-Railyard",
+          external: true,
           variant: "solid",
           icon: ExternalLink,
           scheme: "registry",
@@ -152,6 +153,7 @@ export const HOME_PROJECT_SECTION = {
         {
           label: "Submit Content",
           href: "https://github.com/Subway-Builder-Modded/The-Railyard/issues",
+          external: true,
           variant: "outline",
           icon: Send,
           scheme: "registry",
@@ -174,6 +176,7 @@ export const HOME_PROJECT_SECTION = {
         {
           label: "Download",
           href: "https://github.com/Subway-Builder-Modded/template-mod",
+          external: true,
           variant: "solid",
           icon: Download,
           scheme: "template-mod",
@@ -181,7 +184,7 @@ export const HOME_PROJECT_SECTION = {
         },
         {
           label: "Documentation",
-          href: "/docs/template-mod/latest/home",
+          href: "/template-mod/docs/latest/home",
           variant: "outline",
           icon: BookText,
           scheme: "template-mod",
@@ -204,6 +207,7 @@ export const HOME_PROJECT_SECTION = {
         {
           label: "Contribute",
           href: "https://github.com/Subway-Builder-Modded/website",
+          external: true,
           variant: "solid",
           icon: Github,
           scheme: "website",
