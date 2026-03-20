@@ -6,7 +6,7 @@ import { Scale } from "lucide-react"
 import remarkGfm from "remark-gfm"
 import type { CSSProperties } from "react"
 
-import { HubPageHeader } from "@/components/hub/hub-page-header"
+import { PageHeader } from "@/components/page/page-header"
 import { SHARED_TEXT_COLOR } from "@/config/theme/colors"
 import { hexAlpha } from "@/lib/color"
 import { useMDXComponents as getMDXComponents } from "@/mdx-components"
@@ -44,7 +44,7 @@ export default async function LicensePage() {
   return (
     <section className="relative px-5 pb-12 pt-8 sm:px-8 sm:pt-10">
       <div className="mx-auto w-full max-w-screen-xl">
-        <HubPageHeader
+        <PageHeader
           icon={Scale}
           title="License"
           description="Terms and licensing information for Subway Builder Modded projects."

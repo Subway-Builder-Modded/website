@@ -6,7 +6,7 @@ import { compileMDX } from "next-mdx-remote/rsc"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypePrettyCode from "rehype-pretty-code"
-import { ArrowLeft, ExternalLink, Megaphone } from "lucide-react"
+import { ArrowLeft, ExternalLink } from "lucide-react"
 import remarkDirective from "remark-directive"
 import remarkFlexibleCodeTitles from "remark-flexible-code-titles"
 import remarkGfm from "remark-gfm"
@@ -16,7 +16,6 @@ import type { CSSProperties } from "react"
 import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
 import { UpdateSection } from "@/components/updates/update-section"
 import { getUpdateProjectById } from "@/config/content/updates"
-import { UPDATES_PAGE_COPY } from "@/config/ui/site-content"
 import { hexAlpha } from "@/lib/color"
 import { useMDXComponents as getMDXComponents } from "@/mdx-components"
 import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
@@ -63,15 +62,6 @@ export default async function UpdatePage({
   const { instance: projectId, version } = await params
   const project = getUpdateProjectById(projectId)
   if (!project) notFound()
-  const ProjectIcon = project.icon
-  const badgeStyle = {
-    ["--instance-badge-border-light" as string]: hexAlpha(project.accentColor.light, 0.44),
-    ["--instance-badge-border-dark" as string]: hexAlpha(project.accentColor.dark, 0.5),
-    ["--instance-badge-bg-light" as string]: hexAlpha(project.accentColor.light, 0.12),
-    ["--instance-badge-bg-dark" as string]: hexAlpha(project.accentColor.dark, 0.2),
-    ["--instance-badge-text-light" as string]: project.accentColor.light,
-    ["--instance-badge-text-dark" as string]: project.accentColor.dark,
-  } as CSSProperties
 
   const filePath = getUpdateFilePath(projectId, version)
   if (!filePath) notFound()
@@ -119,16 +109,6 @@ export default async function UpdatePage({
   return (
     <section className="relative px-5 pb-12 pt-8 sm:px-8 sm:pt-10">
       <div className="mx-auto w-full max-w-screen-xl">
-        <div className="mb-7">
-          <Link
-            href={project.basePath}
-            className="inline-flex h-9 items-center gap-2 rounded-lg border border-border/70 bg-card px-3 text-sm font-semibold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:shadow-sm"
-          >
-            <ArrowLeft className="size-4" />
-            {UPDATES_PAGE_COPY.backLabel}
-          </Link>
-        </div>
-
         <header
           className="relative mx-auto mb-8 max-w-4xl overflow-hidden rounded-2xl border border-border/70 bg-card p-5 shadow-sm sm:p-6"
           style={
@@ -137,6 +117,10 @@ export default async function UpdatePage({
               ["--update-accent-dark" as string]: project.accentColor.dark,
               ["--update-soft-light" as string]: hexAlpha(project.accentColor.light, 0.22),
               ["--update-soft-dark" as string]: hexAlpha(project.accentColor.dark, 0.26),
+              ["--button-accent-light" as string]: project.accentColor.light,
+              ["--button-accent-dark" as string]: project.accentColor.dark,
+              ["--button-soft-light" as string]: hexAlpha(project.accentColor.light, 0.14),
+              ["--button-soft-dark" as string]: hexAlpha(project.accentColor.dark, 0.2),
             } as CSSProperties
           }
         >
@@ -144,31 +128,28 @@ export default async function UpdatePage({
           <span className="pointer-events-none absolute -right-16 -top-20 size-40 rounded-full bg-[var(--update-soft-light)] blur-3xl dark:bg-[var(--update-soft-dark)]" />
 
           <div className="relative">
-            <div
-              className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--instance-badge-border-light)] bg-[var(--instance-badge-bg-light)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--instance-badge-text-light)] dark:border-[var(--instance-badge-border-dark)] dark:bg-[var(--instance-badge-bg-dark)] dark:text-[var(--instance-badge-text-dark)]"
-              style={badgeStyle}
-            >
-              <ProjectIcon className="size-3.5" aria-hidden="true" />
-              <span>{project.label}</span>
+            <div className="mb-4">
+              <Link
+                href={`/${project.id}/updates`}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--button-accent-light)] px-3 text-xs font-semibold text-[var(--button-accent-light)] transition-all duration-200 hover:bg-[var(--button-soft-light)] dark:border-[var(--button-accent-dark)] dark:text-[var(--button-accent-dark)] dark:hover:bg-[var(--button-soft-dark)]"
+              >
+                <ArrowLeft className="size-3.5" />
+                <span>Back</span>
+              </Link>
             </div>
-
-            <h1 className="inline-flex items-center gap-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-              <Megaphone className="size-[0.9em] text-primary" aria-hidden="true" />
-              <span>Updates</span>
-            </h1>
 
             {githubUrl ? (
               <a
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-3 inline-flex items-center gap-2 text-2xl font-black tracking-tight text-foreground transition-colors hover:text-primary sm:text-3xl"
+                className="group inline-flex items-center gap-2 text-2xl font-black tracking-tight text-foreground transition-colors hover:text-primary sm:text-3xl"
               >
                 <span>{title}</span>
                 <ExternalLink className="size-5 opacity-65 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             ) : (
-              <h2 className="mt-3 text-2xl font-black tracking-tight text-foreground sm:text-3xl">{title}</h2>
+              <h2 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">{title}</h2>
             )}
 
             <div className="mt-4 flex flex-wrap items-center gap-2.5">

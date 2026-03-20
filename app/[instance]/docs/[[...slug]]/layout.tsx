@@ -13,9 +13,18 @@ export default async function DocsCatchAllLayout({
   params: Promise<{ instance: string; slug?: string[] }>
 }) {
   const { instance: instanceId, slug } = await params
+  const normalizedSlug = slug?.filter(Boolean)
   const resolved = resolveDocsRouteForInstance(instanceId, slug)
 
   if (!resolved) notFound()
+
+  if (!normalizedSlug?.length) {
+    return (
+      <section className="w-full px-4 pb-12 md:px-6">
+        {children}
+      </section>
+    )
+  }
 
   const tree = await getSidebarTree(resolved.instance, resolved.version)
 
@@ -30,7 +39,8 @@ export default async function DocsCatchAllLayout({
               (parts) =>
                 parts[0] === resolved.instance.id && parts[1] === version.value
             )
-            .map((parts) => parts.slice(2).join("/") || "home"),
+            .map((parts) => parts.slice(2).join("/"))
+            .filter(Boolean),
         ])
       )
     : {}

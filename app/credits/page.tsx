@@ -4,7 +4,7 @@ import { ExternalLink, type LucideIcon } from "lucide-react"
 import Markdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 
-import { HubPageHeader } from "@/components/hub/hub-page-header"
+import { PageHeader } from "@/components/page/page-header"
 import { CREDIT_SECTIONS, type CreditSection } from "@/config/content/credits"
 import { CREDITS_PAGE_CONTENT } from "@/config/ui/site-content"
 import { hexAlpha } from "@/lib/color"
@@ -146,7 +146,7 @@ export default function CreditsPage() {
   return (
     <section className="relative px-5 pb-14 pt-8 sm:px-8 sm:pt-10">
       <div className="mx-auto w-full max-w-screen-xl">
-        <HubPageHeader
+        <PageHeader
           icon={CREDITS_PAGE_CONTENT.icon}
           title={CREDITS_PAGE_CONTENT.title}
           description={CREDITS_PAGE_CONTENT.description}

@@ -1,4 +1,4 @@
-import { FolderCode, TrainTrack, type LucideIcon } from "lucide-react"
+import { Package, TrainTrack, type LucideIcon } from "lucide-react"
 import { PROJECT_COLOR_SCHEMES, type ModeHex } from "@/config/theme/colors"
 
 export type UpdateProjectId = "railyard" | "template-mod"
@@ -34,7 +34,7 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     label: "Template Mod",
     description: "Documented TypeScript template to create your own mods for Subway Builder.",
     basePath: "/template-mod/updates",
-    icon: FolderCode,
+    icon: Package,
     accentColor: PROJECT_COLOR_SCHEMES["template-mod"].accentColor,
     primaryColor: PROJECT_COLOR_SCHEMES["template-mod"].primaryColor,
     secondaryColor: PROJECT_COLOR_SCHEMES["template-mod"].secondaryColor,

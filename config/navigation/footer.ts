@@ -27,7 +27,7 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
     title: "Navigation",
     icon: BookText,
     links: [
-      { id: "docs", label: "Railyard Docs", href: "/railyard/docs/latest/home", icon: BookText },
+      { id: "docs", label: "Railyard Docs", href: "/railyard/docs", icon: BookText },
       { id: "updates", label: "Railyard Updates", href: "/railyard/updates", icon: Megaphone },
       { id: "credits", label: "Credits", href: "/credits", icon: Trophy },
     ],

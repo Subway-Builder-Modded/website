@@ -17,7 +17,7 @@ export default function TemplateModPage() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/template-mod/docs/latest/home"
+            href="/template-mod/docs"
             className="inline-flex items-center gap-2 rounded-lg border border-border/70 bg-background px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary/50"
           >
             <BookText className="size-4" />

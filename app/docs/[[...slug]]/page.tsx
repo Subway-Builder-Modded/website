@@ -1,8 +1,7 @@
-import { permanentRedirect } from "next/navigation"
+import { notFound, permanentRedirect } from "next/navigation"
 import { DOCS_INSTANCES, getDocsInstanceById } from "@/config/content/docs"
-import { DocsHubPage } from "@/components/docs/docs-hub-page"
 import { getAllDocsDocSlugs } from "@/lib/docs/server"
-import { buildBaseHomeHref } from "@/lib/docs/shared"
+import { buildDocsHubHref } from "@/lib/docs/shared"
 
 export const dynamicParams = false
 
@@ -58,14 +57,14 @@ export default async function LegacyDocsRedirectPage({
   const normalizedSlug = slug?.filter(Boolean)
 
   if (!normalizedSlug?.length) {
-    return <DocsHubPage />
+    notFound()
   }
 
   const [instanceId, ...rest] = normalizedSlug
   const instance = getDocsInstanceById(instanceId)
 
   if (!instance) {
-    permanentRedirect(buildBaseHomeHref(DOCS_INSTANCES[0]))
+    permanentRedirect(buildDocsHubHref(DOCS_INSTANCES[0]))
   }
 
   const destination = rest.length

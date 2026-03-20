@@ -1,4 +1,18 @@
-import { Package, Tag, TrainTrack, type LucideIcon } from "lucide-react"
+import {
+  Bug,
+  CodeXml,
+  Users,
+  Package,
+  Tag,
+  TrainTrack,
+  Plus,
+  Folder,
+  Link2,
+  Atom,
+  SearchCode,
+  BookText,
+  type LucideIcon,
+} from "lucide-react"
 
 export type DocsInstanceId = "railyard" | "template-mod"
 
@@ -22,10 +36,22 @@ export type DocsInstance = {
   label: string
   basePath: string
   icon: LucideIcon
+  sidebarHeader?: {
+    icon: LucideIcon
+  }
   versioned: boolean
   latestVersion?: string
   versions?: DocsVersion[]
   sidebarOrder?: DocsSidebarOrderItem[]
+  hub: {
+    description: string
+    cards: {
+      title: string
+      description: string
+      icon: LucideIcon
+      docPath: string
+    }[]
+  }
 }
 
 export const DOCS_INSTANCES: DocsInstance[] = [
@@ -34,6 +60,9 @@ export const DOCS_INSTANCES: DocsInstance[] = [
     label: "Railyard",
     basePath: "/railyard/docs",
     icon: TrainTrack,
+    sidebarHeader: {
+      icon: BookText,
+    },
     versioned: true,
     latestVersion: "v0.1",
     versions: [
@@ -42,28 +71,52 @@ export const DOCS_INSTANCES: DocsInstance[] = [
         label: "v0.1",
         icon: Tag,
         sidebarOrder: [
-          "home",
           {
             key: "players",
-            children: ["install-guide-windows", "install-guide-macos", "install-guide-linux", "github-token"],
+            children: [
+              "install-guide-windows",
+              "install-guide-macos",
+              "install-guide-linux",
+              "github-token"
+            ],
           },
           {
             key: "developers",
-            children: ["publishing-projects", "using-custom-url", "data-quality"],
-          },
-          {
-            key: "creating-custom-maps",
-            children: ["home", "creating-custom-maps-us", "custom-map-optional-features"],
+            children: [
+              "publishing-projects",
+              "using-custom-url",
+              "data-quality"
+            ],
           },
         ],
       },
     ],
+    hub: {
+      description: "All-in-one Map and Mod Manager for Subway Builder.",
+      cards: [
+        {
+          title: "Players",
+          description: "The ultimate guide for players to get started with Railyard, including installation and configuration.",
+          icon: Users,
+          docPath: "players",
+        },
+        {
+          title: "Developers",
+          description: "Learn exactly how to make your project compatible with Railyard and how to submit it to the registry.",
+          icon: CodeXml,
+          docPath: "developers",
+        },
+      ],
+    },
   },
   {
     id: "template-mod",
     label: "Template Mod",
     basePath: "/template-mod/docs",
     icon: Package,
+    sidebarHeader: {
+      icon: BookText,
+    },
     versioned: true,
     latestVersion: "v1.0",
     versions: [
@@ -72,7 +125,6 @@ export const DOCS_INSTANCES: DocsInstance[] = [
         label: "v1.0",
         icon: Tag,
         sidebarOrder: [
-          "home",
           "getting-started",
           "project-structure",
           "common-patterns",
@@ -82,6 +134,47 @@ export const DOCS_INSTANCES: DocsInstance[] = [
         ],
       },
     ],
+    hub: {
+      description: "Find setup steps, project structure guidance, and API references for building Template Mod projects.",
+      cards: [
+        {
+          title: "Getting Started",
+          description: "Get started with the Subway Builder Modded Template Mod.",
+          icon: Plus,
+          docPath: "getting-started",
+        },
+        {
+          title: "Project Structure",
+          description: "Learn how to organize your project when creating a custom mod.",
+          icon: Folder,
+          docPath: "project-structure",
+        },
+        {
+          title: "Common Patterns",
+          description: "Learn about common patterns that may be useful.",
+          icon: Link2,
+          docPath: "common-patterns",
+        },
+        {
+          title: "React Components",
+          description: "Learn about the various React components that are available for you to use.",
+          icon: Atom,
+          docPath: "react-components",
+        },
+        {
+          title: "Debugging",
+          description: "Learn how to properly debug and test your mod.",
+          icon: Bug,
+          docPath: "debugging",
+        },
+        {
+          title: "Type Reference",
+          description: "Organization of the template's full TypeScript type definitions for the Subway Builder Modding API.",
+          icon: SearchCode,
+          docPath: "type-reference",
+        },
+      ],
+    },
   },
 ]
 

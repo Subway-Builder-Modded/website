@@ -14,7 +14,7 @@ import remarkAdmonitionDirectives from "@/lib/remark-admonition-directives"
 
 import { DOCS_INSTANCES, getSidebarOrder, type DocsInstance } from "@/config/content/docs"
 import {
-  buildBaseHomeHref,
+  buildDocsHubHref,
   buildDocHref,
   resolveDocsRoute,
   type DocsSidebarCategory,
@@ -320,9 +320,8 @@ export async function getSidebarTree(
 
     const frontmatter = await readFrontmatter(path.join(dir, entry.name))
 
-    // index.mdx at root is the home page - register it with the "home" doc slug
-    const docPath = basename === "index" ? "home" : basename
-    const key = basename === "index" ? "home" : basename
+    const docPath = basename
+    const key = basename
 
     treeEntries.push({
       kind: "page",
@@ -350,12 +349,6 @@ export async function resolveDocsDocFilePath(slug?: string[]) {
   if (exists(directFile)) return directFile
   if (exists(categoryIndex)) return categoryIndex
 
-  // For "home" slug, also check for root index.mdx
-  if (resolved.docSlug === "home") {
-    const rootIndex = path.join(dir, "index.mdx")
-    if (exists(rootIndex)) return rootIndex
-  }
-
   return null
 }
 
@@ -363,18 +356,12 @@ export async function getDocsBreadcrumbs(slug?: string[]): Promise<DocsBreadcrum
   const resolved = resolveDocsRoute(slug)
   if (!resolved) return [{ label: "Docs" }]
 
-  const items: DocsBreadcrumbItem[] = [{ label: "Docs", href: resolved.instance.basePath }]
+  const items: DocsBreadcrumbItem[] = [{
+    label: `${resolved.instance.label} Docs`,
+    href: buildDocsHubHref(resolved.instance),
+  }]
 
-  const isHomePage = resolved.docSlug === "home"
-
-  items.push({
-    label: resolved.instance.label,
-    href: isHomePage
-      ? undefined
-      : buildBaseHomeHref(resolved.instance, resolved.version),
-  })
-
-  if (!resolved.docSlug || isHomePage) return items
+  if (!resolved.docSlug) return items
 
   const dir = getInstanceContentDir(resolved.instance, resolved.version)
   const segments = resolved.docSlug.split("/").filter(Boolean)

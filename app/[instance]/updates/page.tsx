@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, ChevronRight, Megaphone } from "lucide-react"
+import { ChevronRight, Megaphone } from "lucide-react"
 import type { CSSProperties } from "react"
 
-import { HubPageHeader } from "@/components/hub/hub-page-header"
+import { PageHeader } from "@/components/page/page-header"
 import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
 import { getUpdateProjectById, UPDATE_PROJECTS } from "@/config/content/updates"
 import { UPDATES_PAGE_COPY } from "@/config/ui/site-content"
@@ -101,32 +101,39 @@ export default async function ProjectHubPage({
   return (
     <section className="relative px-5 pb-12 pt-8 sm:px-8 sm:pt-10">
       <div className="mx-auto w-full max-w-screen-xl">
-        <div className="mb-7">
-          <Link
-            href={`/${project.id}`}
-            className="inline-flex h-9 items-center gap-2 rounded-lg border border-border/70 bg-card px-3 text-sm font-semibold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:shadow-sm"
-          >
-            <ArrowLeft className="size-4" />
-            {UPDATES_PAGE_COPY.backLabel}
-          </Link>
-        </div>
-
-        <div className="mb-8 text-center">
-          <div
-            className="mb-3 inline-flex items-center gap-2 rounded-full border border-[var(--instance-badge-border-light)] bg-[var(--instance-badge-bg-light)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--instance-badge-text-light)] dark:border-[var(--instance-badge-border-dark)] dark:bg-[var(--instance-badge-bg-dark)] dark:text-[var(--instance-badge-text-dark)]"
-            style={badgeStyle}
-          >
-            <ProjectIcon className="size-3.5" aria-hidden="true" />
-            <span>{project.label}</span>
-          </div>
-
-          <HubPageHeader
-            icon={Megaphone}
-            title="Updates"
-            description={project.description}
-            className="mb-0"
-          />
-        </div>
+        <PageHeader
+          icon={Megaphone}
+          title="Updates"
+          description={project.description}
+          className="mb-8"
+          colorScheme={{
+            accent: project.accentColor,
+            spotlight: {
+              light: hexAlpha(project.accentColor.light, 0.2),
+              dark: hexAlpha(project.accentColor.dark, 0.24),
+            },
+          }}
+          badges={[
+            {
+              text: project.label,
+              icon: ProjectIcon,
+              colorScheme: {
+                border: {
+                  light: badgeStyle["--instance-badge-border-light" as keyof CSSProperties] as string,
+                  dark: badgeStyle["--instance-badge-border-dark" as keyof CSSProperties] as string,
+                },
+                background: {
+                  light: badgeStyle["--instance-badge-bg-light" as keyof CSSProperties] as string,
+                  dark: badgeStyle["--instance-badge-bg-dark" as keyof CSSProperties] as string,
+                },
+                text: {
+                  light: badgeStyle["--instance-badge-text-light" as keyof CSSProperties] as string,
+                  dark: badgeStyle["--instance-badge-text-dark" as keyof CSSProperties] as string,
+                },
+              },
+            },
+          ]}
+        />
 
         {updates.length === 0 ? (
           <div className="rounded-xl border border-border/70 bg-card p-8 text-center text-muted-foreground">

@@ -184,7 +184,7 @@ export const HOME_PROJECT_SECTION = {
         },
         {
           label: "Documentation",
-          href: "/template-mod/docs/latest/home",
+          href: "/template-mod/docs",
           variant: "outline",
           icon: BookText,
           scheme: "template-mod",

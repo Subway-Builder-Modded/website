@@ -30,8 +30,9 @@ import {
   type DocsFrontmatter,
 } from "@/lib/docs/server"
 import { DOCS_INSTANCES } from "@/config/content/docs"
+import { InstanceDocsHubPage } from "@/components/docs/instance-docs-hub-page"
 import {
-  buildBaseHomeHref,
+  buildDocsHubHref,
   buildDocHref,
   resolveDocsRouteForInstance,
 } from "@/lib/docs/shared"
@@ -135,7 +136,7 @@ export default async function DocsPage({
   if (!resolved) notFound()
 
   if (!normalizedSlug?.length) {
-    redirect(buildBaseHomeHref(resolved.instance, resolved.version))
+    return <InstanceDocsHubPage instance={resolved.instance} />
   }
 
   if (resolved.instance.versioned && resolved.requestedVersion === "latest") {
@@ -143,11 +144,11 @@ export default async function DocsPage({
       redirect(buildDocHref(resolved.instance, resolved.version, resolved.docSlug))
     }
 
-    redirect(buildBaseHomeHref(resolved.instance, resolved.version))
+    redirect(buildDocsHubHref(resolved.instance))
   }
 
   if (!resolved.docSlug) {
-    redirect(buildBaseHomeHref(resolved.instance, resolved.version))
+    redirect(buildDocsHubHref(resolved.instance))
   }
 
   const filePath = await resolveDocsDocFilePath([instanceId, ...(normalizedSlug ?? [])])
