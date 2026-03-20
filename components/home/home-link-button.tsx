@@ -2,6 +2,7 @@ import type { CSSProperties } from "react"
 import Link from "next/link"
 
 import { AppIcon } from "@/components/common/app-icon"
+import { MarkdownText } from "@/components/ui/markdown-text"
 import { cn } from "@/lib/utils"
 import { HOME_THEME, type HomeLink } from "@/config/site/homepage"
 import type { NavbarIcon } from "@/config/navigation/navbar"
@@ -48,7 +49,7 @@ function ButtonContent({
   return (
     <>
       {icon ? <AppIcon icon={icon} className={cn(iconClassName, "text-current")} /> : null}
-      <span>{label}</span>
+      <MarkdownText content={label} />
     </>
   )
 }

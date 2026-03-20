@@ -164,7 +164,7 @@ export const HOME_PROJECT_SECTION = {
     {
       id: "template-mod",
       title: "Template Mod",
-      description: "Documented TypeScript template to create your own mods for Subway Builder.",
+      description: "The all-inclusive TypeScript template to create your own mods for Subway Builder.",
       scheme: "template-mod",
       icon: Package,
       image: {

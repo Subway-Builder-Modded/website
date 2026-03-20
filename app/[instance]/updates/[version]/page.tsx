@@ -1,6 +1,5 @@
 import fs from "node:fs/promises"
 import type { Metadata } from "next"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import { compileMDX } from "next-mdx-remote/rsc"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
@@ -13,6 +12,7 @@ import remarkGfm from "remark-gfm"
 import { remarkHeadingId } from "remark-custom-heading-id"
 import type { CSSProperties } from "react"
 
+import { HomeLinkButton } from "@/components/home/home-link-button"
 import { ReleaseTagBadge } from "@/components/updates/release-tag-badge"
 import { UpdateSection } from "@/components/updates/update-section"
 import { getUpdateProjectById } from "@/config/content/updates"
@@ -117,10 +117,6 @@ export default async function UpdatePage({
               ["--update-accent-dark" as string]: project.accentColor.dark,
               ["--update-soft-light" as string]: hexAlpha(project.accentColor.light, 0.22),
               ["--update-soft-dark" as string]: hexAlpha(project.accentColor.dark, 0.26),
-              ["--button-accent-light" as string]: project.accentColor.light,
-              ["--button-accent-dark" as string]: project.accentColor.dark,
-              ["--button-soft-light" as string]: hexAlpha(project.accentColor.light, 0.14),
-              ["--button-soft-dark" as string]: hexAlpha(project.accentColor.dark, 0.2),
             } as CSSProperties
           }
         >
@@ -129,13 +125,16 @@ export default async function UpdatePage({
 
           <div className="relative">
             <div className="mb-4">
-              <Link
-                href={`/${project.id}/updates`}
-                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--button-accent-light)] px-3 text-xs font-semibold text-[var(--button-accent-light)] transition-all duration-200 hover:bg-[var(--button-soft-light)] dark:border-[var(--button-accent-dark)] dark:text-[var(--button-accent-dark)] dark:hover:bg-[var(--button-soft-dark)]"
-              >
-                <ArrowLeft className="size-3.5" />
-                <span>Back</span>
-              </Link>
+              <HomeLinkButton
+                link={{
+                  label: "Back",
+                  href: `/${project.id}/updates`,
+                  icon: ArrowLeft,
+                  variant: "outline",
+                  scheme: project.id,
+                  size: "sm",
+                }}
+              />
             </div>
 
             {githubUrl ? (

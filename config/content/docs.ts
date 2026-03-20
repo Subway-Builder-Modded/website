@@ -96,7 +96,7 @@ export const DOCS_INSTANCES: DocsInstance[] = [
       cards: [
         {
           title: "Players",
-          description: "The ultimate guide for players to get started with Railyard, including installation and configuration.",
+          description: "The ultimate guide for players getting started with Railyard, including installation, setup, and configuration.",
           icon: Users,
           docPath: "players",
         },
@@ -135,7 +135,7 @@ export const DOCS_INSTANCES: DocsInstance[] = [
       },
     ],
     hub: {
-      description: "Find setup steps, project structure guidance, and API references for building Template Mod projects.",
+      description: "The all-inclusive TypeScript template to create your own mods for Subway Builder.",
       cards: [
         {
           title: "Getting Started",

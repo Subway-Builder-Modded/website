@@ -5,14 +5,17 @@ import Link from "next/link"
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 import type { LucideIcon } from "lucide-react"
-import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack, Search, Download } from "lucide-react"
+import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack, Search, Download, BookText, Users, CodeXml, Tag } from "lucide-react"
 
 import { ItemCard } from "@/components/railyard/item-card"
+import { MarkdownText } from "@/components/ui/markdown-text"
 import { Marquee, MarqueeContent, MarqueeEdge, MarqueeItem } from "@/components/ui/marquee"
 import { Card } from "@/components/ui/card"
 import { LineBullet } from "@/components/ui/line-bullet"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { LANDING_HERO_COPY, interpolateHeroText } from "@/config/content/landing-hero"
+import { getUpdateProjectById } from "@/config/content/updates"
 import { useRegistry } from "@/hooks/use-registry"
 import { DEFAULT_SORT_STATE } from "@/lib/railyard/constants"
 import type { GithubRelease } from "@/lib/railyard/github-releases"
@@ -293,6 +296,12 @@ export default function RailyardPage() {
 
   const mapCountLabel = mapCount == null ? "—" : mapCount.toLocaleString()
   const modCountLabel = modCount == null ? "—" : modCount.toLocaleString()
+  const currentVersion = getUpdateProjectById("railyard")?.currentVersion ?? "—"
+  const heroCopy = LANDING_HERO_COPY.railyard
+  const versionLabelMd = interpolateHeroText(heroCopy.versionLabelMd, { currentVersion })
+  const downloadLabelMd = interpolateHeroText(heroCopy.downloadLabelMd, {
+    nativeLabel: nativeDownload.label,
+  })
 
   return (
     <main
@@ -331,9 +340,20 @@ export default function RailyardPage() {
         <div className="mx-auto grid h-full w-full max-w-screen-xl grid-rows-[minmax(0,1fr)_auto] gap-[clamp(0.4rem,1vh,0.75rem)] overflow-visible -translate-y-[clamp(0.6rem,1.8vh,1.5rem)]">
           <div className="relative z-30 flex min-h-0 items-center justify-center overflow-visible">
             <div className="relative z-30 flex w-full max-w-[min(92vw,43rem)] scale-[1.25] flex-col items-center text-center origin-center">
+              <span
+                className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold tracking-wide"
+                style={{
+                  borderColor: "var(--ry-secondary)",
+                  backgroundColor: "var(--ry-primary)",
+                  color: "var(--ry-accent)",
+                }}
+              >
+                <Tag className="size-3.5" aria-hidden="true" />
+                <MarkdownText content={versionLabelMd} />
+              </span>
               <h1 className="inline-flex items-center gap-3 text-[clamp(1.72rem,5.7vw,3.55rem)] font-black leading-[0.98] tracking-[-0.03em] max-[420px]:text-[clamp(1.5rem,5.7vw,2.05rem)]">
                 <TrainTrack aria-hidden="true" className="size-[0.68em]" />
-                <span>Railyard</span>
+                <MarkdownText content={heroCopy.titleMd} />
                 <span
                   className="self-center border-[#A87400] text-[#A87400] dark:border-[#d29922] dark:text-[#d29922]"
                   style={{
@@ -353,7 +373,9 @@ export default function RailyardPage() {
                     flexShrink: 0,
                   }}
                 >
-                  <span style={{ transform: "translateY(-0.03em)" }}>Beta</span>
+                  <span style={{ transform: "translateY(-0.03em)" }}>
+                    <MarkdownText content={heroCopy.betaBadgeMd} />
+                  </span>
                 </span>
               </h1>
 
@@ -368,7 +390,7 @@ export default function RailyardPage() {
                     )}
                     style={{ backgroundColor: "var(--ry-accent)", color: "var(--ry-text-inverted)" }}
                   >
-                    Download for {nativeDownload.label}
+                    <MarkdownText content={downloadLabelMd} />
                   </a>
                   <button
                     type="button"
@@ -411,7 +433,9 @@ export default function RailyardPage() {
                   <MapIcon className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
                   <span>
                     <span className="text-xs font-bold tabular-nums sm:text-sm">{mapCountLabel}</span>
-                    <span className="ml-1 text-[11px] text-muted-foreground sm:text-xs">Maps</span>
+                    <span className="ml-1 text-[11px] text-muted-foreground sm:text-xs">
+                      <MarkdownText content={heroCopy.mapCountLabelMd} />
+                    </span>
                   </span>
                 </Link>
                 <Link
@@ -421,14 +445,16 @@ export default function RailyardPage() {
                   <Package className="h-3.5 w-3.5 text-muted-foreground group-hover:text-foreground transition-colors" aria-hidden="true" />
                   <span>
                     <span className="text-xs font-bold tabular-nums sm:text-sm">{modCountLabel}</span>
-                    <span className="ml-1 text-[11px] text-muted-foreground sm:text-xs">Mods</span>
+                    <span className="ml-1 text-[11px] text-muted-foreground sm:text-xs">
+                      <MarkdownText content={heroCopy.modCountLabelMd} />
+                    </span>
                   </span>
                 </Link>
                 <a
                   href="https://discord.gg/syG9YHMyeG"
                   target="_blank"
                   rel="noreferrer"
-                  aria-label="Join the Subway Builder Modded Discord"
+                  aria-label={heroCopy.discordAriaLabel}
                   className="flex size-9 items-center justify-center rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm hover:bg-accent/60 transition-colors group sm:size-10"
                 >
                   <Image
@@ -440,6 +466,11 @@ export default function RailyardPage() {
                     aria-hidden="true"
                   />
                 </a>
+                <HeroIconLink
+                  href="/railyard/docs"
+                  ariaLabel={heroCopy.docsAriaLabel}
+                  icon={BookText}
+                />
               </div>
             </div>
           </div>
@@ -619,12 +650,72 @@ export default function RailyardPage() {
 
       <SectionDivider />
 
+      {/* ─── Documentation ───────────────────────────────────────────── */ }
+      <section className="relative z-10 px-[clamp(1.5rem,5vw,4rem)]">
+        <div className="mx-auto max-w-screen-xl rounded-2xl border border-border/80 bg-background/88 px-[clamp(1.25rem,4vw,2.5rem)] py-20 shadow-sm backdrop-blur-md">
+          <div className="max-w-screen-lg mx-auto">
+            <SectionHeader title="Documentation" />
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <Link
+                href="/railyard/docs/players"
+                className="group rounded-xl border border-border bg-card/70 p-5 transition-all duration-200 hover:border-[var(--ry-accent)] hover:shadow-md hover:ring-1 hover:ring-[var(--ry-primary)]"
+              >
+                <div className="flex items-center gap-3">
+                  <LineBullet
+                    theme="railyard"
+                    icon={<Users className="size-3.5" aria-hidden="true" />}
+                    colorRole="accentColor"
+                    textRole="textColorInverted"
+                    shape="circle"
+                    size="sm"
+                  />
+                  <h3 className="text-base font-semibold text-foreground">Players</h3>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  The ultimate guide for players getting started with Railyard, including installation, setup, and configuration.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--ry-accent)]">
+                  View
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
+              </Link>
+
+              <Link
+                href="/railyard/docs/developers"
+                className="group rounded-xl border border-border bg-card/70 p-5 transition-all duration-200 hover:border-[var(--ry-accent)] hover:shadow-md hover:ring-1 hover:ring-[var(--ry-primary)]"
+              >
+                <div className="flex items-center gap-3">
+                  <LineBullet
+                    theme="railyard"
+                    icon={<CodeXml className="size-3.5" aria-hidden="true" />}
+                    colorRole="accentColor"
+                    textRole="textColorInverted"
+                    shape="circle"
+                    size="sm"
+                  />
+                  <h3 className="text-base font-semibold text-foreground">Developers</h3>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Learn exactly how to make your project compatible with Railyard and how to submit it to the registry.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--ry-accent)]">
+                  View
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
       {/* ─── Community ─────────────────────────────────────────────────── */}
       <section className="relative z-10 px-[clamp(1.5rem,5vw,4rem)]">
         <div className="mx-auto max-w-screen-xl rounded-2xl border border-border/80 bg-background/88 px-[clamp(1.25rem,4vw,2.5rem)] py-20 shadow-sm backdrop-blur-md">
           <div className="max-w-screen-lg mx-auto">
             <SectionHeader title="Join the Community" />
-            <div className="mt-8 max-w-2xl">
+            <div className="mt-8">
               <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                 Talk with other players, get support, and stay up to date on new Railyard sneak peeks and updates from the dev team.
               </p>
@@ -722,6 +813,26 @@ export default function RailyardPage() {
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
+
+function HeroIconLink({
+  href,
+  ariaLabel,
+  icon: Icon,
+}: {
+  href: string
+  ariaLabel: string
+  icon: LucideIcon
+}) {
+  return (
+    <Link
+      href={href}
+      aria-label={ariaLabel}
+      className="group flex size-9 items-center justify-center rounded-lg border border-border/70 bg-background/60 backdrop-blur-sm transition-colors hover:bg-accent/60 sm:size-10"
+    >
+      <Icon className="size-4 text-black dark:text-white sm:size-5" aria-hidden="true" />
+    </Link>
+  )
+}
 
 function SectionHeader({ title, accent = false }: { title: string; accent?: boolean }) {
   return (

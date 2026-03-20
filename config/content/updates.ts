@@ -7,6 +7,7 @@ export type UpdateProject = {
   id: UpdateProjectId
   label: string
   description: string
+  currentVersion: string
   basePath: string
   icon: LucideIcon
   accentColor: ModeHex
@@ -21,6 +22,7 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     id: "railyard",
     label: "Railyard",
     description: "All-in-one Map and Mod Manager for Subway Builder.",
+    currentVersion: "v0.1.6",
     basePath: "/railyard/updates",
     icon: TrainTrack,
     accentColor: PROJECT_COLOR_SCHEMES.railyard.accentColor,
@@ -32,7 +34,8 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
   {
     id: "template-mod",
     label: "Template Mod",
-    description: "Documented TypeScript template to create your own mods for Subway Builder.",
+    description: "The all-inclusive TypeScript template to create your own mods for Subway Builder.",
+    currentVersion: "v1.0.1",
     basePath: "/template-mod/updates",
     icon: Package,
     accentColor: PROJECT_COLOR_SCHEMES["template-mod"].accentColor,
