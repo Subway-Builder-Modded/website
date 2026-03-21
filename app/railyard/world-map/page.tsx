@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function WorldMapPage() {
   return (
-    <section className="railyard-accent px-5 pb-10 pt-8 sm:px-8 sm:pb-12 sm:pt-10">
+    <section className="railyard-accent px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8 lg:px-8 lg:pb-12 lg:pt-10">
       <div className="w-full">
         <PageHeader
           icon={Globe}
@@ -18,8 +18,8 @@ export default function WorldMapPage() {
           description="Explore a map of all of the user-submitted maps available on Railyard."
         />
 
-        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/55 p-2 shadow-sm sm:p-3">
-          <div className="h-[72svh] min-h-[24rem] w-full overflow-hidden rounded-xl sm:h-[75svh] lg:h-[78svh]">
+        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/55 p-1.5 shadow-sm sm:p-2 lg:p-3">
+          <div className="h-[min(78svh,calc(100svh-12.5rem))] min-h-[20rem] w-full overflow-hidden rounded-xl sm:min-h-[24rem]">
             <WorldMap />
           </div>
         </div>

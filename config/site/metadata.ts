@@ -1,5 +1,5 @@
 export const SITE_NAME = "Subway Builder Modded"
-export const SITE_DESCRIPTION = "The complete hub for everything modded in Subway Builder."
+export const SITE_DESCRIPTION = "The complete hub for everything modded in Subway Builder, made by players, for players."
 export const SITE_URL_FALLBACK = "https://subwaybuildermodded.com"
 export const SITE_LOGO_PATH = "/logo.png"
 

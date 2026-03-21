@@ -123,6 +123,13 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
         colors: getHoverColors("railyard"),
       },
       {
+        id: "railyard-world-map",
+        title: "World Map",
+        href: "/railyard/world-map",
+        icon: Globe,
+        colors: getHoverColors("railyard"),
+      },
+      {
         id: "railyard-docs",
         title: "Docs",
         href: "/railyard/docs",

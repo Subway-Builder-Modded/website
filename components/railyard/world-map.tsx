@@ -1,7 +1,7 @@
 "use client"
 
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react"
-import { MapPin } from "lucide-react"
+import { MapPin, Minus, Plus } from "lucide-react"
 import { useTheme } from "next-themes"
 import { ItemCard } from "@/components/railyard/item-card"
 import { useRegistry } from "@/hooks/use-registry"
@@ -12,6 +12,8 @@ type MapInstance = {
   on: (...args: unknown[]) => void
   off: (...args: unknown[]) => void
   getZoom?: () => number
+  zoomIn?: (options?: { duration?: number }) => void
+  zoomOut?: (options?: { duration?: number }) => void
   project: (lngLat: [number, number]) => { x: number; y: number }
   isStyleLoaded?: () => boolean
   remove: () => void
@@ -96,7 +98,6 @@ const CLUSTER_JOIN_ZOOM = 4.7
 const HOVER_HIDE_DELAY_MS = 180
 const HOVER_CARD_MARGIN_PX = 12
 const HOVER_CARD_GAP_PX = 14
-const HOVER_CARD_ESTIMATED_HEIGHT_PX = 256
 
 const THEME_COLORS: Record<ResolvedTheme, SubwayThemeColors> = {
   light: {
@@ -613,7 +614,6 @@ export function WorldMap() {
           renderWorldCopies: false,
         })
 
-        map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right")
         mapRef.current = map
 
         handleLoad = () => {
@@ -767,7 +767,8 @@ export function WorldMap() {
   const hoveredMaps = hoveredMarker?.maps ?? []
   const hoveredMap =
     hoveredMaps.length > 0 ? hoveredMaps[((hoverIndex % hoveredMaps.length) + hoveredMaps.length) % hoveredMaps.length] : null
-  const hoverCardWidth = clampNumber(mapViewport.width - HOVER_CARD_MARGIN_PX * 2, 220, 352)
+  const dynamicHoverCardHeight = clampNumber(Math.round(mapViewport.height * 0.42), 184, 300)
+  const hoverCardWidth = clampNumber(mapViewport.width - HOVER_CARD_MARGIN_PX * 2, 200, 352)
   const hoverCardHalfWidth = hoverCardWidth / 2
   const hoverCardCenterX = hoveredMarker
     ? clampNumber(
@@ -778,10 +779,10 @@ export function WorldMap() {
     : 0
   const canOpenAbove =
     hoveredMarker !== null &&
-    hoveredMarker.y - HOVER_CARD_GAP_PX - HOVER_CARD_ESTIMATED_HEIGHT_PX >= HOVER_CARD_MARGIN_PX
+    hoveredMarker.y - HOVER_CARD_GAP_PX - dynamicHoverCardHeight >= HOVER_CARD_MARGIN_PX
   const preferredHoverCardTop = hoveredMarker
     ? canOpenAbove
-      ? hoveredMarker.y - HOVER_CARD_GAP_PX - HOVER_CARD_ESTIMATED_HEIGHT_PX
+      ? hoveredMarker.y - HOVER_CARD_GAP_PX - dynamicHoverCardHeight
       : hoveredMarker.y + HOVER_CARD_GAP_PX
     : 0
   const hoverCardTop = clampNumber(
@@ -789,7 +790,7 @@ export function WorldMap() {
     HOVER_CARD_MARGIN_PX,
     Math.max(
       HOVER_CARD_MARGIN_PX,
-      mapViewport.height - HOVER_CARD_MARGIN_PX - HOVER_CARD_ESTIMATED_HEIGHT_PX
+      mapViewport.height - HOVER_CARD_MARGIN_PX - dynamicHoverCardHeight
     )
   )
 
@@ -813,7 +814,7 @@ export function WorldMap() {
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="railyard-world-map relative h-full w-full">
       <style>{`
         @keyframes marker-split-join {
           0% {
@@ -829,8 +830,104 @@ export function WorldMap() {
             opacity: 1;
           }
         }
+
+        .railyard-world-map .maplibregl-ctrl-attrib.maplibregl-compact {
+          border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+          border-radius: 9999px;
+          background: color-mix(in oklab, var(--color-card) 88%, transparent);
+          color: var(--color-foreground);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(4px);
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .railyard-world-map .maplibregl-ctrl-attrib.maplibregl-compact a {
+          color: color-mix(in oklab, var(--suite-accent-light) 84%, var(--color-foreground) 16%);
+        }
+
+        .railyard-world-map .maplibregl-ctrl-attrib-button {
+          order: 2;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          margin-left: 6px;
+          margin-right: -18px;
+          vertical-align: middle;
+          float: none;
+          border-radius: 9999px;
+          border: 1px solid color-mix(in oklab, var(--color-border) 78%, transparent);
+          background-color: var(--color-background);
+          color: var(--color-foreground);
+          background-image: none !important;
+          opacity: 1;
+          -webkit-tap-highlight-color: transparent;
+          outline: none !important;
+          box-shadow: none !important;
+          position: relative;
+        }
+
+        .railyard-world-map .maplibregl-ctrl-attrib-button::before {
+          content: "i";
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          color: var(--color-foreground);
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .railyard-world-map .maplibregl-ctrl-attrib-button:focus,
+        .railyard-world-map .maplibregl-ctrl-attrib-button:focus-visible,
+        .railyard-world-map .maplibregl-ctrl-attrib-button:active,
+        .railyard-world-map .maplibregl-ctrl-attrib.maplibregl-compact:focus-within {
+          outline: none !important;
+          box-shadow: none !important;
+          border-color: color-mix(in oklab, var(--color-border) 82%, transparent) !important;
+        }
+
+        .dark .railyard-world-map .maplibregl-ctrl-attrib.maplibregl-compact {
+          background: color-mix(in oklab, var(--color-card) 82%, black 18%);
+          border-color: color-mix(in oklab, var(--color-border) 70%, black 30%);
+          color: color-mix(in oklab, var(--color-foreground) 82%, white 18%);
+        }
+
+        .dark .railyard-world-map .maplibregl-ctrl-attrib.maplibregl-compact a {
+          color: color-mix(in oklab, var(--suite-accent-dark) 78%, white 22%);
+        }
+
+        .dark .railyard-world-map .maplibregl-ctrl-attrib-button {
+          background-color: var(--color-background);
+          color: var(--color-foreground);
+          border-color: color-mix(in oklab, var(--color-border) 78%, transparent);
+          filter: none;
+          opacity: 1;
+        }
       `}</style>
       <div ref={containerRef} className="h-full w-full rounded-none" aria-label="World map" />
+
+      <div className="pointer-events-none absolute right-2 top-2 z-20 flex flex-col gap-1.5 sm:right-3 sm:top-3 sm:gap-2">
+        <button
+          type="button"
+          onClick={() => mapRef.current?.zoomIn?.({ duration: 220 })}
+          className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-md border border-border bg-card/95 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-accent dark:bg-card/90 sm:size-9"
+          aria-label="Zoom in"
+        >
+          <Plus className="size-3.5 sm:size-4" strokeWidth={2.3} />
+        </button>
+        <button
+          type="button"
+          onClick={() => mapRef.current?.zoomOut?.({ duration: 220 })}
+          className="pointer-events-auto inline-flex size-8 items-center justify-center rounded-md border border-border bg-card/95 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-accent dark:bg-card/90 sm:size-9"
+          aria-label="Zoom out"
+        >
+          <Minus className="size-3.5 sm:size-4" strokeWidth={2.3} />
+        </button>
+      </div>
 
       <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
         {displayMarkers.map((marker) => {
