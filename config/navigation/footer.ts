@@ -1,4 +1,4 @@
-import { BookText, Download, Home, Scale, TrainTrack, Users, FileSearchCorner, MapPin, Megaphone, Package } from "lucide-react"
+import { BookText, Download, Home, Scale, TrainTrack, Users, FileSearchCorner, MapPin, Megaphone, Package, Globe } from "lucide-react"
 import { PROJECT_COLOR_SCHEMES, SHARED_MUTED_TEXT_COLOR, SHARED_TEXT_COLOR, type ModeHex } from "@/config/theme/colors"
 import type { NavbarIcon } from "@/config/navigation/navbar"
 
@@ -107,6 +107,12 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
         label: "Browse",
         href: "/railyard/browse",
         icon: FileSearchCorner
+      },
+      {
+        id: "railyard-world-map",
+        label: "World Map",
+        href: "/railyard/world-map",
+        icon: Globe
       },
       {
         id: "railyard-docs",

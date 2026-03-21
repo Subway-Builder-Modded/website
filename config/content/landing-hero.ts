@@ -25,6 +25,7 @@ export const LANDING_HERO_COPY = {
     modCountLabelMd: "Mods",
     docsAriaLabel: "Open Railyard documentation",
     discordAriaLabel: "Join the Subway Builder Modded Discord",
+    worldMapAriaLabel: "Open the Railyard world map",
   },
   templateMod: {
     versionLabelMd: "Version: `{{currentVersion}}`",

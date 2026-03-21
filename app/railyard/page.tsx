@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { motion, useScroll, useTransform } from "motion/react"
 import type { LucideIcon } from "lucide-react"
-import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack, Search, Download, BookText, Users, CodeXml, Tag } from "lucide-react"
+import { ChevronDown, ArrowRight, Map as MapIcon, MapPlus, Settings, BrushCleaning, Package, CheckCircle, TrainTrack, Search, Download, BookText, Users, CodeXml, Tag, Globe } from "lucide-react"
 
 import { ItemCard } from "@/components/railyard/item-card"
 import { MarkdownText } from "@/components/ui/markdown-text"
@@ -471,6 +471,11 @@ export default function RailyardPage() {
                   ariaLabel={heroCopy.docsAriaLabel}
                   icon={BookText}
                 />
+                <HeroIconLink
+                  href="/railyard/world-map"
+                  ariaLabel={heroCopy.worldMapAriaLabel}
+                  icon={Globe}
+                />
               </div>
             </div>
           </div>
@@ -643,6 +648,41 @@ export default function RailyardPage() {
             })}
           </div>
         </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* ─── World Map ─────────────────────────────────────────────────── */ }
+      <section className="relative z-10 px-[clamp(1.5rem,5vw,4rem)]">
+        <div className="w-full rounded-2xl border border-border/80 bg-background/88 px-[clamp(1.25rem,4vw,2.5rem)] py-20 shadow-sm backdrop-blur-md">
+          <div className="w-full">
+            <SectionHeader title="World Map" />
+            <div className="mt-8">
+              <Link
+                href="/railyard/world-map"
+                className="group block rounded-xl border border-border bg-card/70 p-5 transition-all duration-200 hover:border-[var(--ry-accent)] hover:shadow-md hover:ring-1 hover:ring-[var(--ry-primary)]"
+              >
+                <div className="flex items-center gap-3">
+                  <LineBullet
+                    icon={<Globe className="size-3.5" aria-hidden="true" />}
+                    colorRole="accentColor"
+                    textRole="textColorInverted"
+                    shape="circle"
+                    size="sm"
+                  />
+                  <h3 className="text-base font-semibold text-foreground">Explore the World of Railyard</h3>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Browse published maps around the world on an interactive world map and jump straight to each project.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--ry-accent)]">
+                  View
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
