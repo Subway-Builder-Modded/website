@@ -112,7 +112,7 @@ function CreditPersonCard({ section, person }: { section: CreditSection; person:
           <p className="text-base font-semibold text-foreground">{person.name}</p>
         )}
 
-          {person.role ? (
+        {person.role ? (
           <div className="mt-1 text-sm leading-relaxed text-muted-foreground">
             <CreditRoleMarkdown content={person.role} />
           </div>
@@ -130,7 +130,7 @@ function CreditsSection({ section }: { section: CreditSection }) {
       <CreditsSectionHeader title={section.title} icon={Icon} />
       <p className="mb-5 text-sm leading-relaxed text-muted-foreground">{section.description}</p>
 
-      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6">
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {section.people.map((person) => (
           <li key={`${section.id}-${person.name}`} className="h-full">
             <CreditPersonCard section={section} person={person} />
@@ -144,14 +144,14 @@ function CreditsSection({ section }: { section: CreditSection }) {
 export default function CreditsPage() {
   return (
     <section className="relative px-5 pb-14 pt-8 sm:px-8 sm:pt-10">
-      <div className="w-full">
+      <div className="mx-auto w-full max-w-screen-xl">
         <PageHeader
           icon={CREDITS_PAGE_CONTENT.icon}
           title={CREDITS_PAGE_CONTENT.title}
           description={CREDITS_PAGE_CONTENT.description}
         />
 
-        <div className="flex w-full flex-col gap-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10">
           {CREDIT_SECTIONS.map((section) => (
             <CreditsSection key={section.id} section={section} />
           ))}
