@@ -136,12 +136,7 @@ function clampNumber(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
 }
 
-function getMarkerSizePx(clusterSize: number): number {
-  if (clusterSize >= 18) return 50
-  if (clusterSize >= 12) return 46
-  if (clusterSize >= 8) return 42
-  if (clusterSize >= 5) return 38
-  if (clusterSize >= 2) return 35
+function getMarkerSizePx(): number {
   return 32
 }
 
@@ -154,8 +149,8 @@ function buildMarkerAnimation(modePulse: boolean): CSSProperties | undefined {
 }
 
 function markersOverlap(a: RenderMarker, b: RenderMarker, padding = 4): boolean {
-  const aSize = getMarkerSizePx(a.clusterSize)
-  const bSize = getMarkerSizePx(b.clusterSize)
+  const aSize = getMarkerSizePx()
+  const bSize = getMarkerSizePx()
 
   const aLeft = a.x - aSize / 2
   const aRight = a.x + aSize / 2
@@ -393,7 +388,7 @@ function buildStaticClusters(points: MapPoint[], distanceThresholdPx: number, re
 
 function MarkerBox({ clusterSize, animate }: { clusterSize: number; animate: boolean }) {
   const isCluster = clusterSize > 1
-  const markerSize = getMarkerSizePx(clusterSize)
+  const markerSize = getMarkerSizePx()
   const markerAnimationStyle = buildMarkerAnimation(animate)
 
   if (isCluster) {
