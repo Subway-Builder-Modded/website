@@ -487,7 +487,7 @@ export default function RailyardPage() {
                 href="/railyard/browse"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
-                View all
+                View
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </div>
