@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppDocsSidebar } from '@/components/docs/docs-sidebar';
+import { DocsSidebarShell } from '@/components/docs/docs-sidebar';
 import { resolveDocsRouteForInstance } from '@/lib/docs/shared';
 import { getAllDocsDocSlugs, getSidebarTree } from '@/lib/docs/server';
 
@@ -43,14 +42,11 @@ export default async function DocsCatchAllLayout({
 
   return (
     <section className="w-full">
-      <SidebarProvider defaultOpen className="w-full">
-        <AppDocsSidebar tree={tree} versionDocSlugs={versionDocSlugs} />
-        <SidebarInset className="min-w-0 flex-1 md:ml-0">
-          <div className="w-full px-5 pt-6 pb-16 md:px-8 md:pt-6 md:pb-16 xl:pr-6 2xl:pr-4">
-            {children}
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
+      <DocsSidebarShell tree={tree} versionDocSlugs={versionDocSlugs}>
+        <div className="w-full px-5 pt-6 pb-16 md:px-8 md:pt-6 md:pb-16 xl:pr-6 2xl:pr-4">
+          {children}
+        </div>
+      </DocsSidebarShell>
     </section>
   );
 }

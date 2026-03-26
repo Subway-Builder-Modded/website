@@ -50,7 +50,7 @@ export default function RootLayout({
         >
           <PageColorSchemeProvider>
             <ScrollRestoration />
-            <div className="flex min-h-screen flex-col pt-14">
+            <div className="flex min-h-screen flex-col" style={{ paddingTop: 'var(--app-navbar-offset, 5.5rem)' }}>
               <AppNavbar />
               <main className="flex-1">{children}</main>
               <footer

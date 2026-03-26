@@ -19,7 +19,7 @@ import {
 } from '@/config/theme/colors';
 import type { NavbarIcon } from '@/config/navigation/navbar';
 
-type FooterNavLink = {
+export type FooterNavLink = {
   id: string;
   label: string;
   href: string;
@@ -64,7 +64,7 @@ export type FooterNavSection = {
   links: FooterNavLink[];
 };
 
-type FooterSocialLink = {
+export type FooterSocialLink = {
   id: string;
   label: string;
   href: string;
@@ -193,3 +193,77 @@ export const FOOTER_SOCIAL_LINKS: FooterSocialLink[] = [
     icon: { type: 'mask', src: '/assets/github.svg' },
   },
 ];
+
+export type AppFooterUiConfig = {
+  layout: {
+    paddingX: string;
+    paddingTop: string;
+    paddingBottom: string;
+    mainGapY: string;
+    mainGapXDesktop: string;
+    columnsGapY: string;
+    columnsGapXDesktop: string;
+    columnWidthDesktop: string;
+    sectionTitleMarginBottom: string;
+    linksGapY: string;
+    socialGapX: string;
+  };
+  typography: {
+    sectionTitleFontSize: string;
+    sectionTitleLetterSpacing: string;
+    linkFontSize: string;
+    socialFontSize: string;
+  };
+  sizing: {
+    sectionIconSize: string;
+    linkIconSize: string;
+    socialIconSize: string;
+    linkPaddingX: string;
+    linkPaddingY: string;
+    socialPaddingX: string;
+    socialPaddingY: string;
+    linkRadius: string;
+    socialRadius: string;
+  };
+  colors: {
+    hoverBgAlphaLight: number;
+    hoverBgAlphaDark: number;
+  };
+};
+
+export const APP_FOOTER_UI_CONFIG: AppFooterUiConfig = {
+  layout: {
+    paddingX: 'clamp(1rem,4vw,3.5rem)',
+    paddingTop: '1.5rem',
+    paddingBottom: '2rem',
+    mainGapY: '1.1rem',
+    mainGapXDesktop: '2rem',
+    columnsGapY: '1.1rem',
+    columnsGapXDesktop: '1.25rem',
+    columnWidthDesktop: '10.75rem',
+    sectionTitleMarginBottom: '0.625rem',
+    linksGapY: '0.125rem',
+    socialGapX: '0.25rem',
+  },
+  typography: {
+    sectionTitleFontSize: '1.2rem',
+    sectionTitleLetterSpacing: '0em',
+    linkFontSize: '1rem',
+    socialFontSize: '1rem',
+  },
+  sizing: {
+    sectionIconSize: '1.2em',
+    linkIconSize: '1em',
+    socialIconSize: '1em',
+    linkPaddingX: '0.375rem',
+    linkPaddingY: '0.375rem',
+    socialPaddingX: '0.625rem',
+    socialPaddingY: '0.375rem',
+    linkRadius: '0.5rem',
+    socialRadius: '0.625rem',
+  },
+  colors: {
+    hoverBgAlphaLight: 0.12,
+    hoverBgAlphaDark: 0.16,
+  },
+};

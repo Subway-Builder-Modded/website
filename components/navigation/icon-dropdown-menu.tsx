@@ -135,11 +135,7 @@ export function NavigationDropdownMenu({
         <button
           type="button"
           aria-label={item.title ?? item.id}
-          className={cn(
-            'outline-none',
-            className,
-            !triggerHoverColors && 'hover:bg-secondary/60 hover:text-primary',
-          )}
+          className={cn('outline-none', className)}
           style={
             isTriggerHovered && triggerHoverColors
               ? {
@@ -161,7 +157,10 @@ export function NavigationDropdownMenu({
           onFocus={() => setIsTriggerHovered(true)}
           onBlur={() => setIsTriggerHovered(false)}
         >
-          <AppIcon icon={item.icon} />
+          <AppIcon icon={item.icon} className="size-4 shrink-0" />
+          {item.title && (
+            <span className="hidden md:inline-block">{item.title}</span>
+          )}
         </button>
       </DropdownMenuTrigger>
 

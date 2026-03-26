@@ -1,122 +1,165 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import { Avatar } from '@/components/ui/avatar';
 import { Link } from '@/components/ui/link';
+import { Avatar } from '@/components/ui/avatar';
 import { AppIcon } from '@/components/common/app-icon';
 import {
+  APP_FOOTER_UI_CONFIG,
   FOOTER_NAV_SECTIONS,
   FOOTER_SOCIAL_LINKS,
   getFooterNavColorScheme,
+  type FooterNavColorSchemeId,
 } from '@/config/navigation/footer';
+import { SHARED_MUTED_TEXT_COLOR } from '@/config/theme/colors';
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_LOGO_PATH,
 } from '@/config/site/metadata';
+import { hexAlpha } from '@/lib/color';
+
+function getFooterRootVars(): CSSProperties {
+  return {
+    ['--footer-padding-x' as string]: APP_FOOTER_UI_CONFIG.layout.paddingX,
+    ['--footer-padding-top' as string]: APP_FOOTER_UI_CONFIG.layout.paddingTop,
+    ['--footer-padding-bottom' as string]:
+      APP_FOOTER_UI_CONFIG.layout.paddingBottom,
+    ['--footer-main-gap-y' as string]: APP_FOOTER_UI_CONFIG.layout.mainGapY,
+    ['--footer-main-gap-x-desktop' as string]:
+      APP_FOOTER_UI_CONFIG.layout.mainGapXDesktop,
+    ['--footer-columns-gap-y' as string]:
+      APP_FOOTER_UI_CONFIG.layout.columnsGapY,
+    ['--footer-columns-gap-x-desktop' as string]:
+      APP_FOOTER_UI_CONFIG.layout.columnsGapXDesktop,
+    ['--footer-column-width' as string]:
+      APP_FOOTER_UI_CONFIG.layout.columnWidthDesktop,
+    ['--footer-section-title-mb' as string]:
+      APP_FOOTER_UI_CONFIG.layout.sectionTitleMarginBottom,
+    ['--footer-links-gap-y' as string]: APP_FOOTER_UI_CONFIG.layout.linksGapY,
+    ['--footer-social-gap-x' as string]: APP_FOOTER_UI_CONFIG.layout.socialGapX,
+    ['--footer-section-title-fs' as string]:
+      APP_FOOTER_UI_CONFIG.typography.sectionTitleFontSize,
+    ['--footer-section-title-ls' as string]:
+      APP_FOOTER_UI_CONFIG.typography.sectionTitleLetterSpacing,
+    ['--footer-link-fs' as string]: APP_FOOTER_UI_CONFIG.typography.linkFontSize,
+    ['--footer-social-fs' as string]:
+      APP_FOOTER_UI_CONFIG.typography.socialFontSize,
+    ['--footer-section-icon' as string]:
+      APP_FOOTER_UI_CONFIG.sizing.sectionIconSize,
+    ['--footer-link-icon' as string]: APP_FOOTER_UI_CONFIG.sizing.linkIconSize,
+    ['--footer-social-icon' as string]:
+      APP_FOOTER_UI_CONFIG.sizing.socialIconSize,
+    ['--footer-link-px' as string]: APP_FOOTER_UI_CONFIG.sizing.linkPaddingX,
+    ['--footer-link-py' as string]: APP_FOOTER_UI_CONFIG.sizing.linkPaddingY,
+    ['--footer-social-px' as string]: APP_FOOTER_UI_CONFIG.sizing.socialPaddingX,
+    ['--footer-social-py' as string]: APP_FOOTER_UI_CONFIG.sizing.socialPaddingY,
+    ['--footer-link-radius' as string]: APP_FOOTER_UI_CONFIG.sizing.linkRadius,
+    ['--footer-social-radius' as string]: APP_FOOTER_UI_CONFIG.sizing.socialRadius,
+    ['--footer-link-muted-light' as string]: SHARED_MUTED_TEXT_COLOR.light,
+    ['--footer-link-muted-dark' as string]: SHARED_MUTED_TEXT_COLOR.dark,
+  };
+}
+
+function getFooterSectionVars(
+  sectionColorScheme: FooterNavColorSchemeId,
+): CSSProperties {
+  const scheme = getFooterNavColorScheme(sectionColorScheme);
+
+  return {
+    ['--footer-section-accent-light' as string]: scheme.accentColor.light,
+    ['--footer-section-accent-dark' as string]: scheme.accentColor.dark,
+    ['--footer-section-muted-light' as string]: scheme.mutedColor.light,
+    ['--footer-section-muted-dark' as string]: scheme.mutedColor.dark,
+    ['--footer-section-hover-bg-light' as string]: hexAlpha(
+      scheme.accentColor.light,
+      APP_FOOTER_UI_CONFIG.colors.hoverBgAlphaLight,
+    ),
+    ['--footer-section-hover-bg-dark' as string]: hexAlpha(
+      scheme.accentColor.dark,
+      APP_FOOTER_UI_CONFIG.colors.hoverBgAlphaDark,
+    ),
+  };
+}
 
 export default function AppFooter() {
-  const sectionCount = Math.max(1, FOOTER_NAV_SECTIONS.length);
-
   return (
-    <footer className="bg-sidebar">
-      <div className="px-[clamp(1rem,4vw,3.5rem)] py-8">
-        <div className="grid gap-10 md:grid-cols-[1fr_max-content] md:items-center md:gap-x-12">
-          <div
-            className="grid grid-cols-1 gap-8 md:justify-self-start md:gap-x-[clamp(1.25rem,2.8vw,3rem)] md:[grid-template-columns:repeat(var(--footer-column-count),minmax(0,max-content))]"
-            style={{
-              ['--footer-column-count' as string]: String(sectionCount),
-            }}
-          >
-            {FOOTER_NAV_SECTIONS.map((section) => {
-              const scheme = getFooterNavColorScheme(section.colorScheme);
-              const sectionStyle = {
-                ['--footer-accent-light' as string]: scheme.accentColor.light,
-                ['--footer-accent-dark' as string]: scheme.accentColor.dark,
-                ['--footer-muted-light' as string]: scheme.mutedColor.light,
-                ['--footer-muted-dark' as string]: scheme.mutedColor.dark,
-              } as CSSProperties;
-
-              return (
-                <div
-                  key={section.id}
-                  style={sectionStyle}
-                  className="flex flex-col items-start text-left"
-                >
-                  <div className="mb-4 flex items-center justify-start gap-2">
+    <footer
+      data-color-scheme="default"
+      className="pb-[var(--footer-padding-bottom)] pt-[var(--footer-padding-top)]"
+      style={getFooterRootVars()}
+    >
+      <div className="px-[var(--footer-padding-x)]">
+        <div className="grid gap-y-[var(--footer-main-gap-y)] md:grid-cols-[1fr_auto] md:gap-x-[var(--footer-main-gap-x-desktop)]">
+          <div className="grid grid-cols-1 gap-y-[var(--footer-columns-gap-y)] sm:justify-start sm:[grid-template-columns:repeat(3,minmax(0,var(--footer-column-width)))] sm:gap-x-[var(--footer-columns-gap-x-desktop)]">
+          {FOOTER_NAV_SECTIONS.map((section) => (
+            <section
+              key={section.id}
+              style={getFooterSectionVars(section.colorScheme)}
+            >
+              <h3 className="mb-[var(--footer-section-title-mb)] flex items-center gap-1.5 text-[length:var(--footer-section-title-fs)] font-semibold tracking-[var(--footer-section-title-ls)] text-[var(--footer-section-accent-light)] dark:text-[var(--footer-section-accent-dark)]">
+                <AppIcon
+                  icon={section.icon}
+                  className="size-[var(--footer-section-icon)] shrink-0"
+                />
+                {section.title}
+              </h3>
+              <div className="flex flex-col gap-[var(--footer-links-gap-y)]">
+                {section.links.map((link) => (
+                  <Link
+                    key={link.id}
+                    href={link.href}
+                    className="flex items-center gap-2 rounded-[var(--footer-link-radius)] px-[var(--footer-link-px)] py-[var(--footer-link-py)] text-[length:var(--footer-link-fs)] font-medium text-[var(--footer-link-muted-light)] no-underline transition-colors hover:bg-[var(--footer-section-hover-bg-light)] hover:text-[var(--footer-section-accent-light)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--footer-section-accent-light)] dark:text-[var(--footer-link-muted-dark)] dark:hover:bg-[var(--footer-section-hover-bg-dark)] dark:hover:text-[var(--footer-section-accent-dark)] dark:focus-visible:ring-[var(--footer-section-accent-dark)]"
+                  >
                     <AppIcon
-                      icon={section.icon}
-                      className="size-5 stroke-[2.25] text-[var(--footer-accent-light)] dark:text-[var(--footer-accent-dark)] md:size-6"
+                      icon={link.icon}
+                      className="size-[var(--footer-link-icon)] shrink-0"
                     />
-                    <h3 className="text-base font-bold text-[var(--footer-accent-light)] dark:text-[var(--footer-accent-dark)] md:text-lg">
-                      {section.title}
-                    </h3>
-                  </div>
-
-                  <div className="flex flex-col items-start gap-2 text-sm">
-                    {section.links.map((link) => {
-                      return (
-                        <Link
-                          key={link.id}
-                          href={link.href}
-                          className="flex items-center justify-start gap-2 [--text:var(--footer-muted-light)] hover:[--text:var(--footer-accent-light)] dark:[--text:var(--footer-muted-dark)] dark:hover:[--text:var(--footer-accent-dark)]"
-                        >
-                          <AppIcon
-                            icon={link.icon}
-                            className="size-4 stroke-[2.25]"
-                          />
-                          <span>{link.label}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ))}
           </div>
 
-          <div className="flex w-full flex-col items-center gap-3 text-center md:w-auto md:justify-self-end md:items-end md:text-right">
-            <div className="flex items-center justify-center gap-2 md:justify-end">
-              <Link
-                href="/"
-                className="flex items-center gap-2 font-bold text-foreground transition-colors hover:text-secondary"
-              >
-                <Avatar
-                  isSquare
-                  size="sm"
-                  src={SITE_LOGO_PATH}
-                  className="outline-hidden ring-0 shadow-none border-0 [&_*]:ring-0 [&_*]:border-0 [&_*]:shadow-none"
-                />
-                <span className="font-bold">{SITE_NAME}</span>
-              </Link>
-            </div>
-
-            <p className="max-w-xs text-sm text-muted-foreground md:max-w-sm">
+          <div className="flex flex-col gap-3 md:items-end">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-bold text-foreground no-underline transition-colors hover:opacity-95 text-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Avatar
+                isSquare
+                size="md"
+                src={SITE_LOGO_PATH}
+                className="border-0 shadow-none outline-hidden ring-0 [&_*]:border-0 [&_*]:shadow-none [&_*]:ring-0"
+              />
+              <span>{SITE_NAME}</span>
+            </Link>
+            <p className="max-w-xs text-sm text-muted-foreground md:text-right">
               {SITE_DESCRIPTION}
             </p>
+            <div className="flex items-center gap-[var(--footer-social-gap-x)]">
+              {FOOTER_SOCIAL_LINKS.map((social) => (
+                <Link
+                  key={social.id}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 rounded-[var(--footer-social-radius)] px-[var(--footer-social-px)] py-[var(--footer-social-py)] text-[length:var(--footer-social-fs)] font-semibold text-muted-foreground no-underline transition-colors hover:bg-accent/45 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <AppIcon
+                    icon={social.icon}
+                    className="size-[var(--footer-social-icon)] shrink-0"
+                  />
+                  {social.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="mb-6 flex items-center justify-end">
-          <div className="flex items-center gap-4">
-            {FOOTER_SOCIAL_LINKS.map((social) => (
-              <Link
-                key={social.id}
-                href={social.href}
-                aria-label={social.label}
-                target="_blank"
-                rel="noreferrer"
-                className="text-muted-fg hover:text-secondary transition-colors"
-              >
-                <AppIcon icon={social.icon} className="size-5" />
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-0 mb-8 border-t" />
-
-        <div className="flex flex-col items-stretch gap-4">
+        <div className="mt-6 border-t border-border/60 pt-4">
           <p className="text-center text-sm text-muted-foreground">
             © {SITE_NAME} {new Date().getFullYear()}. Not affiliated with Subway
             Builder or Redistricter, LLC. All content is community-created and

@@ -4,17 +4,22 @@ import * as React from 'react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Archive, ChevronDown, PanelLeftCloseIcon, Tag } from 'lucide-react';
-
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  useSidebar,
-} from '@/components/ui/sidebar';
+  Archive,
+  ChevronDown,
+  PanelLeftCloseIcon,
+  Tag,
+} from 'lucide-react';
+
 import { cn } from '@/lib/utils';
-import { useFooterOffset } from '@/hooks/use-footer-offset';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import {
   buildDocsHubHref,
   buildVersionedDocHref,
@@ -33,10 +38,17 @@ import { PageHeader } from '@/components/page/page-header';
 type AppDocsSidebarProps = {
   tree?: DocsSidebarTree;
   versionDocSlugs?: Record<string, string[]>;
+  open: boolean;
+  onToggle: () => void;
+  mobileOpen: boolean;
+  onMobileOpenChange: (open: boolean) => void;
+  isMobileResolved: boolean;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
 const SWITCHER_ROW_HIGHLIGHT_ALPHA = 0.12;
 const SWITCHER_ICON_CONTRAST_ALPHA = 0.08;
+const SIDEBAR_WIDTH_REM = 15.5;
 
 function withAlpha(color: string, alpha: number) {
   const normalized = color.trim();
@@ -428,7 +440,7 @@ function SidebarActiveIndicator({
   return (
     <span
       className={cn(
-        'absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-full transition-opacity duration-200',
+        'absolute top-1.5 bottom-1.5 right-0 w-[2px] rounded-full transition-opacity duration-200',
         active ? 'opacity-100' : 'opacity-0',
       )}
       style={{ backgroundColor: accent }}
@@ -454,7 +466,6 @@ function SidebarDocsHeader({
   const headerTitle = 'Docs';
   const HeaderIcon = activeInstance.sidebarHeader?.icon ?? activeInstance.icon;
   const instanceBadgeScheme = getInstanceBadgeScheme(activeInstance);
-  const VersionIconGlyph = activeVersion?.icon ?? Tag;
 
   return (
     <PageHeader
@@ -481,7 +492,7 @@ function SidebarDocsHeader({
         },
       ]}
       size="sidebar"
-      className="mb-4"
+      className="mb-4 w-full"
     />
   );
 }
@@ -583,9 +594,10 @@ function SidebarNavEntry({
 }) {
   if (entry.kind === 'page') {
     const showIndicator = activeIndicatorKey === entry.key;
+    const hoverBackground = withAlpha(accent, 0.1);
     const activeStyle = showIndicator
       ? {
-          backgroundColor: withAlpha(accent, 0.1),
+          backgroundColor: hoverBackground,
           color: accent,
         }
       : undefined;
@@ -598,9 +610,13 @@ function SidebarNavEntry({
             'relative flex w-full items-center rounded-md transition-colors',
             showIndicator
               ? 'text-foreground'
-              : 'text-muted-foreground hover:bg-accent/45 hover:text-foreground',
+              : 'text-muted-foreground hover:bg-[var(--docs-sidebar-hover-bg)] hover:text-[var(--docs-sidebar-hover-fg)]',
           )}
-          style={activeStyle}
+          style={{
+            ...(activeStyle ?? {}),
+            ['--docs-sidebar-hover-bg' as string]: hoverBackground,
+            ['--docs-sidebar-hover-fg' as string]: accent,
+          }}
         >
           <NextLink
             href={entry.href}
@@ -663,7 +679,7 @@ function SidebarNavEntry({
     'group relative flex w-full items-center rounded-md transition-colors',
     showIndicator
       ? 'text-foreground'
-      : 'text-muted-foreground hover:bg-accent/45 hover:text-foreground',
+      : 'text-muted-foreground hover:bg-[var(--docs-sidebar-hover-bg)] hover:text-[var(--docs-sidebar-hover-fg)]',
   );
 
   const labelClassName = cn(
@@ -672,16 +688,24 @@ function SidebarNavEntry({
     showIndicator ? 'font-medium' : '',
   );
 
+  const hoverBackground = withAlpha(accent, 0.1);
   const activeStyle = showIndicator
     ? {
-        backgroundColor: withAlpha(accent, 0.1),
+        backgroundColor: hoverBackground,
         color: accent,
       }
     : undefined;
 
   return (
     <li>
-      <div className={rowClassName} style={activeStyle}>
+      <div
+        className={rowClassName}
+        style={{
+          ...(activeStyle ?? {}),
+          ['--docs-sidebar-hover-bg' as string]: hoverBackground,
+          ['--docs-sidebar-hover-fg' as string]: accent,
+        }}
+      >
         <SidebarActiveIndicator active={showIndicator} accent={accent} />
 
         {entry.href ? (
@@ -747,9 +771,18 @@ function SidebarNavEntry({
   );
 }
 
-export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
+function SidebarPanelContent({
+  tree,
+  versionDocSlugs,
+  scrollRef,
+  onCollapse,
+}: {
+  tree?: DocsSidebarTree;
+  versionDocSlugs?: Record<string, string[]>;
+  scrollRef?: React.RefObject<HTMLDivElement | null>;
+  onCollapse?: () => void;
+}) {
   const pathname = usePathname();
-  const { isMobile, state, toggleSidebar } = useSidebar();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -799,98 +832,346 @@ export function AppDocsSidebar({ tree, versionDocSlugs }: AppDocsSidebarProps) {
     return entry?.key ?? null;
   }, [tree?.entries, pathname, openKeys]);
 
-  const footerOffset = useFooterOffset();
-  const isCollapsed = state === 'collapsed';
   const accent = getInstanceAccent(activeInstance, isDark);
-
-  const [showExpandButton, setShowExpandButton] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!isMobile && isCollapsed) {
-      const timeout = window.setTimeout(() => {
-        setShowExpandButton(true);
-      }, 200);
-
-      return () => window.clearTimeout(timeout);
-    }
-
-    setShowExpandButton(false);
-  }, [isCollapsed, isMobile]);
 
   return (
     <>
-      <Sidebar
-        collapsible="offcanvas"
-        variant="sidebar"
-        className="overflow-visible border-r border-sidebar-border bg-sidebar"
-      >
-        <SidebarHeader className="gap-4 border-b border-sidebar-border bg-sidebar px-3.5 pt-4 pb-4">
-          <div className={cn('space-y-4', !mounted && 'invisible')}>
+      <div className="shrink-0 border-b border-border/60 px-[clamp(0.65rem,1.4vw,1rem)] pt-[clamp(0.65rem,1.4vw,1rem)] pb-[clamp(0.42rem,0.88vw,0.6rem)]">
+        <div className={cn('space-y-3', !mounted && 'invisible')}>
+          <div className="relative flex items-start justify-center">
             <SidebarDocsHeader
               activeInstance={activeInstance}
               activeVersion={activeVersion}
             />
-
-            {activeInstance.versioned && activeVersion ? (
-              <div ref={versionSwitcherRef}>
-                <VersionSwitcher
-                  activeInstance={activeInstance}
-                  activeVersion={activeVersion}
-                  pathname={pathname}
-                  open={isVersionDropdownOpen}
-                  setOpen={setIsVersionDropdownOpen}
-                  versionDocSlugs={versionDocSlugs}
-                  isDark={isDark}
-                />
-              </div>
-            ) : null}
+            {onCollapse && (
+              <button
+                type="button"
+                onClick={onCollapse}
+                aria-label="Collapse docs sidebar"
+                className="pointer-events-auto absolute right-0 top-0 z-20 mt-0.5 shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent/45 hover:text-primary"
+              >
+                <PanelLeftCloseIcon className="h-4 w-4" />
+              </button>
+            )}
           </div>
-        </SidebarHeader>
 
-        <SidebarContent className="min-h-0 pl-2.5 pr-1.5 py-2.5">
-          <nav aria-label="Docs navigation">
-            <ul className="space-y-0.5">
-              {(tree?.entries ?? []).map((entry) => (
-                <SidebarNavEntry
-                  key={entry.key}
-                  entry={entry}
-                  pathname={pathname}
-                  openKeys={openKeys}
-                  setOpenKeys={setOpenKeys}
-                  activeIndicatorKey={activeIndicatorKey}
-                  accent={accent}
-                />
-              ))}
-            </ul>
-          </nav>
-        </SidebarContent>
+          {activeInstance.versioned && activeVersion ? (
+            <div ref={versionSwitcherRef}>
+              <VersionSwitcher
+                activeInstance={activeInstance}
+                activeVersion={activeVersion}
+                pathname={pathname}
+                open={isVersionDropdownOpen}
+                setOpen={setIsVersionDropdownOpen}
+                versionDocSlugs={versionDocSlugs}
+                isDark={isDark}
+              />
+            </div>
+          ) : null}
+        </div>
+      </div>
 
-        <SidebarFooter className="border-t border-sidebar-border px-2.5 py-2">
-          <button
-            type="button"
-            aria-label="Collapse sidebar"
-            onClick={toggleSidebar}
-            className="ml-auto hidden h-8 w-8 items-center justify-center rounded-md border border-sidebar-border bg-card text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-foreground md:flex"
-          >
-            <PanelLeftCloseIcon className="size-4" />
-          </button>
-        </SidebarFooter>
-      </Sidebar>
+      <div
+        ref={scrollRef}
+        className="sidebar-scroll min-h-0 flex-1 overflow-y-auto overflow-x-clip px-[clamp(0.65rem,1.4vw,1rem)] py-2.5"
+        onWheelCapture={(e) => e.stopPropagation()}
+      >
+        <nav aria-label="Docs navigation">
+          <ul className="space-y-0.5">
+            {(tree?.entries ?? []).map((entry) => (
+              <SidebarNavEntry
+                key={entry.key}
+                entry={entry}
+                pathname={pathname}
+                openKeys={openKeys}
+                setOpenKeys={setOpenKeys}
+                activeIndicatorKey={activeIndicatorKey}
+                accent={accent}
+              />
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </>
+  );
+}
 
-      {!isMobile && showExpandButton ? (
+const EDGE_GAP_PX = 24;
+
+export function AppDocsSidebar({
+  tree,
+  versionDocSlugs,
+  open,
+  onToggle,
+  mobileOpen,
+  onMobileOpenChange,
+  isMobileResolved,
+  containerRef,
+}: AppDocsSidebarProps) {
+  const panelRef = React.useRef<HTMLElement>(null);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [showScrollThumb, setShowScrollThumb] = React.useState(false);
+  const [thumbHeight, setThumbHeight] = React.useState(0);
+  const [thumbTop, setThumbTop] = React.useState(0);
+  const [sidebarTop, setSidebarTop] = React.useState(88);
+  const [sidebarLeft, setSidebarLeft] = React.useState(0);
+  const [sidebarMaxHeight, setSidebarMaxHeight] = React.useState(500);
+
+  const updateLayout = React.useCallback(() => {
+    const navbarOffset =
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--app-navbar-offset',
+        ),
+      ) || 88;
+    const idealTop = navbarOffset + 60;
+
+    const containerLeft = containerRef?.current
+      ? containerRef.current.getBoundingClientRect().left
+      : 0;
+    setSidebarLeft(containerLeft + EDGE_GAP_PX);
+
+    if (!open) {
+      setSidebarTop(idealTop);
+      setSidebarMaxHeight(window.innerHeight - idealTop - EDGE_GAP_PX);
+      return;
+    }
+
+    const footer = document.getElementById('site-footer');
+    const panelEl = panelRef.current;
+    const panelH = panelEl?.getBoundingClientRect().height ?? 0;
+
+    if (footer) {
+      const footerTop = footer.getBoundingClientRect().top;
+      const nextTop = Math.min(idealTop, footerTop - panelH - EDGE_GAP_PX);
+      setSidebarTop(nextTop);
+      setSidebarMaxHeight(window.innerHeight - nextTop - EDGE_GAP_PX);
+    } else {
+      setSidebarTop(idealTop);
+      setSidebarMaxHeight(window.innerHeight - idealTop - EDGE_GAP_PX);
+    }
+  }, [containerRef, open]);
+
+  React.useLayoutEffect(() => {
+    updateLayout();
+  }, [updateLayout]);
+
+  React.useEffect(() => {
+    if (open) {
+      window.addEventListener('scroll', updateLayout, { passive: true });
+    }
+    window.addEventListener('resize', updateLayout, { passive: true });
+    const ro = new ResizeObserver(updateLayout);
+    if (containerRef?.current) ro.observe(containerRef.current);
+    if (panelRef.current) ro.observe(panelRef.current);
+    return () => {
+      window.removeEventListener('scroll', updateLayout);
+      window.removeEventListener('resize', updateLayout);
+      ro.disconnect();
+    };
+  }, [updateLayout, containerRef, open]);
+
+  React.useLayoutEffect(() => {
+    const scrollEl = scrollRef.current;
+    if (!scrollEl || !open) {
+      setShowScrollThumb(false);
+      return;
+    }
+
+    const updateThumb = () => {
+      const { clientHeight, scrollHeight, scrollTop } = scrollEl;
+      const overflow = scrollHeight - clientHeight;
+      if (overflow <= 1) {
+        setShowScrollThumb(false);
+        setThumbHeight(0);
+        setThumbTop(0);
+        return;
+      }
+      const nextH = Math.max(24, (clientHeight * clientHeight) / scrollHeight);
+      const maxTop = clientHeight - nextH;
+      setShowScrollThumb(true);
+      setThumbHeight(nextH);
+      setThumbTop((scrollTop / overflow) * maxTop);
+    };
+
+    updateThumb();
+    scrollEl.addEventListener('scroll', updateThumb, { passive: true });
+    window.addEventListener('resize', updateThumb);
+
+    const ro = new ResizeObserver(updateThumb);
+    ro.observe(scrollEl);
+    const contentEl = scrollEl.firstElementChild as HTMLElement | null;
+    if (contentEl) ro.observe(contentEl);
+
+    return () => {
+      scrollEl.removeEventListener('scroll', updateThumb);
+      window.removeEventListener('resize', updateThumb);
+      ro.disconnect();
+    };
+  }, [open]);
+
+  if (isMobileResolved) {
+    return (
+      <Sheet isOpen={mobileOpen} onOpenChange={onMobileOpenChange}>
+        <SheetContent
+          side="left"
+          closeButton={false}
+          className="w-[15.5rem] bg-background/95 p-0 backdrop-blur-md"
+        >
+          <SheetHeader className="sr-only">
+            <SheetTitle>Docs navigation</SheetTitle>
+            <SheetDescription>Browse the documentation.</SheetDescription>
+          </SheetHeader>
+          <div className="flex h-full flex-col overflow-hidden">
+            <SidebarPanelContent
+              tree={tree}
+              versionDocSlugs={versionDocSlugs}
+              scrollRef={scrollRef}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  const panelStyle: React.CSSProperties = {
+    position: 'fixed',
+    left: sidebarLeft,
+    top: sidebarTop,
+    width: `${SIDEBAR_WIDTH_REM}rem`,
+    maxHeight: sidebarMaxHeight,
+  };
+
+  const toggleStyle: React.CSSProperties = {
+    position: 'fixed',
+    left: sidebarLeft,
+    top: sidebarTop,
+    width: '2.5rem',
+  };
+
+  return (
+    <>
+      <aside
+        ref={panelRef}
+        aria-label="Docs navigation"
+        className={cn(
+          'z-40 flex flex-col overflow-hidden',
+          'rounded-2xl border border-border/70 bg-background/90 backdrop-blur-md shadow-sm',
+          'transition-[opacity,transform] duration-200 ease-out',
+          open
+            ? 'opacity-100 translate-x-0 pointer-events-auto'
+            : 'opacity-0 -translate-x-3 pointer-events-none',
+        )}
+        style={panelStyle}
+      >
+        <div className="group/sidebar relative flex min-h-0 flex-1 flex-col">
+          <SidebarPanelContent
+            tree={tree}
+            versionDocSlugs={versionDocSlugs}
+            scrollRef={scrollRef}
+            onCollapse={onToggle}
+          />
+
+          {showScrollThumb && (
+            <div className="pointer-events-none absolute bottom-3 right-1 top-3 w-1 opacity-0 transition-opacity duration-150 group-hover/sidebar:opacity-100">
+              <div
+                className="absolute left-0 w-full rounded-full bg-[color-mix(in_srgb,var(--foreground)_28%,transparent)]"
+                style={{
+                  height: thumbHeight,
+                  transform: `translateY(${thumbTop}px)`,
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </aside>
+
+      <div
+        className={cn(
+          'z-40 flex flex-col items-stretch overflow-hidden',
+          'rounded-xl border border-border/70 bg-background/90 backdrop-blur-md shadow-sm',
+          'text-muted-foreground transition-all duration-200 ease-out',
+          open
+            ? 'opacity-0 pointer-events-none scale-90'
+            : 'opacity-100 scale-100 pointer-events-auto',
+        )}
+        style={toggleStyle}
+      >
         <button
           type="button"
-          aria-label="Expand sidebar"
-          onClick={toggleSidebar}
-          className="fixed left-4 z-30 hidden h-9 w-9 items-center justify-center rounded-md border border-sidebar-border bg-sidebar text-muted-foreground shadow-md backdrop-blur animate-in fade-in-0 zoom-in-95 duration-150 hover:bg-accent hover:text-foreground md:flex"
-          style={{ bottom: `calc(${footerOffset}px + 1rem)` }}
+          onClick={onToggle}
+          aria-label="Expand docs sidebar"
+          className="flex h-10 w-full items-center justify-center transition-colors hover:bg-accent/45 hover:text-primary"
         >
-          <PanelLeftCloseIcon
-            className="size-4 rotate-180"
-            style={{ color: accent }}
-          />
+          <PanelLeftCloseIcon className="h-4 w-4 rotate-180" />
         </button>
-      ) : null}
+      </div>
+
     </>
+  );
+}
+
+const SIDEBAR_TOTAL_OFFSET_REM = SIDEBAR_WIDTH_REM + 1.5;
+const SIDEBAR_COOKIE_NAME = 'sidebar_state';
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+
+export function DocsSidebarShell({
+  children,
+  tree,
+  versionDocSlugs,
+}: {
+  children: React.ReactNode;
+  tree?: DocsSidebarTree;
+  versionDocSlugs?: Record<string, string[]>;
+}) {
+  const [open, setOpen] = React.useState(true);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const isMobileResolved = useIsMobile();
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    try {
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${next}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    } catch (_) {}
+  };
+
+  return (
+    <div ref={containerRef} className="relative w-full">
+      <AppDocsSidebar
+        tree={tree}
+        versionDocSlugs={versionDocSlugs}
+        open={open}
+        onToggle={toggle}
+        mobileOpen={mobileOpen}
+        onMobileOpenChange={setMobileOpen}
+        isMobileResolved={isMobileResolved}
+        containerRef={containerRef}
+      />
+      <div
+        className="min-w-0 w-full transition-[padding-left] duration-200 ease-out"
+        style={{
+          paddingLeft:
+            !isMobileResolved && open
+              ? `${SIDEBAR_TOTAL_OFFSET_REM}rem`
+              : undefined,
+        }}
+      >
+        {isMobileResolved && (
+          <div className="sticky top-[var(--app-navbar-offset,5.5rem)] z-20 px-5 pt-4 pb-0 md:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="flex items-center gap-2 rounded-lg border border-border/70 bg-background/90 px-3 py-2 text-sm font-semibold text-muted-foreground shadow-sm backdrop-blur-md hover:bg-accent/45 hover:text-primary"
+            >
+              <PanelLeftCloseIcon className="size-4 rotate-180" />
+              Docs menu
+            </button>
+          </div>
+        )}
+        {children}
+      </div>
+    </div>
   );
 }

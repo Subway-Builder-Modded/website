@@ -18,22 +18,6 @@ import {
 } from 'lucide-react';
 import { PROJECT_COLOR_SCHEMES } from '@/config/theme/colors';
 
-function getHoverColors(
-  project: keyof typeof PROJECT_COLOR_SCHEMES,
-): NavbarItemColors {
-  const scheme = PROJECT_COLOR_SCHEMES[project];
-  return {
-    light: {
-      text: scheme.accentColor.light,
-      background: scheme.primaryColor.light,
-    },
-    dark: {
-      text: scheme.accentColor.dark,
-      background: scheme.primaryColor.dark,
-    },
-  };
-}
-
 export type NavbarPosition = 'left' | 'right';
 
 export type NavbarItemColors = {
@@ -45,6 +29,11 @@ export type NavbarItemColors = {
     text: string;
     background: string;
   };
+};
+
+export type NavbarModeColor = {
+  light: string;
+  dark: string;
 };
 
 export type NavbarMaskIcon = {
@@ -93,101 +82,242 @@ export type NavbarStyleVars = {
   '--instance-accent-dark': string;
 };
 
-export const NAVBAR_ITEMS: NavbarItem[] = [
+export type NavbarColorScheme = {
+  hover?: NavbarItemColors;
+  active?: NavbarItemColors;
+  indicator?: NavbarModeColor;
+};
+
+export type NavbarThemeId = 'light' | 'dark' | 'system';
+
+export type NavbarAction =
+  | {
+      type: 'theme';
+      theme: NavbarThemeId;
+    }
+  | {
+      type: 'none';
+    };
+
+export type AppNavbarDropdownItem = {
+  id: string;
+  title?: string;
+  href?: string;
+  icon?: NavbarIcon;
+  schemeId?: NavbarColorSchemeId;
+  action?: NavbarAction;
+};
+
+export type AppNavbarItem = {
+  id: string;
+  title?: string;
+  href?: string;
+  icon?: NavbarIcon;
+  position: NavbarPosition;
+  schemeId?: NavbarColorSchemeId;
+  presentation?: AppNavbarItemPresentation;
+  dropdown?: AppNavbarDropdownItem[];
+};
+
+export type AppNavbarItemPresentation = {
+  restingState?: 'neutral' | 'hover';
+  hoverExpand?: boolean;
+};
+
+export type AppNavbarBrand = {
+  title: string;
+  href: string;
+  icon: NavbarIcon;
+};
+
+export type AppNavbarSizing = {
+  brand: {
+    gap: string;
+    iconSize: string;
+    titleSize: string;
+    titleWeight: number;
+  };
+  item: {
+    gap: string;
+    iconSize: string;
+    titleSize: string;
+    radius: string;
+    paddingX: string;
+    paddingY: string;
+  };
+  dropdown: {
+    minWidth: string;
+    itemGap: string;
+    itemIconSize: string;
+    itemTitleSize: string;
+    itemRadius: string;
+    itemPaddingX: string;
+    itemPaddingY: string;
+  };
+};
+
+export type AppNavbarSizes = {
+  mobile: AppNavbarSizing;
+  desktop: AppNavbarSizing;
+};
+
+function getProjectNavbarScheme(
+  project: keyof typeof PROJECT_COLOR_SCHEMES,
+): NavbarColorScheme {
+  const scheme = PROJECT_COLOR_SCHEMES[project];
+  const withAlpha = (hex: string, alphaHex: string) => {
+    const normalized = hex.trim().replace(/^#/, '');
+    if (normalized.length === 6) return `#${normalized}${alphaHex}`;
+    if (normalized.length === 8) return `#${normalized.slice(0, 6)}${alphaHex}`;
+    return hex;
+  };
+
+  const hoverBgLight = withAlpha(scheme.primaryColor.light, '26');
+  const hoverBgDark = withAlpha(scheme.primaryColor.dark, '33');
+  const activeBgLight = withAlpha(scheme.primaryColor.light, '33');
+  const activeBgDark = withAlpha(scheme.primaryColor.dark, '40');
+
+  return {
+    hover: {
+      light: { text: scheme.accentColor.light, background: hoverBgLight },
+      dark: { text: scheme.accentColor.dark, background: hoverBgDark },
+    },
+    active: {
+      light: { text: scheme.accentColor.light, background: activeBgLight },
+      dark: { text: scheme.accentColor.dark, background: activeBgDark },
+    },
+    indicator: { light: scheme.accentColor.light, dark: scheme.accentColor.dark },
+  };
+}
+
+export const APP_NAVBAR_COLOR_SCHEMES = {
+  railyard: getProjectNavbarScheme('railyard'),
+  registry: getProjectNavbarScheme('registry'),
+  'template-mod': getProjectNavbarScheme('template-mod'),
+  website: getProjectNavbarScheme('website'),
+  themeLight: {
+    hover: {
+      light: { text: '#B06710', background: '#FFD26055' },
+      dark: { text: '#FFD260', background: '#B0671055' },
+    },
+    active: {
+      light: { text: '#B06710', background: '#FFD26055' },
+      dark: { text: '#FFD260', background: '#B0671055' },
+    },
+    indicator: { light: '#B06710', dark: '#FFD260' },
+  },
+  themeDark: {
+    hover: {
+      light: { text: '#4776CC', background: '#2DB7E055' },
+      dark: { text: '#2DB7E0', background: '#4776CC55' },
+    },
+    active: {
+      light: { text: '#4776CC', background: '#2DB7E055' },
+      dark: { text: '#2DB7E0', background: '#4776CC55' },
+    },
+    indicator: { light: '#4776CC', dark: '#2DB7E0' },
+  },
+  themeSystem: {
+    hover: {
+      light: { text: '#B06710', background: '#FFD26055' },
+      dark: { text: '#2DB7E0', background: '#4776CC55' },
+    },
+    active: {
+      light: { text: '#B06710', background: '#FFD26055' },
+      dark: { text: '#2DB7E0', background: '#4776CC55' },
+    },
+    indicator: { light: '#B06710', dark: '#2DB7E0' },
+  },
+} as const satisfies Record<string, NavbarColorScheme>;
+
+export type NavbarColorSchemeId = keyof typeof APP_NAVBAR_COLOR_SCHEMES;
+
+export const APP_NAVBAR_SIZES: AppNavbarSizes = {
+  mobile: {
+    brand: {
+      gap: '0.5rem',
+      iconSize: '1.6rem',
+      titleSize: '1.15rem',
+      titleWeight: 750,
+    },
+    item: {
+      gap: '0.4rem',
+      iconSize: '1em',
+      titleSize: '0.88rem',
+      radius: '0.65rem',
+      paddingX: '0.55rem',
+      paddingY: '0.45rem',
+    },
+    dropdown: {
+      minWidth: '13.25rem',
+      itemGap: '0.45rem',
+      itemIconSize: '1em',
+      itemTitleSize: '0.84rem',
+      itemRadius: '0.7rem',
+      itemPaddingX: '0.7rem',
+      itemPaddingY: '0.55rem',
+    },
+  },
+  desktop: {
+    brand: {
+      gap: '0.6rem',
+      iconSize: '1.85rem',
+      titleSize: '1.2rem',
+      titleWeight: 800,
+    },
+    item: {
+      gap: '0.45rem',
+      iconSize: '1em',
+      titleSize: '0.8rem',
+      radius: '0.65rem',
+      paddingX: '0.6rem',
+      paddingY: '0.45rem',
+    },
+    dropdown: {
+      minWidth: '13.5rem',
+      itemGap: '0.45rem',
+      itemIconSize: '1em',
+      itemTitleSize: '0.84rem',
+      itemRadius: '0.7rem',
+      itemPaddingX: '0.75rem',
+      itemPaddingY: '0.55rem',
+    },
+  },
+};
+
+export const APP_NAVBAR_BRAND: AppNavbarBrand = {
+  title: 'Subway Builder Modded',
+  href: '/',
+  icon: { type: 'image', src: '/logo.png' },
+};
+
+export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
   {
     id: 'railyard',
     title: 'Railyard',
+    href: '/railyard',
     icon: TrainTrack,
     position: 'left',
-    styleVars: {
-      '--instance-accent-light':
-        PROJECT_COLOR_SCHEMES['railyard'].accentColor.light,
-      '--instance-accent-dark':
-        PROJECT_COLOR_SCHEMES['railyard'].accentColor.dark,
-    },
-    specialStyle: {
-      triggerClassName:
-        'relative isolate overflow-hidden h-auto gap-x-2 rounded-lg border border-border/80 px-2 py-2 text-sm font-semibold !text-foreground bg-card shadow-sm transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:border-transparent hover:shadow-xl hover:shadow-black/12 dark:hover:shadow-black/35 data-open:-translate-y-0.5 data-popup-open:-translate-y-0.5 data-open:border-transparent data-popup-open:border-transparent data-open:shadow-xl data-popup-open:shadow-xl data-open:shadow-black/12 data-popup-open:shadow-black/12 dark:data-open:shadow-black/35 dark:data-popup-open:shadow-black/35 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-[var(--instance-accent-light)] dark:before:bg-[var(--instance-accent-dark)] after:pointer-events-none after:absolute after:-right-8 after:-top-8 after:size-20 after:rounded-full after:bg-[var(--instance-accent-light)]/20 dark:after:bg-[var(--instance-accent-dark)]/24 after:blur-2xl after:opacity-80 after:transition-opacity after:duration-300 hover:after:opacity-100 data-open:after:opacity-100 data-popup-open:after:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--instance-accent-light)]/50 dark:focus-visible:ring-[var(--instance-accent-dark)]/50',
-      activeUnderlineClassName:
-        'absolute left-2 right-2 z-0 -bottom-[calc(var(--navbar-gutter)+1px)] h-(--gutter) rounded-full bg-[var(--instance-accent-light)] dark:bg-[var(--instance-accent-dark)] [--gutter:--spacing(0.5)]',
-    },
+    schemeId: 'railyard',
     dropdown: [
-      {
-        id: 'railyard-download',
-        title: 'Download',
-        href: '/railyard',
-        icon: Download,
-        colors: getHoverColors('railyard'),
-      },
-      {
-        id: 'railyard-browse',
-        title: 'Browse',
-        href: '/railyard/browse',
-        icon: FileSearchCorner,
-        colors: getHoverColors('railyard'),
-      },
-      {
-        id: 'railyard-world-map',
-        title: 'World Map',
-        href: '/railyard/world-map',
-        icon: Globe,
-        colors: getHoverColors('railyard'),
-      },
-      {
-        id: 'railyard-docs',
-        title: 'Docs',
-        href: '/railyard/docs',
-        icon: BookText,
-        colors: getHoverColors('railyard'),
-      },
-      {
-        id: 'railyard-updates',
-        title: 'Updates',
-        href: '/railyard/updates',
-        icon: Megaphone,
-        colors: getHoverColors('railyard'),
-      },
+      { id: 'railyard-download', title: 'Download', href: '/railyard', icon: Download, schemeId: 'railyard' },
+      { id: 'railyard-browse', title: 'Browse', href: '/railyard/browse', icon: FileSearchCorner, schemeId: 'railyard' },
+      { id: 'railyard-world-map', title: 'World Map', href: '/railyard/world-map', icon: Globe, schemeId: 'railyard' },
+      { id: 'railyard-docs', title: 'Docs', href: '/railyard/docs', icon: BookText, schemeId: 'railyard' },
+      { id: 'railyard-updates', title: 'Updates', href: '/railyard/updates', icon: Megaphone, schemeId: 'railyard' },
     ],
   },
   {
     id: 'template-mod',
     title: 'Template Mod',
+    href: '/template-mod',
     icon: Package,
     position: 'left',
-    styleVars: {
-      '--instance-accent-light':
-        PROJECT_COLOR_SCHEMES['template-mod'].accentColor.light,
-      '--instance-accent-dark':
-        PROJECT_COLOR_SCHEMES['template-mod'].accentColor.dark,
-    },
-    specialStyle: {
-      triggerClassName:
-        'relative isolate overflow-hidden h-auto gap-x-2 rounded-lg border border-border/80 px-2 py-2 text-sm font-semibold !text-foreground bg-card shadow-sm transition-all duration-300 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:border-transparent hover:shadow-xl hover:shadow-black/12 dark:hover:shadow-black/35 data-open:-translate-y-0.5 data-popup-open:-translate-y-0.5 data-open:border-transparent data-popup-open:border-transparent data-open:shadow-xl data-popup-open:shadow-xl data-open:shadow-black/12 data-popup-open:shadow-black/12 dark:data-open:shadow-black/35 dark:data-popup-open:shadow-black/35 before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-[var(--instance-accent-light)] dark:before:bg-[var(--instance-accent-dark)] after:pointer-events-none after:absolute after:-right-8 after:-top-8 after:size-20 after:rounded-full after:bg-[var(--instance-accent-light)]/20 dark:after:bg-[var(--instance-accent-dark)]/24 after:blur-2xl after:opacity-80 after:transition-opacity after:duration-300 hover:after:opacity-100 data-open:after:opacity-100 data-popup-open:after:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--instance-accent-light)]/50 dark:focus-visible:ring-[var(--instance-accent-dark)]/50',
-      activeUnderlineClassName:
-        'absolute left-2 right-2 z-0 -bottom-[calc(var(--navbar-gutter)+1px)] h-(--gutter) rounded-full bg-[var(--instance-accent-light)] dark:bg-[var(--instance-accent-dark)] [--gutter:--spacing(0.5)]',
-    },
+    schemeId: 'template-mod',
     dropdown: [
-      {
-        id: 'template-mod-home',
-        title: 'Home',
-        href: '/template-mod',
-        icon: Home,
-        colors: getHoverColors('template-mod'),
-      },
-      {
-        id: 'template-mod-docs',
-        title: 'Docs',
-        href: '/template-mod/docs',
-        icon: BookText,
-        colors: getHoverColors('template-mod'),
-      },
-      {
-        id: 'template-mod-updates',
-        title: 'Updates',
-        href: '/template-mod/updates',
-        icon: Megaphone,
-        colors: getHoverColors('template-mod'),
-      },
+      { id: 'template-mod-home', title: 'Home', href: '/template-mod', icon: Home, schemeId: 'template-mod' },
+      { id: 'template-mod-docs', title: 'Docs', href: '/template-mod/docs', icon: BookText, schemeId: 'template-mod' },
+      { id: 'template-mod-updates', title: 'Updates', href: '/template-mod/updates', icon: Megaphone, schemeId: 'template-mod' },
     ],
   },
   {
@@ -196,136 +326,60 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
     icon: HeartHandshake,
     position: 'right',
     dropdown: [
-      {
-        id: 'credits',
-        title: 'Credits',
-        href: '/credits',
-        icon: Users,
-      },
-      {
-        id: 'license',
-        title: 'License',
-        href: '/license',
-        icon: Scale,
-      },
+      { id: 'credits', title: 'Credits', href: '/credits', icon: Users },
+      { id: 'license', title: 'License', href: '/license', icon: Scale },
     ],
   },
   {
     id: 'discord',
     href: 'https://discord.gg/syG9YHMyeG',
-    icon: {
-      type: 'mask',
-      src: '/assets/discord.svg',
-    },
+    icon: { type: 'mask', src: '/assets/discord.svg' },
     position: 'right',
     dropdown: [
-      {
-        id: 'subway-builder',
-        title: 'Subway Builder',
-        href: 'https://discord.gg/jrNQpbytUQ',
-        icon: {
-          type: 'image',
-          src: '/assets/subway-builder.svg',
-        },
-      },
-      {
-        id: 'Subway-Builder-Modded',
-        title: 'Subway Builder Modded',
-        href: 'https://discord.gg/syG9YHMyeG',
-        icon: TrainTrack,
-      },
+      { id: 'subway-builder', title: 'Subway Builder', href: 'https://discord.gg/jrNQpbytUQ', icon: { type: 'image', src: '/assets/subway-builder.svg' } },
+      { id: 'subway-builder-modded', title: 'Subway Builder Modded', href: 'https://discord.gg/syG9YHMyeG', icon: TrainTrack },
     ],
   },
   {
     id: 'github',
     href: 'https://github.com/Subway-Builder-Modded',
-    icon: {
-      type: 'mask',
-      src: '/assets/github.svg',
-    },
+    icon: { type: 'mask', src: '/assets/github.svg' },
     position: 'right',
     dropdown: [
-      {
-        id: 'railyard',
-        title: 'Railyard',
-        href: 'https://github.com/Subway-Builder-Modded/railyard',
-        icon: TrainTrack,
-        colors: getHoverColors('railyard'),
-      },
-      {
-        id: 'registry',
-        title: 'Registry',
-        href: 'https://github.com/Subway-Builder-Modded/The-Railyard',
-        icon: FolderGit2,
-        colors: getHoverColors('registry'),
-      },
-      {
-        id: 'template-mod',
-        title: 'Template Mod',
-        href: 'https://github.com/Subway-Builder-Modded/template-mod',
-        icon: Package,
-        colors: getHoverColors('template-mod'),
-      },
-      {
-        id: 'website',
-        title: 'Website',
-        href: 'https://github.com/Subway-Builder-Modded/website',
-        icon: Globe,
-        colors: getHoverColors('website'),
-      },
+      { id: 'github-railyard', title: 'Railyard', href: 'https://github.com/Subway-Builder-Modded/railyard', icon: TrainTrack, schemeId: 'railyard' },
+      { id: 'github-registry', title: 'Registry', href: 'https://github.com/Subway-Builder-Modded/The-Railyard', icon: FolderGit2, schemeId: 'registry' },
+      { id: 'github-template-mod', title: 'Template Mod', href: 'https://github.com/Subway-Builder-Modded/template-mod', icon: Package, schemeId: 'template-mod' },
+      { id: 'github-website', title: 'Website', href: 'https://github.com/Subway-Builder-Modded/website', icon: Globe, schemeId: 'website' },
     ],
   },
   {
     id: 'theme',
-    title: 'Theme',
-    position: 'right',
     icon: SunMoon,
+    position: 'right',
     dropdown: [
-      {
-        id: 'theme-light',
-        title: 'Light',
-        icon: Sun,
-        colors: {
-          light: {
-            text: '#B06710',
-            background: '#FFD26055',
-          },
-          dark: {
-            text: '#FFD260',
-            background: '#B0671055',
-          },
-        },
-      },
-      {
-        id: 'theme-dark',
-        title: 'Dark',
-        icon: Moon,
-        colors: {
-          light: {
-            text: '#4776CC',
-            background: '#2DB7E055',
-          },
-          dark: {
-            text: '#2DB7E0',
-            background: '#4776CC55',
-          },
-        },
-      },
-      {
-        id: 'theme-system',
-        title: 'System',
-        icon: SunMoon,
-        colors: {
-          light: {
-            text: '#B06710',
-            background: '#FFD26055',
-          },
-          dark: {
-            text: '#2DB7E0',
-            background: '#4776CC55',
-          },
-        },
-      },
+      { id: 'theme-light', title: 'Light', icon: Sun, schemeId: 'themeLight', action: { type: 'theme', theme: 'light' } },
+      { id: 'theme-dark', title: 'Dark', icon: Moon, schemeId: 'themeDark', action: { type: 'theme', theme: 'dark' } },
+      { id: 'theme-system', title: 'System', icon: SunMoon, schemeId: 'themeSystem', action: { type: 'theme', theme: 'system' } },
     ],
   },
 ];
+
+export type AppNavbarConfig = {
+  brand: AppNavbarBrand;
+  sizes: AppNavbarSizes;
+  layout: {
+    mobileQuickItemIds: string[];
+    rightItemIconScale: number;
+  };
+  items: AppNavbarItem[];
+};
+
+export const APP_NAVBAR_CONFIG: AppNavbarConfig = {
+  brand: APP_NAVBAR_BRAND,
+  sizes: APP_NAVBAR_SIZES,
+  layout: {
+    mobileQuickItemIds: ['discord', 'github', 'theme'],
+    rightItemIconScale: 1.25,
+  },
+  items: APP_NAVBAR_ITEMS,
+};

@@ -75,7 +75,7 @@ const GITHUB_MASK_ICON: NavbarIcon = {
 export const HOME_HERO = {
   title: 'Subway Builder Modded',
   description:
-    'The complete hub for everything modded in Subway Builder, made by players, for players.',
+    'The complete hub for everything modded in Subway Builder.',
   backgroundImage: {
     light: '/images/home/light.png',
     dark: '/images/home/dark.png',

@@ -265,10 +265,10 @@ function withSharedTextColors(colors: ThemedColorSetBase): ThemedColorSet {
 
 export const PROJECT_COLOR_SCHEMES: Record<ProjectColorId, ThemedColorSet> = {
   railyard: withSharedTextColors({
-    accentColor: createModeColorFromDarkAccent('#19D89C'),
-    mutedColor: createModeColorFromDarkVibrant('#2C6E58'),
-    primaryColor: createModeColorFromDarkVibrant('#42AD7F55'),
-    secondaryColor: createModeColorFromDarkVibrant('#19D89C55'),
+    accentColor: { light: '#0F8F68', dark: '#19D89C' },
+    mutedColor: { light: '#2C6E58', dark: '#2C6E58' },
+    primaryColor: { light: '#0F8F6855', dark: '#42AD7F55' },
+    secondaryColor: { light: '#1EA77D55', dark: '#19D89C55' },
   }),
   registry: withSharedTextColors({
     accentColor: createModeColorFromDarkAccent('#C77DFF'),

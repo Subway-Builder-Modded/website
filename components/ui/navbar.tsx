@@ -157,9 +157,8 @@ const Navbar = ({
         'group/navbar-intent relative isolate',
         isSticky &&
           (placement === 'bottom'
-            ? 'fixed bottom-0 inset-x-0 z-40 bg-sidebar'
-            : 'fixed top-0 inset-x-0 z-40 bg-sidebar'),
-        placement === 'top' && intent === 'float' && 'md:pt-8',
+            ? 'fixed bottom-0 inset-x-0 z-50'
+            : 'fixed top-3 inset-x-0 z-50'),
         placement === 'bottom' && intent === 'float' && 'bottom-0 md:pb-8',
         intent === 'float' &&
           'mx-auto w-full max-w-7xl px-4 xl:max-w-(--breakpoint-xl)',
@@ -168,15 +167,23 @@ const Navbar = ({
     >
       <div
         className={twMerge(
-          'relative isolate hidden py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)] md:block',
-          intent === 'float' &&
+          'relative isolate hidden [--navbar-gutter:--spacing(2.5)] md:block',
+          isSticky && 'mx-auto w-[min(2200px,calc(100vw-3rem))] px-0',
+          !isSticky && ['default', 'inset'].includes(intent) && 'px-4 py-(--navbar-gutter)',
+          !isSticky && intent === 'default' && 'border-b bg-sidebar',
+          !isSticky && intent === 'float' &&
             'rounded-xl bg-bg py-0 *:data-[navbar=content]:max-w-7xl *:data-[navbar=content]:rounded-xl *:data-[navbar=content]:border *:data-[navbar=content]:bg-sidebar *:data-[navbar=content]:px-4 *:data-[navbar=content]:py-(--navbar-gutter) *:data-[navbar=content]:shadow-xs',
-          ['default', 'inset'].includes(intent) && 'px-4',
-          intent === 'default' && 'border-b bg-sidebar',
-          className,
         )}
       >
-        <div data-navbar="content" className="flex w-full items-center">
+        <div
+          data-navbar="content"
+          className={twMerge(
+            'flex w-full items-center',
+            isSticky &&
+              'min-h-[4rem] flex-wrap justify-between rounded-2xl border border-border/70 bg-background/90 px-[clamp(0.7rem,1.6vw,1.2rem)] py-1.5 shadow-sm backdrop-blur-md',
+            className,
+          )}
+        >
           {children}
         </div>
       </div>
@@ -214,9 +221,9 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
       className={cx(
         [
           'href' in props ? 'cursor-pointer' : 'cursor-default',
-          'aria-[current=page]:text-primary aria-[current=page]*:data-[slot=icon]:text-primary',
+          'aria-[current=page]:text-primary aria-[current=page]:bg-accent/45 aria-[current=page]*:data-[slot=icon]:text-primary',
           'col-span-full flex items-center gap-x-2',
-          'relative min-w-0 items-center gap-x-3 rounded-lg p-2 text-start font-medium text-base/6 md:gap-x-(--navbar-gutter) md:px-(--navbar-gutter) md:py-[calc(var(--navbar-gutter)---spacing(0.5))] md:text-sm/5',
+          'relative min-w-0 items-center gap-x-3 rounded-lg p-2 text-start font-semibold text-base/6 md:gap-x-(--navbar-gutter) md:px-[clamp(0.45rem,0.95vw,0.7rem)] md:py-[clamp(0.4rem,0.82vw,0.56rem)] md:text-[clamp(0.8rem,0.95vw,0.9rem)]',
           '*:data-[slot=icon]:size-5 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-muted-fg md:*:data-[slot=icon]:size-4',
           '*:data-[slot=loader]:size-5 *:data-[slot=loader]:shrink-0 md:*:data-[slot=loader]:size-4',
           '*:not-nth-2:last:data-[slot=icon]:row-start-1 *:not-nth-2:last:data-[slot=icon]:ms-auto *:not-nth-2:last:data-[slot=icon]:size-5 md:*:not-nth-2:last:data-[slot=icon]:size-4',
@@ -224,7 +231,7 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
           'outline-hidden focus-visible:inset-ring focus-visible:inset-ring-ring focus-visible:ring-2 focus-visible:ring-ring/20',
           'text-start disabled:cursor-default disabled:opacity-50',
           'no-underline transition-colors duration-150 ease-out',
-          'hover:bg-secondary/60 active:bg-secondary/70',
+          'hover:bg-accent/45 active:bg-accent/50',
           'text-muted-fg hover:text-primary active:text-primary',
           'transition-all duration-200 ease-[cubic-bezier(.22,.9,.35,1)]',
           '*:data-[slot=icon]:text-muted-fg hover:*:data-[slot=icon]:text-primary active:*:data-[slot=icon]:text-primary',
@@ -245,7 +252,7 @@ const NavbarItem = ({ className, isCurrent, ...props }: NavbarItemProps) => {
               className={twJoin(
                 'absolute rounded-full bg-primary [--gutter:--spacing(0.5)]',
                 'inset-y-[calc(var(--navbar-gutter)---spacing(0.5))] -start-4 w-(--gutter) md:inset-y-auto md:w-auto',
-                'md:inset-x-2 md:-bottom-[calc(var(--navbar-gutter)+1px)] md:h-(--gutter)',
+                'md:inset-x-2 md:-bottom-[0.38rem] md:h-1',
               )}
             />
           )}
@@ -310,7 +317,7 @@ const NavbarMobile = ({
       ref={ref}
       data-slot="navbar-mobile"
       className={twMerge(
-        'group/navbar-mobile flex items-center gap-x-3 px-4 py-2.5 md:hidden',
+        'group/navbar-mobile flex items-center gap-x-2 px-4 py-2.5 md:hidden',
         'group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-sidebar',
         'group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:top-0 group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-b',
         'group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:bottom-0 group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:border-t',

@@ -147,6 +147,9 @@ const DOWNLOAD_TEMPLATE: DownloadEntry[] = [
   },
 ];
 
+const DISCOVER_MARQUEE_ITEM_CLASS =
+  'w-[clamp(11.4rem,28vw,13.75rem)] origin-top';
+
 function formatBytes(bytes: number): string {
   if (bytes === 0) return '—';
   if (bytes >= 1_000_000) return `${(bytes / 1_000_000).toFixed(1)} MB`;
@@ -691,7 +694,7 @@ export default function RailyardPage() {
                     {Array.from({ length: 8 }).map((_, index) => (
                       <MarqueeItem
                         key={`discover-skeleton-${index}`}
-                        className="w-[13.25rem] sm:w-[14.25rem] lg:w-[15.1rem] max-[420px]:w-[12.4rem] scale-y-[0.9] origin-top"
+                        className={DISCOVER_MARQUEE_ITEM_CLASS}
                       >
                         <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
                           <div className="aspect-[16/10] w-full animate-pulse bg-muted/50" />
@@ -729,7 +732,7 @@ export default function RailyardPage() {
                     {recentProjects.map(({ type, item }) => (
                       <MarqueeItem
                         key={`${type}-${item.id}`}
-                        className="w-[13.25rem] sm:w-[14.25rem] lg:w-[15.1rem] max-[420px]:w-[12.4rem] scale-y-[0.9] origin-top"
+                        className={DISCOVER_MARQUEE_ITEM_CLASS}
                       >
                         <ItemCard
                           type={type}

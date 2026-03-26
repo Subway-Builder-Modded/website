@@ -33,11 +33,13 @@ export function ThemeMenu({
   open,
   onOpenChange,
   items,
+  title,
 }: {
   className: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   items?: NavbarDropdownItem[];
+  title?: string;
 }) {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
@@ -254,9 +256,12 @@ export function ThemeMenu({
           )}
         >
           {mounted ? (
-            <CurrentIcon className="size-5 transform-gpu transition-transform duration-250 ease-[cubic-bezier(.22,.9,.35,1)]" />
+            <CurrentIcon className="size-4 shrink-0 transform-gpu transition-transform duration-250 ease-[cubic-bezier(.22,.9,.35,1)]" />
           ) : (
-            <span aria-hidden className="block size-5" />
+            <span aria-hidden className="block size-4 shrink-0" />
+          )}
+          {title && (
+            <span className="hidden md:inline-block">{title}</span>
           )}
         </button>
       </DropdownMenuTrigger>
@@ -339,7 +344,7 @@ export function ThemeMenu({
                         : undefined
                 }
                 className={cn(
-                  'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-colors duration-250 ease-[cubic-bezier(.22,.9,.35,1)] hover:bg-secondary/60 hover:text-primary',
+                  'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-fg transition-colors duration-250 ease-[cubic-bezier(.22,.9,.35,1)] hover:bg-accent/45 hover:text-primary',
                   !isSystemGradient &&
                     hoverColors &&
                     'hover:!text-[var(--navbar-hover-text)] hover:!bg-[var(--navbar-hover-bg)] data-[highlighted]:!text-[var(--navbar-hover-text)] data-[highlighted]:!bg-[var(--navbar-hover-bg)]',
