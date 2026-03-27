@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { LucideIcon } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { NavbarIcon } from '@/config/navigation/navbar';
 
@@ -49,10 +50,12 @@ export function AppIcon({ icon, className, style }: AppIconProps) {
 
   if (isImageIcon(icon)) {
     return (
-      <img
+      <Image
         src={icon.src}
         alt=""
-        aria-hidden
+        aria-hidden={true}
+        width={20}
+        height={20}
         className={cn('block size-5 object-contain', className)}
         style={style}
       />

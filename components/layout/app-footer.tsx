@@ -42,7 +42,8 @@ function getFooterRootVars(): CSSProperties {
       APP_FOOTER_UI_CONFIG.typography.sectionTitleFontSize,
     ['--footer-section-title-ls' as string]:
       APP_FOOTER_UI_CONFIG.typography.sectionTitleLetterSpacing,
-    ['--footer-link-fs' as string]: APP_FOOTER_UI_CONFIG.typography.linkFontSize,
+    ['--footer-link-fs' as string]:
+      APP_FOOTER_UI_CONFIG.typography.linkFontSize,
     ['--footer-social-fs' as string]:
       APP_FOOTER_UI_CONFIG.typography.socialFontSize,
     ['--footer-section-icon' as string]:
@@ -52,10 +53,13 @@ function getFooterRootVars(): CSSProperties {
       APP_FOOTER_UI_CONFIG.sizing.socialIconSize,
     ['--footer-link-px' as string]: APP_FOOTER_UI_CONFIG.sizing.linkPaddingX,
     ['--footer-link-py' as string]: APP_FOOTER_UI_CONFIG.sizing.linkPaddingY,
-    ['--footer-social-px' as string]: APP_FOOTER_UI_CONFIG.sizing.socialPaddingX,
-    ['--footer-social-py' as string]: APP_FOOTER_UI_CONFIG.sizing.socialPaddingY,
+    ['--footer-social-px' as string]:
+      APP_FOOTER_UI_CONFIG.sizing.socialPaddingX,
+    ['--footer-social-py' as string]:
+      APP_FOOTER_UI_CONFIG.sizing.socialPaddingY,
     ['--footer-link-radius' as string]: APP_FOOTER_UI_CONFIG.sizing.linkRadius,
-    ['--footer-social-radius' as string]: APP_FOOTER_UI_CONFIG.sizing.socialRadius,
+    ['--footer-social-radius' as string]:
+      APP_FOOTER_UI_CONFIG.sizing.socialRadius,
     ['--footer-link-muted-light' as string]: SHARED_MUTED_TEXT_COLOR.light,
     ['--footer-link-muted-dark' as string]: SHARED_MUTED_TEXT_COLOR.dark,
   };
@@ -92,35 +96,35 @@ export default function AppFooter() {
       <div className="px-[var(--footer-padding-x)]">
         <div className="grid gap-y-[var(--footer-main-gap-y)] md:grid-cols-[1fr_auto] md:gap-x-[var(--footer-main-gap-x-desktop)]">
           <div className="grid grid-cols-1 gap-y-[var(--footer-columns-gap-y)] sm:justify-start sm:[grid-template-columns:repeat(3,minmax(0,var(--footer-column-width)))] sm:gap-x-[var(--footer-columns-gap-x-desktop)]">
-          {FOOTER_NAV_SECTIONS.map((section) => (
-            <section
-              key={section.id}
-              style={getFooterSectionVars(section.colorScheme)}
-            >
-              <h3 className="mb-[var(--footer-section-title-mb)] flex items-center gap-1.5 text-[length:var(--footer-section-title-fs)] font-semibold tracking-[var(--footer-section-title-ls)] text-[var(--footer-section-accent-light)] dark:text-[var(--footer-section-accent-dark)]">
-                <AppIcon
-                  icon={section.icon}
-                  className="size-[var(--footer-section-icon)] shrink-0"
-                />
-                {section.title}
-              </h3>
-              <div className="flex flex-col gap-[var(--footer-links-gap-y)]">
-                {section.links.map((link) => (
-                  <Link
-                    key={link.id}
-                    href={link.href}
-                    className="flex items-center gap-2 rounded-[var(--footer-link-radius)] px-[var(--footer-link-px)] py-[var(--footer-link-py)] text-[length:var(--footer-link-fs)] font-medium text-[var(--footer-link-muted-light)] no-underline transition-colors hover:bg-[var(--footer-section-hover-bg-light)] hover:text-[var(--footer-section-accent-light)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--footer-section-accent-light)] dark:text-[var(--footer-link-muted-dark)] dark:hover:bg-[var(--footer-section-hover-bg-dark)] dark:hover:text-[var(--footer-section-accent-dark)] dark:focus-visible:ring-[var(--footer-section-accent-dark)]"
-                  >
-                    <AppIcon
-                      icon={link.icon}
-                      className="size-[var(--footer-link-icon)] shrink-0"
-                    />
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </section>
-          ))}
+            {FOOTER_NAV_SECTIONS.map((section) => (
+              <section
+                key={section.id}
+                style={getFooterSectionVars(section.colorScheme)}
+              >
+                <h3 className="mb-[var(--footer-section-title-mb)] flex items-center gap-1.5 text-[length:var(--footer-section-title-fs)] font-semibold tracking-[var(--footer-section-title-ls)] text-[var(--footer-section-accent-light)] dark:text-[var(--footer-section-accent-dark)]">
+                  <AppIcon
+                    icon={section.icon}
+                    className="size-[var(--footer-section-icon)] shrink-0"
+                  />
+                  {section.title}
+                </h3>
+                <div className="flex flex-col gap-[var(--footer-links-gap-y)]">
+                  {section.links.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={link.href}
+                      className="flex items-center gap-2 rounded-[var(--footer-link-radius)] px-[var(--footer-link-px)] py-[var(--footer-link-py)] text-[length:var(--footer-link-fs)] font-medium text-[var(--footer-link-muted-light)] no-underline transition-colors hover:bg-[var(--footer-section-hover-bg-light)] hover:text-[var(--footer-section-accent-light)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--footer-section-accent-light)] dark:text-[var(--footer-link-muted-dark)] dark:hover:bg-[var(--footer-section-hover-bg-dark)] dark:hover:text-[var(--footer-section-accent-dark)] dark:focus-visible:ring-[var(--footer-section-accent-dark)]"
+                    >
+                      <AppIcon
+                        icon={link.icon}
+                        className="size-[var(--footer-link-icon)] shrink-0"
+                      />
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
 
           <div className="flex flex-col gap-3 md:items-end">

@@ -103,6 +103,7 @@ export type AppNavbarDropdownItem = {
   id: string;
   title?: string;
   href?: string;
+  activeMatchPaths?: string[];
   icon?: NavbarIcon;
   schemeId?: NavbarColorSchemeId;
   action?: NavbarAction;
@@ -186,7 +187,10 @@ function getProjectNavbarScheme(
       light: { text: scheme.accentColor.light, background: activeBgLight },
       dark: { text: scheme.accentColor.dark, background: activeBgDark },
     },
-    indicator: { light: scheme.accentColor.light, dark: scheme.accentColor.dark },
+    indicator: {
+      light: scheme.accentColor.light,
+      dark: scheme.accentColor.dark,
+    },
   };
 }
 
@@ -300,11 +304,42 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     position: 'left',
     schemeId: 'railyard',
     dropdown: [
-      { id: 'railyard-download', title: 'Download', href: '/railyard', icon: Download, schemeId: 'railyard' },
-      { id: 'railyard-browse', title: 'Browse', href: '/railyard/browse', icon: FileSearchCorner, schemeId: 'railyard' },
-      { id: 'railyard-world-map', title: 'World Map', href: '/railyard/world-map', icon: Globe, schemeId: 'railyard' },
-      { id: 'railyard-docs', title: 'Docs', href: '/railyard/docs', icon: BookText, schemeId: 'railyard' },
-      { id: 'railyard-updates', title: 'Updates', href: '/railyard/updates', icon: Megaphone, schemeId: 'railyard' },
+      {
+        id: 'railyard-download',
+        title: 'Download',
+        href: '/railyard',
+        icon: Download,
+        schemeId: 'railyard',
+      },
+      {
+        id: 'railyard-browse',
+        title: 'Browse',
+        href: '/railyard/browse',
+        activeMatchPaths: ['/railyard/mods', '/railyard/maps'],
+        icon: FileSearchCorner,
+        schemeId: 'railyard',
+      },
+      {
+        id: 'railyard-world-map',
+        title: 'World Map',
+        href: '/railyard/world-map',
+        icon: Globe,
+        schemeId: 'railyard',
+      },
+      {
+        id: 'railyard-docs',
+        title: 'Docs',
+        href: '/railyard/docs',
+        icon: BookText,
+        schemeId: 'railyard',
+      },
+      {
+        id: 'railyard-updates',
+        title: 'Updates',
+        href: '/railyard/updates',
+        icon: Megaphone,
+        schemeId: 'railyard',
+      },
     ],
   },
   {
@@ -315,9 +350,27 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     position: 'left',
     schemeId: 'template-mod',
     dropdown: [
-      { id: 'template-mod-home', title: 'Home', href: '/template-mod', icon: Home, schemeId: 'template-mod' },
-      { id: 'template-mod-docs', title: 'Docs', href: '/template-mod/docs', icon: BookText, schemeId: 'template-mod' },
-      { id: 'template-mod-updates', title: 'Updates', href: '/template-mod/updates', icon: Megaphone, schemeId: 'template-mod' },
+      {
+        id: 'template-mod-home',
+        title: 'Home',
+        href: '/template-mod',
+        icon: Home,
+        schemeId: 'template-mod',
+      },
+      {
+        id: 'template-mod-docs',
+        title: 'Docs',
+        href: '/template-mod/docs',
+        icon: BookText,
+        schemeId: 'template-mod',
+      },
+      {
+        id: 'template-mod-updates',
+        title: 'Updates',
+        href: '/template-mod/updates',
+        icon: Megaphone,
+        schemeId: 'template-mod',
+      },
     ],
   },
   {
@@ -336,8 +389,18 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     icon: { type: 'mask', src: '/assets/discord.svg' },
     position: 'right',
     dropdown: [
-      { id: 'subway-builder', title: 'Subway Builder', href: 'https://discord.gg/jrNQpbytUQ', icon: { type: 'image', src: '/assets/subway-builder.svg' } },
-      { id: 'subway-builder-modded', title: 'Subway Builder Modded', href: 'https://discord.gg/syG9YHMyeG', icon: TrainTrack },
+      {
+        id: 'subway-builder',
+        title: 'Subway Builder',
+        href: 'https://discord.gg/jrNQpbytUQ',
+        icon: { type: 'image', src: '/assets/subway-builder.svg' },
+      },
+      {
+        id: 'subway-builder-modded',
+        title: 'Subway Builder Modded',
+        href: 'https://discord.gg/syG9YHMyeG',
+        icon: TrainTrack,
+      },
     ],
   },
   {
@@ -346,10 +409,34 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     icon: { type: 'mask', src: '/assets/github.svg' },
     position: 'right',
     dropdown: [
-      { id: 'github-railyard', title: 'Railyard', href: 'https://github.com/Subway-Builder-Modded/railyard', icon: TrainTrack, schemeId: 'railyard' },
-      { id: 'github-registry', title: 'Registry', href: 'https://github.com/Subway-Builder-Modded/The-Railyard', icon: FolderGit2, schemeId: 'registry' },
-      { id: 'github-template-mod', title: 'Template Mod', href: 'https://github.com/Subway-Builder-Modded/template-mod', icon: Package, schemeId: 'template-mod' },
-      { id: 'github-website', title: 'Website', href: 'https://github.com/Subway-Builder-Modded/website', icon: Globe, schemeId: 'website' },
+      {
+        id: 'github-railyard',
+        title: 'Railyard',
+        href: 'https://github.com/Subway-Builder-Modded/railyard',
+        icon: TrainTrack,
+        schemeId: 'railyard',
+      },
+      {
+        id: 'github-registry',
+        title: 'Registry',
+        href: 'https://github.com/Subway-Builder-Modded/The-Railyard',
+        icon: FolderGit2,
+        schemeId: 'registry',
+      },
+      {
+        id: 'github-template-mod',
+        title: 'Template Mod',
+        href: 'https://github.com/Subway-Builder-Modded/template-mod',
+        icon: Package,
+        schemeId: 'template-mod',
+      },
+      {
+        id: 'github-website',
+        title: 'Website',
+        href: 'https://github.com/Subway-Builder-Modded/website',
+        icon: Globe,
+        schemeId: 'website',
+      },
     ],
   },
   {
@@ -357,9 +444,27 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     icon: SunMoon,
     position: 'right',
     dropdown: [
-      { id: 'theme-light', title: 'Light', icon: Sun, schemeId: 'themeLight', action: { type: 'theme', theme: 'light' } },
-      { id: 'theme-dark', title: 'Dark', icon: Moon, schemeId: 'themeDark', action: { type: 'theme', theme: 'dark' } },
-      { id: 'theme-system', title: 'System', icon: SunMoon, schemeId: 'themeSystem', action: { type: 'theme', theme: 'system' } },
+      {
+        id: 'theme-light',
+        title: 'Light',
+        icon: Sun,
+        schemeId: 'themeLight',
+        action: { type: 'theme', theme: 'light' },
+      },
+      {
+        id: 'theme-dark',
+        title: 'Dark',
+        icon: Moon,
+        schemeId: 'themeDark',
+        action: { type: 'theme', theme: 'dark' },
+      },
+      {
+        id: 'theme-system',
+        title: 'System',
+        icon: SunMoon,
+        schemeId: 'themeSystem',
+        action: { type: 'theme', theme: 'system' },
+      },
     ],
   },
 ];

@@ -235,7 +235,6 @@ const Chart = ({
     setSelectedLegend(legendItem);
   }, []);
 
-  const _data = data ?? [];
   const _dataKey = dataKey ?? 'value';
 
   const value = useMemo(
@@ -243,11 +242,11 @@ const Chart = ({
       config,
       selectedLegend,
       onLegendSelect,
-      data: _data,
+      data: data ?? [],
       dataKey: _dataKey,
       layout,
     }),
-    [config, selectedLegend, onLegendSelect, _data, _dataKey, layout],
+    [config, selectedLegend, onLegendSelect, data, _dataKey, layout],
   );
 
   return (
@@ -279,7 +278,7 @@ const Chart = ({
 const THEMES = { light: '', dark: '.dark' } as const;
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([_, config]) => config.theme || config.color,
+    ([, itemConfig]) => itemConfig.theme || itemConfig.color,
   );
 
   if (!colorConfig.length) {
@@ -370,7 +369,6 @@ const XAxis = ({
   className,
   intervalType = 'preserveStartEnd',
   minTickGap = 5,
-  domain = ['auto', 'auto'],
   ...props
 }: XAxisProps) => {
   const { dataKey, data, layout } = useChart();

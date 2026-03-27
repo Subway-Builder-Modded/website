@@ -28,7 +28,6 @@ interface SheetContentProps
   closeButton?: boolean;
   isFloat?: boolean;
   side?: 'top' | 'bottom' | 'left' | 'right';
-  overlay?: Omit<ModalOverlayProps, 'children'>;
 }
 
 const sideVariants: Record<string, string> = {
@@ -47,7 +46,6 @@ const SheetContent = ({
   role = 'dialog',
   closeButton = true,
   isFloat = true,
-  overlay,
   children,
   ...props
 }: SheetContentProps) => {

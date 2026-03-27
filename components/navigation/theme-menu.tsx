@@ -260,9 +260,7 @@ export function ThemeMenu({
           ) : (
             <span aria-hidden className="block size-4 shrink-0" />
           )}
-          {title && (
-            <span className="hidden md:inline-block">{title}</span>
-          )}
+          {title && <span className="hidden md:inline-block">{title}</span>}
         </button>
       </DropdownMenuTrigger>
 

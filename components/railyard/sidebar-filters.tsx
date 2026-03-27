@@ -8,6 +8,7 @@ import {
   MapPin,
   Package,
   Tag,
+  X,
 } from 'lucide-react';
 import type { ComponentType, Dispatch, SetStateAction } from 'react';
 
@@ -25,11 +26,9 @@ import { SEARCH_FILTER_EMPTY_LABELS } from '@/lib/railyard/search';
 import { cn } from '@/lib/utils';
 
 const FILTER_SECTION_TITLE_CLASS =
-  'text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1';
-const FILTER_SECTION_OPTION_CLASS =
-  'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-sm transition-colors cursor-pointer select-none';
-const FILTER_SECTION_CLEAR_CLASS =
-  'mt-2 text-xs text-muted-foreground hover:text-foreground transition-colors';
+  'text-xs font-semibold uppercase tracking-widest text-muted-foreground';
+const FILTER_COUNT_BADGE_CLASS =
+  'inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-border/65 bg-muted/45 px-1.5 text-[0.65rem] font-semibold tabular-nums text-muted-foreground transition-colors';
 
 interface SidebarFiltersProps {
   filters: SearchFilterState;
@@ -65,45 +64,62 @@ export function SidebarFilters({
   modCount,
   mapCount,
 }: SidebarFiltersProps) {
-  const counts: Record<AssetType, number> = {
-    mod: modCount,
-    map: mapCount,
-  };
+  const counts: Record<AssetType, number> = { mod: modCount, map: mapCount };
 
   return (
     <div className="space-y-5">
       <div>
-        <FilterSectionTitle title="Type" />
+        <p
+          className={cn(FILTER_SECTION_TITLE_CLASS, 'mb-1 px-1 py-1.5')}
+          aria-hidden
+        >
+          Type
+        </p>
         <nav className="space-y-0.5" aria-label="Content type filter">
-          {typeOptions.map(({ value, label, icon: Icon }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => onTypeChange(value)}
-              className={cn(
-                'w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm transition-colors',
-                filters.type === value
-                  ? 'bg-accent text-accent-foreground font-medium'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/60',
-              )}
-              aria-current={filters.type === value ? 'true' : undefined}
-            >
-              <span className="flex items-center gap-2">
-                <Icon className="h-3.5 w-3.5 shrink-0" />
-                {label}
-              </span>
-              <span
-                className={cn(
-                  'text-xs tabular-nums',
-                  filters.type === value
-                    ? 'text-foreground'
-                    : 'text-muted-foreground',
-                )}
+          {typeOptions.map(({ value, label, icon: Icon }) => {
+            const isCurrent = filters.type === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => onTypeChange(value)}
+                aria-current={isCurrent ? 'true' : undefined}
+                className="group relative w-full text-left"
               >
-                {counts[value]}
-              </span>
-            </button>
-          ))}
+                <span
+                  className={cn(
+                    'mr-0.5 flex items-center gap-2 rounded-lg px-2',
+                    'py-[clamp(0.38rem,0.8vw,0.52rem)]',
+                    'text-[clamp(0.78rem,0.9vw,0.86rem)] font-semibold',
+                    'transition-all duration-150',
+                    'group-hover:bg-accent/45 group-hover:text-primary',
+                    isCurrent
+                      ? 'bg-accent/45 text-primary'
+                      : 'text-muted-foreground',
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5 shrink-0 transition-colors" />
+                  <span className="flex-1">{label}</span>
+                  <span
+                    className={cn(
+                      FILTER_COUNT_BADGE_CLASS,
+                      isCurrent
+                        ? 'border-primary/35 bg-accent/45 text-primary'
+                        : 'group-hover:border-primary/35 group-hover:bg-accent/45 group-hover:text-primary',
+                    )}
+                  >
+                    {counts[value]}
+                  </span>
+                </span>
+                {isCurrent && (
+                  <span
+                    aria-hidden
+                    className="absolute right-0 top-0 h-full w-[5px] rounded-full bg-primary"
+                  />
+                )}
+              </button>
+            );
+          })}
         </nav>
       </div>
 
@@ -216,36 +232,37 @@ function ChecklistFilterSection({
   const toggle = (value: string) => {
     onChange(
       selected.includes(value)
-        ? selected.filter((selectedValue) => selectedValue !== value)
+        ? selected.filter((v) => v !== value)
         : [...selected, value],
     );
   };
 
   return (
     <div>
-      <FilterSectionTitle title={title} icon={Icon} />
+      <p
+        className={cn(
+          FILTER_SECTION_TITLE_CLASS,
+          'mb-1 flex items-center gap-1.5 px-1 py-1.5',
+        )}
+      >
+        <Icon className="h-3.5 w-3.5" />
+        {title}
+      </p>
       {visibleValues.length === 0 ? (
-        <p className="text-xs text-muted-foreground px-1">{emptyLabel}</p>
+        <p className="px-1 py-1 text-xs text-muted-foreground">{emptyLabel}</p>
       ) : (
-        <div className="space-y-1">
+        <div className="space-y-1 pt-1">
           {visibleValues.map((value) => (
-            <div
+            <button
               key={value}
-              role="button"
-              tabIndex={0}
+              type="button"
               onClick={() => toggle(value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  toggle(value);
-                }
-              }}
               className={cn(
-                FILTER_SECTION_OPTION_CLASS,
-                'justify-between',
+                'flex w-full items-center justify-between rounded-md px-2 py-1 text-sm font-normal',
+                'transition-colors',
                 selected.includes(value)
-                  ? 'text-foreground bg-accent/60'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent/40',
+                  ? 'bg-muted/60 text-foreground'
+                  : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground',
               )}
             >
               <span className="flex items-center gap-2">
@@ -262,41 +279,25 @@ function ChecklistFilterSection({
                 </span>
                 <span>{formatValue(value)}</span>
               </span>
-              <span className="text-xs tabular-nums text-muted-foreground">
+              <span className={FILTER_COUNT_BADGE_CLASS}>
                 {counts[value] ?? 0}
               </span>
-            </div>
+            </button>
           ))}
         </div>
       )}
       {selected.length > 0 && (
-        <button
-          type="button"
-          onClick={() => onChange([])}
-          className={FILTER_SECTION_CLEAR_CLASS}
-        >
-          Clear {title.toLowerCase()}
-        </button>
+        <div className="mt-2">
+          <button
+            type="button"
+            onClick={() => onChange([])}
+            className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border/60 px-2 py-0.5 text-[0.68rem] font-medium leading-none text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+          >
+            <X className="h-2.5 w-2.5 shrink-0" />
+            <span>Clear</span>
+          </button>
+        </div>
       )}
     </div>
-  );
-}
-
-interface TitleProperties {
-  title: string;
-  icon?: ComponentType<{ className?: string }>;
-}
-
-function FilterSectionTitle({ title, icon: Icon }: TitleProperties) {
-  return (
-    <p
-      className={cn(
-        FILTER_SECTION_TITLE_CLASS,
-        Icon && 'flex items-center gap-1.5',
-      )}
-    >
-      {Icon && <Icon className="h-3.5 w-3.5" />}
-      {title}
-    </p>
   );
 }

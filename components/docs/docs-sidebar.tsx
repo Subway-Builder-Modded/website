@@ -4,12 +4,7 @@ import * as React from 'react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import {
-  Archive,
-  ChevronDown,
-  PanelLeftCloseIcon,
-  Tag,
-} from 'lucide-react';
+import { Archive, ChevronDown, PanelLeftCloseIcon, Tag } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -458,10 +453,8 @@ function getSidebarDepthClassName(depth: number) {
 
 function SidebarDocsHeader({
   activeInstance,
-  activeVersion,
 }: {
   activeInstance: DocsInstance;
-  activeVersion: ReturnType<typeof getActiveVersionFromPathname>;
 }) {
   const headerTitle = 'Docs';
   const HeaderIcon = activeInstance.sidebarHeader?.icon ?? activeInstance.icon;
@@ -839,10 +832,7 @@ function SidebarPanelContent({
       <div className="shrink-0 border-b border-border/60 px-[clamp(0.65rem,1.4vw,1rem)] pt-[clamp(0.65rem,1.4vw,1rem)] pb-[clamp(0.42rem,0.88vw,0.6rem)]">
         <div className={cn('space-y-3', !mounted && 'invisible')}>
           <div className="relative flex items-start justify-center">
-            <SidebarDocsHeader
-              activeInstance={activeInstance}
-              activeVersion={activeVersion}
-            />
+            <SidebarDocsHeader activeInstance={activeInstance} />
             {onCollapse && (
               <button
                 type="button"
@@ -924,7 +914,7 @@ export function AppDocsSidebar({
           '--app-navbar-offset',
         ),
       ) || 88;
-    const idealTop = navbarOffset + 60;
+    const idealTop = navbarOffset;
 
     const containerLeft = containerRef?.current
       ? containerRef.current.getBoundingClientRect().left
@@ -1106,7 +1096,6 @@ export function AppDocsSidebar({
           <PanelLeftCloseIcon className="h-4 w-4 rotate-180" />
         </button>
       </div>
-
     </>
   );
 }
@@ -1134,7 +1123,7 @@ export function DocsSidebarShell({
     setOpen(next);
     try {
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${next}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-    } catch (_) {}
+    } catch {}
   };
 
   return (

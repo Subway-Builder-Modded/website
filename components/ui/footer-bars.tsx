@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 const SUBWAY_BARS = ['#0039A6', '#FF6319', '#00933C', '#FCCC0A', '#752F82'];
@@ -16,8 +15,6 @@ export function FooterBars({ className }: { className?: string }) {
           />
         ))}
       </div>
-
-      <div className="mt-4"></div>
     </div>
   );
 }

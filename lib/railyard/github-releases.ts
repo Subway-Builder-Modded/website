@@ -12,6 +12,7 @@ export interface GithubRelease {
   published_at: string;
   prerelease: boolean;
   assets: GithubReleaseAsset[];
+  game_version?: string;
 }
 
 export interface CustomVersionEntry {
@@ -94,6 +95,8 @@ function sanitizeRelease(input: unknown): GithubRelease {
             : 0,
       };
     }),
+    game_version:
+      typeof entry.game_version === 'string' ? entry.game_version : undefined,
   };
 }
 
@@ -152,9 +155,18 @@ async function fetchCustomVersionsDirect(
 
 export async function getGithubReleases(
   repo: string,
+  options?: { preferNetwork?: boolean },
 ): Promise<GithubRelease[]> {
   const normalizedRepo = repo.trim();
   if (!normalizedRepo) return [];
+
+  if (options?.preferNetwork) {
+    try {
+      return await fetchGitHubReleasesDirect(normalizedRepo);
+    } catch {
+      // Fall back to cache/direct fallback path below.
+    }
+  }
 
   const cache = await getReleaseCache();
   const cached = cache?.repos[normalizeRepo(normalizedRepo)];
@@ -165,9 +177,18 @@ export async function getGithubReleases(
 
 export async function getCustomVersions(
   url: string,
+  options?: { preferNetwork?: boolean },
 ): Promise<CustomVersionEntry[]> {
   const normalizedUrl = normalizeCustomUrl(url);
   if (!normalizedUrl) return [];
+
+  if (options?.preferNetwork) {
+    try {
+      return await fetchCustomVersionsDirect(normalizedUrl);
+    } catch {
+      // Fall back to cache/direct fallback path below.
+    }
+  }
 
   const cache = await getReleaseCache();
   const cached = cache?.custom_urls?.[normalizedUrl];

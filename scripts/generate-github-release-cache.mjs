@@ -10,6 +10,7 @@ const OUTPUT_PATH = path.resolve(
 );
 const TOKEN = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? '';
 const WORKER_LIMIT = 8;
+const GAME_DEP_KEY = 'subway-builder';
 
 async function fetchJson(url, init) {
   const response = await fetch(url, init);
@@ -117,14 +118,80 @@ async function collectCustomUrls() {
   return [...urls];
 }
 
+/**
+ * Fetches a manifest.json asset URL and returns extracted game_version and
+ * dependencies, mirroring the Go backend's enrichVersions logic.
+ * Returns null on any error.
+ */
+async function fetchManifestDeps(url) {
+  try {
+    const response = await fetch(url, {
+      headers: TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {},
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (!data?.dependencies || typeof data.dependencies !== 'object') {
+      return null;
+    }
+    const deps = data.dependencies;
+    const game_version =
+      typeof deps[GAME_DEP_KEY] === 'string' ? deps[GAME_DEP_KEY] : undefined;
+    const dependencies = Object.fromEntries(
+      Object.entries(deps).filter(
+        ([id, range]) => id !== GAME_DEP_KEY && typeof range === 'string',
+      ),
+    );
+    return { game_version, dependencies };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Enriches a list of sanitized releases by fetching any manifest.json assets
+ * in parallel, then attaching game_version and dependencies to each release.
+ * Mirrors Go's enrichVersions.
+ */
+async function enrichReleases(releases) {
+  await Promise.allSettled(
+    releases.map(async (release) => {
+      const manifestAsset = release.assets.find(
+        (a) => a.name === 'manifest.json',
+      );
+      if (!manifestAsset?.browser_download_url) return;
+      const enriched = await fetchManifestDeps(
+        manifestAsset.browser_download_url,
+      );
+      if (!enriched) return;
+      if (enriched.game_version !== undefined) {
+        release.game_version = enriched.game_version;
+      }
+      if (Object.keys(enriched.dependencies).length > 0) {
+        release.dependencies = enriched.dependencies;
+      }
+    }),
+  );
+}
+
 async function fetchReleases(repo) {
   const url = `https://api.github.com/repos/${repo}/releases`;
   const releases = await fetchJson(url, { headers: headers() });
-  return Array.isArray(releases) ? releases.map(sanitizeRelease) : [];
+  const sanitized = Array.isArray(releases)
+    ? releases.map(sanitizeRelease)
+    : [];
+  await enrichReleases(sanitized);
+  return sanitized;
 }
 
 function sanitizeCustomVersion(input) {
   const entry = input ?? {};
+  const rawDeps = entry.dependencies;
+  const dependencies =
+    rawDeps && typeof rawDeps === 'object' && !Array.isArray(rawDeps)
+      ? Object.fromEntries(
+          Object.entries(rawDeps).filter(([, v]) => typeof v === 'string'),
+        )
+      : undefined;
   return {
     version: typeof entry.version === 'string' ? entry.version : '',
     name:
@@ -146,6 +213,7 @@ function sanitizeCustomVersion(input) {
         : 0,
     manifest: typeof entry.manifest === 'string' ? entry.manifest : undefined,
     prerelease: Boolean(entry.prerelease),
+    dependencies,
   };
 }
 
@@ -156,7 +224,24 @@ async function fetchCustomVersions(url) {
     : Array.isArray(payload?.versions)
       ? payload.versions
       : [];
-  return rawVersions.map((entry) => sanitizeCustomVersion(entry));
+  const versions = rawVersions.map((entry) => sanitizeCustomVersion(entry));
+  // Also enrich custom versions that provide a manifest URL but no inline deps.
+  await Promise.allSettled(
+    versions.map(async (v) => {
+      if (!v.manifest) return;
+      // Only fetch if deps not already populated from the version JSON.
+      if (v.game_version || v.dependencies) return;
+      const enriched = await fetchManifestDeps(v.manifest);
+      if (!enriched) return;
+      if (enriched.game_version !== undefined) {
+        v.game_version = enriched.game_version;
+      }
+      if (Object.keys(enriched.dependencies).length > 0) {
+        v.dependencies = enriched.dependencies;
+      }
+    }),
+  );
+  return versions;
 }
 
 async function buildReleaseMap(repos) {

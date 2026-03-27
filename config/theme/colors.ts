@@ -40,10 +40,6 @@ export const SHARED_MUTED_TEXT_COLOR: ModeHex = {
   dark: '#9E9E9E',
 };
 
-const LIGHT_MODE_BACKGROUND_HEX = '#FAFAFA';
-const DARK_MODE_BACKGROUND_HEX = '#1C1C1C';
-const LIGHT_MODE_SATURATION_BOOST = 2;
-
 type Rgb = { r: number; g: number; b: number };
 type Rgba = Rgb & { a?: number };
 
@@ -147,24 +143,6 @@ function hslToRgb(h: number, s: number, l: number): Rgb {
   };
 }
 
-function toLinear(channel: number) {
-  const value = channel / 255;
-  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-}
-
-function relativeLuminance({ r, g, b }: Rgb) {
-  const red = toLinear(r);
-  const green = toLinear(g);
-  const blue = toLinear(b);
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
-}
-
-function contrastRatio(a: number, b: number) {
-  const lighter = Math.max(a, b);
-  const darker = Math.min(a, b);
-  return (lighter + 0.05) / (darker + 0.05);
-}
-
 type VibrantLightDeriveOptions = {
   saturationBoost?: number;
   lightnessBase?: number;
@@ -190,51 +168,6 @@ function deriveLightHexFromDarkVibrant(
 
   const lightCandidate = hslToRgb(h, targetSaturation, targetLightness);
   return rgbaToHex({ ...lightCandidate, a: darkRgba.a });
-}
-
-function deriveLightHexFromDarkByContrast(
-  darkHex: string,
-  lightBackgroundHex = LIGHT_MODE_BACKGROUND_HEX,
-  darkBackgroundHex = DARK_MODE_BACKGROUND_HEX,
-) {
-  const darkRgba = parseHexToRgba(darkHex);
-  const darkRgb = { r: darkRgba.r, g: darkRgba.g, b: darkRgba.b };
-  const darkBackground = parseHexToRgba(darkBackgroundHex);
-  const lightBackground = parseHexToRgba(lightBackgroundHex);
-
-  const targetContrast = contrastRatio(
-    relativeLuminance(darkRgb),
-    relativeLuminance(darkBackground),
-  );
-  const { h, s } = rgbToHsl(darkRgb);
-  const boostedSaturation = clamp01(s * LIGHT_MODE_SATURATION_BOOST);
-  const lightBackgroundLum = relativeLuminance(lightBackground);
-
-  let low = 0;
-  let high = 1;
-  let bestRgb = darkRgb;
-  let bestDelta = Number.POSITIVE_INFINITY;
-
-  for (let iteration = 0; iteration < 40; iteration += 1) {
-    const mid = (low + high) / 2;
-    const candidate = hslToRgb(h, boostedSaturation, mid);
-    const candidateLum = relativeLuminance(candidate);
-    const ratio = contrastRatio(candidateLum, lightBackgroundLum);
-    const delta = Math.abs(ratio - targetContrast);
-
-    if (delta < bestDelta) {
-      bestDelta = delta;
-      bestRgb = candidate;
-    }
-
-    if (ratio > targetContrast) {
-      low = mid;
-    } else {
-      high = mid;
-    }
-  }
-
-  return rgbaToHex({ ...bestRgb, a: darkRgba.a });
 }
 
 function createModeColorFromDarkAccent(darkHex: string): ModeHex {

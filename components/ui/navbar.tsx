@@ -169,9 +169,12 @@ const Navbar = ({
         className={twMerge(
           'relative isolate hidden [--navbar-gutter:--spacing(2.5)] md:block',
           isSticky && 'mx-auto w-[min(2200px,calc(100vw-3rem))] px-0',
-          !isSticky && ['default', 'inset'].includes(intent) && 'px-4 py-(--navbar-gutter)',
+          !isSticky &&
+            ['default', 'inset'].includes(intent) &&
+            'px-4 py-(--navbar-gutter)',
           !isSticky && intent === 'default' && 'border-b bg-sidebar',
-          !isSticky && intent === 'float' &&
+          !isSticky &&
+            intent === 'float' &&
             'rounded-xl bg-bg py-0 *:data-[navbar=content]:max-w-7xl *:data-[navbar=content]:rounded-xl *:data-[navbar=content]:border *:data-[navbar=content]:bg-sidebar *:data-[navbar=content]:px-4 *:data-[navbar=content]:py-(--navbar-gutter) *:data-[navbar=content]:shadow-xs',
         )}
       >

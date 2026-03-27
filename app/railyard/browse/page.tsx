@@ -9,10 +9,13 @@ export const metadata: Metadata = {
 
 export default function BrowseRoutePage() {
   return (
-    <main className="railyard-accent px-6 py-8 max-w-screen-xl mx-auto">
+    <div
+      data-sidebar-host
+      className="railyard-accent px-6 py-8 max-w-screen-xl mx-auto"
+    >
       <Suspense fallback={null}>
         <BrowsePage />
       </Suspense>
-    </main>
+    </div>
   );
 }

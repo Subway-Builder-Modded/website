@@ -53,12 +53,16 @@ const itemSchemeVariableClassName =
 
 const NAVBAR_DEFAULT_COLOR_SCHEME_ID = 'default';
 
-function resolveScheme(schemeId?: NavbarColorSchemeId): NavbarColorScheme | null {
+function resolveScheme(
+  schemeId?: NavbarColorSchemeId,
+): NavbarColorScheme | null {
   if (!schemeId) return null;
   return APP_NAVBAR_COLOR_SCHEMES[schemeId] ?? null;
 }
 
-function toSchemeStyle(scheme: NavbarColorScheme | null): CSSProperties | undefined {
+function toSchemeStyle(
+  scheme: NavbarColorScheme | null,
+): CSSProperties | undefined {
   if (!scheme) return undefined;
   const hover = scheme.hover;
   const active = scheme.active ?? scheme.hover;
@@ -133,7 +137,9 @@ export default function AppNavbar(props: NavbarProps) {
     '--app-navbar-brand-title-mobile': sizes.mobile.brand.titleSize,
     '--app-navbar-brand-title-desktop': sizes.desktop.brand.titleSize,
     '--app-navbar-brand-weight-mobile': String(sizes.mobile.brand.titleWeight),
-    '--app-navbar-brand-weight-desktop': String(sizes.desktop.brand.titleWeight),
+    '--app-navbar-brand-weight-desktop': String(
+      sizes.desktop.brand.titleWeight,
+    ),
 
     '--app-navbar-item-gap-mobile': sizes.mobile.item.gap,
     '--app-navbar-item-gap-desktop': sizes.desktop.item.gap,
@@ -214,7 +220,9 @@ function AppNavbarInner({
     const itemScheme = resolveScheme(item.schemeId);
     const schemeStyle = toSchemeStyle(itemScheme);
     const iconScale =
-      item.position === 'right' ? APP_NAVBAR_CONFIG.layout.rightItemIconScale : 1;
+      item.position === 'right'
+        ? APP_NAVBAR_CONFIG.layout.rightItemIconScale
+        : 1;
     const itemStyle =
       iconScale !== 1
         ? ({
@@ -274,7 +282,9 @@ function AppNavbarInner({
     ) : null;
 
     const label =
-      compact || !item.title ? null : <span className="truncate">{item.title}</span>;
+      compact || !item.title ? null : (
+        <span className="truncate">{item.title}</span>
+      );
 
     const indicator = isActive ? (
       <span
@@ -429,17 +439,17 @@ function AppNavbarInner({
           aria-label="Home"
           onClick={onNavigate}
         >
-        <AppIcon
-          icon={brand.icon}
-          className="shrink-0 text-current size-[var(--app-navbar-brand-icon)]"
-        />
-        <span
-          className="overflow-hidden text-clip whitespace-nowrap max-w-[min(54vw,36rem)] text-[var(--app-navbar-brand-title)]"
-          style={{ fontWeight: 'var(--app-navbar-brand-weight)' }}
-        >
-          {brand.title}
-        </span>
-      </NextLink>
+          <AppIcon
+            icon={brand.icon}
+            className="shrink-0 text-current size-[var(--app-navbar-brand-icon)]"
+          />
+          <span
+            className="overflow-hidden text-clip whitespace-nowrap max-w-[min(54vw,36rem)] text-[var(--app-navbar-brand-title)]"
+            style={{ fontWeight: 'var(--app-navbar-brand-weight)' }}
+          >
+            {brand.title}
+          </span>
+        </NextLink>
         <NavbarSpacer />
         {mobileQuickItems.map((item) => renderNavItem(item, { compact: true }))}
       </NavbarMobile>
@@ -557,7 +567,28 @@ function NavbarDropdown({
     const scheme = resolveScheme(dropdownItem.schemeId ?? item.schemeId);
     const style = toSchemeStyle(scheme);
     const href = dropdownItem.href;
-    const isActive = href ? isActivePath(pathname, href) : false;
+    const getActiveDepth = (itemToCheck: AppNavbarDropdownItem): number => {
+      const paths = [
+        itemToCheck.href,
+        ...(itemToCheck.activeMatchPaths ?? []),
+      ].filter((value): value is string => Boolean(value));
+
+      let best = -1;
+      for (const path of paths) {
+        if (isActivePath(pathname, path)) {
+          const depth = path.split('/').filter(Boolean).length;
+          if (depth > best) best = depth;
+        }
+      }
+      return best;
+    };
+
+    const activeDepth = getActiveDepth(dropdownItem);
+    const maxDropdownDepth = dropdownItems.reduce((best, itemToCheck) => {
+      const depth = getActiveDepth(itemToCheck);
+      return depth > best ? depth : best;
+    }, -1);
+    const isActive = activeDepth >= 0 && activeDepth === maxDropdownDepth;
     const dropdownLabel = dropdownItem.title ?? dropdownItem.id;
     const icon = (
       <AppIcon

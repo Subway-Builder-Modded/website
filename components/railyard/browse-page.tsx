@@ -1,18 +1,24 @@
 'use client';
 
-import { AlertCircle, SearchX } from 'lucide-react';
+import { Compass, SearchX } from 'lucide-react';
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import {
+  AssetSidebarPanel,
+  SIDEBAR_CONTENT_OFFSET,
+} from '@/components/railyard/asset-sidebar-panel';
 import { CardSkeletonGrid } from '@/components/railyard/card-skeleton-grid';
 import { EmptyState } from '@/components/railyard/empty-state';
+import { ErrorBanner } from '@/components/railyard/error-banner';
 import { ItemCard } from './item-card';
+import { PageHeader } from '@/components/page/page-header';
 import { Pagination } from '@/components/railyard/pagination';
 import { SearchBar } from '@/components/railyard/search-bar';
-import { SidebarFilters } from '@/components/railyard/sidebar-filters';
 import { SortSelect } from '@/components/railyard/sort-select';
 import { ViewModeToggle } from '@/components/railyard/view-mode-toggle';
 import { createRandomSeed, useFilteredItems } from '@/hooks/use-filtered-items';
+import { preloadGalleryImage } from '@/hooks/use-gallery-image';
 import { useRegistry } from '@/hooks/use-registry';
 import { buildAssetListingCounts } from '@/lib/railyard/listing-counts';
 import { buildSpecialDemandValues } from '@/lib/railyard/map-filter-values';
@@ -23,6 +29,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const VIEW_MODE_STORAGE_KEY = 'railyard:browse:view-mode:v1';
+const SIDEBAR_OPEN_KEY = 'railyard:browse:sidebar-open:v1';
 
 function normalizeType(value: string | null): 'mod' | 'map' | undefined {
   if (value === 'mod' || value === 'map') return value;
@@ -44,6 +51,17 @@ export function BrowsePage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryType = normalizeType(searchParams.get('type'));
+
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const stored = window.localStorage.getItem(SIDEBAR_OPEN_KEY);
+    return stored !== 'false';
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(SIDEBAR_OPEN_KEY, String(sidebarOpen));
+  }, [sidebarOpen]);
 
   const [viewMode, setViewMode] = useState<SearchViewMode>(() => {
     if (typeof window === 'undefined') return 'full';
@@ -106,6 +124,19 @@ export function BrowsePage() {
     }
   }, [filters.type, pathname, router, searchParams]);
 
+  useEffect(() => {
+    if (loading || items.length === 0) return;
+    void Promise.allSettled(
+      items.map(({ type: itemType, item }) =>
+        preloadGalleryImage(
+          itemType === 'mod' ? 'mods' : 'maps',
+          item.id,
+          item.gallery?.[0],
+        ),
+      ),
+    );
+  }, [items, loading]);
+
   const resultsLayoutClassName = useMemo(() => {
     if (viewMode === 'list') return 'space-y-4';
     if (viewMode === 'compact') {
@@ -114,78 +145,66 @@ export function BrowsePage() {
     return 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4';
   }, [viewMode]);
 
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <AlertCircle className="h-10 w-10 text-destructive mb-3" />
-        <h3 className="text-sm font-semibold text-foreground">
-          Failed to load registry
-        </h3>
-        <p className="mt-1 text-sm text-muted-foreground max-w-sm">{error}</p>
-      </div>
-    );
-  }
-
-  const modCount = mods.length;
-  const mapCount = maps.length;
-
   if (!isClient) {
     return (
       <div className="space-y-5">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground text-balance">
-            Browse
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Discover and install maps and mods for Subway Builder.
-          </p>
-        </div>
+        <PageHeader
+          icon={Compass}
+          title="Browse"
+          description="Discover and install maps and mods for Subway Builder."
+        />
         <CardSkeletonGrid count={12} />
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground text-balance">
-          Browse
-        </h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          Discover and install maps and mods for Subway Builder.
-        </p>
-      </div>
-
-      <SearchBar
-        query={filters.query}
-        onQueryChange={(value) =>
-          setFilters((prev) => ({ ...prev, query: value }))
-        }
+    <div className="relative isolate">
+      <AssetSidebarPanel
+        open={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
+        filters={filters}
+        onFiltersChange={setFilters}
+        onTypeChange={setType}
+        availableTags={allTags}
+        availableSpecialDemand={availableSpecialDemand}
+        modTagCounts={modTagCounts}
+        mapLocationCounts={mapLocationCounts}
+        mapSourceQualityCounts={mapSourceQualityCounts}
+        mapLevelOfDetailCounts={mapLevelOfDetailCounts}
+        mapSpecialDemandCounts={mapSpecialDemandCounts}
+        modCount={mods.length}
+        mapCount={maps.length}
       />
 
-      <div className="flex gap-6 items-start">
-        <aside className="w-52 shrink-0">
-          <SidebarFilters
-            filters={filters}
-            onFiltersChange={setFilters}
-            onTypeChange={setType}
-            availableTags={allTags}
-            availableSpecialDemand={availableSpecialDemand}
-            modTagCounts={modTagCounts}
-            mapLocationCounts={mapLocationCounts}
-            mapSourceQualityCounts={mapSourceQualityCounts}
-            mapLevelOfDetailCounts={mapLevelOfDetailCounts}
-            mapSpecialDemandCounts={mapSpecialDemandCounts}
-            modCount={modCount}
-            mapCount={mapCount}
-          />
-        </aside>
+      <div
+        className="relative z-10 space-y-5"
+        style={{
+          paddingLeft: sidebarOpen ? SIDEBAR_CONTENT_OFFSET : '0px',
+          transition: 'padding-left 200ms ease-out',
+          minHeight: 'calc(100vh - var(--app-navbar-offset))',
+        }}
+      >
+        <PageHeader
+          icon={Compass}
+          title="Browse"
+          description="Discover and install maps and mods for Subway Builder."
+        />
 
-        <div className="flex-1 min-w-0 space-y-4">
+        {error && <ErrorBanner message={error} />}
+
+        <SearchBar
+          query={filters.query}
+          onQueryChange={(value) =>
+            setFilters((prev) => ({ ...prev, query: value }))
+          }
+        />
+
+        <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
               {loading ? (
-                <span className="inline-block h-4 w-24 bg-muted rounded animate-pulse" />
+                <span className="inline-block h-4 w-24 animate-pulse rounded bg-muted" />
               ) : (
                 <>
                   <span className="font-medium text-foreground">
