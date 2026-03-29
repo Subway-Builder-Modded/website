@@ -42,8 +42,9 @@ type AppDocsSidebarProps = {
 };
 
 const SWITCHER_ROW_HIGHLIGHT_ALPHA = 0.12;
+const SWITCHER_ROW_NEUTRAL_ALPHA = 0.06;
 const SWITCHER_ICON_CONTRAST_ALPHA = 0.08;
-const SIDEBAR_WIDTH_REM = 15.5;
+const SIDEBAR_WIDTH_REM = 17;
 
 function withAlpha(color: string, alpha: number) {
   const normalized = color.trim();
@@ -93,27 +94,43 @@ function getInstanceBadgeScheme(instance: DocsInstance) {
   };
 }
 
-function getSwitcherRowBackground(accent: string, highlighted: boolean) {
-  return highlighted
+function getNeutralInteractiveBackground(isDark: boolean, alpha: number) {
+  return isDark
+    ? `rgba(255, 255, 255, ${alpha})`
+    : `rgba(0, 0, 0, ${alpha})`;
+}
+
+function getSwitcherRowBackground({
+  accent,
+  isDark,
+  latest,
+  highlighted,
+}: {
+  accent: string;
+  isDark: boolean;
+  latest: boolean;
+  highlighted: boolean;
+}) {
+  if (!highlighted) return undefined;
+
+  return latest
     ? withAlpha(accent, SWITCHER_ROW_HIGHLIGHT_ALPHA)
-    : undefined;
+    : getNeutralInteractiveBackground(isDark, SWITCHER_ROW_NEUTRAL_ALPHA);
 }
 
 function getSwitcherIconBackground(
   accent: string,
   isDark: boolean,
-  highlighted: boolean,
+  latest: boolean,
 ) {
-  if (highlighted) {
+  if (latest) {
     return withAlpha(
       accent,
       SWITCHER_ROW_HIGHLIGHT_ALPHA + SWITCHER_ICON_CONTRAST_ALPHA,
     );
   }
 
-  return isDark
-    ? `rgba(255, 255, 255, ${SWITCHER_ICON_CONTRAST_ALPHA})`
-    : `rgba(0, 0, 0, ${SWITCHER_ICON_CONTRAST_ALPHA})`;
+  return getNeutralInteractiveBackground(isDark, SWITCHER_ICON_CONTRAST_ALPHA);
 }
 
 function useOnClickOutside(
@@ -137,27 +154,26 @@ function VersionIcon({
   version,
   accent,
   isDark,
-  active,
 }: {
   instance: DocsInstance;
   version: DocsVersion;
   accent: string;
   isDark: boolean;
-  active?: boolean;
 }) {
+  const latest = isLatestVersion(instance, version.value);
   const Icon =
-    version.icon ?? (isLatestVersion(instance, version.value) ? Tag : Archive);
+    version.icon ?? (latest ? Tag : Archive);
 
   return (
     <span
       className={cn(
         'flex size-7 shrink-0 items-center justify-center rounded-md border bg-background text-muted-foreground',
-        active && 'text-foreground',
+        latest && 'text-foreground',
       )}
       style={{
-        backgroundColor: getSwitcherIconBackground(accent, isDark, !!active),
-        borderColor: active ? withAlpha(accent, 0.5) : undefined,
-        color: active ? accent : undefined,
+        backgroundColor: getSwitcherIconBackground(accent, isDark, latest),
+        borderColor: latest ? withAlpha(accent, 0.5) : undefined,
+        color: latest ? accent : undefined,
       }}
     >
       <Icon className="size-3.5" />
@@ -188,7 +204,7 @@ function StatusBadge({
   }
 
   return (
-    <span className="inline-flex h-4.5 items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-1.5 text-[9px] font-semibold normal-case tracking-[0.08em] text-amber-500">
+    <span className="inline-flex h-4.5 items-center rounded-full border border-border bg-muted px-1.5 text-[9px] font-semibold normal-case tracking-[0.08em] text-muted-foreground">
       Deprecated
     </span>
   );
@@ -197,14 +213,22 @@ function StatusBadge({
 function DropdownTrigger({
   open,
   accent,
+  isDark,
+  latestTone,
   onToggle,
   children,
 }: {
   open: boolean;
   accent: string;
+  isDark: boolean;
+  latestTone: boolean;
   onToggle: () => void;
   children: React.ReactNode;
 }) {
+  const hoverBackground = latestTone
+    ? withAlpha(accent, 0.08)
+    : getNeutralInteractiveBackground(isDark, SWITCHER_ROW_NEUTRAL_ALPHA);
+
   return (
     <button
       type="button"
@@ -220,10 +244,15 @@ function DropdownTrigger({
           onToggle();
         }
       }}
-      className="flex h-10 w-full items-center gap-2 rounded-lg border bg-card px-2.5 text-left text-sm shadow-xs transition-colors hover:bg-accent/45"
+      className="flex h-10 w-full items-center gap-2 rounded-lg border bg-card px-2.5 text-left text-sm shadow-xs transition-colors hover:bg-[var(--docs-switcher-trigger-hover-bg)]"
       style={{
-        borderColor: open ? withAlpha(accent, 0.5) : undefined,
-        backgroundColor: open ? withAlpha(accent, 0.08) : undefined,
+        borderColor: open
+          ? latestTone
+            ? withAlpha(accent, 0.5)
+            : getNeutralInteractiveBackground(isDark, 0.2)
+          : undefined,
+        backgroundColor: open ? hoverBackground : undefined,
+        ['--docs-switcher-trigger-hover-bg' as string]: hoverBackground,
       }}
     >
       {children}
@@ -289,8 +318,13 @@ function VersionDropdownRow({
       style={
         highlighted
           ? {
-              backgroundColor: getSwitcherRowBackground(accent, highlighted),
-              color: accent,
+              backgroundColor: getSwitcherRowBackground({
+                accent,
+                isDark,
+                latest,
+                highlighted,
+              }),
+              color: latest ? accent : undefined,
             }
           : undefined
       }
@@ -304,7 +338,6 @@ function VersionDropdownRow({
         version={version}
         accent={accent}
         isDark={isDark}
-        active={highlighted}
       />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-1.5">
@@ -451,6 +484,15 @@ function getSidebarDepthClassName(depth: number) {
   return 'pl-13';
 }
 
+function getSidebarDepthTypographyClassName(depth: number) {
+  if (depth <= 0) return 'font-semibold text-sm';
+  return 'font-normal text-sm';
+}
+
+function getSidebarDepthToneClassName(depth: number) {
+  return 'text-foreground';
+}
+
 function SidebarDocsHeader({
   activeInstance,
 }: {
@@ -512,12 +554,15 @@ function VersionSwitcher({
     return null;
 
   const accent = getInstanceAccent(activeInstance, isDark);
+  const latestTone = isLatestVersion(activeInstance, activeVersion.value);
 
   return (
     <div>
       <DropdownTrigger
         open={open}
         accent={accent}
+        isDark={isDark}
+        latestTone={latestTone}
         onToggle={() => setOpen(!open)}
       >
         <VersionIcon
@@ -525,7 +570,6 @@ function VersionSwitcher({
           version={activeVersion}
           accent={accent}
           isDark={isDark}
-          active
         />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -603,7 +647,10 @@ function SidebarNavEntry({
             'relative flex w-full items-center rounded-md transition-colors',
             showIndicator
               ? 'text-foreground'
-              : 'text-muted-foreground hover:bg-[var(--docs-sidebar-hover-bg)] hover:text-[var(--docs-sidebar-hover-fg)]',
+              : cn(
+                  getSidebarDepthToneClassName(depth),
+                  'hover:bg-[var(--docs-sidebar-hover-bg)] hover:text-[var(--docs-sidebar-hover-fg)]',
+                ),
           )}
           style={{
             ...(activeStyle ?? {}),
@@ -614,8 +661,9 @@ function SidebarNavEntry({
           <NextLink
             href={entry.href}
             className={cn(
-              'min-w-0 flex-1 px-2.5 py-1.5 pr-3 text-sm',
+              'min-w-0 flex-1 px-2.5 py-1.5 pr-3',
               getSidebarDepthClassName(depth),
+              getSidebarDepthTypographyClassName(depth),
             )}
           >
             <span className="block truncate">{entry.title}</span>
@@ -672,13 +720,16 @@ function SidebarNavEntry({
     'group relative flex w-full items-center rounded-md transition-colors',
     showIndicator
       ? 'text-foreground'
-      : 'text-muted-foreground hover:bg-[var(--docs-sidebar-hover-bg)] hover:text-[var(--docs-sidebar-hover-fg)]',
+      : cn(
+          getSidebarDepthToneClassName(depth),
+          'hover:bg-[var(--docs-sidebar-hover-bg)] hover:text-[var(--docs-sidebar-hover-fg)]',
+        ),
   );
 
   const labelClassName = cn(
-    'min-w-0 flex-1 px-2.5 py-1.5 pr-3 text-left text-sm',
+    'min-w-0 flex-1 px-2.5 py-1.5 pr-3 text-left',
     getSidebarDepthClassName(depth),
-    showIndicator ? 'font-medium' : '',
+    getSidebarDepthTypographyClassName(depth),
   );
 
   const hoverBackground = withAlpha(accent, 0.1);
@@ -725,7 +776,7 @@ function SidebarNavEntry({
             isOpen ? `Collapse ${entry.title}` : `Expand ${entry.title}`
           }
           onClick={toggle}
-          className="mr-1 flex size-6 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="mr-1 flex size-6 items-center justify-center rounded-sm text-muted-foreground transition-colors group-hover:text-[var(--docs-sidebar-hover-fg)]"
         >
           <ChevronDown
             className={cn(
@@ -1006,7 +1057,8 @@ export function AppDocsSidebar({
         <SheetContent
           side="left"
           closeButton={false}
-          className="w-[15.5rem] bg-background/95 p-0 backdrop-blur-md"
+          className="bg-background/95 p-0 backdrop-blur-md"
+          style={{ width: `${SIDEBAR_WIDTH_REM}rem` }}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Docs navigation</SheetTitle>

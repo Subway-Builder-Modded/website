@@ -1,6 +1,6 @@
 ---
-id: install-guide-linux
-title: Install Guide (Linux)
+id: linux
+title: Linux
 ---
 
 This guide will walk you through installing and setting up Railyard on Linux.
@@ -17,6 +17,16 @@ Once you have Flatpak installed, run the following command:
 flatpak --user install <Railyard Flatpak Path>
 ```
 
+:::important
+
+If this command fails, flatpak may not be properly searching for the runtime dependencies. In this case, run `flatpak install <Railyard Flatpak Path>` if you have access to system-wide installs. Otherwise, run the following before `flatpak --user install <Railyard Flatpak Path>`:
+
+```bash
+flatpak --user install org.gnome.Platform//47 org.gnome.Sdk//47 org.freedesktop.Sdk.Extension.golang//24.08 org.freedesktop.Sdk.Extension.node24//24.08
+```
+
+:::
+
 This will install Railyard on your system.
 
 ## Step 2 - Setting Up Railyard {#setting-up-railyard}
@@ -27,7 +37,7 @@ When you first launch Railyard, you will be asked to select your `metro-maker4` 
   <img
     width="400"
     alt="image"
-    src="/images/docs/railyard/v0.1/railyard-setup-mm4.png"
+    src="/images/docs/railyard/v0.2/railyard-setup-mm4.png"
   />
 </p>
 
@@ -39,11 +49,11 @@ After, you will be asked to select your game executable. Once again, click "Auto
   <img
     width="400"
     alt="image"
-    src="/images/docs/railyard/v0.1/railyard-setup-exec.png"
+    src="/images/docs/railyard/v0.2/railyard-setup-exec.png"
   />
 </p>
 
-The next prompt will ask you to input your GitHub token. This is optional, but recommended to avoid hitting GitHub's API rate limits when using Railyard. If you do not have a token or do not wish to use one, simply click "Next" to continue with the setup process. You can always add a token later via the settings menu. To set up a GitHub token, see the [GitHub Token guide](https://subwaybuildermodded.com/railyard/docs/v0.1/players/github-token).
+The next prompt will ask you to input your GitHub token. This is optional, but recommended to avoid hitting GitHub's API rate limits when using Railyard. If you do not have a token or do not wish to use one, simply click "Next" to continue with the setup process. You can always add a token later via the settings menu. To set up a GitHub token, see the [GitHub Token guide](https://subwaybuildermodded.com/railyard/docs/v0.2/players/github-token).
 
 The final prompt will ask you whether you want to enable automatic updates. This will allow Railyard to prompt you every time a new version is released, allowing you to easily stay up to date with the latest features and bug fixes.
 

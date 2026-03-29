@@ -19,6 +19,10 @@ import {
   ArrowDownToLine,
   KeyRound,
   ShieldCheck,
+  Globe,
+  Tag,
+  Inbox,
+  CircleUser,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -47,6 +51,10 @@ const ICONS = {
   ArrowDownToLine,
   KeyRound,
   ShieldCheck,
+  Globe,
+  Tag,
+  Inbox,
+  CircleUser,
 } satisfies Record<string, LucideIcon>;
 
 type DocsCardIconName = keyof typeof ICONS;

@@ -139,6 +139,11 @@ export function Tabs({
   function handleValueChange(value: string) {
     setActiveValue(value);
     if (groupId) setStoredGroupValue(groupId, value);
+    window.dispatchEvent(
+      new CustomEvent('mdx-tab-change', {
+        detail: { value, tabsInstanceId, groupId: groupId ?? null },
+      }),
+    );
   }
 
   return (

@@ -11,6 +11,7 @@ import {
   Atom,
   SearchCode,
   BookText,
+  Archive,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -27,6 +28,7 @@ export type DocsVersion = {
   value: string;
   label: string;
   icon?: LucideIcon;
+  // When true, the version switcher shows a "Deprecated" badge.
   deprecated?: boolean;
   sidebarOrder?: DocsSidebarOrderItem[];
 };
@@ -64,12 +66,47 @@ export const DOCS_INSTANCES: DocsInstance[] = [
       icon: BookText,
     },
     versioned: true,
-    latestVersion: 'v0.1',
+    latestVersion: 'v0.2',
     versions: [
+      {
+        value: 'v0.2',
+        label: 'v0.2',
+        icon: Tag,
+        sidebarOrder: [
+          {
+            key: 'players',
+            children: [
+              {
+                key: 'installing-railyard',
+                children: [
+                  'windows',
+                  'macos',
+                  'linux',
+                ],
+              },
+              'github-token',
+              'country-flag-emojis',
+              'importing-custom-assets',
+              'profile-management',
+            ],
+          },
+          {
+            key: 'developers',
+            children: [
+              'publishing-projects',
+              'using-custom-url',
+              'tagging',
+              'data-quality',
+              'dependencies',
+            ],
+          },
+        ],
+      },
       {
         value: 'v0.1',
         label: 'v0.1',
-        icon: Tag,
+        icon: Archive,
+        deprecated: true,
         sidebarOrder: [
           {
             key: 'players',
