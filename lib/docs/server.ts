@@ -32,8 +32,6 @@ const CONTENT_ROOT = path.join(process.cwd(), 'content', 'docs');
 export type DocsFrontmatter = {
   title: string;
   description?: string;
-  // Backward-compatible typo support for existing content files.
-  desctription?: string;
 };
 
 export type DocsBreadcrumbItem = {

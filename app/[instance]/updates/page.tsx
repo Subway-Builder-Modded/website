@@ -11,6 +11,8 @@ import {
   getUpdateProjectById,
   UPDATE_PROJECTS,
 } from '@/config/content/updates';
+import { resolveEmbedDescription } from '@/config/site/embed-descriptions';
+import { buildEmbedMetadata } from '@/config/site/metadata';
 import { UPDATES_PAGE_COPY } from '@/config/ui/site-content';
 import { hexAlpha } from '@/lib/color';
 import { getAllUpdatesForProject, type UpdateMeta } from '@/lib/updates.server';
@@ -29,12 +31,20 @@ export async function generateMetadata({
   const { instance: projectId } = await params;
   const project = getUpdateProjectById(projectId);
 
-  if (!project) return { title: 'Updates | Subway Builder Modded' };
+  if (!project) {
+    return buildEmbedMetadata({
+      title: 'Updates | Subway Builder Modded',
+      description: 'Changelogs and release notes for Subway Builder Modded.',
+    });
+  }
 
-  return {
-    title: `${project.label} Changelogs | Subway Builder Modded`,
-    description: `Changelogs and release notes for ${project.label}.`,
-  };
+  const title = `${project.label} Changelogs | Subway Builder Modded`;
+  const description = resolveEmbedDescription(
+    project.basePath,
+    `Changelogs and release notes for ${project.label}.`,
+  );
+
+  return buildEmbedMetadata({ title, description });
 }
 
 function VersionCard({

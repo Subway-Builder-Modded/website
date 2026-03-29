@@ -16,6 +16,8 @@ import { ReleaseTagBadge } from '@/components/updates/release-tag-badge';
 import { UpdateSection } from '@/components/updates/update-section';
 import { ThemedShowcaseCard } from '@/components/ui/themed-showcase-card';
 import { getUpdateProjectById } from '@/config/content/updates';
+import { resolveEmbedDescription } from '@/config/site/embed-descriptions';
+import { buildEmbedMetadata } from '@/config/site/metadata';
 import { useMDXComponents as getMDXComponents } from '@/mdx-components';
 import remarkAdmonitionDirectives from '@/lib/remark-admonition-directives';
 import {
@@ -42,18 +44,33 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { instance: projectId, version } = await params;
   const project = getUpdateProjectById(projectId);
-  if (!project) return { title: 'Update | Subway Builder Modded' };
+  if (!project) {
+    return buildEmbedMetadata({
+      title: 'Update | Subway Builder Modded',
+      description: 'Release notes for Subway Builder Modded.',
+    });
+  }
 
   const filePath = getUpdateFilePath(projectId, version);
-  if (!filePath) return { title: `${project.label} | Subway Builder Modded` };
+  if (!filePath) {
+    return buildEmbedMetadata({
+      title: `${project.label} | Subway Builder Modded`,
+      description: `Changelogs and release notes for ${project.label}.`,
+    });
+  }
 
   const frontmatter = await readUpdateFrontmatter(filePath);
   const title = frontmatter?.title ?? `${project.label} ${version}`;
+  const baseDescription =
+    frontmatter?.description?.trim() ||
+    `Release notes for ${title}.`;
+  const routePath = `/${project.id}/updates/${version}`;
+  const description = resolveEmbedDescription(routePath, baseDescription);
 
-  return {
+  return buildEmbedMetadata({
     title: `${title} | Subway Builder Modded`,
-    description: `Release notes for ${title}.`,
-  };
+    description,
+  });
 }
 
 export default async function UpdatePage({

@@ -21,6 +21,7 @@ export type UpdateFrontmatter = {
   date: string;
   tag: UpdateTag;
   githubUrl?: string;
+  description?: string;
 };
 
 export type UpdateMeta = {

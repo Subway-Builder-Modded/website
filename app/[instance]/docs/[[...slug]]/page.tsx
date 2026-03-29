@@ -31,6 +31,8 @@ import {
 } from '@/lib/docs/server';
 import { DOCS_INSTANCES } from '@/config/content/docs';
 import { InstanceDocsHubPage } from '@/components/docs/instance-docs-hub-page';
+import { resolveEmbedDescription } from '@/config/site/embed-descriptions';
+import { buildEmbedMetadata } from '@/config/site/metadata';
 import {
   buildDocsHubHref,
   buildDocHref,
@@ -100,42 +102,52 @@ export async function generateMetadata({
   const resolved = resolveDocsRouteForInstance(instanceId, normalizedSlug);
 
   if (!resolved) {
-    return {
+    return buildEmbedMetadata({
       title: 'Docs | Subway Builder Modded',
-    };
+      description: 'Documentation for Subway Builder Modded projects.',
+    });
   }
 
   if (!normalizedSlug?.length) {
-    return {
-      title: `${resolved.instance.label} Docs | Subway Builder Modded`,
-    };
+    const title = `${resolved.instance.label} Docs | Subway Builder Modded`;
+    const description = resolveEmbedDescription(
+      buildDocsHubHref(resolved.instance),
+      resolved.instance.hub.description,
+    );
+    return buildEmbedMetadata({ title, description });
   }
 
   if (!resolved.docSlug) {
-    return {
-      title: `${resolved.instance.label} Docs | Subway Builder Modded`,
-    };
+    const title = `${resolved.instance.label} Docs | Subway Builder Modded`;
+    const description = resolveEmbedDescription(
+      buildDocsHubHref(resolved.instance),
+      resolved.instance.hub.description,
+    );
+    return buildEmbedMetadata({ title, description });
   }
 
-  const frontmatter = await getDocsDocFrontmatter([instanceId, ...normalizedSlug]);
+  const frontmatter = await getDocsDocFrontmatter([
+    instanceId,
+    ...normalizedSlug,
+  ]);
   const title = frontmatter?.title;
-  const description =
+  const routePath = buildDocHref(
+    resolved.instance,
+    resolved.version,
+    resolved.docSlug,
+  );
+  const baseDescription =
     frontmatter?.description?.trim() ||
-    frontmatter?.desctription?.trim() ||
     resolved.instance.hub.description;
+  const metadataTitle = title
+    ? `${title} | ${resolved.instance.label} | Subway Builder Modded`
+    : `${resolved.instance.label} Docs | Subway Builder Modded`;
+  const description = resolveEmbedDescription(routePath, baseDescription);
 
-  return {
-    title: title
-      ? `${title} | ${resolved.instance.label} | Subway Builder Modded`
-      : `${resolved.instance.label} Docs | Subway Builder Modded`,
+  return buildEmbedMetadata({
+    title: metadataTitle,
     description,
-    openGraph: {
-      description,
-    },
-    twitter: {
-      description,
-    },
-  };
+  });
 }
 
 export default async function DocsPage({
