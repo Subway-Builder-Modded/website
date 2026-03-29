@@ -95,7 +95,7 @@ export const DOCS_INSTANCES: DocsInstance[] = [
             children: [
               'publishing-projects',
               'using-custom-url',
-              'tagging-guide',
+              'tagging',
               'data-quality',
               'dependencies',
             ],

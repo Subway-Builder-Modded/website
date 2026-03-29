@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const admonitionVariants = cva(
-  'my-6 flex items-start gap-3 rounded-lg border-l-[3px] px-4 py-3 text-sm [&>svg]:mt-[1px] [&>svg]:size-4 [&>svg]:shrink-0',
+  'my-6 flex min-w-0 items-start gap-3 overflow-hidden rounded-lg border-l-[3px] px-4 py-3 text-sm [&>svg]:mt-[1px] [&>svg]:size-4 [&>svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -208,7 +208,7 @@ function Admonition({
       {...props}
     >
       <Icon aria-hidden="true" />
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         {collapsible ? (
           <button
             type="button"
@@ -240,12 +240,15 @@ function Admonition({
         {!collapsible || open ? (
           <div
             className={cn(
-              'mt-1.5 text-current/80',
+              'mt-1.5 min-w-0 break-words text-current/80 [overflow-wrap:anywhere]',
               '[&>p:first-child]:mt-0',
               '[&_p]:leading-relaxed',
               '[&_ul]:my-3 [&_ul]:ml-5 [&_ul]:list-disc',
               '[&_ol]:my-3 [&_ol]:ml-5 [&_ol]:list-decimal',
               '[&_li]:mt-1.5',
+              '[&_pre]:box-border [&_pre]:max-w-full [&_pre]:overflow-x-auto',
+              '[&_[data-rehype-pretty-code-figure]]:max-w-full [&_[data-rehype-pretty-code-figure]]:overflow-x-auto',
+              '[&_code]:break-words',
             )}
           >
             {title || derivedTitle ? bodyChildren : children}

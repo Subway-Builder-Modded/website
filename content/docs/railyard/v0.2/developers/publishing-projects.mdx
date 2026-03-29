@@ -9,30 +9,9 @@ Railyard does not host mods or maps within the service. Instead, Railyard pulls 
 
 In order to make a submission to the Railyard registry, you need to first upload the source code and release to GitHub and link it to Railyard. To do this, create a new GitHub repository. The actual contents can contain the source code for your map/mod.
 
-::::note[Mod Dependencies]
-
-Mods must declare dependencies in their `manifest.json` (the one shipped inside the mod's download ZIP). The `dependencies` field is required and must include a `subway-builder` semver range:
-
-```json
-"dependencies": {
-  "subway-builder": ">=1.0.0",
-  "some-library": ">=2.0.0"
-}
-```
-
-Each key is a mod ID from the Railyard registry (or `subway-builder` for the base game) and the value is a semver range for the minimum required version.
-
-:::caution
-
-Versions **must** be in [semantic versioning format](https://semver.org/). `1.0`, `abc`, `version-A`, etc. will not work. Your version must be `X.Y.Z` or `vX.Y.Z`.
-
-:::
-
-::::
-
 Once you have the repository set up, create a new release. In this release, place **ALL** the ZIP files containing your various projects (as different release assets). The ZIP files should contain **exactly** the files that are used for the mods, meaning no nested subfolders.
 
-:::important
+::::important
 
 If you are publishing a **mod**, you must expose your mod's `manifest.json` (the same file already inside the ZIP) outside the archive so Railyard can validate it without downloading the full ZIP. Specifically, Railyard checks that the `dependencies` field is present and includes `subway-builder`.
 
@@ -41,7 +20,19 @@ If you are publishing a **mod**, you must expose your mod's `manifest.json` (the
 
 This requirement applies to **mods only** — maps are exempt.
 
+:::note
+
+Mods must declare dependencies in their `manifest.json` (the one shipped inside the mod's download ZIP). The `dependencies` field is required and must include a `subway-builder` semver range. You can also declare another existing mod as a dependency. For more information, see the [Dependencies guide](/railyard/docs/v0.2/developers/dependencies).
+
 :::
+
+:::caution
+
+Versions **must** be in [semantic versioning format](https://semver.org/). `1.0`, `abc`, `version-A`, etc. will not work. Your version must be `X.Y.Z` or `vX.Y.Z`.
+
+:::
+
+::::
 
 ## Step 2 - Submitting to the Registry {#submitting-to-the-registry}
 
@@ -65,103 +56,7 @@ You should _likely_ only need to do this if you are the creator of a large amoun
 
 <TabItem value="submitting-maps" label="Submitting Maps" default>
 
-Once you select "`Publish New Map`", a popup window will appear to input some information about the map. The information should be inputted as follows:
-
-```
-Map ID:         A unique identifier for your map in kebab-case. This is the
-                 permanent directory name in the registry and cannot be changed
-                 later. Must be unique across all maps, so if another map of the
-                 same city already exists, use a distinct ID (e.g. london-detailed,
-                 london-mini). Only lowercase letters, numbers, and hyphens allowed.
-
-City Name:       The human-readable city name shown in Railyard. This is the title
-                 of the map that people will see when downloading it.
-
-City Code:       2-4 letter IATA/ICAO-style city code used by the game internally.
-                 Must be uppercase letters/numbers. Must not clash with vanilla city
-                 codes or other registered maps. Check existing maps before choosing
-                 a code.
-
-Country Code:    ISO 3166-1 alpha-2 country code — two uppercase letters (e.g. US,
-                 GB, CA, DE, JP). Used to group maps by country in Railyard. It is
-                 REQUIRED that you use ISO codes according to this list:
-                 https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes.
-
-Population:      Approximate metropolitan area population. Number only, no commas or
-                 separators. Used for display and sorting in Railyard and it doesn't
-                 need to be exact.
-
-Description:     A short description of what your map does. This is shown in the map
-                 browser. Mention notable features, coverage area, etc.
-
-## Data Attestation
-
-Provide details about your map's data source, data source quality, and level of detail.
-Be honest and transparent in your descriptions and please include the methodology you
-used to generate the map's data. See the Data Quality guide for more information
-(https://subwaybuildermodded.com/railyard/docs/v0.2/developers/data-quality).
-
-Data Source:     Enter the data source used to generate the demand data for your map.
-                 The source name should use common abbreviations like LODES, INSEE,
-                 ONS, etc.
-
-Source Quality:  Approximate quality of the data source used for your map. Official
-                 government sources are considered high-quality while raw open-source
-                 data is considered low-quality. If your data source includes OSM, we
-                 will not consider that high-quality data.
-
-Level of Detail: Approximate level of detail of your map. Demand resolution at the
-                 level of census blocks is considered high-detail, while neighborhood/
-                 city resolutions are considered low-detail.
-
-Methodology:     Description of how demand data was generated for your map. Please include
-                 any details about overcoming data source limitations or any augmentations
-                 done with real-world data.
-
-## Tagging & Image Preview
-
-Railyard allows users to search for maps based on tags and presents a preview image for
-discovery. Please check whichever tags best represent your map. Note that "Location" is
-required.
-
-Location:        Select the real-world region that your map is located in.
-
-Special Demand:  Use these tags only when the map models a meaningful amount of demand
-                 related to the feature.
-                 airports: passenger (non-worker) demand from major airports
-                 entertainment: leisure/tourist demand at stadiums/venues/nightlife
-                 ferries: passenger (non-worker) demand from ferry terminals
-                 hospitals: visitation demand for major medical centers
-                 parks: leisure/tourist demand from large local or national parks
-                 schools: demand from primary/secondary school students
-                 universities: demand from university school students
-
-Gallery:         Drag and drop screenshots here, or paste image URLs (one per line). These
-                 will be displayed in the map browser. At least one image of your demand data
-                 is required.
-
-## Source Code Information
-
-Provide information on where your map is hosted so that Railyard will be able to check your
-repository for updates and allow users to install the map on demand.
-
-Source URL:      URL to your map's source code repository or download page.
-
-Update Type:     The method used by Railyard to fetch updates for your map. Most
-                 maps should use GitHub Releases. Use
-                 Custom URL only if you host your own Update JSON file.
-
-GitHub Repo:     Required ONLY if using GitHub Releases. The owner/repo path (e.g.
-                 username/sb-raleigh) in plaintext, NOT a URL. The repo must exist,
-                 have at least one release, and the latest release must contain a
-                 .zip asset. Leave blank if you are using Custom URL.
-
-Custom URL:      Required ONLY if you selected Custom URL. The full URL to your
-                 self-hosted Update JSON file. The file must follow the Railyard
-                 Update JSON schema. Leave blank if using GitHub Releases. The
-                 guide for using an Update JSON can be found at:
-                 https://subwaybuildermodded.com/railyard/docs/v0.2/developers/using-custom-url.
-```
+Once you select "`Publish New Map`", a popup window will appear to input some information about the map. The information should be inputted according to the issue template.
 
 :::danger[Data Source and Quality]
 
@@ -169,54 +64,23 @@ Railyard requires all map makers to submit the source and quality of their data.
 
 :::
 
+:::tip
+
+For more information on how to properly tag your map, see the [**Tagging guide**](/railyard/docs/v0.2/developers/tagging).
+
+:::
+
 </TabItem>
 
 <TabItem value="submitting-mods" label="Submitting Mods">
 
-Once you select "`Publish New Mod`", a popup window will appear to input some information about the mod. The information should be inputted as follows:
+Once you select "`Publish New Mod`", a popup window will appear to input some information about the mod. The information should be inputted according to the issue template.
 
-```
-Mod ID:      A unique identifier for your mod in kebab-case. This is the permanent
-              directory name in the registry and cannot be changed later. Must be
-              unique across all mods, so check existing listings before submitting.
-              Only lowercase letters, numbers, and hyphens allowed.
+:::tip
 
-Display Name: The human-readable mod name shown in Railyard. This is the title of
-              the mod that people will see when downloading it.
+For more information on how to properly tag your map, see the [**Tagging guide**](/railyard/docs/v0.2/developers/tagging).
 
-Description:  A short description of what your mod does. This is shown in the mod
-              browser.
-
-Tags:         Select all tags that apply to your mod. These help users find your mod
-              in the browser.
-
-Source URL:   URL to your mod's source code repository or download page.
-
-Update Type:  The method used by Railyard to fetch updates for your mod. Most mods
-              should use GitHub Releases. Use Custom URL only if you host your own
-              Update JSON file.
-
-GitHub Repo:  Required ONLY if using GitHub Releases. The owner/repo path (e.g.
-              username/better-trains). The repo must exist, have at least one
-              release, and the latest release must contain both a .zip asset AND a
-              manifest.json asset. Leave blank if you are using Custom URL.
-
-Custom URL:   Required if using Custom URL. The full URL to your self-hosted Update
-              JSON file. The file must follow the Railyard Update JSON schema. Leave
-              blank if using GitHub Releases. The guide for using an Update JSON can
-              be found at:
-              https://subwaybuildermodded.com/railyard/docs/v0.2/developers/using-custom-url.
-
-Manifest URL: Required ONLY if using Custom URL. The full URL to your mod's manifest.
-              json for the current release. Railyard fetches this to validate that
-              your mod declares its dependencies correctly. Leave blank if using
-              GitHub Releases (manifest.json should be uploaded as a release asset
-              instead).
-
-Gallery:      Drag and drop screenshots here, or paste image URLs (one per line).
-              These will be displayed in the mod browser. At least one image is
-              required.
-```
+:::
 
 </TabItem>
 
@@ -225,7 +89,7 @@ Gallery:      Drag and drop screenshots here, or paste image URLs (one per line)
 <details>
   <summary>**Using the Update JSON**</summary>
   
-  For `Custom URL`, place a link to your raw Update JSON file. You can paste the raw link directly copied from your repository, however, it is instead recommended to deploy it to GitHub pages and paste that link there. This can help some users who may be rate limited. To deploy to GitHub pages, create a new file located at `.github/workflows/deploy-releases.yml`. Paste the following into the file:
+For `Custom URL`, place a link to your raw Update JSON file. You can paste the raw link directly copied from your repository, however, it is instead recommended to deploy it to GitHub pages and paste that link there. This can help some users who may be rate limited. To deploy to GitHub pages, create a new file located at `.github/workflows/deploy-releases.yml`. Paste the following into the file:
 
 ```yml
 name: Deploy Update JSON to GitHub Pages

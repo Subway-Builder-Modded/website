@@ -51,6 +51,7 @@ export function DocsOnThisPage({ headings }: { headings: TocHeading[] }) {
     [pathname],
   );
   const [activeId, setActiveId] = React.useState<string>('');
+  const [visibleHeadings, setVisibleHeadings] = React.useState<TocHeading[]>([]);
 
   React.useEffect(() => {
     setMounted(true);
@@ -59,15 +60,61 @@ export function DocsOnThisPage({ headings }: { headings: TocHeading[] }) {
   const isDark = mounted ? resolvedTheme !== 'light' : false;
 
   React.useEffect(() => {
-    const elements = headings
+    let rafId: number | null = null;
+
+    function isVisible(element: HTMLElement) {
+      return element.getClientRects().length > 0;
+    }
+
+    function updateVisibleHeadings() {
+      if (rafId !== null) return;
+
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        const next = headings.filter((heading) => {
+          const element = document.getElementById(heading.id);
+          return !!element && isVisible(element);
+        });
+        setVisibleHeadings(next);
+      });
+    }
+
+    updateVisibleHeadings();
+    window.addEventListener('resize', updateVisibleHeadings);
+    window.addEventListener('mdx-tab-change', updateVisibleHeadings);
+
+    const observerTarget = document.querySelector('main') ?? document.body;
+    const observer = new MutationObserver(updateVisibleHeadings);
+    observer.observe(observerTarget, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['style', 'hidden', 'class', 'data-state'],
+    });
+
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('resize', updateVisibleHeadings);
+      window.removeEventListener('mdx-tab-change', updateVisibleHeadings);
+      observer.disconnect();
+    };
+  }, [headings]);
+
+  React.useEffect(() => {
+    const elements = visibleHeadings
       .map((heading) => document.getElementById(heading.id))
       .filter(Boolean) as HTMLElement[];
 
-    if (!elements.length) return;
+    if (!elements.length) {
+      setActiveId('');
+      return;
+    }
 
     let rafId: number | null = null;
 
-    function update() {
+    function updateActiveHeading() {
       if (rafId !== null) return;
 
       rafId = window.requestAnimationFrame(() => {
@@ -76,22 +123,24 @@ export function DocsOnThisPage({ headings }: { headings: TocHeading[] }) {
       });
     }
 
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    updateActiveHeading();
+    window.addEventListener('scroll', updateActiveHeading, { passive: true });
+    window.addEventListener('resize', updateActiveHeading);
+    window.addEventListener('mdx-tab-change', updateActiveHeading);
+
     return () => {
       if (rafId !== null) {
         window.cancelAnimationFrame(rafId);
       }
-
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', updateActiveHeading);
+      window.removeEventListener('resize', updateActiveHeading);
+      window.removeEventListener('mdx-tab-change', updateActiveHeading);
     };
-  }, [headings]);
+  }, [visibleHeadings]);
 
-  if (!headings.length) return null;
+  if (!visibleHeadings.length) return null;
 
-  const singleHeading = headings.length === 1;
+  const singleHeading = visibleHeadings.length === 1;
   const scheme = PROJECT_COLOR_SCHEMES[activeInstance.id];
   const color = getModeHex(scheme.accentColor, isDark);
 
@@ -103,7 +152,7 @@ export function DocsOnThisPage({ headings }: { headings: TocHeading[] }) {
         ) : null}
 
         <ul className="space-y-1 pb-4">
-          {headings.map((heading) => {
+          {visibleHeadings.map((heading) => {
             const active = activeId === heading.id;
 
             return (

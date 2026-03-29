@@ -5,7 +5,9 @@ import * as LucideIcons from 'lucide-react';
 import type { LucideIcon, LucideProps } from 'lucide-react';
 import { Tabs, TabItem } from '@/components/mdx/mdx-tabs';
 import { IconList, IconItem } from '@/components/mdx/icon-list';
+import { CodeBlock } from '@/components/mdx/code-block';
 import { DocsCardGrid, DocsCard } from '@/components/docs/docs-home-cards';
+import { RailyardTaggingRegions } from '@/components/docs/railyard/tagging-regions';
 import { UpdateSection } from '@/components/updates/update-section';
 
 import {
@@ -151,6 +153,7 @@ const baseComponents: MDXComponents = {
   TabItem,
   DocsCardGrid,
   DocsCard,
+  RailyardTaggingRegions,
   UpdateSection,
   IconList,
   IconItem,
@@ -259,12 +262,7 @@ const baseComponents: MDXComponents = {
     );
   },
 
-  pre: (props) => (
-    <pre
-      className="my-6 overflow-x-auto rounded-xl border bg-muted p-4 text-sm"
-      {...props}
-    />
-  ),
+  pre: (props) => <CodeBlock {...props} />,
 
   blockquote: (props) => (
     <blockquote
