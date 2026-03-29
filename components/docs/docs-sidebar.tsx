@@ -7,7 +7,6 @@ import { useTheme } from 'next-themes';
 import { Archive, ChevronDown, PanelLeftCloseIcon, Tag } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Sheet,
   SheetContent,
@@ -37,7 +36,7 @@ type AppDocsSidebarProps = {
   onToggle: () => void;
   mobileOpen: boolean;
   onMobileOpenChange: (open: boolean) => void;
-  isMobileResolved: boolean;
+  isMobileResolved: boolean | null;
   containerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
@@ -45,6 +44,24 @@ const SWITCHER_ROW_HIGHLIGHT_ALPHA = 0.12;
 const SWITCHER_ROW_NEUTRAL_ALPHA = 0.06;
 const SWITCHER_ICON_CONTRAST_ALPHA = 0.08;
 const SIDEBAR_WIDTH_REM = 17;
+const MOBILE_BREAKPOINT = 768;
+
+function useDocsIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | null>(null);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+
+    onChange();
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  return isMobile;
+}
 
 function withAlpha(color: string, alpha: number) {
   const normalized = color.trim();
@@ -938,6 +955,22 @@ function SidebarPanelContent({
 }
 
 const EDGE_GAP_PX = 24;
+const MOBILE_SIDEBAR_TOP_OFFSET = 'calc(var(--app-navbar-offset, 5.5rem) - 1.5rem)';
+const DESKTOP_SIDEBAR_TOP_GAP_PX = 12;
+
+function getNavbarOffset() {
+  const cssOffset = Number.parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue(
+      '--app-navbar-offset',
+    ),
+  );
+
+  if (Number.isFinite(cssOffset) && cssOffset > 0) {
+    return Math.max(cssOffset, 88);
+  }
+
+  return 88;
+}
 
 export function AppDocsSidebar({
   tree,
@@ -957,47 +990,64 @@ export function AppDocsSidebar({
   const [sidebarTop, setSidebarTop] = React.useState(88);
   const [sidebarLeft, setSidebarLeft] = React.useState(0);
   const [sidebarMaxHeight, setSidebarMaxHeight] = React.useState(500);
+  const [layoutReady, setLayoutReady] = React.useState(false);
 
   const updateLayout = React.useCallback(() => {
-    const navbarOffset =
-      parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          '--app-navbar-offset',
-        ),
-      ) || 88;
-    const idealTop = navbarOffset;
+    const idealTop = getNavbarOffset() + DESKTOP_SIDEBAR_TOP_GAP_PX;
 
     const containerLeft = containerRef?.current
       ? containerRef.current.getBoundingClientRect().left
       : 0;
-    setSidebarLeft(containerLeft + EDGE_GAP_PX);
+    setSidebarLeft(Math.max(EDGE_GAP_PX, containerLeft + EDGE_GAP_PX));
 
-    if (!open) {
-      setSidebarTop(idealTop);
-      setSidebarMaxHeight(window.innerHeight - idealTop - EDGE_GAP_PX);
+    const viewportBound = Math.max(220, window.innerHeight - idealTop - EDGE_GAP_PX);
+    const footer = document.getElementById('site-footer');
+    let maxHeight = viewportBound;
+    if (footer) {
+      const footerTop = footer.getBoundingClientRect().top;
+      const footerBound = Math.max(180, footerTop - idealTop - EDGE_GAP_PX);
+      maxHeight = Math.min(viewportBound, footerBound);
+    }
+
+    setSidebarTop(idealTop);
+    setSidebarMaxHeight(maxHeight);
+    setLayoutReady(true);
+  }, [containerRef]);
+
+  React.useLayoutEffect(() => {
+    if (isMobileResolved === false) {
+      updateLayout();
+    }
+  }, [isMobileResolved, updateLayout]);
+
+  React.useEffect(() => {
+    if (isMobileResolved !== false) {
+      setLayoutReady(false);
       return;
     }
 
-    const footer = document.getElementById('site-footer');
-    const panelEl = panelRef.current;
-    const panelH = panelEl?.getBoundingClientRect().height ?? 0;
-
-    if (footer) {
-      const footerTop = footer.getBoundingClientRect().top;
-      const nextTop = Math.min(idealTop, footerTop - panelH - EDGE_GAP_PX);
-      setSidebarTop(nextTop);
-      setSidebarMaxHeight(window.innerHeight - nextTop - EDGE_GAP_PX);
-    } else {
-      setSidebarTop(idealTop);
-      setSidebarMaxHeight(window.innerHeight - idealTop - EDGE_GAP_PX);
-    }
-  }, [containerRef, open]);
-
-  React.useLayoutEffect(() => {
-    updateLayout();
-  }, [updateLayout]);
+    setLayoutReady(false);
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = window.requestAnimationFrame(() => {
+      raf2 = window.requestAnimationFrame(updateLayout);
+    });
+    return () => {
+      window.cancelAnimationFrame(raf1);
+      window.cancelAnimationFrame(raf2);
+    };
+  }, [isMobileResolved, updateLayout]);
 
   React.useEffect(() => {
+    if (isMobileResolved !== false) return;
+
+    const timeout = window.setTimeout(updateLayout, 160);
+    return () => window.clearTimeout(timeout);
+  }, [isMobileResolved, updateLayout]);
+
+  React.useEffect(() => {
+    if (isMobileResolved !== false) return;
+
     if (open) {
       window.addEventListener('scroll', updateLayout, { passive: true });
     }
@@ -1010,11 +1060,11 @@ export function AppDocsSidebar({
       window.removeEventListener('resize', updateLayout);
       ro.disconnect();
     };
-  }, [updateLayout, containerRef, open]);
+  }, [isMobileResolved, updateLayout, containerRef, open]);
 
   React.useLayoutEffect(() => {
     const scrollEl = scrollRef.current;
-    if (!scrollEl || !open) {
+    if (!scrollEl || !open || !layoutReady) {
       setShowScrollThumb(false);
       return;
     }
@@ -1049,7 +1099,11 @@ export function AppDocsSidebar({
       window.removeEventListener('resize', updateThumb);
       ro.disconnect();
     };
-  }, [open]);
+  }, [layoutReady, open]);
+
+  if (isMobileResolved === null) {
+    return null;
+  }
 
   if (isMobileResolved) {
     return (
@@ -1057,8 +1111,20 @@ export function AppDocsSidebar({
         <SheetContent
           side="left"
           closeButton={false}
-          className="bg-background/95 p-0 backdrop-blur-md"
-          style={{ width: `${SIDEBAR_WIDTH_REM}rem` }}
+          isFloat={false}
+          overlayClassName="bg-transparent backdrop-blur-0"
+          className={cn(
+            'inset-y-auto top-[var(--docs-mobile-sidebar-top)] h-[calc(100svh-var(--docs-mobile-sidebar-top))]',
+            'w-(--sidebar-width) max-w-none bg-sidebar p-0 text-sidebar-foreground',
+            'entering:duration-200 entering:ease-out exiting:duration-160 exiting:ease-in',
+            '[&>button]:hidden',
+          )}
+          style={
+            {
+              '--docs-mobile-sidebar-top': MOBILE_SIDEBAR_TOP_OFFSET,
+              '--sidebar-width': `${SIDEBAR_WIDTH_REM}rem`,
+            } as React.CSSProperties
+          }
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Docs navigation</SheetTitle>
@@ -1074,6 +1140,10 @@ export function AppDocsSidebar({
         </SheetContent>
       </Sheet>
     );
+  }
+
+  if (!layoutReady) {
+    return null;
   }
 
   const panelStyle: React.CSSProperties = {
@@ -1167,8 +1237,14 @@ export function DocsSidebarShell({
 }) {
   const [open, setOpen] = React.useState(true);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const isMobileResolved = useIsMobile();
+  const isMobileResolved = useDocsIsMobile();
   const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (isMobileResolved === false) {
+      setMobileOpen(false);
+    }
+  }, [isMobileResolved]);
 
   const toggle = () => {
     const next = !open;
@@ -1191,15 +1267,19 @@ export function DocsSidebarShell({
         containerRef={containerRef}
       />
       <div
-        className="min-w-0 w-full transition-[padding-left] duration-200 ease-out"
-        style={{
-          paddingLeft:
-            !isMobileResolved && open
-              ? `${SIDEBAR_TOTAL_OFFSET_REM}rem`
-              : undefined,
-        }}
+        className={cn(
+          'min-w-0 w-full transition-[padding-left] duration-200 ease-out',
+          open &&
+            isMobileResolved !== true &&
+            'md:pl-[var(--docs-sidebar-content-offset)]',
+        )}
+        style={
+          {
+            '--docs-sidebar-content-offset': `${SIDEBAR_TOTAL_OFFSET_REM}rem`,
+          } as React.CSSProperties
+        }
       >
-        {isMobileResolved && (
+        {isMobileResolved === true && (
           <div className="sticky top-[var(--app-navbar-offset,5.5rem)] z-20 px-5 pt-4 pb-0 md:hidden">
             <button
               type="button"
@@ -1207,7 +1287,7 @@ export function DocsSidebarShell({
               className="flex items-center gap-2 rounded-lg border border-border/70 bg-background/90 px-3 py-2 text-sm font-semibold text-muted-foreground shadow-sm backdrop-blur-md hover:bg-accent/45 hover:text-primary"
             >
               <PanelLeftCloseIcon className="size-4 rotate-180" />
-              Docs menu
+              Expand Sidebar
             </button>
           </div>
         )}

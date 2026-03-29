@@ -32,6 +32,8 @@ const CONTENT_ROOT = path.join(process.cwd(), 'content', 'docs');
 export type DocsFrontmatter = {
   title: string;
   description?: string;
+  // Backward-compatible typo support for existing content files.
+  desctription?: string;
 };
 
 export type DocsBreadcrumbItem = {
@@ -408,6 +410,13 @@ export async function getDocsDocTitle(slug?: string[]) {
 
   const frontmatter = await readFrontmatter(filePath);
   return frontmatter?.title ?? null;
+}
+
+export async function getDocsDocFrontmatter(slug?: string[]) {
+  const filePath = await resolveDocsDocFilePath(slug);
+  if (!filePath) return null;
+
+  return readFrontmatter(filePath);
 }
 
 export async function getAllDocsDocSlugs(): Promise<string[][]> {

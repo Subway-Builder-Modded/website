@@ -52,6 +52,8 @@ function MdxLink({
   children,
   ...props
 }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const linkClassName =
+    'font-medium text-primary underline underline-offset-4 break-words [overflow-wrap:anywhere]';
   const isHash = href.startsWith('#');
   const isInternal = href.startsWith('/');
   const isExternal =
@@ -62,11 +64,7 @@ function MdxLink({
 
   if (isHash) {
     return (
-      <a
-        href={href}
-        className="font-medium text-primary underline underline-offset-4"
-        {...props}
-      >
+      <a href={href} className={linkClassName} {...props}>
         {children}
       </a>
     );
@@ -74,11 +72,7 @@ function MdxLink({
 
   if (isInternal) {
     return (
-      <Link
-        href={href}
-        className="font-medium text-primary underline underline-offset-4"
-        {...props}
-      >
+      <Link href={href} className={linkClassName} {...props}>
         {children}
       </Link>
     );
@@ -88,7 +82,7 @@ function MdxLink({
     return (
       <a
         href={href}
-        className="font-medium text-primary underline underline-offset-4"
+        className={linkClassName}
         target="_blank"
         rel="noreferrer"
         {...props}
@@ -99,11 +93,7 @@ function MdxLink({
   }
 
   return (
-    <a
-      href={href}
-      className="font-medium text-primary underline underline-offset-4"
-      {...props}
-    >
+    <a href={href} className={linkClassName} {...props}>
       {children}
     </a>
   );
@@ -213,7 +203,10 @@ const baseComponents: MDXComponents = {
   },
 
   p: (props) => (
-    <p className="leading-7 [&:not(:first-child)]:mt-6" {...props} />
+    <p
+      className="leading-7 break-words [overflow-wrap:anywhere] [&:not(:first-child)]:mt-6"
+      {...props}
+    />
   ),
 
   ul: (props) => <ul className="my-6 ml-6 list-disc [&>li]:mt-2" {...props} />,
@@ -222,7 +215,9 @@ const baseComponents: MDXComponents = {
     <ol className="my-6 ml-6 list-decimal [&>li]:mt-2" {...props} />
   ),
 
-  li: (props) => <li className="leading-7" {...props} />,
+  li: (props) => (
+    <li className="leading-7 break-words [overflow-wrap:anywhere]" {...props} />
+  ),
 
   strong: (props) => <strong className="font-semibold" {...props} />,
 

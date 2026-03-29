@@ -24,7 +24,7 @@ import { useMDXComponents as getMDXComponents } from '@/mdx-components';
 import {
   extractTocHeadings,
   getDocsBreadcrumbs,
-  getDocsDocTitle,
+  getDocsDocFrontmatter,
   getAllDocsDocSlugs,
   resolveDocsDocFilePath,
   type DocsFrontmatter,
@@ -117,12 +117,24 @@ export async function generateMetadata({
     };
   }
 
-  const title = await getDocsDocTitle([instanceId, ...normalizedSlug]);
+  const frontmatter = await getDocsDocFrontmatter([instanceId, ...normalizedSlug]);
+  const title = frontmatter?.title;
+  const description =
+    frontmatter?.description?.trim() ||
+    frontmatter?.desctription?.trim() ||
+    resolved.instance.hub.description;
 
   return {
     title: title
       ? `${title} | ${resolved.instance.label} | Subway Builder Modded`
       : `${resolved.instance.label} Docs | Subway Builder Modded`,
+    description,
+    openGraph: {
+      description,
+    },
+    twitter: {
+      description,
+    },
   };
 }
 

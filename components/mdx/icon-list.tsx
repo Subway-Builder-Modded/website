@@ -80,7 +80,7 @@ export function IconItem({
         <span aria-hidden="true" className="inline-block h-[1em] w-[1em]" />
       )}
 
-      <div className="min-w-0 leading-7 [&>[data-slot=mdx-icon-list]]:mt-2">
+      <div className="min-w-0 break-words leading-7 [overflow-wrap:anywhere] [&>[data-slot=mdx-icon-list]]:mt-2 [&_a]:break-words [&_a]:[overflow-wrap:anywhere]">
         {children}
       </div>
     </div>
