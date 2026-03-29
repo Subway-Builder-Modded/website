@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm';
 
 import { PageHeader } from '@/components/page/page-header';
 import { ThemedShowcaseCard } from '@/components/ui/themed-showcase-card';
+import { buildEmbedMetadata } from '@/config/site/metadata';
 import { SHARED_TEXT_COLOR } from '@/config/theme/colors';
 import { hexAlpha } from '@/lib/color';
 import { useMDXComponents as getMDXComponents } from '@/mdx-components';
@@ -24,11 +25,11 @@ const LICENSE_MDX_PATH = path.join(
 );
 const NEUTRAL_ACCENT = SHARED_TEXT_COLOR;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildEmbedMetadata({
   title: 'License | Subway Builder Modded',
   description:
     'GNU General Public License v3.0 for Subway Builder Modded projects.',
-};
+});
 
 export default async function LicensePage() {
   const source = await fs.readFile(LICENSE_MDX_PATH, 'utf8');

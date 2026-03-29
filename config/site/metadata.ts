@@ -5,7 +5,7 @@ export const SITE_DESCRIPTION =
   'The complete hub for everything modded in Subway Builder.';
 export const SITE_URL_FALLBACK = 'https://subwaybuildermodded.com';
 export const SITE_LOGO_PATH = '/logo.png';
-export const SITE_OG_IMAGE_PATH = '/images/shared/website-dark.png';
+export const SITE_OG_IMAGE_PATH = SITE_LOGO_PATH;
 
 export function resolveSiteMetadataBase(
   configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL,

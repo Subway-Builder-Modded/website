@@ -7,14 +7,15 @@ import remarkGfm from 'remark-gfm';
 import { PageHeader } from '@/components/page/page-header';
 import { ThemedShowcaseCard } from '@/components/ui/themed-showcase-card';
 import { CREDIT_SECTIONS, type CreditSection } from '@/config/content/credits';
+import { buildEmbedMetadata } from '@/config/site/metadata';
 import { CREDITS_PAGE_CONTENT } from '@/config/ui/site-content';
 import { hexAlpha } from '@/lib/color';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildEmbedMetadata({
   title: 'Credits | Subway Builder Modded',
   description:
     'Subway Builder Modded is a community-driven project made possible by dedicated contributors.',
-};
+});
 
 const SECTION_ICON_MAP = CREDITS_PAGE_CONTENT.sectionIcons;
 const CREDITS_ACCENT = CREDITS_PAGE_CONTENT.accentHex;
