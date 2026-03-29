@@ -23,13 +23,22 @@ In the `manifest.json` you create for your mod, create a new field called depend
 
 ### Dependency Fields {#dependency-fields}
 Dependencies can be declared using the following format:
+
 ```json
 {
     "dependencies": {
-        "mod-id": ">=X.Y.Z" // version constraint, either >= (greater than or equal), or <= (less than or equal)
+        "mod-a": ">X.Y.Z", // greater than
+        "mod-b": "<=A.B.C", // less than or equal
     }
 }
 ```
-In order for Railyard to install dependencies, the Mod ID must match a mod in the [Registry](https://github.com/Subway-Builder-Modded/The-Railyard), and the version constraint must be compatible with at least one version of the mod.
+
+:::note
+
+In the example above, `mod-a` and `mod-b` are the mod IDs of the mods you depend on.
+
+:::
+
+In order for Railyard to install dependencies, the Mod ID must match a mod in the [registry](https://github.com/Subway-Builder-Modded/The-Railyard), and the version constraint must be compatible with at least one version of the mod.
 
 Otherwise, that's it! Railyard will select and install the latest, most compatible version of your dependencies for you, and even ensure nested dependencies are installed properly. All you have to do is declare them, and we'll handle the rest.
