@@ -27,7 +27,6 @@ import {
 } from '@/lib/registry-analytics-helpers';
 import {
   DailyDownloadChart,
-  getAuthorDisplayName,
   getListingColor,
   RankBadge,
   RegistryDetailShell,
@@ -266,7 +265,6 @@ export function RegistryListingPage({
     return (
       <RegistryDetailShell
         title="Not Found"
-        subtitle="This listing could not be found."
         type={type}
         snapshotLabel={data.snapshotLabel}
       >
@@ -280,18 +278,6 @@ export function RegistryListingPage({
   return (
     <RegistryDetailShell
       title={listing.name}
-      subtitle={
-        <>
-          {type === 'mod' ? 'Mod' : 'Map'} by{' '}
-          <Link
-            href={`/registry/author/${encodeURIComponent(listing.author)}`}
-            className="font-medium"
-            style={{ color }}
-          >
-            {getAuthorDisplayName(listing)}
-          </Link>
-        </>
-      }
       type={type}
       snapshotLabel={data.snapshotLabel}
       actions={

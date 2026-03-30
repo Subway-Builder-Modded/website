@@ -152,7 +152,6 @@ export function RegistryAuthorPage({
   return (
     <RegistryDetailShell
       title={displayName}
-      subtitle="Registry stats for this author."
       snapshotLabel={data.snapshotLabel}
       actions={
         attributionHref ? (
