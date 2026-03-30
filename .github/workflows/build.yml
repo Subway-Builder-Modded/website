@@ -29,11 +29,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Checkout registry analytics
-        if: ${{ secrets.RAILYARD_GITHUB_TOKEN != '' }}
         uses: actions/checkout@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         with:
           repository: Subway-Builder-Modded/The-Railyard
-          token: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
+          token: ${{ env.GITHUB_TOKEN }}
           path: The-Railyard
           sparse-checkout: |
             analytics
