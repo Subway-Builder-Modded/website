@@ -8,6 +8,9 @@ import {
   Rocket,
   TrainTrack,
   Users,
+  Database,
+  ChartLine,
+  FolderGit2,
 } from 'lucide-react';
 import type { HomeLink, HomeProjectCard } from '@/config/site/homepage.types';
 
@@ -97,6 +100,39 @@ export const HOME_PROJECT_SECTION = {
           variant: 'outline',
           icon: Rocket,
           scheme: 'railyard',
+          size: 'md',
+        },
+      ],
+    },
+    {
+      id: 'registry',
+      title: 'Registry',
+      description:
+        'The GitHub-hosted registry powering Railyard and its services.',
+      scheme: 'registry',
+      icon: Database,
+      image: {
+        light: '/images/shared/registry-light.png',
+        dark: '/images/shared/registry-dark.png',
+        alt: 'Registry preview',
+      },
+      buttons: [
+        {
+          label: 'Analytics',
+          href: '/registry',
+          external: false,
+          variant: 'solid',
+          icon: ChartLine,
+          scheme: 'registry',
+          size: 'md',
+        },
+        {
+          label: 'View the Registry',
+          href: 'https://github.com/Subway-Builder-Modded/The-Railyard',
+          external: true,
+          variant: 'outline',
+          icon: FolderGit2,
+          scheme: 'registry',
           size: 'md',
         },
       ],

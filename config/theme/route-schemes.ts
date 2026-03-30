@@ -8,6 +8,8 @@ export type SiteColorSchemeRouteRule = {
 export const SITE_COLOR_SCHEME_ROUTE_RULES: SiteColorSchemeRouteRule[] = [
   { pattern: '/railyard/**', scheme: 'railyard' },
   { pattern: '/template-mod/**', scheme: 'template-mod' },
+  { pattern: '/registry/**', scheme: 'registry' },
+  { pattern: '/registry', scheme: 'registry' },
 ];
 
 function normalizePathname(pathname: string): string {

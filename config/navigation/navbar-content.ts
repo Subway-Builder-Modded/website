@@ -2,7 +2,6 @@ import {
   BookText,
   Download,
   FileSearchCorner,
-  FolderGit2,
   Globe,
   HeartHandshake,
   Home,
@@ -14,6 +13,8 @@ import {
   SunMoon,
   TrainTrack,
   Users,
+  Database,
+  ChartLine,
 } from 'lucide-react';
 import type {
   AppNavbarBrand,
@@ -91,7 +92,7 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     schemeId: 'railyard',
     dropdown: [
       {
-        id: 'railyard-download',
+        id: 'railyard-home',
         title: 'Download',
         href: '/railyard',
         icon: Download,
@@ -125,6 +126,23 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
         href: '/railyard/updates',
         icon: Megaphone,
         schemeId: 'railyard',
+      },
+    ],
+  },
+  {
+    id: 'registry',
+    title: 'Registry',
+    href: '/registry',
+    icon: Database,
+    position: 'left',
+    schemeId: 'registry',
+    dropdown: [
+      {
+        id: 'registry-home',
+        title: 'Analytics',
+        href: '/registry',
+        icon: ChartLine,
+        schemeId: 'registry',
       },
     ],
   },
@@ -206,7 +224,7 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
         id: 'github-registry',
         title: 'Registry',
         href: 'https://github.com/Subway-Builder-Modded/The-Railyard',
-        icon: FolderGit2,
+        icon: Database,
         schemeId: 'registry',
       },
       {

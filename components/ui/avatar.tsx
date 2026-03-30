@@ -85,6 +85,7 @@ export function Avatar({
           fill
           unoptimized
           sizes="100vw"
+          priority
         />
       )}
     </span>

@@ -10,6 +10,8 @@ import {
   Megaphone,
   Package,
   Globe,
+  Database,
+  ChartLine,
 } from 'lucide-react';
 import {
   PROJECT_COLOR_SCHEMES,
@@ -105,7 +107,7 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
     colorScheme: 'railyard',
     links: [
       {
-        id: 'railyard-download',
+        id: 'railyard-home',
         label: 'Download',
         href: '/railyard',
         icon: Download,
@@ -137,13 +139,27 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
     ],
   },
   {
+    id: 'registry',
+    title: 'Registry',
+    icon: Database,
+    colorScheme: 'registry',
+    links: [
+      {
+        id: 'registry-home',
+        label: 'Analytics',
+        href: '/registry',
+        icon: ChartLine,
+      },
+    ],
+  },
+  {
     id: 'template-mod',
     title: 'Template Mod',
     icon: Package,
     colorScheme: 'template-mod',
     links: [
       {
-        id: 'template-mod-download',
+        id: 'template-mod-home',
         label: 'Home',
         href: '/template-mod',
         icon: Home,
