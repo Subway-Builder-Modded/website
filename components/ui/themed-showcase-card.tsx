@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
 
+import { getCurrentSuiteModeHex } from '@/config/theme/css-vars';
 import type { ThemedColorSet } from '@/config/theme/colors';
-import type { SiteColorSchemeId } from '@/config/theme/scheme-config';
+import type { SiteColorSchemeId } from '@/config/theme/contracts';
 import {
   PROJECT_COLOR_SCHEMES,
   SHARED_TEXT_COLOR,
@@ -53,26 +54,11 @@ function resolvePaletteFromScheme(
 ): ThemedShowcaseCardPalette {
   if (!scheme) {
     return {
-      accent: {
-        light: 'var(--suite-accent-light)',
-        dark: 'var(--suite-accent-dark)',
-      },
-      primary: {
-        light: 'var(--suite-primary-light)',
-        dark: 'var(--suite-primary-dark)',
-      },
-      secondary: {
-        light: 'var(--suite-secondary-light)',
-        dark: 'var(--suite-secondary-dark)',
-      },
-      text: {
-        light: 'var(--suite-text-light)',
-        dark: 'var(--suite-text-dark)',
-      },
-      textInverted: {
-        light: 'var(--suite-text-inverted-light)',
-        dark: 'var(--suite-text-inverted-dark)',
-      },
+      accent: getCurrentSuiteModeHex('accentColor'),
+      primary: getCurrentSuiteModeHex('primaryColor'),
+      secondary: getCurrentSuiteModeHex('secondaryColor'),
+      text: getCurrentSuiteModeHex('textColor'),
+      textInverted: getCurrentSuiteModeHex('textColorInverted'),
     };
   }
 

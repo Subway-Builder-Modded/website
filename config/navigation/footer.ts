@@ -17,13 +17,13 @@ import {
   SHARED_TEXT_COLOR,
   type ModeHex,
 } from '@/config/theme/colors';
-import type { NavbarIcon } from '@/config/navigation/navbar';
+import type { AppIconValue } from '@/lib/icons';
 
 export type FooterNavLink = {
   id: string;
   label: string;
   href: string;
-  icon: NavbarIcon;
+  icon: AppIconValue;
 };
 
 type FooterNavColorScheme = {
@@ -59,7 +59,7 @@ export type FooterNavColorSchemeId = keyof typeof FOOTER_NAV_COLOR_SCHEMES;
 export type FooterNavSection = {
   id: string;
   title: string;
-  icon: NavbarIcon;
+  icon: AppIconValue;
   colorScheme: FooterNavColorSchemeId;
   links: FooterNavLink[];
 };
@@ -68,7 +68,7 @@ export type FooterSocialLink = {
   id: string;
   label: string;
   href: string;
-  icon: NavbarIcon;
+  icon: AppIconValue;
 };
 
 export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
@@ -175,13 +175,13 @@ export const FOOTER_SOCIAL_LINKS: FooterSocialLink[] = [
     id: 'discord',
     label: 'Discord',
     href: 'https://discord.gg/syG9YHMyeG',
-    icon: { type: 'mask', src: '/assets/discord.svg' },
+    icon: 'discord',
   },
   {
     id: 'github',
     label: 'GitHub',
     href: 'https://github.com/Subway-Builder-Modded',
-    icon: { type: 'mask', src: '/assets/github.svg' },
+    icon: 'github',
   },
 ];
 

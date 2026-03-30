@@ -78,7 +78,7 @@ export const APP_NAVBAR_SIZES: AppNavbarSizes = {
 export const APP_NAVBAR_BRAND: AppNavbarBrand = {
   title: 'Subway Builder Modded',
   href: '/',
-  icon: { type: 'image', src: '/logo.png' },
+  icon: 'logo',
 };
 
 export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
@@ -172,14 +172,14 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
   {
     id: 'discord',
     href: 'https://discord.gg/syG9YHMyeG',
-    icon: { type: 'mask', src: '/assets/discord.svg' },
+    icon: 'discord',
     position: 'right',
     dropdown: [
       {
         id: 'subway-builder',
         title: 'Subway Builder',
         href: 'https://discord.gg/jrNQpbytUQ',
-        icon: { type: 'image', src: '/assets/subway-builder.svg' },
+        icon: 'subway-builder',
       },
       {
         id: 'subway-builder-modded',
@@ -192,7 +192,7 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
   {
     id: 'github',
     href: 'https://github.com/Subway-Builder-Modded',
-    icon: { type: 'mask', src: '/assets/github.svg' },
+    icon: 'github',
     position: 'right',
     dropdown: [
       {

@@ -954,21 +954,6 @@ function SidebarPanelContent({
 const EDGE_GAP_PX = 24;
 const MOBILE_SIDEBAR_TOP_OFFSET =
   'calc(var(--app-navbar-offset, 5.5rem) - 1.5rem)';
-const DESKTOP_SIDEBAR_TOP_GAP_PX = 12;
-
-function getNavbarOffset() {
-  const cssOffset = Number.parseFloat(
-    getComputedStyle(document.documentElement).getPropertyValue(
-      '--app-navbar-offset',
-    ),
-  );
-
-  if (Number.isFinite(cssOffset) && cssOffset > 0) {
-    return Math.max(cssOffset, 88);
-  }
-
-  return 88;
-}
 
 export function AppDocsSidebar({
   tree,
@@ -988,67 +973,47 @@ export function AppDocsSidebar({
   const [sidebarTop, setSidebarTop] = React.useState(88);
   const [sidebarLeft, setSidebarLeft] = React.useState(0);
   const [sidebarMaxHeight, setSidebarMaxHeight] = React.useState(500);
-  const [layoutReady, setLayoutReady] = React.useState(false);
 
   const updateLayout = React.useCallback(() => {
-    const idealTop = getNavbarOffset() + DESKTOP_SIDEBAR_TOP_GAP_PX;
+    const navbarOffset =
+      Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          '--app-navbar-offset',
+        ),
+      ) || 88;
+    const idealTop = navbarOffset;
 
     const containerLeft = containerRef?.current
       ? containerRef.current.getBoundingClientRect().left
       : 0;
-    setSidebarLeft(Math.max(EDGE_GAP_PX, containerLeft + EDGE_GAP_PX));
+    setSidebarLeft(containerLeft + EDGE_GAP_PX);
 
-    const viewportBound = Math.max(
-      220,
-      window.innerHeight - idealTop - EDGE_GAP_PX,
-    );
-    const footer = document.getElementById('site-footer');
-    let maxHeight = viewportBound;
-    if (footer) {
-      const footerTop = footer.getBoundingClientRect().top;
-      const footerBound = Math.max(180, footerTop - idealTop - EDGE_GAP_PX);
-      maxHeight = Math.min(viewportBound, footerBound);
-    }
-
-    setSidebarTop(idealTop);
-    setSidebarMaxHeight(maxHeight);
-    setLayoutReady(true);
-  }, [containerRef]);
-
-  React.useLayoutEffect(() => {
-    if (isMobileResolved === false) {
-      updateLayout();
-    }
-  }, [isMobileResolved, updateLayout]);
-
-  React.useEffect(() => {
-    if (isMobileResolved !== false) {
-      setLayoutReady(false);
+    if (!open) {
+      setSidebarTop(idealTop);
+      setSidebarMaxHeight(window.innerHeight - idealTop - EDGE_GAP_PX);
       return;
     }
 
-    setLayoutReady(false);
-    let raf1 = 0;
-    let raf2 = 0;
-    raf1 = window.requestAnimationFrame(() => {
-      raf2 = window.requestAnimationFrame(updateLayout);
-    });
-    return () => {
-      window.cancelAnimationFrame(raf1);
-      window.cancelAnimationFrame(raf2);
-    };
-  }, [isMobileResolved, updateLayout]);
+    const footer = document.getElementById('site-footer');
+    const panelEl = panelRef.current;
+    const panelH = panelEl?.getBoundingClientRect().height ?? 0;
+
+    if (footer) {
+      const footerTop = footer.getBoundingClientRect().top;
+      const nextTop = Math.min(idealTop, footerTop - panelH - EDGE_GAP_PX);
+      setSidebarTop(nextTop);
+      setSidebarMaxHeight(window.innerHeight - nextTop - EDGE_GAP_PX);
+    } else {
+      setSidebarTop(idealTop);
+      setSidebarMaxHeight(window.innerHeight - idealTop - EDGE_GAP_PX);
+    }
+  }, [containerRef, open]);
+
+  React.useLayoutEffect(() => {
+    updateLayout();
+  }, [updateLayout]);
 
   React.useEffect(() => {
-    if (isMobileResolved !== false) return;
-
-    const timeout = window.setTimeout(updateLayout, 160);
-    return () => window.clearTimeout(timeout);
-  }, [isMobileResolved, updateLayout]);
-
-  React.useEffect(() => {
-    if (isMobileResolved !== false) return;
-
     if (open) {
       window.addEventListener('scroll', updateLayout, { passive: true });
     }
@@ -1061,11 +1026,11 @@ export function AppDocsSidebar({
       window.removeEventListener('resize', updateLayout);
       ro.disconnect();
     };
-  }, [isMobileResolved, updateLayout, containerRef, open]);
+  }, [updateLayout, containerRef, open]);
 
   React.useLayoutEffect(() => {
     const scrollEl = scrollRef.current;
-    if (!scrollEl || !open || !layoutReady) {
+    if (!scrollEl || !open) {
       setShowScrollThumb(false);
       return;
     }
@@ -1100,7 +1065,7 @@ export function AppDocsSidebar({
       window.removeEventListener('resize', updateThumb);
       ro.disconnect();
     };
-  }, [layoutReady, open]);
+  }, [open]);
 
   if (isMobileResolved === null) {
     return null;
@@ -1141,10 +1106,6 @@ export function AppDocsSidebar({
         </SheetContent>
       </Sheet>
     );
-  }
-
-  if (!layoutReady) {
-    return null;
   }
 
   const panelStyle: React.CSSProperties = {

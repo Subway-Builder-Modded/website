@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { resolveSiteColorScheme } from '@/config/theme/scheme-config';
+import { SITE_COLOR_SCHEME_ROUTE_RULES } from '@/config/theme/route-schemes';
 
 describe('resolveSiteColorScheme', () => {
   it('resolves project schemes for matching paths', () => {
@@ -20,5 +21,12 @@ describe('resolveSiteColorScheme', () => {
     expect(resolveSiteColorScheme('/')).toBe('default');
     expect(resolveSiteColorScheme('/docs')).toBe('default');
     expect(resolveSiteColorScheme('/registry')).toBe('default');
+  });
+
+  it('keeps route scheme rules discoverable in config order', () => {
+    expect(SITE_COLOR_SCHEME_ROUTE_RULES).toEqual([
+      { pattern: '/railyard/**', scheme: 'railyard' },
+      { pattern: '/template-mod/**', scheme: 'template-mod' },
+    ]);
   });
 });

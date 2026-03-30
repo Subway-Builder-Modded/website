@@ -1,13 +1,5 @@
-export type ProjectColorId =
-  | 'railyard'
-  | 'registry'
-  | 'template-mod'
-  | 'website';
-
-export type ModeHex = {
-  light: string;
-  dark: string;
-};
+import type { ModeHex, ProjectColorId } from '@/config/theme/contracts';
+export type { ModeHex, ProjectColorId } from '@/config/theme/contracts';
 
 export type ThemedColorSetBase = {
   accentColor: ModeHex;

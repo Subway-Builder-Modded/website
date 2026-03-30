@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
-import type { NavbarIcon } from '@/config/navigation/navbar';
-import type { ProjectColorId } from '@/config/theme/colors';
+import type { AppIconValue } from '@/lib/icons';
+import type { ProjectColorId } from '@/config/theme/contracts';
 
 export type HomeButtonScheme = 'default' | ProjectColorId;
 export type HomeButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -9,7 +9,7 @@ export type HomeLink = {
   label: string;
   href: string;
   external?: boolean;
-  icon?: NavbarIcon;
+  icon?: AppIconValue;
   variant: 'solid' | 'outline';
   scheme?: HomeButtonScheme;
   size: HomeButtonSize;

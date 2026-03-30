@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { buttonStyles } from '@/components/ui/button';
 import {
   InputGroup,
   InputGroupAddon,
@@ -250,7 +250,12 @@ function ComboboxChip({
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
-          render={<Button intent="plain" size="sq-xs" />}
+          render={
+            <button
+              type="button"
+              className={buttonStyles({ intent: 'plain', size: 'sq-xs' })}
+            />
+          }
           className="-ml-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
         >

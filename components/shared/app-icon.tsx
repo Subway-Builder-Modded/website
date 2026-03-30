@@ -1,67 +1,70 @@
 import type { CSSProperties } from 'react';
-import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import type { NavbarIcon } from '@/config/navigation/navbar';
+import {
+  isImageIcon,
+  isMaskIcon,
+  resolveAppIcon,
+  type AppIconInput,
+} from '@/lib/icons';
 
 type AppIconProps = {
-  icon?: NavbarIcon;
+  icon?: AppIconInput;
   className?: string;
   style?: CSSProperties;
+  size?: number | string;
 };
 
-function isMaskIcon(
-  icon: NavbarIcon,
-): icon is Extract<NavbarIcon, { type: 'mask' }> {
-  return (
-    typeof icon === 'object' &&
-    icon !== null &&
-    'type' in icon &&
-    icon.type === 'mask'
-  );
-}
+export function AppIcon({ icon, className, style, size }: AppIconProps) {
+  const resolvedIcon = resolveAppIcon(icon);
+  if (!resolvedIcon) return null;
+  const sizeStyle =
+    size !== undefined
+      ? {
+          width: size,
+          height: size,
+        }
+      : undefined;
 
-function isImageIcon(
-  icon: NavbarIcon,
-): icon is Extract<NavbarIcon, { type: 'image' }> {
-  return (
-    typeof icon === 'object' &&
-    icon !== null &&
-    'type' in icon &&
-    icon.type === 'image'
-  );
-}
-
-export function AppIcon({ icon, className, style }: AppIconProps) {
-  if (!icon) return null;
-
-  if (isMaskIcon(icon)) {
+  if (isMaskIcon(resolvedIcon)) {
     return (
       <span
         className={cn('block size-5 bg-current', className)}
         style={{
-          WebkitMask: `url(${icon.src}) center / contain no-repeat`,
-          mask: `url(${icon.src}) center / contain no-repeat`,
+          WebkitMask: `url(${resolvedIcon.src}) center / contain no-repeat`,
+          mask: `url(${resolvedIcon.src}) center / contain no-repeat`,
+          ...sizeStyle,
           ...style,
         }}
       />
     );
   }
 
-  if (isImageIcon(icon)) {
+  if (isImageIcon(resolvedIcon)) {
     return (
       <Image
-        src={icon.src}
+        src={resolvedIcon.src}
         alt=""
         aria-hidden={true}
         width={20}
         height={20}
         className={cn('block size-5 object-contain', className)}
-        style={style}
+        style={{
+          ...sizeStyle,
+          ...style,
+        }}
       />
     );
   }
 
-  const Icon = icon as LucideIcon;
-  return <Icon className={cn('size-5', className)} style={style} />;
+  const Icon = resolvedIcon;
+  return (
+    <Icon
+      className={cn('size-5', className)}
+      style={{
+        ...sizeStyle,
+        ...style,
+      }}
+    />
+  );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, type CSSProperties, type RefObject } from 'react';
+import { useCallback, useMemo, useState, type CSSProperties, type RefCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import {
@@ -15,8 +15,9 @@ import { DesktopNavbar } from './app-navbar/desktop-navbar';
 import { MobileNavbar } from './app-navbar/mobile-navbar';
 
 export default function AppNavbar(props: NavbarProps) {
-  const headerRef = useRef<HTMLDivElement>(null);
-  useNavbarOffset(headerRef);
+  const [headerElement, setHeaderElement] = useState<HTMLDivElement | null>(null);
+  const headerRef = useCallback((el: HTMLDivElement | null) => setHeaderElement(el), []);
+  useNavbarOffset(headerElement);
 
   const configStyleVars = useMemo(
     () => createNavbarConfigStyleVars(APP_NAVBAR_CONFIG.sizes),
@@ -35,7 +36,7 @@ export default function AppNavbar(props: NavbarProps) {
 }
 
 type AppNavbarInnerProps = NavbarProps & {
-  headerRef: RefObject<HTMLDivElement | null>;
+  headerRef: RefCallback<HTMLDivElement>;
   configStyleVars: CSSProperties;
 };
 

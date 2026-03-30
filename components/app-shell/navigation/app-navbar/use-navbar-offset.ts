@@ -1,8 +1,7 @@
-import { useEffect, type RefObject } from 'react';
+import { useEffect } from 'react';
 
-export function useNavbarOffset(headerRef: RefObject<HTMLDivElement | null>) {
+export function useNavbarOffset(element: HTMLDivElement | null) {
   useEffect(() => {
-    const element = headerRef.current;
     if (!element) return;
 
     const updateOffset = () => {
@@ -24,5 +23,5 @@ export function useNavbarOffset(headerRef: RefObject<HTMLDivElement | null>) {
       window.removeEventListener('resize', updateOffset);
       document.documentElement.style.removeProperty('--app-navbar-offset');
     };
-  }, [headerRef]);
+  }, [element]);
 }

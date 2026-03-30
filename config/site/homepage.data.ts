@@ -10,7 +10,9 @@ import {
   Users,
 } from 'lucide-react';
 import type { HomeLink, HomeProjectCard } from '@/config/site/homepage.types';
-import type { NavbarIcon } from '@/config/navigation/navbar';
+
+const GITHUB_MASK_ICON = 'github';
+const DISCORD_MASK_ICON = 'discord';
 
 export const HOME_THEME = {
   accent: {
@@ -35,11 +37,6 @@ export const HOME_SUBWAY_BARS = [
   '#752F82',
 ] as const;
 
-const GITHUB_MASK_ICON: NavbarIcon = {
-  type: 'mask',
-  src: '/assets/github.svg',
-};
-
 export const HOME_HERO = {
   title: 'Subway Builder Modded',
   description: 'The complete hub for everything modded in Subway Builder.',
@@ -63,10 +60,7 @@ export const HOME_HERO = {
       href: 'https://discord.gg/syG9YHMyeG',
       external: true,
       variant: 'outline',
-      icon: {
-        type: 'mask',
-        src: '/assets/discord.svg',
-      },
+      icon: DISCORD_MASK_ICON,
       scheme: 'default',
       size: 'xl',
     },
@@ -214,12 +208,10 @@ export const HOME_COMMUNITY_SECTION = {
       href: 'https://discord.gg/syG9YHMyeG',
       external: true,
       variant: 'solid',
-      icon: {
-        type: 'mask',
-        src: '/assets/discord.svg',
-      },
+      icon: DISCORD_MASK_ICON,
       scheme: 'default',
       size: 'md',
     },
   ] satisfies HomeLink[],
 } as const;
+

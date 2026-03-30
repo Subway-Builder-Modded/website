@@ -1,4 +1,4 @@
-import type { CSSProperties, RefObject } from 'react';
+import type { CSSProperties, Ref } from 'react';
 import {
   Navbar,
   NavbarGap,
@@ -15,7 +15,7 @@ import { NavbarBrandLink } from './navbar-brand-link';
 import { NavbarItemView } from './navbar-item';
 
 type DesktopNavbarProps = NavbarProps & {
-  headerRef: RefObject<HTMLDivElement | null>;
+  headerRef: Ref<HTMLDivElement>;
   brand: AppNavbarBrand;
   leftItems: AppNavbarItem[];
   rightItems: AppNavbarItem[];

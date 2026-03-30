@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { getCurrentSuiteModeHex } from '@/config/theme/css-vars';
 import { cn } from '@/lib/utils';
 import {
   getLineBulletPreset,
@@ -48,43 +49,6 @@ function isWhiteColor(value: string) {
   );
 }
 
-function resolveCurrentSuiteModeHex(
-  role: LineBulletColorRole | LineBulletTextRole,
-) {
-  switch (role) {
-    case 'accentColor':
-      return {
-        light: 'var(--suite-accent-light)',
-        dark: 'var(--suite-accent-dark)',
-      };
-    case 'primaryColor':
-      return {
-        light: 'var(--suite-primary-light)',
-        dark: 'var(--suite-primary-dark)',
-      };
-    case 'secondaryColor':
-      return {
-        light: 'var(--suite-secondary-light)',
-        dark: 'var(--suite-secondary-dark)',
-      };
-    case 'textColor':
-      return {
-        light: 'var(--suite-text-light)',
-        dark: 'var(--suite-text-dark)',
-      };
-    case 'textColorInverted':
-      return {
-        light: 'var(--suite-text-inverted-light)',
-        dark: 'var(--suite-text-inverted-dark)',
-      };
-    default:
-      return {
-        light: 'var(--suite-accent-light)',
-        dark: 'var(--suite-accent-dark)',
-      };
-  }
-}
-
 export function LineBullet({
   icon,
   text,
@@ -117,13 +81,13 @@ export function LineBullet({
   const colorHex = theme
     ? resolveLineBulletModeHex(theme, resolvedColorRole, colorOverride)
     : {
-        ...resolveCurrentSuiteModeHex(resolvedColorRole),
+        ...getCurrentSuiteModeHex(resolvedColorRole),
         ...colorOverride,
       };
   const textHex = theme
     ? resolveLineBulletTextModeHex(theme, resolvedTextRole, textOverride)
     : {
-        ...resolveCurrentSuiteModeHex(resolvedTextRole),
+        ...getCurrentSuiteModeHex(resolvedTextRole),
         ...textOverride,
       };
   const hoverHex = theme
@@ -134,7 +98,7 @@ export function LineBullet({
         hoverColorOverride,
       )
     : {
-        ...resolveCurrentSuiteModeHex(
+        ...getCurrentSuiteModeHex(
           resolvedHoverColorRole ?? resolvedColorRole,
         ),
         ...hoverColorOverride,

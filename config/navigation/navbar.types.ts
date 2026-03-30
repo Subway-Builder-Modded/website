@@ -1,4 +1,5 @@
-import type { LucideIcon } from 'lucide-react';
+import type { AppIconValue } from '@/lib/icons';
+import type { ProjectColorId } from '@/config/theme/contracts';
 
 export type NavbarPosition = 'left' | 'right';
 
@@ -18,17 +19,7 @@ export type NavbarModeColor = {
   dark: string;
 };
 
-export type NavbarMaskIcon = {
-  type: 'mask';
-  src: string;
-};
-
-export type NavbarImageIcon = {
-  type: 'image';
-  src: string;
-};
-
-export type NavbarIcon = LucideIcon | NavbarMaskIcon | NavbarImageIcon;
+export type NavbarIcon = AppIconValue;
 
 export type NavbarDropdownItem = {
   id: string;
@@ -155,10 +146,7 @@ export type AppNavbarConfig = {
 };
 
 export type NavbarColorSchemeId =
-  | 'railyard'
-  | 'registry'
-  | 'template-mod'
-  | 'website'
+  | ProjectColorId
   | 'themeLight'
   | 'themeDark'
   | 'themeSystem';

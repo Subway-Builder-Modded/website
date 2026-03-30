@@ -2,10 +2,8 @@
 
 import { createContext } from 'react';
 import { usePathname } from 'next/navigation';
-import {
-  resolveSiteColorScheme,
-  type SiteColorSchemeId,
-} from '@/config/theme/scheme-config';
+import type { SiteColorSchemeId } from '@/config/theme/contracts';
+import { resolveSiteColorScheme } from '@/config/theme/route-schemes';
 
 const PageColorSchemeContext = createContext<SiteColorSchemeId>('default');
 
