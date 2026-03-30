@@ -1,7 +1,54 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-03-30T02:41:17.644Z",
+  "generated_at": "2026-03-30T04:23:35.583Z",
   "repos": {
+    "willbarouch/subwaybuilder-sydney": [
+      {
+        "tag_name": "1.2.0",
+        "name": "1.2.0",
+        "body": "Add place labels, update OSM buildings",
+        "published_at": "2026-03-22T03:22:16Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "syd.zip",
+            "browser_download_url": "https://github.com/WillBarouch/subwaybuilder-sydney/releases/download/1.2.0/syd.zip",
+            "download_count": 146,
+            "size": 91401281
+          }
+        ]
+      },
+      {
+        "tag_name": "1.1.0",
+        "name": "1.1.0",
+        "body": "Add school and hospital demand data",
+        "published_at": "2026-03-21T08:54:28Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "syd.zip",
+            "browser_download_url": "https://github.com/WillBarouch/subwaybuilder-sydney/releases/download/1.1.0/syd.zip",
+            "download_count": 36,
+            "size": 85577990
+          }
+        ]
+      },
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "Initial release",
+        "published_at": "2026-03-21T03:31:29Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "syd.zip",
+            "browser_download_url": "https://github.com/WillBarouch/subwaybuilder-sydney/releases/download/1.0.0/syd.zip",
+            "download_count": 17,
+            "size": 85424034
+          }
+        ]
+      }
+    ],
     "soccerjonj/providence": [
       {
         "tag_name": "1.0.0",
@@ -19,51 +66,36 @@
         ]
       }
     ],
-    "pswbsf/wilmington-nc": [
+    "soccerjonj/sacramento": [
       {
-        "tag_name": "v1.0.0",
+        "tag_name": "1.0.0",
         "name": "1.0.0",
-        "body": "First release",
-        "published_at": "2026-03-29T21:58:57Z",
+        "body": "v1.0 of my Sacramento Subway Builder Mod. Attached is the zipped file for the Subway Builder Railyard.",
+        "published_at": "2026-02-21T15:12:21Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "Wilmington.zip",
-            "browser_download_url": "https://github.com/PSWBSF/wilmington-nc/releases/download/v1.0.0/Wilmington.zip",
-            "download_count": 1,
-            "size": 12889578
+            "name": "Sacramento-Railyard.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Sacramento/releases/download/1.0.0/Sacramento-Railyard.zip",
+            "download_count": 90,
+            "size": 78202585
           }
         ]
       }
     ],
-    "kronifer/sb-zurich-map": [
-      {
-        "tag_name": "v1.1.0",
-        "name": "v1.1.0",
-        "body": "Added map labels :]",
-        "published_at": "2026-03-04T02:54:38Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "ZRH.zip",
-            "browser_download_url": "https://github.com/Kronifer/sb-zurich-map/releases/download/v1.1.0/ZRH.zip",
-            "download_count": 282,
-            "size": 220939390
-          }
-        ]
-      },
+    "pswbsf/piedmont-triad": [
       {
         "tag_name": "v1.0.0",
-        "name": "v1.0.0",
-        "body": "Initial release. Includes Airport and University data.",
-        "published_at": "2026-03-02T16:49:20Z",
+        "name": "1.0.0",
+        "body": "First map!",
+        "published_at": "2026-03-26T20:45:28Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "ZRH.zip",
-            "browser_download_url": "https://github.com/Kronifer/sb-zurich-map/releases/download/v1.0.0/ZRH.zip",
-            "download_count": 56,
-            "size": 220041613
+            "name": "Piedmont.zip",
+            "browser_download_url": "https://github.com/PSWBSF/piedmont-triad/releases/download/v1.0.0/Piedmont.zip",
+            "download_count": 26,
+            "size": 76163225
           }
         ]
       }
@@ -115,83 +147,19 @@
         ]
       }
     ],
-    "pswbsf/piedmont-triad": [
+    "pswbsf/wilmington-nc": [
       {
         "tag_name": "v1.0.0",
         "name": "1.0.0",
-        "body": "First map!",
-        "published_at": "2026-03-26T20:45:28Z",
+        "body": "First release",
+        "published_at": "2026-03-29T21:58:57Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "Piedmont.zip",
-            "browser_download_url": "https://github.com/PSWBSF/piedmont-triad/releases/download/v1.0.0/Piedmont.zip",
-            "download_count": 25,
-            "size": 76163225
-          }
-        ]
-      }
-    ],
-    "willbarouch/subwaybuilder-sydney": [
-      {
-        "tag_name": "1.2.0",
-        "name": "1.2.0",
-        "body": "Add place labels, update OSM buildings",
-        "published_at": "2026-03-22T03:22:16Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "syd.zip",
-            "browser_download_url": "https://github.com/WillBarouch/subwaybuilder-sydney/releases/download/1.2.0/syd.zip",
-            "download_count": 145,
-            "size": 91401281
-          }
-        ]
-      },
-      {
-        "tag_name": "1.1.0",
-        "name": "1.1.0",
-        "body": "Add school and hospital demand data",
-        "published_at": "2026-03-21T08:54:28Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "syd.zip",
-            "browser_download_url": "https://github.com/WillBarouch/subwaybuilder-sydney/releases/download/1.1.0/syd.zip",
-            "download_count": 36,
-            "size": 85577990
-          }
-        ]
-      },
-      {
-        "tag_name": "1.0.0",
-        "name": "1.0.0",
-        "body": "Initial release",
-        "published_at": "2026-03-21T03:31:29Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "syd.zip",
-            "browser_download_url": "https://github.com/WillBarouch/subwaybuilder-sydney/releases/download/1.0.0/syd.zip",
-            "download_count": 17,
-            "size": 85424034
-          }
-        ]
-      }
-    ],
-    "soccerjonj/sacramento": [
-      {
-        "tag_name": "1.0.0",
-        "name": "1.0.0",
-        "body": "v1.0 of my Sacramento Subway Builder Mod. Attached is the zipped file for the Subway Builder Railyard.",
-        "published_at": "2026-02-21T15:12:21Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "Sacramento-Railyard.zip",
-            "browser_download_url": "https://github.com/soccerjonj/Sacramento/releases/download/1.0.0/Sacramento-Railyard.zip",
-            "download_count": 90,
-            "size": 78202585
+            "name": "Wilmington.zip",
+            "browser_download_url": "https://github.com/PSWBSF/wilmington-nc/releases/download/v1.0.0/Wilmington.zip",
+            "download_count": 4,
+            "size": 12889578
           }
         ]
       }
@@ -209,6 +177,23 @@
             "browser_download_url": "https://github.com/crumpetime/sb-maps-xna/releases/download/1.0.0/XNA.zip",
             "download_count": 87,
             "size": 54855508
+          }
+        ]
+      }
+    ],
+    "crumpetime/sb-maps-msn": [
+      {
+        "tag_name": "3.0.0",
+        "name": "3.0.0",
+        "body": "initial railyard release - reworked map entirely",
+        "published_at": "2026-03-14T01:19:31Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "MSN.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-msn/releases/download/3.0.0/MSN.zip",
+            "download_count": 137,
+            "size": 66706942
           }
         ]
       }
@@ -238,6 +223,55 @@
         "assets": []
       }
     ],
+    "kronifer/sb-zurich-map": [
+      {
+        "tag_name": "v1.1.0",
+        "name": "v1.1.0",
+        "body": "Added map labels :]",
+        "published_at": "2026-03-04T02:54:38Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "ZRH.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-zurich-map/releases/download/v1.1.0/ZRH.zip",
+            "download_count": 283,
+            "size": 220939390
+          }
+        ]
+      },
+      {
+        "tag_name": "v1.0.0",
+        "name": "v1.0.0",
+        "body": "Initial release. Includes Airport and University data.",
+        "published_at": "2026-03-02T16:49:20Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "ZRH.zip",
+            "browser_download_url": "https://github.com/Kronifer/sb-zurich-map/releases/download/v1.0.0/ZRH.zip",
+            "download_count": 56,
+            "size": 220041613
+          }
+        ]
+      }
+    ],
+    "crumpetime/sb-maps-las": [
+      {
+        "tag_name": "1.1.0",
+        "name": "1.1.0",
+        "body": "initial upload",
+        "published_at": "2026-03-20T11:34:04Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "LAS.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-las/releases/download/1.1.0/LAS.zip",
+            "download_count": 64,
+            "size": 63125355
+          }
+        ]
+      }
+    ],
     "crumpetime/sb-maps-hkg": [
       {
         "tag_name": "0.4.0",
@@ -249,7 +283,7 @@
           {
             "name": "HKG.zip",
             "browser_download_url": "https://github.com/crumpetime/sb-maps-hkg/releases/download/0.4.0/HKG.zip",
-            "download_count": 351,
+            "download_count": 352,
             "size": 57452165
           }
         ]
@@ -278,36 +312,19 @@
         "assets": []
       }
     ],
-    "crumpetime/sb-maps-msn": [
+    "crumpetime/sb-maps-orf": [
       {
-        "tag_name": "3.0.0",
-        "name": "3.0.0",
-        "body": "initial railyard release - reworked map entirely",
-        "published_at": "2026-03-14T01:19:31Z",
+        "tag_name": "1.0.0",
+        "name": "1.4.0",
+        "body": "initial upload to repo",
+        "published_at": "2026-03-12T03:53:44Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "MSN.zip",
-            "browser_download_url": "https://github.com/crumpetime/sb-maps-msn/releases/download/3.0.0/MSN.zip",
-            "download_count": 137,
-            "size": 66706942
-          }
-        ]
-      }
-    ],
-    "crumpetime/sb-maps-las": [
-      {
-        "tag_name": "1.1.0",
-        "name": "1.1.0",
-        "body": "initial upload",
-        "published_at": "2026-03-20T11:34:04Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "LAS.zip",
-            "browser_download_url": "https://github.com/crumpetime/sb-maps-las/releases/download/1.1.0/LAS.zip",
-            "download_count": 64,
-            "size": 63125355
+            "name": "ORF.zip",
+            "browser_download_url": "https://github.com/crumpetime/sb-maps-orf/releases/download/1.0.0/ORF.zip",
+            "download_count": 117,
+            "size": 125607232
           }
         ]
       }
@@ -359,19 +376,19 @@
         ]
       }
     ],
-    "crumpetime/sb-maps-orf": [
+    "danield1909/improvedtwincities": [
       {
-        "tag_name": "1.0.0",
-        "name": "1.4.0",
-        "body": "initial upload to repo",
-        "published_at": "2026-03-12T03:53:44Z",
+        "tag_name": "v1.0.0",
+        "name": "1.0.0",
+        "body": "",
+        "published_at": "2026-03-14T06:09:06Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "ORF.zip",
-            "browser_download_url": "https://github.com/crumpetime/sb-maps-orf/releases/download/1.0.0/ORF.zip",
-            "download_count": 117,
-            "size": 125607232
+            "name": "KMSP.zip",
+            "browser_download_url": "https://github.com/DanielD1909/improvedTwinCities/releases/download/v1.0.0/KMSP.zip",
+            "download_count": 124,
+            "size": 183676738
           }
         ]
       }
@@ -393,23 +410,6 @@
         ]
       }
     ],
-    "danield1909/improvedtwincities": [
-      {
-        "tag_name": "v1.0.0",
-        "name": "1.0.0",
-        "body": "",
-        "published_at": "2026-03-14T06:09:06Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "KMSP.zip",
-            "browser_download_url": "https://github.com/DanielD1909/improvedTwinCities/releases/download/v1.0.0/KMSP.zip",
-            "download_count": 124,
-            "size": 183676738
-          }
-        ]
-      }
-    ],
     "barkuperman/jerusalem-sb-map": [
       {
         "tag_name": "v0.3.1",
@@ -421,7 +421,7 @@
           {
             "name": "JER.zip",
             "browser_download_url": "https://github.com/BarKuperman/jerusalem-sb-map/releases/download/v0.3.1/JER.zip",
-            "download_count": 112,
+            "download_count": 113,
             "size": 25488597
           }
         ]
@@ -468,42 +468,8 @@
           {
             "name": "GLED.zip",
             "browser_download_url": "https://github.com/Kronifer/sb-glasgow-edinburgh-map/releases/download/v1.0.0/GLED.zip",
-            "download_count": 166,
+            "download_count": 167,
             "size": 197060376
-          }
-        ]
-      }
-    ],
-    "nzh0172/sb-malaysia-map-pack": [
-      {
-        "tag_name": "v1.0.0",
-        "name": "v1.0.0",
-        "body": "Kuala Lumpur",
-        "published_at": "2026-03-17T14:39:45Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "KUL.zip",
-            "browser_download_url": "https://github.com/nzh0172/sb-malaysia-map-pack/releases/download/v1.0.0/KUL.zip",
-            "download_count": 89,
-            "size": 104417461
-          }
-        ]
-      }
-    ],
-    "soccerjonj/colorado-ski-country": [
-      {
-        "tag_name": "1.0.0",
-        "name": "1.0.0",
-        "body": "V1.0 of my Colorado-Ski-Country map. Attached zip file for Subway Builder Railway.",
-        "published_at": "2026-02-25T17:22:35Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "Colorado-Ski-Country-Railway.zip",
-            "browser_download_url": "https://github.com/soccerjonj/Colorado-Ski-Country/releases/download/1.0.0/Colorado-Ski-Country-Railway.zip",
-            "download_count": 103,
-            "size": 75537082
           }
         ]
       }
@@ -521,6 +487,23 @@
             "browser_download_url": "https://github.com/soccerjonj/Albany/releases/download/1.0.0/Albany-Railway.zip",
             "download_count": 77,
             "size": 43450274
+          }
+        ]
+      }
+    ],
+    "soccerjonj/colorado-ski-country": [
+      {
+        "tag_name": "1.0.0",
+        "name": "1.0.0",
+        "body": "V1.0 of my Colorado-Ski-Country map. Attached zip file for Subway Builder Railway.",
+        "published_at": "2026-02-25T17:22:35Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "Colorado-Ski-Country-Railway.zip",
+            "browser_download_url": "https://github.com/soccerjonj/Colorado-Ski-Country/releases/download/1.0.0/Colorado-Ski-Country-Railway.zip",
+            "download_count": 104,
+            "size": 75537082
           }
         ]
       }
@@ -557,6 +540,185 @@
         ]
       }
     ],
+    "nzh0172/sb-malaysia-map-pack": [
+      {
+        "tag_name": "v1.0.0",
+        "name": "v1.0.0",
+        "body": "Kuala Lumpur",
+        "published_at": "2026-03-17T14:39:45Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "KUL.zip",
+            "browser_download_url": "https://github.com/nzh0172/sb-malaysia-map-pack/releases/download/v1.0.0/KUL.zip",
+            "download_count": 89,
+            "size": 104417461
+          }
+        ]
+      }
+    ],
+    "subway-builder-modded/test-mod-vulnerabilityscanning": [
+      {
+        "tag_name": "v0.1.0",
+        "name": "Evil Mod",
+        "body": "dont fucking download this",
+        "published_at": "2026-03-29T18:03:13Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "evil.zip",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/Test-Mod-VulnerabilityScanning/releases/download/v0.1.0/evil.zip",
+            "download_count": 3,
+            "size": 1092
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Subway-Builder-Modded/Test-Mod-VulnerabilityScanning/releases/download/v0.1.0/manifest.json",
+            "download_count": 199,
+            "size": 289
+          }
+        ],
+        "game_version": ">=1.0.0"
+      }
+    ],
+    "crumpetime/subway_builder_distance_circles": [
+      {
+        "tag_name": "0.4.0",
+        "name": "0.4.0",
+        "body": "- Added settings menu using a floating panel to avoid clutter on the toolbar\r\n- Edited layer styling logic to avoid flooding the console with errors (hopefully!)",
+        "published_at": "2026-03-20T00:22:05Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "distanceCircles.zip",
+            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.4.0/distanceCircles.zip",
+            "download_count": 258,
+            "size": 3970
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.4.0/manifest.json",
+            "download_count": 4292,
+            "size": 307
+          }
+        ]
+      },
+      {
+        "tag_name": "0.3.3",
+        "name": "0.3.3",
+        "body": "fixed formatting AGAIN to hopefully make sure download works for realer this time (please work please work)",
+        "published_at": "2026-03-14T01:25:11Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "distanceCircles.zip",
+            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.3.3/distanceCircles.zip",
+            "download_count": 218,
+            "size": 4008
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.3.3/manifest.json",
+            "download_count": 5626,
+            "size": 300
+          }
+        ]
+      }
+    ],
+    "ahkimn/subwaybuilder-regions": [
+      {
+        "tag_name": "v0.4.5",
+        "name": "v0.4.5",
+        "body": "## v0.4.5 - 2026-03-04\n\n_Game version_ v1.1.0\n\n### New Features\n\n- Added GB `wpcs` support for Westminster Parliamentary Constituencies (ONS July 2024 boundaries).\n- Added online fetch support for CA `peds` via hosted `.geojson.gz` source (no longer local-only in runtime fetch flows).\n- Added shared remote compressed GeoJSON loader utility for script pipelines so hosted binary `.geojson.gz` sources can be reused across datasets/countries.\n\n### Other Updates\n\n- GB population attachment is now sourced from NOMIS API for all GB datasets (`districts`, `wpcs`, `bua`, `wards`)\n  - Deprecated local CSV population matching path in GB extraction scripts.\n\n",
+        "published_at": "2026-03-08T20:10:36Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/ahkimn/subwaybuilder-regions/releases/download/v0.4.5/manifest.json",
+            "download_count": 6467,
+            "size": 642
+          },
+          {
+            "name": "subwaybuilder-regions-v0.4.5.zip",
+            "browser_download_url": "https://github.com/ahkimn/subwaybuilder-regions/releases/download/v0.4.5/subwaybuilder-regions-v0.4.5.zip",
+            "download_count": 451,
+            "size": 383768
+          }
+        ],
+        "game_version": ">=1.0.0"
+      }
+    ],
+    "barkuperman/transit-overlay-subway-builder-mod": [
+      {
+        "tag_name": "1.5.0",
+        "name": "v1.5",
+        "body": "### **New Maps Added**\r\n*   **US Vanilla Maps:** All vanilla US maps with rapid transit are now available (hopefully!).\r\n*   **Global Additions:** \r\n    *   **Hong Kong**\r\n    *   **Jerusalem** ",
+        "published_at": "2026-03-06T16:21:45Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/BarKuperman/transit-overlay-subway-builder-mod/releases/download/1.5.0/manifest.json",
+            "download_count": 6220,
+            "size": 470
+          },
+          {
+            "name": "transit-overlay.zip",
+            "browser_download_url": "https://github.com/BarKuperman/transit-overlay-subway-builder-mod/releases/download/1.5.0/transit-overlay.zip",
+            "download_count": 416,
+            "size": 5452848
+          }
+        ],
+        "game_version": ">=1.0.0"
+      }
+    ],
+    "gio1112/subway-builder-citymapper": [
+      {
+        "tag_name": "0.1.2",
+        "name": "v0.1.2 | Minor efficiency changes",
+        "body": "Made the code more efficient, thats really all, should be better and fix some bugs maybe fps too.",
+        "published_at": "2026-03-15T18:28:25Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "citymapper.zip",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.2/citymapper.zip",
+            "download_count": 462,
+            "size": 14664
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.2/manifest.json",
+            "download_count": 5003,
+            "size": 847
+          }
+        ],
+        "game_version": ">=1.0.0"
+      },
+      {
+        "tag_name": "0.1.0",
+        "name": "Mod",
+        "body": "",
+        "published_at": "2026-03-12T06:35:04Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "citymapper.zip",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.0/citymapper.zip",
+            "download_count": 20,
+            "size": 14886
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.0/manifest.json",
+            "download_count": 5003,
+            "size": 847
+          }
+        ],
+        "game_version": ">=1.0.0"
+      }
+    ],
     "valdotorium/valdotoriums_trains": [
       {
         "tag_name": "v0.1.4",
@@ -568,13 +730,13 @@
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.4/manifest.json",
-            "download_count": 846,
+            "download_count": 886,
             "size": 346
           },
           {
             "name": "Valdotoriums_Trains_0_1_4.zip",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.4/Valdotoriums_Trains_0_1_4.zip",
-            "download_count": 82,
+            "download_count": 93,
             "size": 3707
           }
         ]
@@ -589,13 +751,13 @@
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.3/manifest.json",
-            "download_count": 5420,
+            "download_count": 5460,
             "size": 346
           },
           {
             "name": "Valdotoriums_Trains_0_1_3.zip",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.3/Valdotoriums_Trains_0_1_3.zip",
-            "download_count": 699,
+            "download_count": 705,
             "size": 3670
           }
         ]
@@ -610,13 +772,13 @@
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.2/manifest.json",
-            "download_count": 6098,
+            "download_count": 6138,
             "size": 346
           },
           {
             "name": "Valdotoriums_Trains_0_1_2.zip",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v0.1.2/Valdotoriums_Trains_0_1_2.zip",
-            "download_count": 753,
+            "download_count": 754,
             "size": 603172
           }
         ]
@@ -631,7 +793,7 @@
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/Valdotorium/Valdotoriums_Trains/releases/download/v1.1/manifest.json",
-            "download_count": 1397,
+            "download_count": 1400,
             "size": 346
           },
           {
@@ -658,236 +820,6 @@
         ]
       }
     ],
-    "crumpetime/subway_builder_distance_circles": [
-      {
-        "tag_name": "0.4.0",
-        "name": "0.4.0",
-        "body": "- Added settings menu using a floating panel to avoid clutter on the toolbar\r\n- Edited layer styling logic to avoid flooding the console with errors (hopefully!)",
-        "published_at": "2026-03-20T00:22:05Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "distanceCircles.zip",
-            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.4.0/distanceCircles.zip",
-            "download_count": 254,
-            "size": 3970
-          },
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.4.0/manifest.json",
-            "download_count": 4251,
-            "size": 307
-          }
-        ]
-      },
-      {
-        "tag_name": "0.3.3",
-        "name": "0.3.3",
-        "body": "fixed formatting AGAIN to hopefully make sure download works for realer this time (please work please work)",
-        "published_at": "2026-03-14T01:25:11Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "distanceCircles.zip",
-            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.3.3/distanceCircles.zip",
-            "download_count": 217,
-            "size": 4008
-          },
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/crumpetime/subway_builder_distance_circles/releases/download/0.3.3/manifest.json",
-            "download_count": 5585,
-            "size": 300
-          }
-        ]
-      }
-    ],
-    "subway-builder-modded/test-mod-vulnerabilityscanning": [
-      {
-        "tag_name": "v0.1.0",
-        "name": "Evil Mod",
-        "body": "dont fucking download this",
-        "published_at": "2026-03-29T18:03:13Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "evil.zip",
-            "browser_download_url": "https://github.com/Subway-Builder-Modded/Test-Mod-VulnerabilityScanning/releases/download/v0.1.0/evil.zip",
-            "download_count": 2,
-            "size": 1092
-          },
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/Subway-Builder-Modded/Test-Mod-VulnerabilityScanning/releases/download/v0.1.0/manifest.json",
-            "download_count": 169,
-            "size": 289
-          }
-        ],
-        "game_version": ">=1.0.0"
-      }
-    ],
-    "ahkimn/subwaybuilder-regions": [
-      {
-        "tag_name": "v0.4.5",
-        "name": "v0.4.5",
-        "body": "## v0.4.5 - 2026-03-04\n\n_Game version_ v1.1.0\n\n### New Features\n\n- Added GB `wpcs` support for Westminster Parliamentary Constituencies (ONS July 2024 boundaries).\n- Added online fetch support for CA `peds` via hosted `.geojson.gz` source (no longer local-only in runtime fetch flows).\n- Added shared remote compressed GeoJSON loader utility for script pipelines so hosted binary `.geojson.gz` sources can be reused across datasets/countries.\n\n### Other Updates\n\n- GB population attachment is now sourced from NOMIS API for all GB datasets (`districts`, `wpcs`, `bua`, `wards`)\n  - Deprecated local CSV population matching path in GB extraction scripts.\n\n",
-        "published_at": "2026-03-08T20:10:36Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/ahkimn/subwaybuilder-regions/releases/download/v0.4.5/manifest.json",
-            "download_count": 6429,
-            "size": 642
-          },
-          {
-            "name": "subwaybuilder-regions-v0.4.5.zip",
-            "browser_download_url": "https://github.com/ahkimn/subwaybuilder-regions/releases/download/v0.4.5/subwaybuilder-regions-v0.4.5.zip",
-            "download_count": 448,
-            "size": 383768
-          }
-        ],
-        "game_version": ">=1.0.0"
-      }
-    ],
-    "barkuperman/transit-overlay-subway-builder-mod": [
-      {
-        "tag_name": "1.5.0",
-        "name": "v1.5",
-        "body": "### **New Maps Added**\r\n*   **US Vanilla Maps:** All vanilla US maps with rapid transit are now available (hopefully!).\r\n*   **Global Additions:** \r\n    *   **Hong Kong**\r\n    *   **Jerusalem** ",
-        "published_at": "2026-03-06T16:21:45Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/BarKuperman/transit-overlay-subway-builder-mod/releases/download/1.5.0/manifest.json",
-            "download_count": 6182,
-            "size": 470
-          },
-          {
-            "name": "transit-overlay.zip",
-            "browser_download_url": "https://github.com/BarKuperman/transit-overlay-subway-builder-mod/releases/download/1.5.0/transit-overlay.zip",
-            "download_count": 413,
-            "size": 5452848
-          }
-        ],
-        "game_version": ">=1.0.0"
-      }
-    ],
-    "gio1112/subway-builder-citymapper": [
-      {
-        "tag_name": "0.1.2",
-        "name": "v0.1.2 | Minor efficiency changes",
-        "body": "Made the code more efficient, thats really all, should be better and fix some bugs maybe fps too.",
-        "published_at": "2026-03-15T18:28:25Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "citymapper.zip",
-            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.2/citymapper.zip",
-            "download_count": 455,
-            "size": 14664
-          },
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.2/manifest.json",
-            "download_count": 4966,
-            "size": 847
-          }
-        ],
-        "game_version": ">=1.0.0"
-      },
-      {
-        "tag_name": "0.1.0",
-        "name": "Mod",
-        "body": "",
-        "published_at": "2026-03-12T06:35:04Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "citymapper.zip",
-            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.0/citymapper.zip",
-            "download_count": 19,
-            "size": 14886
-          },
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/Gio1112/subway-builder-citymapper/releases/download/0.1.0/manifest.json",
-            "download_count": 4966,
-            "size": 847
-          }
-        ],
-        "game_version": ">=1.0.0"
-      }
-    ],
-    "nzh0172/sb-anymoney": [
-      {
-        "tag_name": "v0.2.0",
-        "name": "v0.2.0",
-        "body": "- Add your own construction cost presets\r\n- You can now set a fixed amount for your budget",
-        "published_at": "2026-03-26T08:18:14Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.2.0/manifest.json",
-            "download_count": 2276,
-            "size": 273
-          },
-          {
-            "name": "v0.2.0.zip",
-            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.2.0/v0.2.0.zip",
-            "download_count": 91,
-            "size": 5701
-          }
-        ],
-        "game_version": ">=1.0.0"
-      },
-      {
-        "tag_name": "v0.1.1",
-        "name": "v0.1.1",
-        "body": "- Fixed butchered elevation modifiers when resetting (at-grade and elevated) like stoopid\r\n- UI: Elevation modifiers input box now sorted as in game guide",
-        "published_at": "2026-03-19T17:29:18Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.1/manifest.json",
-            "download_count": 4057,
-            "size": 273
-          },
-          {
-            "name": "v0.1.1.zip",
-            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.1/v0.1.1.zip",
-            "download_count": 108,
-            "size": 3616
-          }
-        ],
-        "game_version": ">=1.0.0"
-      },
-      {
-        "tag_name": "v0.1.0",
-        "name": "v0.1.0",
-        "body": "Initial release",
-        "published_at": "2026-03-18T20:07:25Z",
-        "prerelease": false,
-        "assets": [
-          {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.0/manifest.json",
-            "download_count": 4198,
-            "size": 273
-          },
-          {
-            "name": "v0.1.0.zip",
-            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.0/v0.1.0.zip",
-            "download_count": 52,
-            "size": 3565
-          }
-        ],
-        "game_version": ">=1.0.0"
-      }
-    ],
     "danield1909/dantrains": [
       {
         "tag_name": "v1.3.0",
@@ -899,13 +831,13 @@
           {
             "name": "danTrains-1_3_0-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.3.0/danTrains-1_3_0-Phoenix.zip",
-            "download_count": 167,
+            "download_count": 170,
             "size": 93258
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.3.0/manifest.json",
-            "download_count": 2745,
+            "download_count": 2782,
             "size": 653
           }
         ],
@@ -921,13 +853,13 @@
           {
             "name": "danTrains-1_2_1-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.2.1/danTrains-1_2_1-Phoenix.zip",
-            "download_count": 67,
+            "download_count": 68,
             "size": 91469
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.2.1/manifest.json",
-            "download_count": 3202,
+            "download_count": 3239,
             "size": 653
           }
         ],
@@ -943,13 +875,13 @@
           {
             "name": "danTrains-1_2_0-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.2.0/danTrains-1_2_0-Phoenix.zip",
-            "download_count": 33,
+            "download_count": 34,
             "size": 91244
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.2.0/manifest.json",
-            "download_count": 3437,
+            "download_count": 3474,
             "size": 653
           }
         ],
@@ -965,13 +897,13 @@
           {
             "name": "danTrains-1_1_2-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.1.2/danTrains-1_1_2-Phoenix.zip",
-            "download_count": 34,
+            "download_count": 35,
             "size": 89417
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.1.2/manifest.json",
-            "download_count": 3681,
+            "download_count": 3718,
             "size": 653
           }
         ],
@@ -987,13 +919,13 @@
           {
             "name": "danTrains-1_1_1-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.1.1/danTrains-1_1_1-Phoenix.zip",
-            "download_count": 63,
+            "download_count": 64,
             "size": 89257
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.1.1/manifest.json",
-            "download_count": 4243,
+            "download_count": 4280,
             "size": 653
           }
         ],
@@ -1009,13 +941,13 @@
           {
             "name": "danTrains-1_1_0-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.1.0/danTrains-1_1_0-Phoenix.zip",
-            "download_count": 45,
+            "download_count": 46,
             "size": 89163
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.1.0/manifest.json",
-            "download_count": 4443,
+            "download_count": 4480,
             "size": 653
           }
         ],
@@ -1031,13 +963,13 @@
           {
             "name": "danTrains-1_0_3-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.3/danTrains-1_0_3-Phoenix.zip",
-            "download_count": 64,
+            "download_count": 65,
             "size": 81907
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.3/manifest.json",
-            "download_count": 4743,
+            "download_count": 4780,
             "size": 648
           }
         ],
@@ -1053,13 +985,13 @@
           {
             "name": "danTrains-1_0_2-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.2/danTrains-1_0_2-Phoenix.zip",
-            "download_count": 106,
+            "download_count": 107,
             "size": 81964
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.2/manifest.json",
-            "download_count": 5191,
+            "download_count": 5228,
             "size": 648
           }
         ],
@@ -1075,13 +1007,13 @@
           {
             "name": "danTrains-1_0_1-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.1/danTrains-1_0_1-Phoenix.zip",
-            "download_count": 78,
+            "download_count": 79,
             "size": 75156
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.1/manifest.json",
-            "download_count": 5285,
+            "download_count": 5322,
             "size": 648
           }
         ],
@@ -1097,85 +1029,85 @@
           {
             "name": "danTrains-1_0_0-Phoenix.zip",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.0/danTrains-1_0_0-Phoenix.zip",
-            "download_count": 45,
+            "download_count": 46,
             "size": 75122
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/DanielD1909/danTrains/releases/download/v1.0.0/manifest.json",
-            "download_count": 5311,
+            "download_count": 5348,
             "size": 648
           }
         ],
         "game_version": ">=1.2.0"
       }
     ],
-    "transitcore/cinematic-camera": [
+    "nzh0172/sb-anymoney": [
       {
-        "tag_name": "v1.2.0",
-        "name": "v1.2.0",
-        "body": "Added two new transitions (easein, easeout), ability to save, new settings tab, and overwrite current shot (update to current)",
-        "published_at": "2026-03-23T02:42:51Z",
+        "tag_name": "v0.2.0",
+        "name": "v0.2.0",
+        "body": "- Add your own construction cost presets\r\n- You can now set a fixed amount for your budget",
+        "published_at": "2026-03-26T08:18:14Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "cinematic-camera.zip",
-            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.2.0/cinematic-camera.zip",
-            "download_count": 131,
-            "size": 5944
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.2.0/manifest.json",
+            "download_count": 2315,
+            "size": 273
           },
           {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.2.0/manifest.json",
-            "download_count": 3117,
-            "size": 279
+            "name": "v0.2.0.zip",
+            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.2.0/v0.2.0.zip",
+            "download_count": 96,
+            "size": 5701
           }
         ],
-        "game_version": ">=1.2.0"
+        "game_version": ">=1.0.0"
       },
       {
-        "tag_name": "v1.1.0",
-        "name": "v1.1.0",
-        "body": "Added per-keyframe duration sliders, transition types (Fly/Ease/Linear), loop playback, keyframe renaming, and Escape to stop",
-        "published_at": "2026-03-19T18:26:45Z",
+        "tag_name": "v0.1.1",
+        "name": "v0.1.1",
+        "body": "- Fixed butchered elevation modifiers when resetting (at-grade and elevated) like stoopid\r\n- UI: Elevation modifiers input box now sorted as in game guide",
+        "published_at": "2026-03-19T17:29:18Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "cinematic-camera.zip",
-            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.1.0/cinematic-camera.zip",
-            "download_count": 30,
-            "size": 4458
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.1/manifest.json",
+            "download_count": 4096,
+            "size": 273
           },
           {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.1.0/manifest.json",
-            "download_count": 3936,
-            "size": 279
+            "name": "v0.1.1.zip",
+            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.1/v0.1.1.zip",
+            "download_count": 109,
+            "size": 3616
           }
         ],
-        "game_version": ">=1.1.0"
+        "game_version": ">=1.0.0"
       },
       {
-        "tag_name": "v1.0.0",
-        "name": "v1.0.0",
-        "body": "First version on cinematic camera mod",
-        "published_at": "2026-03-18T14:12:57Z",
+        "tag_name": "v0.1.0",
+        "name": "v0.1.0",
+        "body": "Initial release",
+        "published_at": "2026-03-18T20:07:25Z",
         "prerelease": false,
         "assets": [
           {
-            "name": "cinematic-camera.zip",
-            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.0.0/cinematic-camera.zip",
-            "download_count": 30,
-            "size": 3570
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.0/manifest.json",
+            "download_count": 4237,
+            "size": 273
           },
           {
-            "name": "manifest.json",
-            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.0.0/manifest.json",
-            "download_count": 4171,
-            "size": 279
+            "name": "v0.1.0.zip",
+            "browser_download_url": "https://github.com/nzh0172/sb-anymoney/releases/download/v0.1.0/v0.1.0.zip",
+            "download_count": 53,
+            "size": 3565
           }
         ],
-        "game_version": ">=1.1.0"
+        "game_version": ">=1.0.0"
       }
     ],
     "Subway-Builder-Modded/railyard": [
@@ -1189,13 +1121,13 @@
           {
             "name": "railyard-v0.2.0-current-linux-amd64.flatpak",
             "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.2.0/railyard-v0.2.0-current-linux-amd64.flatpak",
-            "download_count": 19,
+            "download_count": 20,
             "size": 10573032
           },
           {
             "name": "railyard-v0.2.0-macos-universal.dmg",
             "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.2.0/railyard-v0.2.0-macos-universal.dmg",
-            "download_count": 107,
+            "download_count": 113,
             "size": 32942275
           },
           {
@@ -1207,7 +1139,7 @@
           {
             "name": "railyard-v0.2.0-windows-amd64-installer.exe",
             "browser_download_url": "https://github.com/Subway-Builder-Modded/railyard/releases/download/v0.2.0/railyard-v0.2.0-windows-amd64-installer.exe",
-            "download_count": 210,
+            "download_count": 217,
             "size": 16827521
           },
           {
@@ -2685,13 +2617,13 @@
           {
             "name": "advanced_analytics-v1.3.0.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.3.0/advanced_analytics-v1.3.0.zip",
-            "download_count": 66,
+            "download_count": 74,
             "size": 86443
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.3.0/manifest.json",
-            "download_count": 405,
+            "download_count": 449,
             "size": 307
           }
         ],
@@ -2707,13 +2639,13 @@
           {
             "name": "advanced_analytics-v1.2.9.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.9/advanced_analytics-v1.2.9.zip",
-            "download_count": 91,
+            "download_count": 92,
             "size": 82141
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.9/manifest.json",
-            "download_count": 1234,
+            "download_count": 1278,
             "size": 307
           }
         ],
@@ -2729,13 +2661,13 @@
           {
             "name": "advanced_analytics-v1.2.8.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.8/advanced_analytics-v1.2.8.zip",
-            "download_count": 112,
+            "download_count": 113,
             "size": 80107
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.8/manifest.json",
-            "download_count": 2410,
+            "download_count": 2454,
             "size": 307
           }
         ],
@@ -2751,13 +2683,13 @@
           {
             "name": "advanced_analytics-v1.2.7.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.7/advanced_analytics-v1.2.7.zip",
-            "download_count": 113,
+            "download_count": 114,
             "size": 78075
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.7/manifest.json",
-            "download_count": 3545,
+            "download_count": 3589,
             "size": 307
           }
         ],
@@ -2773,13 +2705,13 @@
           {
             "name": "advanced_analytics-v1.2.6.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.6/advanced_analytics-v1.2.6.zip",
-            "download_count": 8,
+            "download_count": 9,
             "size": 78066
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.6/manifest.json",
-            "download_count": 3548,
+            "download_count": 3592,
             "size": 307
           }
         ],
@@ -2795,13 +2727,13 @@
           {
             "name": "advanced_analytics-v1.2.5.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.5/advanced_analytics-v1.2.5.zip",
-            "download_count": 46,
+            "download_count": 47,
             "size": 77019
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.5/manifest.json",
-            "download_count": 3906,
+            "download_count": 3950,
             "size": 307
           }
         ],
@@ -2817,13 +2749,13 @@
           {
             "name": "advanced_analytics-v1.2.1.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.1/advanced_analytics-v1.2.1.zip",
-            "download_count": 312,
+            "download_count": 313,
             "size": 73896
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.1/manifest.json",
-            "download_count": 5595,
+            "download_count": 5639,
             "size": 307
           }
         ],
@@ -2839,13 +2771,13 @@
           {
             "name": "advanced_analytics-v1.2.0.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.0/advanced_analytics-v1.2.0.zip",
-            "download_count": 64,
+            "download_count": 65,
             "size": 73728
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.2.0/manifest.json",
-            "download_count": 5734,
+            "download_count": 5778,
             "size": 307
           }
         ],
@@ -2861,13 +2793,13 @@
           {
             "name": "advanced_analytics-v1.1.0.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.1.0/advanced_analytics-v1.1.0.zip",
-            "download_count": 563,
+            "download_count": 564,
             "size": 62371
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.1.0/manifest.json",
-            "download_count": 7850,
+            "download_count": 7894,
             "size": 307
           }
         ],
@@ -2883,13 +2815,13 @@
           {
             "name": "advanced_analytics-v1.0.1.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.1/advanced_analytics-v1.0.1.zip",
-            "download_count": 116,
+            "download_count": 117,
             "size": 62601
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.1/manifest.json",
-            "download_count": 8034,
+            "download_count": 8078,
             "size": 306
           }
         ],
@@ -2905,13 +2837,13 @@
           {
             "name": "advanced_analytics-v1.0.0.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.0/advanced_analytics-v1.0.0.zip",
-            "download_count": 271,
+            "download_count": 272,
             "size": 61367
           },
           {
             "name": "manifest.json",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v1.0.0/manifest.json",
-            "download_count": 8051,
+            "download_count": 8095,
             "size": 306
           }
         ],
@@ -2927,7 +2859,7 @@
           {
             "name": "advanced_analytics-v0.9.2.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v0.9.2/advanced_analytics-v0.9.2.zip",
-            "download_count": 34,
+            "download_count": 35,
             "size": 62147
           }
         ]
@@ -2942,7 +2874,7 @@
           {
             "name": "advanced_analytics-v0.9.1.zip",
             "browser_download_url": "https://github.com/stefanorigano/advanced_analytics/releases/download/v0.9.1/advanced_analytics-v0.9.1.zip",
-            "download_count": 33,
+            "download_count": 34,
             "size": 60976
           }
         ]
@@ -2954,6 +2886,74 @@
         "published_at": "2026-03-02T23:15:42Z",
         "prerelease": true,
         "assets": []
+      }
+    ],
+    "transitcore/cinematic-camera": [
+      {
+        "tag_name": "v1.2.0",
+        "name": "v1.2.0",
+        "body": "Added two new transitions (easein, easeout), ability to save, new settings tab, and overwrite current shot (update to current)",
+        "published_at": "2026-03-23T02:42:51Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "cinematic-camera.zip",
+            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.2.0/cinematic-camera.zip",
+            "download_count": 134,
+            "size": 5944
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.2.0/manifest.json",
+            "download_count": 3154,
+            "size": 279
+          }
+        ],
+        "game_version": ">=1.2.0"
+      },
+      {
+        "tag_name": "v1.1.0",
+        "name": "v1.1.0",
+        "body": "Added per-keyframe duration sliders, transition types (Fly/Ease/Linear), loop playback, keyframe renaming, and Escape to stop",
+        "published_at": "2026-03-19T18:26:45Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "cinematic-camera.zip",
+            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.1.0/cinematic-camera.zip",
+            "download_count": 31,
+            "size": 4458
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.1.0/manifest.json",
+            "download_count": 3973,
+            "size": 279
+          }
+        ],
+        "game_version": ">=1.1.0"
+      },
+      {
+        "tag_name": "v1.0.0",
+        "name": "v1.0.0",
+        "body": "First version on cinematic camera mod",
+        "published_at": "2026-03-18T14:12:57Z",
+        "prerelease": false,
+        "assets": [
+          {
+            "name": "cinematic-camera.zip",
+            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.0.0/cinematic-camera.zip",
+            "download_count": 31,
+            "size": 3570
+          },
+          {
+            "name": "manifest.json",
+            "browser_download_url": "https://github.com/TransitCore/cinematic-camera/releases/download/v1.0.0/manifest.json",
+            "download_count": 4208,
+            "size": 279
+          }
+        ],
+        "game_version": ">=1.1.0"
       }
     ]
   },
@@ -2967,111 +2967,6 @@
         "download_url": "",
         "game_version": ">=1.2.0",
         "sha256": "3c73cddf79484ff09304f9fad1023b167f94080509134aa168b65977816b13de",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/SDJ.json": [
-      {
-        "version": "0.4.0",
-        "name": "0.4.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-23",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "c0c6dceeec305a6ee3c9ceb5b1acf97e0442bc0fda36694baaf22256fa7242b2",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.3.0",
-        "name": "0.3.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-14",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "c566c3f74e1dfc7d25bec3cbbc3992dd948eebd9306598232ec48542c6c1977c",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.2.0",
-        "name": "0.2.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "8010b55827ec67a977cf283c9f0b72ab8a3ec7ea66c5505f4e216e3883f5b64c",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/SPK.json": [
-      {
-        "version": "0.4.0",
-        "name": "0.4.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-23",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "12c083d0a42f12d2b4b5db0809d713990ef08fd105c06daea348ef80053e62ae",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.3.0",
-        "name": "0.3.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-14",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "30f1534400c12f52c8314a8632f44528e535062311f99abac7948c4d643eb6e4",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.2.0",
-        "name": "0.2.0",
-        "changelog": "Contains 千歳 (Chitose)",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "be3813fa292cfd15df7f31fde978dca42cae7ce2e2401b440606e9e553dad0c3",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/ITM.json": [
-      {
-        "version": "0.1.2",
-        "name": "0.1.2",
-        "changelog": "Further demand data pruning",
-        "date": "2026-03-27",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "c31a2018c5dbcc8de60272b4ea47ed3be184e16b0b7af450b70bc8dbc0029cad",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.1.1",
-        "name": "0.1.1",
-        "changelog": "Reduced buildings index size",
-        "date": "2026-03-26",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "896ec40f84f60bffb626fab97ac6e715617c543f934823189377cb60743f83a9",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.1.0",
-        "name": "0.1.0",
-        "changelog": "New in 0.3.0",
-        "date": "2026-03-23",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "79265f09c8c0a855e22e17d40487d3f59c14b247ecdef530b835871c7b9c9a33",
         "downloads": 0,
         "prerelease": false
       }
@@ -3111,6 +3006,41 @@
         "prerelease": false
       }
     ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/SPK.json": [
+      {
+        "version": "0.4.0",
+        "name": "0.4.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "12c083d0a42f12d2b4b5db0809d713990ef08fd105c06daea348ef80053e62ae",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.3.0",
+        "name": "0.3.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-14",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "30f1534400c12f52c8314a8632f44528e535062311f99abac7948c4d643eb6e4",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.2.0",
+        "name": "0.2.0",
+        "changelog": "Contains 千歳 (Chitose)",
+        "date": "2026-03-09",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "be3813fa292cfd15df7f31fde978dca42cae7ce2e2401b440606e9e553dad0c3",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://ahkimn.github.io/subwaybuilder-jp-maps/TOY.json": [
       {
         "version": "0.2.0",
@@ -3131,6 +3061,100 @@
         "download_url": "",
         "game_version": ">=1.2.0",
         "sha256": "5fe70d4cea44709298389404b4037055655288d15d786a58089dee262f40d701",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/SDJ.json": [
+      {
+        "version": "0.4.0",
+        "name": "0.4.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "c0c6dceeec305a6ee3c9ceb5b1acf97e0442bc0fda36694baaf22256fa7242b2",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.3.0",
+        "name": "0.3.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-14",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "c566c3f74e1dfc7d25bec3cbbc3992dd948eebd9306598232ec48542c6c1977c",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.2.0",
+        "name": "0.2.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-09",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "8010b55827ec67a977cf283c9f0b72ab8a3ec7ea66c5505f4e216e3883f5b64c",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/TAK.json": [
+      {
+        "version": "0.2.0",
+        "name": "0.2.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "c9b39cfa4489ad96348844fe3a45175fbe544ebf534a2e3aab4bce4faf3f6518",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.1.0",
+        "name": "0.1.0",
+        "changelog": "New in 0.2.0",
+        "date": "2026-03-14",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "6602f94702738c8dc4c5f49b9047997411bb02cb7ce3da5c0364cf2495e03393",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/ITM.json": [
+      {
+        "version": "0.1.2",
+        "name": "0.1.2",
+        "changelog": "Further demand data pruning",
+        "date": "2026-03-27",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "c31a2018c5dbcc8de60272b4ea47ed3be184e16b0b7af450b70bc8dbc0029cad",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.1.1",
+        "name": "0.1.1",
+        "changelog": "Reduced buildings index size",
+        "date": "2026-03-26",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "896ec40f84f60bffb626fab97ac6e715617c543f934823189377cb60743f83a9",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.1.0",
+        "name": "0.1.0",
+        "changelog": "New in 0.3.0",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "79265f09c8c0a855e22e17d40487d3f59c14b247ecdef530b835871c7b9c9a33",
         "downloads": 0,
         "prerelease": false
       }
@@ -3170,54 +3194,6 @@
         "prerelease": false
       }
     ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/TAK.json": [
-      {
-        "version": "0.2.0",
-        "name": "0.2.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-23",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "c9b39cfa4489ad96348844fe3a45175fbe544ebf534a2e3aab4bce4faf3f6518",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.1.0",
-        "name": "0.1.0",
-        "changelog": "New in 0.2.0",
-        "date": "2026-03-14",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "6602f94702738c8dc4c5f49b9047997411bb02cb7ce3da5c0364cf2495e03393",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/IZO.json": [
-      {
-        "version": "0.2.0",
-        "name": "0.2.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-23",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "e8422ae8ecb89a9152fd1d46a6f9e372268b51e06bc4385ff0c72523599a3d90",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.1.0",
-        "name": "0.1.0",
-        "changelog": "New in 0.2.0",
-        "date": "2026-03-14",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "bfb2e32212e23cbe329dd0c5b28934a2f688ff54ec8fa99c7cbf79eb325ecf3c",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
     "https://ahkimn.github.io/subwaybuilder-jp-maps/KIJ.json": [
       {
         "version": "0.4.0",
@@ -3253,50 +3229,26 @@
         "prerelease": false
       }
     ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/NGO.json": [
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/IZO.json": [
       {
-        "version": "0.1.4",
-        "name": "0.1.4",
-        "changelog": "New in 0.3.2",
-        "date": "2026-03-27",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "0c46cd138d53b4432d905691bd378d289001f429c31b1844b83373b6c6b49c3d",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/KCZ.json": [
-      {
-        "version": "0.4.0",
-        "name": "0.4.0",
+        "version": "0.2.0",
+        "name": "0.2.0",
         "changelog": "Map pack update.",
         "date": "2026-03-23",
         "download_url": "",
         "game_version": ">=1.2.0",
-        "sha256": "1b5d3030f3e6c54c212ff32a8d7c5ab1a7be209d6b8ebead92a4e4421aaafed9",
+        "sha256": "e8422ae8ecb89a9152fd1d46a6f9e372268b51e06bc4385ff0c72523599a3d90",
         "downloads": 0,
         "prerelease": false
       },
       {
-        "version": "0.3.0",
-        "name": "0.3.0",
-        "changelog": "Map pack update.",
+        "version": "0.1.0",
+        "name": "0.1.0",
+        "changelog": "New in 0.2.0",
         "date": "2026-03-14",
         "download_url": "",
         "game_version": ">=1.2.0",
-        "sha256": "0ef4f53487848c0d0e4be827207ca5a4195084f77d799142d271d0524c2b630a",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.2.0",
-        "name": "0.2.0",
-        "changelog": "New in 0.1.3",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "ee3397e2e3bf21419646f8a85f04e057f9351a7f9a9c0bb8ff5615d21d0e5dac",
+        "sha256": "bfb2e32212e23cbe329dd0c5b28934a2f688ff54ec8fa99c7cbf79eb325ecf3c",
         "downloads": 0,
         "prerelease": false
       }
@@ -3321,6 +3273,19 @@
         "download_url": "",
         "game_version": ">=1.2.0",
         "sha256": "d360bd84af65d690af6911f52f5e73e50502f00d1f09808f0448ca3e1deae8bb",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/NGO.json": [
+      {
+        "version": "0.1.4",
+        "name": "0.1.4",
+        "changelog": "New in 0.3.2",
+        "date": "2026-03-27",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "0c46cd138d53b4432d905691bd378d289001f429c31b1844b83373b6c6b49c3d",
         "downloads": 0,
         "prerelease": false
       }
@@ -3395,6 +3360,41 @@
         "prerelease": false
       }
     ],
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/KCZ.json": [
+      {
+        "version": "0.4.0",
+        "name": "0.4.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "1b5d3030f3e6c54c212ff32a8d7c5ab1a7be209d6b8ebead92a4e4421aaafed9",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.3.0",
+        "name": "0.3.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-14",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "0ef4f53487848c0d0e4be827207ca5a4195084f77d799142d271d0524c2b630a",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.2.0",
+        "name": "0.2.0",
+        "changelog": "New in 0.1.3",
+        "date": "2026-03-09",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "ee3397e2e3bf21419646f8a85f04e057f9351a7f9a9c0bb8ff5615d21d0e5dac",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://ahkimn.github.io/subwaybuilder-jp-maps/UKB.json": [
       {
         "version": "0.4.0",
@@ -3426,41 +3426,6 @@
         "download_url": "",
         "game_version": ">=1.0.0",
         "sha256": "12e4453bbe40190125dab98375bf9818609175b232c0e1a9e7f428aeb3a4d862",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/KKJ.json": [
-      {
-        "version": "0.4.0",
-        "name": "0.4.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-23",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "15e52094b6544b586ae7852bb5dab514efa68b041c5d7016bae1446d43ae139c",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.3.0",
-        "name": "0.3.0",
-        "changelog": "Map pack update.",
-        "date": "2026-03-14",
-        "download_url": "",
-        "game_version": ">=1.2.0",
-        "sha256": "d9337220ebf38dcfa07fb4e9f48521199d5c9a4fce49c6588d11901c76a10c34",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "0.2.0",
-        "name": "0.2.0",
-        "changelog": "New in 0.1.3. Contains 下関 (Shimonoseki)",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "9bf190c32dee18a46ec201a0bb06a75a7b81faaa5909572747dd544551770bac",
         "downloads": 0,
         "prerelease": false
       }
@@ -3500,7 +3465,7 @@
         "prerelease": false
       }
     ],
-    "https://ahkimn.github.io/subwaybuilder-jp-maps/HIJ.json": [
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/KKJ.json": [
       {
         "version": "0.4.0",
         "name": "0.4.0",
@@ -3508,7 +3473,7 @@
         "date": "2026-03-23",
         "download_url": "",
         "game_version": ">=1.2.0",
-        "sha256": "06e5568a7ac3427f791e6473d2094d799c1b1c531dd5e31047870262ffcb6c4f",
+        "sha256": "15e52094b6544b586ae7852bb5dab514efa68b041c5d7016bae1446d43ae139c",
         "downloads": 0,
         "prerelease": false
       },
@@ -3519,18 +3484,18 @@
         "date": "2026-03-14",
         "download_url": "",
         "game_version": ">=1.2.0",
-        "sha256": "11eadf4fb9cab9135c37328d6ddf8a78de1ed7989ea6feb81469cd6aaaf2bb8b",
+        "sha256": "d9337220ebf38dcfa07fb4e9f48521199d5c9a4fce49c6588d11901c76a10c34",
         "downloads": 0,
         "prerelease": false
       },
       {
         "version": "0.2.0",
         "name": "0.2.0",
-        "changelog": "Contains 呉 (Kure)",
+        "changelog": "New in 0.1.3. Contains 下関 (Shimonoseki)",
         "date": "2026-03-09",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "108d0672fc073ec9fe070df48797ad76589ca5482e1ca8e5d40f246b4c72c9aa",
+        "sha256": "9bf190c32dee18a46ec201a0bb06a75a7b81faaa5909572747dd544551770bac",
         "downloads": 0,
         "prerelease": false
       }
@@ -3594,26 +3559,37 @@
         "prerelease": false
       }
     ],
-    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YVR-update.json": [
+    "https://ahkimn.github.io/subwaybuilder-jp-maps/HIJ.json": [
       {
-        "version": "1.1.3",
-        "name": "1.1.3",
-        "changelog": "Updated map files.",
-        "date": "2026-02-27",
+        "version": "0.4.0",
+        "name": "0.4.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-23",
         "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "47b36073c8dee7bca75d90358e17579db4664a33bd7928b4c3b5bd1abdfd0a1c",
+        "game_version": ">=1.2.0",
+        "sha256": "06e5568a7ac3427f791e6473d2094d799c1b1c531dd5e31047870262ffcb6c4f",
         "downloads": 0,
         "prerelease": false
       },
       {
-        "version": "1.0.1",
-        "name": "1.0.1",
-        "changelog": "Initial public release.",
-        "date": "2026-02-21",
+        "version": "0.3.0",
+        "name": "0.3.0",
+        "changelog": "Map pack update.",
+        "date": "2026-03-14",
+        "download_url": "",
+        "game_version": ">=1.2.0",
+        "sha256": "11eadf4fb9cab9135c37328d6ddf8a78de1ed7989ea6feb81469cd6aaaf2bb8b",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "0.2.0",
+        "name": "0.2.0",
+        "changelog": "Contains 呉 (Kure)",
+        "date": "2026-03-09",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "845ce1b80e4c4c18a68337e801752017518eeb08d235c92be19ff1f65961ee0a",
+        "sha256": "108d0672fc073ec9fe070df48797ad76589ca5482e1ca8e5d40f246b4c72c9aa",
         "downloads": 0,
         "prerelease": false
       }
@@ -3642,6 +3618,30 @@
         "prerelease": false
       }
     ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YVR-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "47b36073c8dee7bca75d90358e17579db4664a33bd7928b4c3b5bd1abdfd0a1c",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "845ce1b80e4c4c18a68337e801752017518eeb08d235c92be19ff1f65961ee0a",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/TPA.json": [
       {
         "version": "1.1.0",
@@ -3651,19 +3651,6 @@
         "download_url": "",
         "game_version": ">=1.0.0",
         "sha256": "c5bdc340edfa2f4127d5911951c61e0d8a1bbeb365bec161c9ca0edf11608fcc",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://valdotorium.github.io/Railyard-Maps-2/updates/WAW.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Railyard Release.",
-        "date": "2026-03-15",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "a59ed8bfabc4a1e789e4a254f09e3a43d54d951ced98c6a3980b0df98cae5dea",
         "downloads": 0,
         "prerelease": false
       }
@@ -3727,6 +3714,32 @@
         "prerelease": false
       }
     ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/SBA.json": [
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-12",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "8c7e15c5fa31e73dd3e9b40585fe41ae125d106bba0860a16039425ac7f3383e",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/WAW.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Railyard Release.",
+        "date": "2026-03-15",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "a59ed8bfabc4a1e789e4a254f09e3a43d54d951ced98c6a3980b0df98cae5dea",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://valdotorium.github.io/Railyard-Maps-2/updates/TRD.json": [
       {
         "version": "1.0.0",
@@ -3736,32 +3749,6 @@
         "download_url": "",
         "game_version": ">=1.0.0",
         "sha256": "465a6d00ac0e3744606b2f9131427aa28f5e403f7bf1f68427d1e335528d1343",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/TOR.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "22560682f5ae014c05dc26c33d38092eb39c49c19aa09c09aed3f1a271761b95",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://valdotorium.github.io/Railyard-Maps-2/updates/SIN.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Railyard Release.",
-        "date": "2026-03-15",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "12878f405a49d47e51726d0a80144fa89fa41d92707b94557e8141ab2f94d88a",
         "downloads": 0,
         "prerelease": false
       }
@@ -3779,32 +3766,6 @@
         "prerelease": false
       }
     ],
-    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/SBA.json": [
-      {
-        "version": "1.0.1",
-        "name": "1.0.1",
-        "changelog": "Realistic demand data using 2023 LODES.",
-        "date": "2026-03-12",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "8c7e15c5fa31e73dd3e9b40585fe41ae125d106bba0860a16039425ac7f3383e",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/ROM.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "f31ea397cc04e9104e6331a10e8a396e75a6f5f9ef87f1dd018f796d4087e7f4",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/SAT.json": [
       {
         "version": "1.1.1",
@@ -3818,15 +3779,28 @@
         "prerelease": false
       }
     ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/RIV.json": [
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/SIN.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Railyard Release.",
+        "date": "2026-03-15",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "12878f405a49d47e51726d0a80144fa89fa41d92707b94557e8141ab2f94d88a",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/TOR.json": [
       {
         "version": "1.0.0",
         "name": "1.0.0",
         "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-17",
+        "date": "2026-03-09",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "1864560931cc79a68eb874d7632db02bcfca928f73463e4b47b7491ed5b519db",
+        "sha256": "22560682f5ae014c05dc26c33d38092eb39c49c19aa09c09aed3f1a271761b95",
         "downloads": 0,
         "prerelease": false
       }
@@ -3844,6 +3818,19 @@
         "prerelease": false
       }
     ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/VPT.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "80059ca666760e06de53131c9afad1354d148a9ef728e842fecb3c8c122178a3",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/RIC.json": [
       {
         "version": "1.1.0",
@@ -3857,15 +3844,15 @@
         "prerelease": false
       }
     ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/VPT.json": [
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/PR.json": [
       {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-23",
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Uses US Census data for residences, and US Census data-informed jobs distributed according to OSM",
+        "date": "2026-03-18",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "80059ca666760e06de53131c9afad1354d148a9ef728e842fecb3c8c122178a3",
+        "sha256": "b144d52d0d34c60c90ae72c4a1943f809c0b2784fcf74a1c82463243e4dc278a",
         "downloads": 0,
         "prerelease": false
       }
@@ -3894,15 +3881,41 @@
         "prerelease": false
       }
     ],
-    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/PR.json": [
+    "https://maximilian284.github.io/subwaybuilder-it-maps/ROM.json": [
       {
-        "version": "1.0.1",
-        "name": "1.0.1",
-        "changelog": "Uses US Census data for residences, and US Census data-informed jobs distributed according to OSM",
-        "date": "2026-03-18",
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-09",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "b144d52d0d34c60c90ae72c4a1943f809c0b2784fcf74a1c82463243e4dc278a",
+        "sha256": "f31ea397cc04e9104e6331a10e8a396e75a6f5f9ef87f1dd018f796d4087e7f4",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/RIV.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-17",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "1864560931cc79a68eb874d7632db02bcfca928f73463e4b47b7491ed5b519db",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ryandicicco.github.io/Subway-Builder-Maps/RTM.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial release (ported by ryandicicco). Original map by Lawrencelot. Covers the Rotterdam-The Hague metro corridor in the Randstad region, including Rotterdam Centrum, The Hague, Delft, Schiedam, Vlaardingen, and Rotterdam The Hague Airport (RTM).",
+        "date": "2026-03-09",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "881b595ea72c64aa42316aadb08f1d432b99af7c222eadb7e8fa92e7ad302333",
         "downloads": 0,
         "prerelease": false
       }
@@ -3933,6 +3946,19 @@
         "prerelease": false
       }
     ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/MIL.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-10",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "4efc7f7986a0a1e920e479e956170ba0015fe50934c061bebbfe10a0a31b1026",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://maximilian284.github.io/subwaybuilder-it-maps/PRM.json": [
       {
         "version": "1.0.0",
@@ -3946,6 +3972,30 @@
         "prerelease": false
       }
     ],
+    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YOW-update.json": [
+      {
+        "version": "1.1.3",
+        "name": "1.1.3",
+        "changelog": "Updated map files.",
+        "date": "2026-02-27",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "1ad349318afe26e27eefcec044e4376cc6e72411730805781f08f5c8ea7180c5",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Initial public release.",
+        "date": "2026-02-21",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "58860a472fd840be1edb8aea229955e04f71a807fa7f15fc43b356c2a37da60d",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/MCO.json": [
       {
         "version": "1.1.1",
@@ -3955,19 +4005,6 @@
         "download_url": "",
         "game_version": ">=1.0.0",
         "sha256": "78092950577c535576d2dc3b13f5ff3a61fdeb61a359023ecd486d5b8be747ef",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://ryandicicco.github.io/Subway-Builder-Maps/RTM.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial release (ported by ryandicicco). Original map by Lawrencelot. Covers the Rotterdam-The Hague metro corridor in the Randstad region, including Rotterdam Centrum, The Hague, Delft, Schiedam, Vlaardingen, and Rotterdam The Hague Airport (RTM).",
-        "date": "2026-03-09",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "881b595ea72c64aa42316aadb08f1d432b99af7c222eadb7e8fa92e7ad302333",
         "downloads": 0,
         "prerelease": false
       }
@@ -4009,43 +4046,6 @@
         "prerelease": false
       }
     ],
-    "https://raw.githubusercontent.com/devenperez/subway-builder-canadian-maps/refs/heads/main/railyard/YOW-update.json": [
-      {
-        "version": "1.1.3",
-        "name": "1.1.3",
-        "changelog": "Updated map files.",
-        "date": "2026-02-27",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "1ad349318afe26e27eefcec044e4376cc6e72411730805781f08f5c8ea7180c5",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "1.0.1",
-        "name": "1.0.1",
-        "changelog": "Initial public release.",
-        "date": "2026-02-21",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "58860a472fd840be1edb8aea229955e04f71a807fa7f15fc43b356c2a37da60d",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/MIL.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-10",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "4efc7f7986a0a1e920e479e956170ba0015fe50934c061bebbfe10a0a31b1026",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/MEM.json": [
       {
         "version": "1.1.0",
@@ -4072,6 +4072,19 @@
         "prerelease": false
       }
     ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/GRD.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-17",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "9982da87e4007ecb6b2f12efb4485b86251a9fb182cd7946de8b61db7d8cd126",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/LAXM.json": [
       {
         "version": "1.0.0",
@@ -4081,19 +4094,6 @@
         "download_url": "",
         "game_version": ">=1.0.0",
         "sha256": "d09cfce8d8757496ae1c334979fc47d4ec9e4873795c58cab7101cb002ed98d6",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/KNOX.json": [
-      {
-        "version": "1.1.0",
-        "name": "1.1.0",
-        "changelog": "Realistic demand data using 2023 LODES.",
-        "date": "2026-03-08",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "31d89963dfb04413e548b493ff0fb4a326215071832077e7c2cb96d8978ef59c",
         "downloads": 0,
         "prerelease": false
       }
@@ -4111,32 +4111,6 @@
         "prerelease": false
       }
     ],
-    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/LAX.json": [
-      {
-        "version": "1.0.1",
-        "name": "1.0.1",
-        "changelog": "Realistic demand data using 2023 LODES.",
-        "date": "2026-03-13",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "c50d68b569eb0edade342fd17d96f6e636be93e0697dee8de39601836a67719a",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/GRD.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-17",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "9982da87e4007ecb6b2f12efb4485b86251a9fb182cd7946de8b61db7d8cd126",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
     "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/BWI.json": [
       {
         "version": "1.1.0",
@@ -4150,39 +4124,28 @@
         "prerelease": false
       }
     ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/FIR.json": [
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/LAX.json": [
       {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-09",
+        "version": "1.0.1",
+        "name": "1.0.1",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-13",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "158a6bd6aa81804632bddaf1e9a50b82d4ab4bb62bab724bb6a306e2f4c82871",
+        "sha256": "c50d68b569eb0edade342fd17d96f6e636be93e0697dee8de39601836a67719a",
         "downloads": 0,
         "prerelease": false
       }
     ],
-    "https://ryandicicco.github.io/Subway-Builder-Maps/CAI.json": [
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/KNOX.json": [
       {
-        "version": "2.0.1",
-        "name": "2.0.1",
-        "changelog": "Fix: repaired corrupted buildings_index.json that prevented building demolition in-game.",
-        "date": "2026-03-23",
+        "version": "1.1.0",
+        "name": "1.1.0",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-08",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "eb5f6f280e7d6ace4047627fe19d801e159c596f4b9758a2ec38123a842ad077",
-        "downloads": 0,
-        "prerelease": false
-      },
-      {
-        "version": "2.0.0",
-        "name": "2.0.0",
-        "changelog": "Major update: merged 1.3M+ building footprints and 725K+ road segments from Overture Maps (Google Open Buildings + Microsoft + OSM). Demand data generated from building density via Voronoi tessellation.",
-        "date": "2026-03-22",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "5685812a9561acdc58e0b6317049790dee375227aad10ef42012e03c04ee1201",
+        "sha256": "31d89963dfb04413e548b493ff0fb4a326215071832077e7c2cb96d8978ef59c",
         "downloads": 0,
         "prerelease": false
       }
@@ -4200,7 +4163,7 @@
         "prerelease": false
       }
     ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/BOL.json": [
+    "https://maximilian284.github.io/subwaybuilder-it-maps/FIR.json": [
       {
         "version": "1.0.0",
         "name": "1.0.0",
@@ -4208,20 +4171,7 @@
         "date": "2026-03-09",
         "download_url": "",
         "game_version": ">=1.0.0",
-        "sha256": "01780884c4c890ebfbaee6bd1395baa93bc35553c65ee1c0c002c9f740d010b1",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
-    "https://valdotorium.github.io/Railyard-Maps-2/updates/BER.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Railyard Release.",
-        "date": "2026-03-15",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "fbd63062283da4b746b79798e6909818abe776fb2be7b6aac96289970f9fa68c",
+        "sha256": "158a6bd6aa81804632bddaf1e9a50b82d4ab4bb62bab724bb6a306e2f4c82871",
         "downloads": 0,
         "prerelease": false
       }
@@ -4274,6 +4224,82 @@
         "prerelease": false
       }
     ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/BAR.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-10",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "fbe628e9901eb82cfb0a97c595e00ef02631951e2d9cb1d19947ab23a20a69c9",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://valdotorium.github.io/Railyard-Maps-2/updates/BER.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Railyard Release.",
+        "date": "2026-03-15",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "fbd63062283da4b746b79798e6909818abe776fb2be7b6aac96289970f9fa68c",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://maximilian284.github.io/subwaybuilder-it-maps/BOL.json": [
+      {
+        "version": "1.0.0",
+        "name": "1.0.0",
+        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
+        "date": "2026-03-09",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "01780884c4c890ebfbaee6bd1395baa93bc35553c65ee1c0c002c9f740d010b1",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://ryandicicco.github.io/Subway-Builder-Maps/CAI.json": [
+      {
+        "version": "2.0.1",
+        "name": "2.0.1",
+        "changelog": "Fix: repaired corrupted buildings_index.json that prevented building demolition in-game.",
+        "date": "2026-03-23",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "eb5f6f280e7d6ace4047627fe19d801e159c596f4b9758a2ec38123a842ad077",
+        "downloads": 0,
+        "prerelease": false
+      },
+      {
+        "version": "2.0.0",
+        "name": "2.0.0",
+        "changelog": "Major update: merged 1.3M+ building footprints and 725K+ road segments from Overture Maps (Google Open Buildings + Microsoft + OSM). Demand data generated from building density via Voronoi tessellation.",
+        "date": "2026-03-22",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "5685812a9561acdc58e0b6317049790dee375227aad10ef42012e03c04ee1201",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
+    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/DCA.json": [
+      {
+        "version": "1.1.1",
+        "name": "1.1.1",
+        "changelog": "Realistic demand data using 2023 LODES.",
+        "date": "2026-03-18",
+        "download_url": "",
+        "game_version": ">=1.0.0",
+        "sha256": "a6117386faecfdef85d2f43f5c1b9a01c28d046d409259c02072c9986a901ff4",
+        "downloads": 0,
+        "prerelease": false
+      }
+    ],
     "https://ryandicicco.github.io/Subway-Builder-Maps/AMS.json": [
       {
         "version": "1.2.0",
@@ -4309,19 +4335,6 @@
         "prerelease": false
       }
     ],
-    "https://maximilian284.github.io/subwaybuilder-it-maps/BAR.json": [
-      {
-        "version": "1.0.0",
-        "name": "1.0.0",
-        "changelog": "Initial Railyard release with updated demand data and new buildings foundations data.",
-        "date": "2026-03-10",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "fbe628e9901eb82cfb0a97c595e00ef02631951e2d9cb1d19947ab23a20a69c9",
-        "downloads": 0,
-        "prerelease": false
-      }
-    ],
     "https://raw.githubusercontent.com/Subway-Builder-Modded/Dependency-Test-Mod/refs/heads/main/update_nested.json": [
       {
         "version": "0.1.0",
@@ -4347,19 +4360,6 @@
         "sha256": "f2ef5d8c5d1c20428ca43dbe33c15a56545e1b6487b57ed590132c91eb068581",
         "downloads": 0,
         "manifest": "https://github.com/Subway-Builder-Modded/Dependency-Test-Mod/releases/download/v0.1.3/manifest-base.json",
-        "prerelease": false
-      }
-    ],
-    "https://raw.githubusercontent.com/rslurry/subwaybuilder-maps/refs/heads/main/DCA.json": [
-      {
-        "version": "1.1.1",
-        "name": "1.1.1",
-        "changelog": "Realistic demand data using 2023 LODES.",
-        "date": "2026-03-18",
-        "download_url": "",
-        "game_version": ">=1.0.0",
-        "sha256": "a6117386faecfdef85d2f43f5c1b9a01c28d046d409259c02072c9986a901ff4",
-        "downloads": 0,
         "prerelease": false
       }
     ]

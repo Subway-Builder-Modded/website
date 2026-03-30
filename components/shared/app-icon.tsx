@@ -1,8 +1,10 @@
 import type { CSSProperties } from 'react';
 import Image from 'next/image';
+import type { LucideProps } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   isImageIcon,
+  isLucideIcon,
   isMaskIcon,
   resolveAppIcon,
   type AppIconInput,
@@ -13,28 +15,52 @@ type AppIconProps = {
   className?: string;
   style?: CSSProperties;
   size?: number | string;
+  decorative?: boolean;
+  label?: string;
+  title?: string;
+  lucideProps?: Omit<LucideProps, 'className' | 'style' | 'size'>;
 };
 
-export function AppIcon({ icon, className, style, size }: AppIconProps) {
+function iconSizeStyle(size: number | string | undefined) {
+  if (size === undefined) return undefined;
+  return {
+    width: size,
+    height: size,
+  } satisfies CSSProperties;
+}
+
+export function AppIcon({
+  icon,
+  className,
+  style,
+  size,
+  decorative = true,
+  label,
+  title,
+  lucideProps,
+}: AppIconProps) {
   const resolvedIcon = resolveAppIcon(icon);
   if (!resolvedIcon) return null;
-  const sizeStyle =
-    size !== undefined
-      ? {
-          width: size,
-          height: size,
-        }
-      : undefined;
+  const sizeStyle = iconSizeStyle(size);
+  const ariaLabel = decorative ? undefined : label;
+  const commonStyle = {
+    ...sizeStyle,
+    ...style,
+  };
+  const commonClassName = cn('inline-block size-5 align-middle', className);
 
   if (isMaskIcon(resolvedIcon)) {
     return (
       <span
-        className={cn('block size-5 bg-current', className)}
+        aria-hidden={decorative}
+        aria-label={ariaLabel}
+        role={decorative ? undefined : 'img'}
+        title={title}
+        className={cn(commonClassName, 'bg-current')}
         style={{
           WebkitMask: `url(${resolvedIcon.src}) center / contain no-repeat`,
           mask: `url(${resolvedIcon.src}) center / contain no-repeat`,
-          ...sizeStyle,
-          ...style,
+          ...commonStyle,
         }}
       />
     );
@@ -44,27 +70,30 @@ export function AppIcon({ icon, className, style, size }: AppIconProps) {
     return (
       <Image
         src={resolvedIcon.src}
-        alt=""
-        aria-hidden={true}
+        alt={decorative ? '' : (ariaLabel ?? title ?? '')}
+        aria-hidden={decorative}
         width={20}
         height={20}
-        className={cn('block size-5 object-contain', className)}
-        style={{
-          ...sizeStyle,
-          ...style,
-        }}
+        title={title}
+        className={cn(commonClassName, 'object-contain')}
+        style={commonStyle}
       />
     );
   }
 
+  if (!isLucideIcon(resolvedIcon)) return null;
+
   const Icon = resolvedIcon;
   return (
     <Icon
-      className={cn('size-5', className)}
-      style={{
-        ...sizeStyle,
-        ...style,
-      }}
+      aria-hidden={decorative}
+      aria-label={ariaLabel}
+      role={decorative ? undefined : 'img'}
+      title={title}
+      className={commonClassName}
+      style={commonStyle}
+      size={size}
+      {...lucideProps}
     />
   );
 }

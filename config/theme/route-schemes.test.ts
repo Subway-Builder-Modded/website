@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { resolveSiteColorScheme } from '@/config/theme/scheme-config';
-import { SITE_COLOR_SCHEME_ROUTE_RULES } from '@/config/theme/route-schemes';
+import {
+  resolveSiteColorScheme,
+  SITE_COLOR_SCHEME_ROUTE_RULES,
+} from '@/config/theme/route-schemes';
 
 describe('resolveSiteColorScheme', () => {
   it('resolves project schemes for matching paths', () => {

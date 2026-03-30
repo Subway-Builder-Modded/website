@@ -11,7 +11,15 @@ export type AppIconRegistryName = keyof typeof APP_ICON_REGISTRY;
 
 export const APP_ICON_ALIASES: Record<string, AppIconRegistryName> = {
   'sbm-logo': 'logo',
+  sbmLogo: 'logo',
+  sbm_logo: 'logo',
   'discord-mask': 'discord',
+  discordMask: 'discord',
+  discord_mask: 'discord',
   'github-mask': 'github',
+  githubMask: 'github',
+  github_mask: 'github',
   'subway-builder': 'subwayBuilder',
+  subway_builder: 'subwayBuilder',
+  subwaybuilder: 'subwayBuilder',
 };

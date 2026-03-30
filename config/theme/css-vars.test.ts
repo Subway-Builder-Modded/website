@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { getCurrentSuiteModeHex } from '@/config/theme/css-vars';
+import { getSuiteColorVarRefs } from '@/config/theme/css-vars';
 
-describe('getCurrentSuiteModeHex', () => {
+describe('getSuiteColorVarRefs', () => {
   it('returns suite CSS variable references for color roles', () => {
-    expect(getCurrentSuiteModeHex('accentColor')).toEqual({
+    expect(getSuiteColorVarRefs('accentColor')).toEqual({
       light: 'var(--suite-accent-light)',
       dark: 'var(--suite-accent-dark)',
     });
-    expect(getCurrentSuiteModeHex('textColorInverted')).toEqual({
+    expect(getSuiteColorVarRefs('textColorInverted')).toEqual({
       light: 'var(--suite-text-inverted-light)',
       dark: 'var(--suite-text-inverted-dark)',
     });

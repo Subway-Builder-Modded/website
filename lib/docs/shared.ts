@@ -123,11 +123,6 @@ export function getActiveVersionFromPathname(
   );
 }
 
-export function buildVersionHref(instance: DocsInstance, versionValue: string) {
-  void versionValue;
-  return buildDocsHubHref(instance);
-}
-
 export function buildDocHref(
   instance: DocsInstance,
   version: string | null,

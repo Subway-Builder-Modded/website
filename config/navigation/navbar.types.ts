@@ -19,13 +19,11 @@ export type NavbarModeColor = {
   dark: string;
 };
 
-export type NavbarIcon = AppIconValue;
-
 export type NavbarDropdownItem = {
   id: string;
   title?: string;
   href?: string;
-  icon?: NavbarIcon;
+  icon?: AppIconValue;
   colors?: NavbarItemColors;
   color?: NavbarItemColors;
 };
@@ -34,7 +32,7 @@ export type NavbarItem = {
   id: string;
   title?: string;
   href?: string;
-  icon?: NavbarIcon;
+  icon?: AppIconValue;
   position: NavbarPosition;
   colors?: NavbarItemColors;
   color?: NavbarItemColors;
@@ -77,7 +75,7 @@ export type AppNavbarDropdownItem = {
   title?: string;
   href?: string;
   activeMatchPaths?: string[];
-  icon?: NavbarIcon;
+  icon?: AppIconValue;
   schemeId?: NavbarColorSchemeId;
   action?: NavbarAction;
 };
@@ -86,7 +84,7 @@ export type AppNavbarItem = {
   id: string;
   title?: string;
   href?: string;
-  icon?: NavbarIcon;
+  icon?: AppIconValue;
   position: NavbarPosition;
   schemeId?: NavbarColorSchemeId;
   presentation?: AppNavbarItemPresentation;
@@ -101,7 +99,7 @@ export type AppNavbarItemPresentation = {
 export type AppNavbarBrand = {
   title: string;
   href: string;
-  icon: NavbarIcon;
+  icon: AppIconValue;
 };
 
 export type AppNavbarSizing = {

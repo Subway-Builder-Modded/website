@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 
-import { getCurrentSuiteModeHex } from '@/config/theme/css-vars';
+import { getSuiteColorVarRefs } from '@/config/theme/css-vars';
 import type { ThemedColorSet } from '@/config/theme/colors';
 import type { SiteColorSchemeId } from '@/config/theme/contracts';
 import {
@@ -54,11 +54,11 @@ function resolvePaletteFromScheme(
 ): ThemedShowcaseCardPalette {
   if (!scheme) {
     return {
-      accent: getCurrentSuiteModeHex('accentColor'),
-      primary: getCurrentSuiteModeHex('primaryColor'),
-      secondary: getCurrentSuiteModeHex('secondaryColor'),
-      text: getCurrentSuiteModeHex('textColor'),
-      textInverted: getCurrentSuiteModeHex('textColorInverted'),
+      accent: getSuiteColorVarRefs('accentColor'),
+      primary: getSuiteColorVarRefs('primaryColor'),
+      secondary: getSuiteColorVarRefs('secondaryColor'),
+      text: getSuiteColorVarRefs('textColor'),
+      textInverted: getSuiteColorVarRefs('textColorInverted'),
     };
   }
 

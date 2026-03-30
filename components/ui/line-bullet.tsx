@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getCurrentSuiteModeHex } from '@/config/theme/css-vars';
+import { getSuiteColorVarRefs } from '@/config/theme/css-vars';
 import { cn } from '@/lib/utils';
 import {
   getLineBulletPreset,
@@ -81,13 +81,13 @@ export function LineBullet({
   const colorHex = theme
     ? resolveLineBulletModeHex(theme, resolvedColorRole, colorOverride)
     : {
-        ...getCurrentSuiteModeHex(resolvedColorRole),
+        ...getSuiteColorVarRefs(resolvedColorRole),
         ...colorOverride,
       };
   const textHex = theme
     ? resolveLineBulletTextModeHex(theme, resolvedTextRole, textOverride)
     : {
-        ...getCurrentSuiteModeHex(resolvedTextRole),
+        ...getSuiteColorVarRefs(resolvedTextRole),
         ...textOverride,
       };
   const hoverHex = theme
@@ -98,7 +98,7 @@ export function LineBullet({
         hoverColorOverride,
       )
     : {
-        ...getCurrentSuiteModeHex(resolvedHoverColorRole ?? resolvedColorRole),
+        ...getSuiteColorVarRefs(resolvedHoverColorRole ?? resolvedColorRole),
         ...hoverColorOverride,
       };
 

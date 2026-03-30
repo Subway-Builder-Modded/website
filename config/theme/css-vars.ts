@@ -33,6 +33,8 @@ const SUITE_VAR_MAP: Record<
   },
 };
 
-export function getCurrentSuiteModeHex(role: ThemeSuiteColorRole): ModeHex {
+export type { ThemeSuiteColorRole };
+
+export function getSuiteColorVarRefs(role: ThemeSuiteColorRole): ModeHex {
   return SUITE_VAR_MAP[role];
 }
