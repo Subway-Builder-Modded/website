@@ -10,8 +10,9 @@ import {
 } from '@/config/site/metadata';
 
 export const dynamicParams = false;
+export const dynamic = 'force-static';
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const data = loadRegistryAnalytics();
   return data.authors.map((a) => ({
     author: a.author,

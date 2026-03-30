@@ -11,8 +11,9 @@ import {
 import type { ListingType } from '@/types/registry-analytics';
 
 export const dynamicParams = false;
+export const dynamic = 'force-static';
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const data = loadRegistryAnalytics();
   return data.allTime.map((r) => ({
     type: r.listing_type,
