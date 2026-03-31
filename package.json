@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev",
-    "prebuild": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/generate-github-release-cache.mjs",
+    "generate:website-analytics": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/generate-website-analytics.mjs",
+    "prebuild": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/generate-github-release-cache.mjs && node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/generate-website-analytics.mjs",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",

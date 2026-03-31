@@ -45,7 +45,20 @@ jobs:
             analytics
           sparse-checkout-cone-mode: true
 
-      - name: Build
+      - name: Build (route discovery)
+        env:
+          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
+          REGISTRY_ANALYTICS_DIR: ${{ github.workspace }}/The-Railyard/analytics
+        run: pnpm run build
+
+      - name: Regenerate website analytics snapshot
+        env:
+          CLOUDFLARE_ZONE_TAG: ${{ secrets.CLOUDFLARE_ZONE_TAG }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          WEBSITE_PATH_SOURCE_DIR: ${{ github.workspace }}/out
+        run: pnpm run generate:website-analytics
+
+      - name: Build (final deploy output)
         env:
           GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
           REGISTRY_ANALYTICS_DIR: ${{ github.workspace }}/The-Railyard/analytics

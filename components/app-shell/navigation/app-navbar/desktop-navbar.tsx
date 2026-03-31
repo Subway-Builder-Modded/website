@@ -19,6 +19,8 @@ type DesktopNavbarProps = NavbarProps & {
   brand: AppNavbarBrand;
   leftItems: AppNavbarItem[];
   rightItems: AppNavbarItem[];
+  compactLeftItems?: boolean;
+  compactBrand?: boolean;
   pathname: string;
   onNavigate: () => void;
   setTheme: (theme: string) => void;
@@ -30,6 +32,8 @@ export function DesktopNavbar({
   brand,
   leftItems,
   rightItems,
+  compactLeftItems = false,
+  compactBrand = false,
   pathname,
   onNavigate,
   setTheme,
@@ -46,7 +50,11 @@ export function DesktopNavbar({
       data-color-scheme={NAVBAR_DEFAULT_COLOR_SCHEME_ID}
     >
       <NavbarStart>
-        <NavbarBrandLink brand={brand} onNavigate={onNavigate} />
+        <NavbarBrandLink
+          brand={brand}
+          onNavigate={onNavigate}
+          compact={compactBrand}
+        />
       </NavbarStart>
 
       <NavbarGap />
@@ -60,6 +68,7 @@ export function DesktopNavbar({
             onNavigate={onNavigate}
             setTheme={setTheme}
             configStyleVars={configStyleVars}
+            compact={compactLeftItems}
           />
         ))}
       </NavbarSection>

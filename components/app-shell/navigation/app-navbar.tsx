@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  useEffect,
   useCallback,
   useMemo,
   useState,
@@ -19,6 +20,9 @@ import { createNavbarConfigStyleVars } from './app-navbar/style-vars';
 import { useNavbarOffset } from './app-navbar/use-navbar-offset';
 import { DesktopNavbar } from './app-navbar/desktop-navbar';
 import { MobileNavbar } from './app-navbar/mobile-navbar';
+
+const INTERMEDIATE_NAVBAR_MIN_WIDTH = 768;
+const INTERMEDIATE_NAVBAR_MAX_WIDTH = 1200;
 
 export default function AppNavbar(props: NavbarProps) {
   const [headerElement, setHeaderElement] = useState<HTMLDivElement | null>(
@@ -56,9 +60,31 @@ function AppNavbarInner({
   configStyleVars,
   ...props
 }: AppNavbarInnerProps) {
+  const [isIntermediateDesktop, setIsIntermediateDesktop] = useState(false);
   const pathname = usePathname() ?? '/';
   const { setTheme } = useTheme();
-  const { open, setOpen } = useNavbar();
+  const { open, setOpen, isMobile } = useNavbar();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const update = () => {
+      const width = window.innerWidth;
+      setIsIntermediateDesktop(
+        width >= INTERMEDIATE_NAVBAR_MIN_WIDTH &&
+          width <= INTERMEDIATE_NAVBAR_MAX_WIDTH,
+      );
+    };
+
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    window.addEventListener('orientationchange', update);
+
+    return () => {
+      window.removeEventListener('resize', update);
+      window.removeEventListener('orientationchange', update);
+    };
+  }, []);
 
   const items = APP_NAVBAR_CONFIG.items;
   const leftItems = useMemo(
@@ -88,6 +114,8 @@ function AppNavbarInner({
         brand={APP_NAVBAR_CONFIG.brand}
         leftItems={leftItems}
         rightItems={rightItems}
+        compactLeftItems={isIntermediateDesktop && !isMobile}
+        compactBrand={isIntermediateDesktop && !isMobile}
         pathname={pathname}
         onNavigate={onNavigate}
         setTheme={setTheme}

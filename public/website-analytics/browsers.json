@@ -1,0 +1,173 @@
+[
+  {
+    "browser": "Chrome",
+    "visits": {
+      "1d": 183,
+      "7d": 1030,
+      "30d": 1030,
+      "all": 1030
+    }
+  },
+  {
+    "browser": "Unknown",
+    "visits": {
+      "1d": 207,
+      "7d": 940,
+      "30d": 940,
+      "all": 940
+    }
+  },
+  {
+    "browser": "MobileSafari",
+    "visits": {
+      "1d": 77,
+      "7d": 566,
+      "30d": 566,
+      "all": 566
+    }
+  },
+  {
+    "browser": "Firefox",
+    "visits": {
+      "1d": 83,
+      "7d": 455,
+      "30d": 455,
+      "all": 455
+    }
+  },
+  {
+    "browser": "Safari",
+    "visits": {
+      "1d": 52,
+      "7d": 391,
+      "30d": 391,
+      "all": 391
+    }
+  },
+  {
+    "browser": "GoogleBot",
+    "visits": {
+      "1d": 19,
+      "7d": 235,
+      "30d": 235,
+      "all": 235
+    }
+  },
+  {
+    "browser": "Edge",
+    "visits": {
+      "1d": 29,
+      "7d": 198,
+      "30d": 198,
+      "all": 198
+    }
+  },
+  {
+    "browser": "ChromeMobile",
+    "visits": {
+      "1d": 44,
+      "7d": 169,
+      "30d": 169,
+      "all": 169
+    }
+  },
+  {
+    "browser": "Opera",
+    "visits": {
+      "1d": 26,
+      "7d": 70,
+      "30d": 70,
+      "all": 70
+    }
+  },
+  {
+    "browser": "BingBot",
+    "visits": {
+      "1d": 7,
+      "7d": 52,
+      "30d": 52,
+      "all": 52
+    }
+  },
+  {
+    "browser": "OperaMobile",
+    "visits": {
+      "1d": 9,
+      "7d": 11,
+      "30d": 11,
+      "all": 11
+    }
+  },
+  {
+    "browser": "AppleBot",
+    "visits": {
+      "1d": 2,
+      "7d": 11,
+      "30d": 11,
+      "all": 11
+    }
+  },
+  {
+    "browser": "SamsungInternet",
+    "visits": {
+      "1d": 5,
+      "7d": 9,
+      "30d": 9,
+      "all": 9
+    }
+  },
+  {
+    "browser": "MobileSafariWebview",
+    "visits": {
+      "1d": 1,
+      "7d": 5,
+      "30d": 5,
+      "all": 5
+    }
+  },
+  {
+    "browser": "ChromeMobileWebview",
+    "visits": {
+      "1d": 0,
+      "7d": 2,
+      "30d": 2,
+      "all": 2
+    }
+  },
+  {
+    "browser": "Curl",
+    "visits": {
+      "1d": 0,
+      "7d": 2,
+      "30d": 2,
+      "all": 2
+    }
+  },
+  {
+    "browser": "Yandex",
+    "visits": {
+      "1d": 1,
+      "7d": 1,
+      "30d": 1,
+      "all": 1
+    }
+  },
+  {
+    "browser": "Silk",
+    "visits": {
+      "1d": 1,
+      "7d": 1,
+      "30d": 1,
+      "all": 1
+    }
+  },
+  {
+    "browser": "ChromeHeadless",
+    "visits": {
+      "1d": 0,
+      "7d": 1,
+      "30d": 1,
+      "all": 1
+    }
+  }
+]

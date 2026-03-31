@@ -185,6 +185,20 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
       },
     ],
   },
+  {
+    id: 'website',
+    title: 'Website',
+    icon: Globe,
+    colorScheme: 'website',
+    links: [
+      {
+        id: 'website-home',
+        label: 'Analytics',
+        href: '/website',
+        icon: ChartLine,
+      },
+    ],
+  },
 ];
 
 export function getFooterNavColorScheme(

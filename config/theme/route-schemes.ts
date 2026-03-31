@@ -10,6 +10,8 @@ export const SITE_COLOR_SCHEME_ROUTE_RULES: SiteColorSchemeRouteRule[] = [
   { pattern: '/template-mod/**', scheme: 'template-mod' },
   { pattern: '/registry/**', scheme: 'registry' },
   { pattern: '/registry', scheme: 'registry' },
+  { pattern: '/website/**', scheme: 'website' },
+  { pattern: '/website', scheme: 'website' },
 ];
 
 function normalizePathname(pathname: string): string {
