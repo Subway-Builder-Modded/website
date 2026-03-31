@@ -8,7 +8,7 @@ import {
   Package,
   Database,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { PageHeader } from '@/components/shared/page-header';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,8 @@ import { RegistryTrendingSection } from './registry-trending-section';
 import { RegistryAuthorsSection } from './registry-authors-section';
 import { RegistryBreakdownSection } from './registry-breakdown-section';
 import { RegistryPopulationSection } from './registry-population-section';
+import { RegistryDownloadsTimelineSection } from './registry-downloads-timeline-section';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 const PAGE_HEADER_SCHEME = {
   accent: { light: '#9d4edd', dark: '#c77dff' },
@@ -42,7 +44,10 @@ export function RegistryAnalyticsPage({
 }: {
   data: RegistryAnalyticsData;
 }) {
-  const [active, setActive] = useState<TabKey>('overview');
+  const [active, setActive] = usePersistedState<TabKey>(
+    'registry.analytics.active-tab',
+    'overview',
+  );
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -56,7 +61,7 @@ export function RegistryAnalyticsPage({
     ) {
       setActive(tab);
     }
-  }, []);
+  }, [setActive]);
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">
@@ -101,6 +106,7 @@ export function RegistryAnalyticsPage({
       {active === 'overview' && (
         <>
           <RegistrySummaryStats data={data} />
+          <RegistryDownloadsTimelineSection data={data} />
           <RegistryBreakdownSection data={data} />
         </>
       )}

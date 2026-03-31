@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { Cpu } from 'lucide-react';
 import type {
   WebsiteAnalyticsData,
   WebsiteAnalyticsPeriod,
 } from '@/types/website-analytics';
+import { usePersistedState } from '@/lib/use-persisted-state';
 import {
   EmptyState,
   WEBSITE_ACCENT_COLOR,
@@ -74,7 +74,10 @@ export function WebsiteTechnologySection({
 }: {
   data: WebsiteAnalyticsData;
 }) {
-  const [period, setPeriod] = useState<WebsiteAnalyticsPeriod>('7d');
+  const [period, setPeriod] = usePersistedState<WebsiteAnalyticsPeriod>(
+    'website.analytics.technology.period',
+    '7d',
+  );
 
   const browserRows = data.browsers.slice(0, 8).map((row) => ({
     label: row.browser,

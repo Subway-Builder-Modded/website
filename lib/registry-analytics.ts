@@ -1,11 +1,16 @@
 import { existsSync, readFileSync, statSync } from 'fs';
 import path from 'path';
+import {
+  REGISTRY_ANALYTICS_SENTINEL,
+  resolveRegistryAnalyticsDir,
+} from '@/lib/registry-analytics-paths';
 import type {
   DailyDataPoint,
   ListingType,
   RegistryAnalyticsData,
   RegistryAuthorDailyRow,
   RegistryAuthorRow,
+  RegistryDownloadsByTypeDailyRow,
   RegistryListingDailyRow,
   RegistryListingProjectRow,
   RegistryListingRow,
@@ -21,6 +26,7 @@ export type {
   RegistryAnalyticsData,
   RegistryAuthorDailyRow,
   RegistryAuthorRow,
+  RegistryDownloadsByTypeDailyRow,
   RegistryListingDailyRow,
   RegistryListingProjectRow,
   RegistryListingRow,
@@ -75,23 +81,12 @@ function parseCSV(text: string): Record<string, string>[] {
 }
 
 function resolveAnalyticsDir(): string {
-  const envDir = process.env['REGISTRY_ANALYTICS_DIR']?.trim();
-  const candidates = [
-    envDir || '',
-    path.join(process.cwd(), '..', 'The-Railyard', 'analytics'),
-    path.join(process.cwd(), 'The-Railyard', 'analytics'),
-    path.join(process.cwd(), 'analytics'),
-    path.join(process.cwd(), 'public', 'analytics'),
-  ].filter(Boolean);
-
-  for (const dir of candidates) {
-    if (existsSync(path.join(dir, 'most_popular_all_time.csv'))) {
-      return dir;
-    }
-  }
-
-  // Keep a stable fallback path for callers; readFile() handles missing files safely.
-  return path.join(process.cwd(), 'analytics');
+  return resolveRegistryAnalyticsDir({
+    cwd: process.cwd(),
+    envDir: process.env['REGISTRY_ANALYTICS_DIR'],
+    hasSentinelFile: (dir) =>
+      existsSync(path.join(dir, REGISTRY_ANALYTICS_SENTINEL)),
+  });
 }
 
 const ANALYTICS_DIR = resolveAnalyticsDir();
@@ -120,13 +115,14 @@ const REGISTRY_ANALYTICS_PATHS = {
     'projects_most_popular_last_7d.csv',
   ),
   listingProjects: path.join(ANALYTICS_DIR, 'listing_projects.csv'),
-  mapsByPopulation: path.join(ANALYTICS_DIR, 'maps_by_population.csv'),
+  mapsByPopulation: path.join(ANALYTICS_DIR, 'map_statistics.csv'),
+  assetsByDay: path.join(ANALYTICS_DIR, 'assets_by_day.csv'),
   listingsByDay: path.join(ANALYTICS_DIR, 'most_popular_by_day.csv'),
   authorsByDay: path.join(ANALYTICS_DIR, 'authors_by_day.csv'),
 } as const;
 
 type RegistryAnalyticsFileKey = keyof typeof REGISTRY_ANALYTICS_PATHS;
-type RegistryTrendingKey = 'trending1d' | 'trending3d' | 'trending7d';
+type RegistryTrendingKey = 'trending1d' | 'tremaps_statisticsending7d';
 type RegistryProjectTrendingKey =
   | 'projectsTrending1d'
   | 'projectsTrending3d'
@@ -304,6 +300,31 @@ function parseMapPopulations(): RegistryMapPopulationRow[] {
   }));
 }
 
+function parseDownloadsByTypeDaily(): RegistryDownloadsByTypeDailyRow[] {
+  const rows = readFile('assetsByDay');
+  return rows
+    .map((row) => {
+      const rawDate = (row['snapshot_date'] ?? '').trim();
+      const date = /^\d{4}_\d{2}_\d{2}$/.test(rawDate)
+        ? rawDate.replace(/_/g, '-')
+        : rawDate;
+      const mapDownloads = Number(row['maps'] ?? 0) || 0;
+      const modDownloads = Number(row['mods'] ?? 0) || 0;
+      const totalDownloads =
+        Number(row['total_downloads'] ?? mapDownloads + modDownloads) ||
+        mapDownloads + modDownloads;
+
+      return {
+        date,
+        mapDownloads,
+        modDownloads,
+        totalDownloads,
+      };
+    })
+    .filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date))
+    .sort((left, right) => left.date.localeCompare(right.date));
+}
+
 // ---------------------------------------------------------------------------
 // Daily data helpers (parse wide-format date columns into DailyDataPoint[])
 // ---------------------------------------------------------------------------
@@ -387,6 +408,7 @@ export function loadRegistryAnalytics(): RegistryAnalyticsData {
   const projectsTrending7d = parseProjectsTrending('projectsTrending7d');
   const listingProjects = parseListingProjects();
   const mapPopulations = parseMapPopulations();
+  const downloadsByTypeDaily = parseDownloadsByTypeDaily();
 
   const totalDownloads = allTime.reduce((s, r) => s + r.total_downloads, 0);
   const mapRows = allTime.filter((r) => r.listing_type === 'map');
@@ -404,6 +426,7 @@ export function loadRegistryAnalytics(): RegistryAnalyticsData {
     projectsTrending7d,
     listingProjects,
     mapPopulations,
+    downloadsByTypeDaily,
     snapshotLabel: buildSnapshotLabel(),
     totalDownloads,
     totalListings: allTime.length,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { TrendingUp } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -15,6 +15,7 @@ import {
 } from './trending/registry-trending-types';
 import { RegistryTrendingTypeSection } from './trending/registry-trending-type-section';
 import { MAP_COLOR, MOD_COLOR } from './registry-shared';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 const PAGE_HEADER_SCHEME = {
   accent: { light: '#9d4edd', dark: '#c77dff' },
@@ -27,8 +28,14 @@ export function RegistryTrendingPage({
   data: RegistryAnalyticsData;
   listingDailyData: RegistryListingDailyRow[];
 }) {
-  const [mode, setMode] = useState<TrendingModeKey>('1d');
-  const [activeType, setActiveType] = useState<'mod' | 'map'>('mod');
+  const [mode, setMode] = usePersistedState<TrendingModeKey>(
+    'registry.trending.mode',
+    '1d',
+  );
+  const [activeType, setActiveType] = usePersistedState<'mod' | 'map'>(
+    'registry.trending.type',
+    'mod',
+  );
 
   const modRows = useMemo(
     () =>

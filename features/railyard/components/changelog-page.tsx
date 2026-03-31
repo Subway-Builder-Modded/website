@@ -29,7 +29,7 @@ import {
 import type { VersionInfo } from '@/types/registry';
 
 const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main';
+  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 
 async function fetchIntegrity(type: 'mods' | 'maps') {
   try {

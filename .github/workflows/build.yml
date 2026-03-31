@@ -28,20 +28,7 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Checkout registry analytics
-        uses: actions/checkout@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
-        with:
-          repository: Subway-Builder-Modded/The-Railyard
-          token: ${{ env.GITHUB_TOKEN }}
-          path: The-Railyard
-          sparse-checkout: |
-            analytics
-          sparse-checkout-cone-mode: true
-
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
-          REGISTRY_ANALYTICS_DIR: ${{ github.workspace }}/The-Railyard/analytics
         run: pnpm run build

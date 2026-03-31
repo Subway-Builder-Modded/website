@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, type CSSProperties } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import {
   Area,
   AreaChart,
@@ -23,6 +23,7 @@ import type {
   WebsiteAnalyticsData,
   WebsiteAnalyticsPeriod,
 } from '@/types/website-analytics';
+import { usePersistedState } from '@/lib/use-persisted-state';
 import {
   EmptyState,
   SafeChartContainer,
@@ -253,7 +254,10 @@ export function WebsiteOverviewSection({
 }: {
   data: WebsiteAnalyticsData;
 }) {
-  const [period, setPeriod] = useState<WebsiteAnalyticsPeriod>('all');
+  const [period, setPeriod] = usePersistedState<WebsiteAnalyticsPeriod>(
+    'website.analytics.overview.period',
+    'all',
+  );
 
   const periodLabel = useMemo(() => {
     if (period === '1d') return 'Last Day';

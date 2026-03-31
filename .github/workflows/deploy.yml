@@ -41,22 +41,9 @@ jobs:
           echo "Cloudflare zone present: $([ -n \"${CLOUDFLARE_ZONE_TAG}${CLOUDFLARE_ZONE_ID}\" ] && echo yes || echo no)"
           echo "Cloudflare token present: $([ -n \"${CLOUDFLARE_API_TOKEN}${CLOUDFLARE_TOKEN}${CF_API_TOKEN}\" ] && echo yes || echo no)"
 
-      - name: Checkout The-Railyard analytics
-        uses: actions/checkout@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
-        with:
-          repository: Subway-Builder-Modded/The-Railyard
-          token: ${{ env.GITHUB_TOKEN }}
-          path: The-Railyard
-          sparse-checkout: |
-            analytics
-          sparse-checkout-cone-mode: true
-
       - name: Build (route discovery)
         env:
           GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
-          REGISTRY_ANALYTICS_DIR: ${{ github.workspace }}/The-Railyard/analytics
         run: pnpm run build
 
       - name: Regenerate website analytics snapshot
@@ -67,7 +54,6 @@ jobs:
       - name: Build (final deploy output)
         env:
           GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
-          REGISTRY_ANALYTICS_DIR: ${{ github.workspace }}/The-Railyard/analytics
         run: pnpm run build
 
       - name: Deploy to GitHub Pages
