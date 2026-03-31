@@ -91,17 +91,14 @@ function resolveAnalyticsDir(): string {
 
 const ANALYTICS_DIR = resolveAnalyticsDir();
 let warnedMissingAnalytics = false;
-const MAP_POPULATION_FILENAMES = ['maps_statistics.csv', 'map_statistics.csv'];
-
-function resolveMapPopulationPath(baseDir: string): string {
-  for (const filename of MAP_POPULATION_FILENAMES) {
-    const candidate = path.join(baseDir, filename);
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-  return path.join(baseDir, MAP_POPULATION_FILENAMES[0]);
-}
+const MAPS_BY_POPULATION_PRIMARY_PATH = path.join(
+  ANALYTICS_DIR,
+  'maps_statistics.csv',
+);
+const MAPS_BY_POPULATION_LEGACY_PATH = path.join(
+  ANALYTICS_DIR,
+  'map_statistics.csv',
+);
 
 const REGISTRY_ANALYTICS_PATHS = {
   allTime: path.join(ANALYTICS_DIR, 'most_popular_all_time.csv'),
@@ -126,7 +123,7 @@ const REGISTRY_ANALYTICS_PATHS = {
     'projects_most_popular_last_7d.csv',
   ),
   listingProjects: path.join(ANALYTICS_DIR, 'listing_projects.csv'),
-  mapsByPopulation: resolveMapPopulationPath(ANALYTICS_DIR),
+  mapsByPopulation: MAPS_BY_POPULATION_PRIMARY_PATH,
   assetsByDay: path.join(ANALYTICS_DIR, 'assets_by_day.csv'),
   listingsByDay: path.join(ANALYTICS_DIR, 'most_popular_by_day.csv'),
   authorsByDay: path.join(ANALYTICS_DIR, 'authors_by_day.csv'),
@@ -140,7 +137,10 @@ type RegistryProjectTrendingKey =
   | 'projectsTrending7d';
 
 function readFile(fileKey: RegistryAnalyticsFileKey): Record<string, string>[] {
-  const fullPath = REGISTRY_ANALYTICS_PATHS[fileKey];
+  const fullPath =
+    fileKey === 'mapsByPopulation' && !existsSync(REGISTRY_ANALYTICS_PATHS[fileKey])
+      ? MAPS_BY_POPULATION_LEGACY_PATH
+      : REGISTRY_ANALYTICS_PATHS[fileKey];
   try {
     const text = readFileSync(fullPath, 'utf-8');
     return parseCSV(text);
