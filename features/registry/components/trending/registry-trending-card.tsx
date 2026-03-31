@@ -182,7 +182,6 @@ function TrendingWindowChart({
   data: {
     date: string;
     label: string;
-    currentDownloads: number | null;
     downloads: number;
     isCurrent: boolean;
   }[];
