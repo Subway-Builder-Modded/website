@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import {
   Download,
@@ -44,6 +45,8 @@ import {
   registryLinkStyle,
   trimLeadingZeroDailyData,
 } from './registry-shared';
+import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 const STAT_HEADER_CLS =
   'text-xs font-semibold uppercase tracking-wider text-muted-foreground';
@@ -199,8 +202,24 @@ function SiblingsSection({
   analytics: ListingAnalytics;
   type: ListingType;
 }) {
-  if (analytics.siblings.length === 0 || !analytics.project) return null;
   const accent = getListingColor(type);
+  const [sortDirection, setSortDirection] = usePersistedState<'asc' | 'desc'>(
+    `registry.listing.${type}.siblings.sort.direction`,
+    'desc',
+  );
+  const sortedSiblings = useMemo(() => {
+    const ordered = [...analytics.siblings].sort((left, right) => {
+      if (left.total_downloads === right.total_downloads) {
+        return left.rank - right.rank;
+      }
+      return sortDirection === 'asc'
+        ? left.total_downloads - right.total_downloads
+        : right.total_downloads - left.total_downloads;
+    });
+    return ordered;
+  }, [analytics.siblings, sortDirection]);
+
+  if (analytics.siblings.length === 0 || !analytics.project) return null;
 
   return (
     <section className="mb-12">
@@ -226,18 +245,26 @@ function SiblingsSection({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/40">
-              <th className={TABLE_HEADER_CLS}>#</th>
               <th className={TABLE_HEADER_CLS}>Name</th>
               <th className={TABLE_HEADER_CLS}>Type</th>
-              <th className={TABLE_HEADER_RIGHT_CLS}>Downloads</th>
+              <th className={TABLE_HEADER_RIGHT_CLS}>
+                <SortableNumberHeader
+                  label="Downloads"
+                  isActive
+                  direction={sortDirection}
+                  accentColor={accent}
+                  onToggle={() =>
+                    setSortDirection((previous) =>
+                      previous === 'desc' ? 'asc' : 'desc',
+                    )
+                  }
+                />
+              </th>
             </tr>
           </thead>
           <tbody>
-            {analytics.siblings.map((s) => (
+            {sortedSiblings.map((s) => (
               <tr key={s.id} className={TABLE_ROW_CLS}>
-                <td className={TABLE_CELL_CLS}>
-                  <RankBadge rank={s.rank} />
-                </td>
                 <td className={TABLE_CELL_CLS}>
                   <Link
                     href={`/registry/${s.listing_type}/${s.id}`}
@@ -251,7 +278,7 @@ function SiblingsSection({
                   <TypeBadge type={s.listing_type} />
                 </td>
                 <td
-                  className={TABLE_CELL_NUMERIC_CLS}
+                  className={`${TABLE_CELL_NUMERIC_CLS} font-black`}
                   style={{ color: getListingColor(s.listing_type) }}
                 >
                   {s.total_downloads.toLocaleString()}

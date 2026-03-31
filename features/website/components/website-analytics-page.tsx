@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Activity, FileText, Cpu, Globe2, Globe } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ import { WebsitePagesSection } from './website-pages-section';
 import { WebsiteTechnologySection } from './website-technology-section';
 import { WebsiteCountriesSection } from './website-countries-section';
 import { WEBSITE_PAGE_HEADER_SCHEME } from './website-shared';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 type TabKey = 'overview' | 'pages' | 'countries' | 'technology';
 
@@ -25,7 +26,10 @@ const TABS: {
 ];
 
 export function WebsiteAnalyticsPage({ data }: { data: WebsiteAnalyticsData }) {
-  const [active, setActive] = useState<TabKey>('overview');
+  const [active, setActive] = usePersistedState<TabKey>(
+    'website.analytics.active-tab',
+    'overview',
+  );
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -39,7 +43,7 @@ export function WebsiteAnalyticsPage({ data }: { data: WebsiteAnalyticsData }) {
     ) {
       setActive(tab);
     }
-  }, []);
+  }, [setActive]);
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">

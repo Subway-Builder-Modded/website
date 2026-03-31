@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   Bar,
@@ -12,7 +12,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Map, Package, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 import {
   REGISTRY_LINK_HOVER_CLS,
@@ -39,15 +41,32 @@ import type {
 } from '@/types/registry-analytics';
 
 // ---------------------------------------------------------------------------
-// Downloads bar chart (top 10 by total downloads)
+// Sort-aware bar chart (top 10 by active metric)
 // ---------------------------------------------------------------------------
 
-function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
+function AuthorsMetricChart({
+  rows,
+  metricKey,
+  metricLabel,
+  accentColor,
+}: {
+  rows: RegistryAuthorRow[];
+  metricKey: 'total_downloads' | 'map_count' | 'mod_count' | 'asset_count';
+  metricLabel: string;
+  accentColor: string;
+}) {
   const isClientReady = useClientReady();
-  const chartData = authors.slice(0, 10).map((a) => ({
+  const chartData = rows.slice(0, 10).map((a) => ({
     name: truncateName(getAuthorDisplayName(a), 18),
     fullName: getAuthorDisplayName(a),
-    downloads: a.total_downloads,
+    value:
+      metricKey === 'map_count'
+        ? a.map_count
+        : metricKey === 'mod_count'
+          ? a.mod_count
+          : metricKey === 'asset_count'
+            ? a.asset_count
+            : a.total_downloads,
   }));
 
   if (!isClientReady) {
@@ -94,7 +113,8 @@ function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
                       ?.fullName ?? (label as string)}
                   </span>
                   <div className="mt-1">
-                    {(payload[0]!.value as number).toLocaleString()} downloads
+                    {(payload[0]!.value as number).toLocaleString()}{' '}
+                    {metricLabel.toLowerCase()}
                   </div>
                 </div>
               );
@@ -102,11 +122,11 @@ function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
             cursor={{ fill: 'var(--muted)', fillOpacity: 0.4 }}
             wrapperStyle={{ outline: 'none' }}
           />
-          <Bar dataKey="downloads" radius={[0, 4, 4, 0]} maxBarSize={22}>
+          <Bar dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={22}>
             {chartData.map((_, i) => (
               <Cell
                 key={`cell-${i}`}
-                fill="var(--primary)"
+                fill={accentColor}
                 fillOpacity={0.9 - i * 0.055}
               />
             ))}
@@ -123,11 +143,30 @@ function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
 
 const MAX_AUTHORS = 20;
 
-function AuthorRow({ row }: { row: RegistryAuthorRow }) {
+type AuthorSortKey =
+  | 'total_downloads'
+  | 'map_count'
+  | 'mod_count'
+  | 'asset_count';
+
+type AuthorSortState = {
+  key: AuthorSortKey;
+  direction: 'asc' | 'desc';
+};
+
+function AuthorRow({
+  row,
+  displayRank,
+  sortKey,
+}: {
+  row: RegistryAuthorRow;
+  displayRank: number;
+  sortKey: AuthorSortKey;
+}) {
   return (
     <tr key={row.author} className={TABLE_ROW_CLS}>
       <td className={TABLE_CELL_CLS}>
-        <RankBadge rank={row.rank} />
+        <RankBadge rank={displayRank} />
       </td>
       <td className={TABLE_CELL_CLS}>
         <Link
@@ -138,23 +177,33 @@ function AuthorRow({ row }: { row: RegistryAuthorRow }) {
           {getAuthorDisplayName(row)}
         </Link>
       </td>
-      <td className={`${TABLE_CELL_NUMERIC_CLS} font-semibold text-foreground`}>
+      <td
+        className={`${TABLE_CELL_NUMERIC_CLS} ${sortKey === 'total_downloads' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+        style={
+          sortKey === 'total_downloads'
+            ? { color: 'var(--primary)' }
+            : undefined
+        }
+      >
         {row.total_downloads.toLocaleString()}
       </td>
       <td
-        className={`hidden ${TABLE_CELL_NUMERIC_CLS} sm:table-cell`}
-        style={{ color: MAP_COLOR }}
+        className={`hidden ${TABLE_CELL_NUMERIC_CLS} sm:table-cell ${sortKey === 'map_count' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+        style={sortKey === 'map_count' ? { color: MAP_COLOR } : undefined}
       >
         {row.map_count}
       </td>
       <td
-        className={`hidden ${TABLE_CELL_NUMERIC_CLS} sm:table-cell`}
-        style={{ color: MOD_COLOR }}
+        className={`hidden ${TABLE_CELL_NUMERIC_CLS} sm:table-cell ${sortKey === 'mod_count' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+        style={sortKey === 'mod_count' ? { color: MOD_COLOR } : undefined}
       >
         {row.mod_count}
       </td>
       <td
-        className={`hidden ${TABLE_CELL_NUMERIC_CLS} text-muted-foreground md:table-cell`}
+        className={`hidden ${TABLE_CELL_NUMERIC_CLS} md:table-cell ${sortKey === 'asset_count' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+        style={
+          sortKey === 'asset_count' ? { color: 'var(--primary)' } : undefined
+        }
       >
         {row.asset_count}
       </td>
@@ -164,6 +213,10 @@ function AuthorRow({ row }: { row: RegistryAuthorRow }) {
 
 function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
   const [query, setQuery] = useState('');
+  const [sort, setSort] = usePersistedState<AuthorSortState>(
+    'registry.analytics.authors.sort',
+    { key: 'total_downloads', direction: 'desc' },
+  );
 
   const filtered = query.trim()
     ? authors.filter((a) =>
@@ -173,10 +226,55 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
           .includes(query.toLowerCase()),
       )
     : authors;
-  const visible = filtered.slice(0, MAX_AUTHORS);
+  const sorted = useMemo(() => {
+    const ordered = [...filtered].sort((left, right) => {
+      const leftValue = left[sort.key];
+      const rightValue = right[sort.key];
+      if (leftValue === rightValue) return left.rank - right.rank;
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    });
+    return ordered;
+  }, [filtered, sort.direction, sort.key]);
+  const visible = sorted.slice(0, MAX_AUTHORS);
+  const activeMetricLabel =
+    sort.key === 'map_count'
+      ? 'Maps Published'
+      : sort.key === 'mod_count'
+        ? 'Mods Published'
+        : sort.key === 'asset_count'
+          ? 'Total Assets Published'
+          : 'Downloads';
+  const activeMetricColor =
+    sort.key === 'map_count'
+      ? MAP_COLOR
+      : sort.key === 'mod_count'
+        ? MOD_COLOR
+        : 'var(--primary)';
+
+  const makeSortToggle = (key: AuthorSortKey) => () => {
+    setSort((previous) => ({
+      key,
+      direction:
+        previous.key === key && previous.direction === 'desc' ? 'asc' : 'desc',
+    }));
+  };
 
   return (
     <div>
+      <div className="mb-4 rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Top 10 by {activeMetricLabel}
+        </p>
+        <AuthorsMetricChart
+          rows={sorted}
+          metricKey={sort.key}
+          metricLabel={activeMetricLabel}
+          accentColor={activeMetricColor}
+        />
+      </div>
+
       <SearchField
         placeholder="Search authors..."
         value={query}
@@ -190,21 +288,41 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
             <tr className="border-b border-border bg-muted/40">
               <th className={TABLE_HEADER_CLS}>#</th>
               <th className={TABLE_HEADER_CLS}>Author</th>
-              <th className={TABLE_HEADER_RIGHT_CLS}>Downloads</th>
-              <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
-                <span className="inline-flex items-center gap-1">
-                  <Map className="size-3" style={{ color: MAP_COLOR }} />
-                  Maps
-                </span>
+              <th className={TABLE_HEADER_RIGHT_CLS}>
+                <SortableNumberHeader
+                  label="Downloads"
+                  isActive={sort.key === 'total_downloads'}
+                  direction={sort.direction}
+                  accentColor="var(--primary)"
+                  onToggle={makeSortToggle('total_downloads')}
+                />
               </th>
               <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
-                <span className="inline-flex items-center gap-1">
-                  <Package className="size-3" style={{ color: MOD_COLOR }} />
-                  Mods
-                </span>
+                <SortableNumberHeader
+                  label="Maps Published"
+                  isActive={sort.key === 'map_count'}
+                  direction={sort.direction}
+                  accentColor={MAP_COLOR}
+                  onToggle={makeSortToggle('map_count')}
+                />
+              </th>
+              <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
+                <SortableNumberHeader
+                  label="Mods Published"
+                  isActive={sort.key === 'mod_count'}
+                  direction={sort.direction}
+                  accentColor={MOD_COLOR}
+                  onToggle={makeSortToggle('mod_count')}
+                />
               </th>
               <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} md:table-cell`}>
-                Total
+                <SortableNumberHeader
+                  label="Total Assets Published"
+                  isActive={sort.key === 'asset_count'}
+                  direction={sort.direction}
+                  accentColor="var(--primary)"
+                  onToggle={makeSortToggle('asset_count')}
+                />
               </th>
             </tr>
           </thead>
@@ -219,15 +337,22 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
                 </td>
               </tr>
             ) : (
-              visible.map((a) => <AuthorRow key={a.author} row={a} />)
+              visible.map((a, index) => (
+                <AuthorRow
+                  key={a.author}
+                  row={a}
+                  displayRank={index + 1}
+                  sortKey={sort.key}
+                />
+              ))
             )}
           </tbody>
         </table>
       </div>
 
-      {!query.trim() && filtered.length > MAX_AUTHORS && (
+      {!query.trim() && sorted.length > MAX_AUTHORS && (
         <p className="mt-2 text-center text-xs text-muted-foreground">
-          Showing {MAX_AUTHORS} of {filtered.length} authors. Use search to find
+          Showing {MAX_AUTHORS} of {sorted.length} authors. Use search to find
           more.
         </p>
       )}
@@ -247,13 +372,6 @@ export function RegistryAuthorsSection({
   return (
     <section id="author-rankings" className="scroll-mt-24 mb-12">
       <SectionHeader icon={Users} title="Authors" />
-
-      <div className="mb-8 rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Top 10 by Downloads
-        </p>
-        <DownloadsBarChart authors={data.authors} />
-      </div>
 
       {/* Table */}
       <AuthorsTable authors={data.authors} />

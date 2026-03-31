@@ -2,6 +2,11 @@
 
 import { useMemo, useState } from 'react';
 import { FileText } from 'lucide-react';
+import {
+  SortableNumberHeader,
+  type SortDirection,
+} from '@/components/shared/sortable-number-header';
+import { usePersistedState } from '@/lib/use-persisted-state';
 import type {
   WebsiteAnalyticsData,
   WebsiteAnalyticsPeriod,
@@ -9,6 +14,7 @@ import type {
 } from '@/types/website-analytics';
 import {
   EmptyState,
+  WEBSITE_ACCENT_COLOR,
   WEBSITE_TABLE_CELL_CLS,
   WEBSITE_TABLE_HEADER_CLS,
   WEBSITE_TABLE_NUMERIC_CLS,
@@ -19,14 +25,23 @@ import {
   WebsiteSectionHeader,
 } from './website-shared';
 
+type PageSortState = {
+  key: 'visits';
+  direction: SortDirection;
+};
+
 function PageTable({
   rows,
   period,
   title,
+  sort,
+  onToggleVisitsSort,
 }: {
   rows: Array<WebsitePageRow & { rank: number }>;
   period: WebsiteAnalyticsPeriod;
   title: string;
+  sort: PageSortState;
+  onToggleVisitsSort: () => void;
 }) {
   if (rows.length === 0) {
     return (
@@ -49,14 +64,22 @@ function PageTable({
           <tr className="border-b border-border bg-muted/35">
             <th className={WEBSITE_TABLE_HEADER_CLS}>#</th>
             <th className={WEBSITE_TABLE_HEADER_CLS}>Page</th>
-            <th className={WEBSITE_TABLE_HEADER_CLS}>Visits</th>
+            <th className={WEBSITE_TABLE_HEADER_CLS}>
+              <SortableNumberHeader
+                label="Visits"
+                isActive={sort.key === 'visits'}
+                direction={sort.direction}
+                accentColor={WEBSITE_ACCENT_COLOR}
+                onToggle={onToggleVisitsSort}
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {rows.map((row, index) => (
             <tr key={row.path} className={WEBSITE_TABLE_ROW_CLS}>
               <td className={WEBSITE_TABLE_CELL_CLS}>
-                <WebsiteRankBadge rank={row.rank} />
+                <WebsiteRankBadge rank={index + 1} />
               </td>
               <td className={WEBSITE_TABLE_CELL_CLS}>
                 <span className="block truncate font-medium text-foreground">
@@ -64,7 +87,12 @@ function PageTable({
                 </span>
               </td>
               <td
-                className={`${WEBSITE_TABLE_NUMERIC_CLS} font-semibold text-foreground`}
+                className={`${WEBSITE_TABLE_NUMERIC_CLS} ${sort.key === 'visits' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                style={
+                  sort.key === 'visits'
+                    ? { color: WEBSITE_ACCENT_COLOR }
+                    : undefined
+                }
               >
                 {row.pageviews[period].toLocaleString()}
               </td>
@@ -77,8 +105,15 @@ function PageTable({
 }
 
 export function WebsitePagesSection({ data }: { data: WebsiteAnalyticsData }) {
-  const [period, setPeriod] = useState<WebsiteAnalyticsPeriod>('7d');
+  const [period, setPeriod] = usePersistedState<WebsiteAnalyticsPeriod>(
+    'website.analytics.pages.period',
+    '7d',
+  );
   const [query, setQuery] = useState('');
+  const [sort, setSort] = usePersistedState<PageSortState>(
+    'website.analytics.pages.sort',
+    { key: 'visits', direction: 'desc' },
+  );
 
   const filteredPages = useMemo<
     Array<WebsitePageRow & { rank: number }>
@@ -88,15 +123,29 @@ export function WebsitePagesSection({ data }: { data: WebsiteAnalyticsData }) {
       .map((row, index) => ({ ...row, rank: index + 1 }));
 
     const trimmed = query.trim().toLowerCase();
-    const rows =
+    const matchingRows =
       trimmed.length === 0
         ? globallyRankedRows
         : globallyRankedRows.filter((row) =>
             row.path.toLowerCase().includes(trimmed),
           );
+    const sortedRows = [...matchingRows].sort((left, right) => {
+      const leftValue = left.pageviews[period];
+      const rightValue = right.pageviews[period];
+      if (leftValue === rightValue) return left.rank - right.rank;
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    });
+    return trimmed.length === 0 ? sortedRows.slice(0, 20) : sortedRows;
+  }, [data.pages, period, query, sort.direction]);
 
-    return trimmed.length === 0 ? rows.slice(0, 20) : rows;
-  }, [data.pages, period, query]);
+  const handleToggleVisitsSort = () => {
+    setSort((previous) => ({
+      key: 'visits',
+      direction: previous.direction === 'desc' ? 'asc' : 'desc',
+    }));
+  };
 
   return (
     <section className="mb-12">
@@ -112,7 +161,13 @@ export function WebsitePagesSection({ data }: { data: WebsiteAnalyticsData }) {
         />
       </div>
 
-      <PageTable rows={filteredPages} period={period} title="Pages" />
+      <PageTable
+        rows={filteredPages}
+        period={period}
+        title="Pages"
+        sort={sort}
+        onToggleVisitsSort={handleToggleVisitsSort}
+      />
     </section>
   );
 }

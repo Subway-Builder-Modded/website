@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import type { ModManifest, MapManifest } from '@/types/registry';
 
 const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main';
+  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 
 interface UseRegistryItemResult {
   item: ModManifest | MapManifest | null;

@@ -91,6 +91,13 @@ export type RegistryAuthorDailyRow = {
   dailyData: DailyDataPoint[];
 };
 
+export type RegistryDownloadsByTypeDailyRow = {
+  date: string;
+  mapDownloads: number;
+  modDownloads: number;
+  totalDownloads: number;
+};
+
 export type RegistryAnalyticsData = {
   allTime: RegistryListingRow[];
   trending1d: RegistryTrendingRow[];
@@ -103,6 +110,7 @@ export type RegistryAnalyticsData = {
   projectsTrending7d: RegistryProjectTrendingRow[];
   listingProjects: RegistryListingProjectRow[];
   mapPopulations: RegistryMapPopulationRow[];
+  downloadsByTypeDaily: RegistryDownloadsByTypeDailyRow[];
   snapshotLabel: string;
   totalDownloads: number;
   totalListings: number;

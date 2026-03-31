@@ -3,7 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main';
+  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 const OUTPUT_PATH = path.resolve(
   process.cwd(),
   'public/railyard/github-releases-cache.json',

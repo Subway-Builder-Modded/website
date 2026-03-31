@@ -56,11 +56,12 @@ export function RegistryTrendingCard({
       : null;
 
   const modeDays = getModeDays(mode);
+  const spanDays = modeDays;
 
   const chartSource = trimLeadingZeroDailyData(row.dailyData);
-  const chartData = chartSource.slice(-(modeDays * 2));
-
-  const splitIndex = Math.max(0, chartData.length - modeDays);
+  const windowPointCount = spanDays * 2 + 1;
+  const chartData = chartSource.slice(-windowPointCount);
+  const splitIndex = Math.max(0, chartData.length - (spanDays + 1));
   const MONTH_ABBR = [
     'Jan',
     'Feb',
@@ -82,7 +83,6 @@ export function RegistryTrendingCard({
   const segmentedChartData = chartData.map((point, index) => ({
     ...point,
     label: fmtDate(point.date),
-    currentDownloads: index >= splitIndex ? point.downloads : null,
     isCurrent: index >= splitIndex,
   }));
 
@@ -91,8 +91,8 @@ export function RegistryTrendingCard({
       className="min-h-[420px] rounded-2xl border border-border bg-background/70 p-5 ring-1 ring-foreground/5 backdrop-blur-sm"
       style={{ boxShadow: `inset 0 1px 0 ${color}2b` }}
     >
-      <div className="grid h-full gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="min-w-0">
+      <div className="grid h-full items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="flex h-full min-w-0 flex-col">
           <div className="mb-2 flex items-center gap-2">
             <RankBadge rank={rank} />
             <TypeBadge type={row.listing_type} />
@@ -130,8 +130,8 @@ export function RegistryTrendingCard({
           </div>
         </div>
 
-        <div className="grid auto-rows-fr gap-3">
-          <div className="rounded-lg border border-border bg-card px-3 py-3">
+        <div className="grid h-full grid-rows-[repeat(3,minmax(0,1fr))_auto] gap-3">
+          <div className="flex min-h-0 flex-col justify-center rounded-lg border border-border bg-card px-3 py-3">
             <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               New Downloads
             </p>
@@ -139,7 +139,7 @@ export function RegistryTrendingCard({
               {row.download_change.toLocaleString()}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card px-3 py-3">
+          <div className="flex min-h-0 flex-col justify-center rounded-lg border border-border bg-card px-3 py-3">
             <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Total Downloads
             </p>
@@ -147,7 +147,7 @@ export function RegistryTrendingCard({
               {row.totalDownloads.toLocaleString()}
             </p>
           </div>
-          <div className="rounded-lg border border-border bg-card px-3 py-3">
+          <div className="flex min-h-0 flex-col justify-center rounded-lg border border-border bg-card px-3 py-3">
             <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Growth
             </p>
@@ -158,7 +158,7 @@ export function RegistryTrendingCard({
 
           <Link
             href={listingAnalyticsHref(row)}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors"
             style={{
               borderColor: `${color}7a`,
               color,
@@ -182,7 +182,6 @@ function TrendingWindowChart({
   data: {
     date: string;
     label: string;
-    currentDownloads: number | null;
     downloads: number;
     isCurrent: boolean;
   }[];
@@ -195,6 +194,18 @@ function TrendingWindowChart({
 
   const baseGradientId = `trend-base-${color.replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const currGradientId = `trend-curr-${color.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const clipKey = `${data[0]?.date ?? 'na'}-${data[data.length - 1]?.date ?? 'na'}-${modeDays}`;
+  const prevClipId = `trend-prev-clip-${clipKey.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const currClipId = `trend-curr-clip-${clipKey.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const splitAtIndex = Math.max(
+    0,
+    data.findIndex((point) => point.isCurrent),
+  );
+  const splitRatio =
+    data.length <= 1
+      ? 1
+      : Math.min(1, Math.max(0, splitAtIndex / (data.length - 1)));
+  const splitPercent = splitRatio * 100;
 
   return (
     <div>
@@ -230,6 +241,17 @@ function TrendingWindowChart({
                 <stop offset="5%" stopColor={color} stopOpacity={0.28} />
                 <stop offset="95%" stopColor={color} stopOpacity={0.03} />
               </linearGradient>
+              <clipPath id={prevClipId}>
+                <rect x="0%" y="0%" width={`${splitPercent}%`} height="100%" />
+              </clipPath>
+              <clipPath id={currClipId}>
+                <rect
+                  x={`${splitPercent}%`}
+                  y="0%"
+                  width={`${100 - splitPercent}%`}
+                  height="100%"
+                />
+              </clipPath>
             </defs>
             <CartesianGrid
               horizontal
@@ -277,20 +299,29 @@ function TrendingWindowChart({
               type="monotone"
               dataKey="downloads"
               stroke={color}
-              strokeOpacity={0.55}
-              strokeWidth={1.8}
-              fill={`url(#${baseGradientId})`}
+              strokeOpacity={0.9}
+              strokeWidth={2.2}
+              fillOpacity={0}
               connectNulls
               dot={false}
             />
             <Area
               type="monotone"
-              dataKey="currentDownloads"
-              stroke={color}
-              strokeWidth={2.2}
+              dataKey="downloads"
+              stroke="none"
+              fill={`url(#${baseGradientId})`}
+              connectNulls
+              dot={false}
+              clipPath={`url(#${prevClipId})`}
+            />
+            <Area
+              type="monotone"
+              dataKey="downloads"
+              stroke="none"
               fill={`url(#${currGradientId})`}
               connectNulls
               dot={false}
+              clipPath={`url(#${currClipId})`}
             />
           </AreaChart>
         </ResponsiveContainer>

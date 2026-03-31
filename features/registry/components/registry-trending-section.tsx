@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { Trophy } from 'lucide-react';
 import Link from 'next/link';
+import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
 
 import {
   REGISTRY_LINK_HOVER_CLS,
@@ -42,6 +43,7 @@ import type {
   RegistryListingRow,
   RegistryTrendingRow,
 } from '@/types/registry-analytics';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -66,22 +68,25 @@ type ChartEntry = {
 
 const TOP_N = 10;
 
-function allTimeToChart(rows: RegistryListingRow[]): ChartEntry[] {
+function rowsToChart(
+  rows: Array<
+    | RegistryListingRow
+    | RegistryTrendingRow
+    | (RegistryListingRow & { day_change?: number })
+  >,
+  metricKey: 'total_downloads' | 'day_change' | 'primary',
+): ChartEntry[] {
   return rows.slice(0, TOP_N).map((r) => ({
     name: truncateName(r.name, 20),
     fullName: r.name,
-    downloads: r.total_downloads,
-    type: r.listing_type,
-    author: getAuthorDisplayName(r),
-    id: r.id,
-  }));
-}
-
-function trendingToChart(rows: RegistryTrendingRow[]): ChartEntry[] {
-  return rows.slice(0, TOP_N).map((r) => ({
-    name: truncateName(r.name, 20),
-    fullName: r.name,
-    downloads: r.download_change,
+    downloads:
+      metricKey === 'day_change'
+        ? 'day_change' in r
+          ? Number(r.day_change ?? 0)
+          : 0
+        : 'download_change' in r
+          ? r.download_change
+          : r.total_downloads,
     type: r.listing_type,
     author: getAuthorDisplayName(r),
     id: r.id,
@@ -130,6 +135,40 @@ function SearchGroup({
   type: ListingType;
 }) {
   const accent = getListingColor(type);
+  const [sort, setSort] = usePersistedState<{
+    key: 'total_downloads' | 'day_change';
+    direction: 'asc' | 'desc';
+  }>(`registry.analytics.search.${type}.sort`, {
+    key: 'total_downloads',
+    direction: 'desc',
+  });
+
+  const sortedRows = useMemo(() => {
+    const withTrend = rows.map((row) => ({
+      ...row,
+      day_change:
+        data.trending1d.find((trend) => trend.id === row.id)?.download_change ??
+        0,
+    }));
+    const ordered = [...withTrend].sort((left, right) => {
+      const leftValue = left[sort.key];
+      const rightValue = right[sort.key];
+      if (leftValue === rightValue) return left.rank - right.rank;
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    });
+    return ordered;
+  }, [data.trending1d, rows, sort.direction, sort.key]);
+
+  const toggleSort = (key: 'total_downloads' | 'day_change') => {
+    setSort((previous) => ({
+      key,
+      direction:
+        previous.key === key && previous.direction === 'desc' ? 'asc' : 'desc',
+    }));
+  };
+
   if (rows.length === 0) return null;
 
   return (
@@ -144,6 +183,16 @@ function SearchGroup({
         </p>
       </div>
       <div className="overflow-x-auto">
+        <div className="border-b border-border/70 p-4">
+          <TypeBarChart
+            data={rowsToChart(
+              sortedRows,
+              sort.key === 'day_change' ? 'day_change' : 'total_downloads',
+            )}
+            type={type}
+            chartHeight={260}
+          />
+        </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border bg-muted/35">
@@ -151,18 +200,33 @@ function SearchGroup({
               <th className={`hidden ${TABLE_HEADER_CLS} sm:table-cell`}>
                 Author
               </th>
-              <th className={TABLE_HEADER_RIGHT_CLS}>Downloads</th>
-              <th className={TABLE_HEADER_RIGHT_CLS}>24h</th>
+              <th className={TABLE_HEADER_RIGHT_CLS}>
+                <SortableNumberHeader
+                  label="Downloads"
+                  isActive={sort.key === 'total_downloads'}
+                  direction={sort.direction}
+                  accentColor={accent}
+                  onToggle={() => toggleSort('total_downloads')}
+                />
+              </th>
+              <th className={TABLE_HEADER_RIGHT_CLS}>
+                <SortableNumberHeader
+                  label="24h"
+                  isActive={sort.key === 'day_change'}
+                  direction={sort.direction}
+                  accentColor={accent}
+                  onToggle={() => toggleSort('day_change')}
+                />
+              </th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => {
-              const trend1d = data.trending1d.find((t) => t.id === row.id);
+            {sortedRows.map((row, index) => {
               return (
                 <tr key={row.id} className={TABLE_ROW_CLS}>
                   <td className={TABLE_CELL_CLS}>
                     <span className="inline-flex items-center gap-2">
-                      <RankBadge rank={row.rank} />
+                      <RankBadge rank={index + 1} />
                       <Link
                         href={`/registry/${row.listing_type}/${row.id}`}
                         className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
@@ -184,15 +248,22 @@ function SearchGroup({
                     </Link>
                   </td>
                   <td
-                    className={`${TABLE_CELL_NUMERIC_CLS} font-semibold`}
-                    style={{ color: accent }}
+                    className={`${TABLE_CELL_NUMERIC_CLS} ${sort.key === 'total_downloads' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                    style={
+                      sort.key === 'total_downloads'
+                        ? { color: accent }
+                        : undefined
+                    }
                   >
                     {row.total_downloads.toLocaleString()}
                   </td>
                   <td
-                    className={`${TABLE_CELL_NUMERIC_CLS} text-muted-foreground`}
+                    className={`${TABLE_CELL_NUMERIC_CLS} ${sort.key === 'day_change' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                    style={
+                      sort.key === 'day_change' ? { color: accent } : undefined
+                    }
                   >
-                    {trend1d ? trend1d.download_change.toLocaleString() : '—'}
+                    {row.day_change.toLocaleString()}
                   </td>
                 </tr>
               );
@@ -211,13 +282,14 @@ function SearchGroup({
 function TypeBarChart({
   data,
   type,
+  chartHeight = 396,
 }: {
   data: ChartEntry[];
   type: ListingType;
+  chartHeight?: number;
 }) {
   const isClientReady = useClientReady();
   const color = getListingColor(type);
-  const chartHeight = 396;
 
   if (data.length === 0) {
     return (
@@ -302,69 +374,110 @@ function TypeTable({
   type: ListingType;
   isAllTime: boolean;
 }) {
-  const rows = data.filter((r) => r.listing_type === type).slice(0, 20);
+  const [sort, setSort] = usePersistedState<{
+    key: 'primary';
+    direction: 'asc' | 'desc';
+  }>(`registry.analytics.content.${type}.sort`, {
+    key: 'primary',
+    direction: 'desc',
+  });
+
+  const rows = useMemo(() => {
+    const baseRows = data.filter((row) => row.listing_type === type);
+    const ordered = [...baseRows].sort((left, right) => {
+      const leftValue =
+        'download_change' in left ? left.download_change : left.total_downloads;
+      const rightValue =
+        'download_change' in right
+          ? right.download_change
+          : right.total_downloads;
+      if (leftValue === rightValue) return left.rank - right.rank;
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    });
+    return ordered.slice(0, 20);
+  }, [data, sort.direction, type]);
   const color = getListingColor(type);
 
   if (rows.length === 0) return null;
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-border bg-muted/40">
-            <th className={TABLE_HEADER_CLS}>#</th>
-            <th className={TABLE_HEADER_CLS}>Name</th>
-            <th className={`hidden ${TABLE_HEADER_CLS} sm:table-cell`}>
-              Author
-            </th>
-            <th className={TABLE_HEADER_RIGHT_CLS}>Downloads</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => {
-            const isTrending = !isAllTime && 'download_change' in row;
-            return (
-              <tr key={row.id} className={TABLE_ROW_CLS}>
-                <td className={TABLE_CELL_CLS}>
-                  <RankBadge rank={i + 1} />
-                </td>
-                <td className={TABLE_CELL_CLS}>
-                  <Link
-                    href={`/registry/${type}/${row.id}`}
-                    className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
-                    style={registryLinkStyle(color)}
+    <div className="rounded-lg border border-border">
+      <div className="border-b border-border/70 p-4">
+        <TypeBarChart data={rowsToChart(rows, 'primary')} type={type} />
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border bg-muted/40">
+              <th className={TABLE_HEADER_CLS}>#</th>
+              <th className={TABLE_HEADER_CLS}>Name</th>
+              <th className={`hidden ${TABLE_HEADER_CLS} sm:table-cell`}>
+                Author
+              </th>
+              <th className={TABLE_HEADER_RIGHT_CLS}>
+                <SortableNumberHeader
+                  label="Downloads"
+                  isActive={sort.key === 'primary'}
+                  direction={sort.direction}
+                  accentColor={color}
+                  onToggle={() =>
+                    setSort((previous) => ({
+                      key: 'primary',
+                      direction: previous.direction === 'desc' ? 'asc' : 'desc',
+                    }))
+                  }
+                />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => {
+              const isTrending = !isAllTime && 'download_change' in row;
+              return (
+                <tr key={row.id} className={TABLE_ROW_CLS}>
+                  <td className={TABLE_CELL_CLS}>
+                    <RankBadge rank={index + 1} />
+                  </td>
+                  <td className={TABLE_CELL_CLS}>
+                    <Link
+                      href={`/registry/${type}/${row.id}`}
+                      className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
+                      style={registryLinkStyle(color)}
+                    >
+                      {row.name}
+                    </Link>
+                  </td>
+                  <td
+                    className={`hidden ${TABLE_CELL_CLS} text-muted-foreground sm:table-cell`}
                   >
-                    {row.name}
-                  </Link>
-                </td>
-                <td
-                  className={`hidden ${TABLE_CELL_CLS} text-muted-foreground sm:table-cell`}
-                >
-                  <Link
-                    href={`/registry/author/${encodeURIComponent(row.author)}`}
-                    className={REGISTRY_LINK_HOVER_CLS}
-                    style={registryLinkStyle(color)}
+                    <Link
+                      href={`/registry/author/${encodeURIComponent(row.author)}`}
+                      className={REGISTRY_LINK_HOVER_CLS}
+                      style={registryLinkStyle(color)}
+                    >
+                      {getAuthorDisplayName(row)}
+                    </Link>
+                  </td>
+                  <td
+                    className={`${TABLE_CELL_NUMERIC_CLS} ${sort.key === 'primary' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                    style={sort.key === 'primary' ? { color } : undefined}
                   >
-                    {getAuthorDisplayName(row)}
-                  </Link>
-                </td>
-                <td
-                  className={`${TABLE_CELL_NUMERIC_CLS} font-semibold`}
-                  style={{ color }}
-                >
-                  {isTrending
-                    ? (
-                        row as RegistryTrendingRow
-                      ).download_change.toLocaleString()
-                    : (
-                        row as RegistryListingRow
-                      ).total_downloads.toLocaleString()}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                    {isTrending
+                      ? (
+                          row as RegistryTrendingRow
+                        ).download_change.toLocaleString()
+                      : (
+                          row as RegistryListingRow
+                        ).total_downloads.toLocaleString()}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -382,32 +495,6 @@ function SplitPanel({
 }) {
   const allRows = periodData.rows;
 
-  const modsChart =
-    periodData.kind === 'alltime'
-      ? allTimeToChart(
-          (allRows as RegistryListingRow[]).filter(
-            (r) => r.listing_type === 'mod',
-          ),
-        )
-      : trendingToChart(
-          (allRows as RegistryTrendingRow[]).filter(
-            (r) => r.listing_type === 'mod',
-          ),
-        );
-
-  const mapsChart =
-    periodData.kind === 'alltime'
-      ? allTimeToChart(
-          (allRows as RegistryListingRow[]).filter(
-            (r) => r.listing_type === 'map',
-          ),
-        )
-      : trendingToChart(
-          (allRows as RegistryTrendingRow[]).filter(
-            (r) => r.listing_type === 'map',
-          ),
-        );
-
   return (
     <div className="grid gap-8 xl:grid-cols-2">
       {/* Mods */}
@@ -421,10 +508,7 @@ function SplitPanel({
             Mods
           </h3>
         </div>
-        <TypeBarChart data={modsChart} type="mod" />
-        <div className="mt-4">
-          <TypeTable data={allRows} type="mod" isAllTime={isAllTime} />
-        </div>
+        <TypeTable data={allRows} type="mod" isAllTime={isAllTime} />
       </div>
 
       {/* Maps */}
@@ -438,10 +522,7 @@ function SplitPanel({
             Maps
           </h3>
         </div>
-        <TypeBarChart data={mapsChart} type="map" />
-        <div className="mt-4">
-          <TypeTable data={allRows} type="map" isAllTime={isAllTime} />
-        </div>
+        <TypeTable data={allRows} type="map" isAllTime={isAllTime} />
       </div>
     </div>
   );
@@ -456,7 +537,10 @@ export function RegistryTrendingSection({
 }: {
   data: RegistryAnalyticsData;
 }) {
-  const [period, setPeriod] = useState<PeriodKey>('all');
+  const [period, setPeriod] = usePersistedState<PeriodKey>(
+    'registry.analytics.content.period',
+    'all',
+  );
   const [query, setQuery] = useState('');
 
   const isSearching = query.trim().length > 0;

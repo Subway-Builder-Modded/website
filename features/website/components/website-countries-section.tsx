@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -12,6 +12,11 @@ import {
   YAxis,
 } from 'recharts';
 import { Globe2 } from 'lucide-react';
+import {
+  SortableNumberHeader,
+  type SortDirection,
+} from '@/components/shared/sortable-number-header';
+import { usePersistedState } from '@/lib/use-persisted-state';
 import type {
   WebsiteAnalyticsData,
   WebsiteAnalyticsPeriod,
@@ -36,6 +41,11 @@ type CountryChartRow = {
   label: string;
   fullName: string;
   visits: number;
+};
+
+type CountrySortState = {
+  key: 'visits';
+  direction: SortDirection;
 };
 
 function CountriesChart({ rows }: { rows: CountryChartRow[] }) {
@@ -133,15 +143,30 @@ export function WebsiteCountriesSection({
 }: {
   data: WebsiteAnalyticsData;
 }) {
-  const [period, setPeriod] = useState<WebsiteAnalyticsPeriod>('7d');
-
-  const topCountries = useMemo(
-    () =>
-      [...data.countries].sort(
-        (a, b) => b.visitors[period] - a.visitors[period],
-      ),
-    [data.countries, period],
+  const [period, setPeriod] = usePersistedState<WebsiteAnalyticsPeriod>(
+    'website.analytics.countries.period',
+    '7d',
   );
+  const [sort, setSort] = usePersistedState<CountrySortState>(
+    'website.analytics.countries.sort',
+    { key: 'visits', direction: 'desc' },
+  );
+
+  const topCountries = useMemo(() => {
+    const ranked = [...data.countries]
+      .sort((a, b) => b.visitors[period] - a.visitors[period])
+      .map((row, index) => ({ ...row, rank: index + 1 }));
+
+    const sorted = [...ranked].sort((left, right) => {
+      const leftValue = left.visitors[period];
+      const rightValue = right.visitors[period];
+      if (leftValue === rightValue) return left.rank - right.rank;
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    });
+    return sorted;
+  }, [data.countries, period, sort.direction]);
 
   const chartRows: CountryChartRow[] = topCountries.slice(0, 10).map((row) => ({
     label:
@@ -166,7 +191,20 @@ export function WebsiteCountriesSection({
             <tr className="border-b border-border bg-muted/35">
               <th className={WEBSITE_TABLE_HEADER_CLS}>#</th>
               <th className={WEBSITE_TABLE_HEADER_CLS}>Country</th>
-              <th className={WEBSITE_TABLE_HEADER_CLS}>Visits</th>
+              <th className={WEBSITE_TABLE_HEADER_CLS}>
+                <SortableNumberHeader
+                  label="Visits"
+                  isActive={sort.key === 'visits'}
+                  direction={sort.direction}
+                  accentColor={WEBSITE_ACCENT_COLOR}
+                  onToggle={() =>
+                    setSort((previous) => ({
+                      key: 'visits',
+                      direction: previous.direction === 'desc' ? 'asc' : 'desc',
+                    }))
+                  }
+                />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -186,7 +224,12 @@ export function WebsiteCountriesSection({
                     </span>
                   </td>
                   <td
-                    className={`${WEBSITE_TABLE_NUMERIC_CLS} font-semibold text-foreground`}
+                    className={`${WEBSITE_TABLE_NUMERIC_CLS} ${sort.key === 'visits' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                    style={
+                      sort.key === 'visits'
+                        ? { color: WEBSITE_ACCENT_COLOR }
+                        : undefined
+                    }
                   >
                     {row.visitors[period].toLocaleString()}
                   </td>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 import {
   Download,
@@ -37,6 +38,8 @@ import {
   TABLE_ROW_CLS,
   registryLinkStyle,
 } from './registry-shared';
+import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
+import { usePersistedState } from '@/lib/use-persisted-state';
 
 const STAT_HEADER_CLS =
   'text-xs font-semibold uppercase tracking-wider text-muted-foreground';
@@ -59,6 +62,23 @@ function ListingsTable({
   type: 'map' | 'mod';
   color: string;
 }) {
+  const [sortDirection, setSortDirection] = usePersistedState<'asc' | 'desc'>(
+    `registry.author.${type}.sort.direction`,
+    'desc',
+  );
+
+  const sortedListings = useMemo(() => {
+    const ordered = [...listings].sort((left, right) => {
+      if (left.total_downloads === right.total_downloads) {
+        return left.rank - right.rank;
+      }
+      return sortDirection === 'asc'
+        ? left.total_downloads - right.total_downloads
+        : right.total_downloads - left.total_downloads;
+    });
+    return ordered;
+  }, [listings, sortDirection]);
+
   if (listings.length === 0) return null;
 
   return (
@@ -73,14 +93,26 @@ function ListingsTable({
           <tr className="border-b border-border bg-muted/40">
             <th className={TABLE_HEADER_CLS}>#</th>
             <th className={TABLE_HEADER_CLS}>Name</th>
-            <th className={TABLE_HEADER_RIGHT_CLS}>Downloads</th>
+            <th className={TABLE_HEADER_RIGHT_CLS}>
+              <SortableNumberHeader
+                label="Downloads"
+                isActive
+                direction={sortDirection}
+                accentColor={color}
+                onToggle={() =>
+                  setSortDirection((previous) =>
+                    previous === 'desc' ? 'asc' : 'desc',
+                  )
+                }
+              />
+            </th>
           </tr>
         </thead>
         <tbody>
-          {listings.map((r) => (
+          {sortedListings.map((r, index) => (
             <tr key={r.id} className={TABLE_ROW_CLS}>
               <td className={TABLE_CELL_CLS}>
-                <RankBadge rank={r.rank} />
+                <RankBadge rank={index + 1} />
               </td>
               <td className={TABLE_CELL_CLS}>
                 <Link
@@ -92,7 +124,7 @@ function ListingsTable({
                 </Link>
               </td>
               <td
-                className={`${TABLE_CELL_NUMERIC_CLS} font-semibold`}
+                className={`${TABLE_CELL_NUMERIC_CLS} font-black`}
                 style={{ color }}
               >
                 {r.total_downloads.toLocaleString()}

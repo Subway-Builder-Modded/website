@@ -287,9 +287,14 @@ export function isExternalHref(href: string): boolean {
 export function trimLeadingZeroDailyData(
   data: DailyDataPoint[],
 ): DailyDataPoint[] {
-  const firstNonZeroIndex = data.findIndex((point) => point.downloads > 0);
-  if (firstNonZeroIndex <= 0) return data;
-  return data.slice(firstNonZeroIndex);
+  const withoutFirstSnapshot = data.filter(
+    (point) => point.date !== '2026-03-11',
+  );
+  const firstNonZeroIndex = withoutFirstSnapshot.findIndex(
+    (point) => point.downloads > 0,
+  );
+  if (firstNonZeroIndex <= 0) return withoutFirstSnapshot;
+  return withoutFirstSnapshot.slice(firstNonZeroIndex);
 }
 
 export function registryLinkStyle(accent: string): CSSProperties {

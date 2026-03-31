@@ -14,7 +14,7 @@ import type {
 } from '@/types/registry';
 
 const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main';
+  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 const LAST_UPDATED_WORKER_LIMIT = 6;
 
 type LastUpdatedCandidate = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, type CSSProperties } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import {
   Area,
   AreaChart,
@@ -23,6 +23,7 @@ import type {
   WebsiteAnalyticsData,
   WebsiteAnalyticsPeriod,
 } from '@/types/website-analytics';
+import { usePersistedState } from '@/lib/use-persisted-state';
 import {
   EmptyState,
   SafeChartContainer,
@@ -118,7 +119,9 @@ function TrendChart({
 
   const dayCount =
     period === '1d' ? 2 : period === '7d' ? 7 : period === '30d' ? 30 : 0;
-  const sourceRows = dayCount > 0 ? data.slice(-dayCount) : data;
+  const filteredData = data.filter((row) => row.date !== '2026-03-11');
+  const sourceRows =
+    dayCount > 0 ? filteredData.slice(-dayCount) : filteredData;
 
   const chartRows = sourceRows.map((row) => {
     const [, month, day] = row.date.split('-');
@@ -253,7 +256,10 @@ export function WebsiteOverviewSection({
 }: {
   data: WebsiteAnalyticsData;
 }) {
-  const [period, setPeriod] = useState<WebsiteAnalyticsPeriod>('all');
+  const [period, setPeriod] = usePersistedState<WebsiteAnalyticsPeriod>(
+    'website.analytics.overview.period',
+    'all',
+  );
 
   const periodLabel = useMemo(() => {
     if (period === '1d') return 'Last Day';

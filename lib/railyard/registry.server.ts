@@ -11,7 +11,7 @@ export type RailyardRegistryType = 'mods' | 'maps';
 type RailyardManifest = ModManifest | MapManifest;
 
 const RAILYARD_REGISTRY_BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main';
+  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 const RAILYARD_EMBED_FALLBACK_IMAGE_PATH =
   '/images/docs/creating-custom-maps/empty-thumbnail.png?v=20260329';
 const EMBED_DESCRIPTION_MAX_LENGTH = 180;
