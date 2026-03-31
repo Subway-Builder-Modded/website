@@ -28,9 +28,7 @@ export function usePersistedState<T>(key: string, initialValue: T) {
     (next: Updater<T>) => {
       setValue((prev) => {
         const resolved =
-          typeof next === 'function'
-            ? (next as (prev: T) => T)(prev)
-            : next;
+          typeof next === 'function' ? (next as (prev: T) => T)(prev) : next;
         try {
           if (typeof window !== 'undefined') {
             window.localStorage.setItem(key, JSON.stringify(resolved));

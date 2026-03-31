@@ -17,7 +17,12 @@ describe('resolveRegistryAnalyticsDir', () => {
   });
 
   it('falls back to public railyard cache before legacy locations', () => {
-    const cachePath = path.join(cwd, 'public', 'railyard', 'registry-analytics');
+    const cachePath = path.join(
+      cwd,
+      'public',
+      'railyard',
+      'registry-analytics',
+    );
     const legacyPath = path.join(cwd, 'The-Railyard', 'analytics');
     const resolved = resolveRegistryAnalyticsDir({
       cwd,
@@ -36,4 +41,3 @@ describe('resolveRegistryAnalyticsDir', () => {
     expect(resolved).toBe(path.join(cwd, 'analytics'));
   });
 });
-

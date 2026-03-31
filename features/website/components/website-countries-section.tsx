@@ -12,7 +12,10 @@ import {
   YAxis,
 } from 'recharts';
 import { Globe2 } from 'lucide-react';
-import { SortableNumberHeader, type SortDirection } from '@/components/shared/sortable-number-header';
+import {
+  SortableNumberHeader,
+  type SortDirection,
+} from '@/components/shared/sortable-number-header';
 import { usePersistedState } from '@/lib/use-persisted-state';
 import type {
   WebsiteAnalyticsData,
@@ -149,24 +152,21 @@ export function WebsiteCountriesSection({
     { key: 'visits', direction: 'desc' },
   );
 
-  const topCountries = useMemo(
-    () => {
-      const ranked = [...data.countries]
-        .sort((a, b) => b.visitors[period] - a.visitors[period])
-        .map((row, index) => ({ ...row, rank: index + 1 }));
+  const topCountries = useMemo(() => {
+    const ranked = [...data.countries]
+      .sort((a, b) => b.visitors[period] - a.visitors[period])
+      .map((row, index) => ({ ...row, rank: index + 1 }));
 
-      const sorted = [...ranked].sort((left, right) => {
-        const leftValue = left.visitors[period];
-        const rightValue = right.visitors[period];
-        if (leftValue === rightValue) return left.rank - right.rank;
-        return sort.direction === 'asc'
-          ? leftValue - rightValue
-          : rightValue - leftValue;
-      });
-      return sorted;
-    },
-    [data.countries, period, sort.direction],
-  );
+    const sorted = [...ranked].sort((left, right) => {
+      const leftValue = left.visitors[period];
+      const rightValue = right.visitors[period];
+      if (leftValue === rightValue) return left.rank - right.rank;
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    });
+    return sorted;
+  }, [data.countries, period, sort.direction]);
 
   const chartRows: CountryChartRow[] = topCountries.slice(0, 10).map((row) => ({
     label:
@@ -200,8 +200,7 @@ export function WebsiteCountriesSection({
                   onToggle={() =>
                     setSort((previous) => ({
                       key: 'visits',
-                      direction:
-                        previous.direction === 'desc' ? 'asc' : 'desc',
+                      direction: previous.direction === 'desc' ? 'asc' : 'desc',
                     }))
                   }
                 />

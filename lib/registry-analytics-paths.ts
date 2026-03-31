@@ -30,4 +30,3 @@ export function resolveRegistryAnalyticsDir({
 
   return path.join(cwd, 'analytics');
 }
-

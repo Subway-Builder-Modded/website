@@ -41,15 +41,32 @@ import type {
 } from '@/types/registry-analytics';
 
 // ---------------------------------------------------------------------------
-// Downloads bar chart (top 10 by total downloads)
+// Sort-aware bar chart (top 10 by active metric)
 // ---------------------------------------------------------------------------
 
-function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
+function AuthorsMetricChart({
+  rows,
+  metricKey,
+  metricLabel,
+  accentColor,
+}: {
+  rows: RegistryAuthorRow[];
+  metricKey: 'total_downloads' | 'map_count' | 'mod_count' | 'asset_count';
+  metricLabel: string;
+  accentColor: string;
+}) {
   const isClientReady = useClientReady();
-  const chartData = authors.slice(0, 10).map((a) => ({
+  const chartData = rows.slice(0, 10).map((a) => ({
     name: truncateName(getAuthorDisplayName(a), 18),
     fullName: getAuthorDisplayName(a),
-    downloads: a.total_downloads,
+    value:
+      metricKey === 'map_count'
+        ? a.map_count
+        : metricKey === 'mod_count'
+          ? a.mod_count
+          : metricKey === 'asset_count'
+            ? a.asset_count
+            : a.total_downloads,
   }));
 
   if (!isClientReady) {
@@ -96,7 +113,8 @@ function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
                       ?.fullName ?? (label as string)}
                   </span>
                   <div className="mt-1">
-                    {(payload[0]!.value as number).toLocaleString()} downloads
+                    {(payload[0]!.value as number).toLocaleString()}{' '}
+                    {metricLabel.toLowerCase()}
                   </div>
                 </div>
               );
@@ -104,11 +122,11 @@ function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
             cursor={{ fill: 'var(--muted)', fillOpacity: 0.4 }}
             wrapperStyle={{ outline: 'none' }}
           />
-          <Bar dataKey="downloads" radius={[0, 4, 4, 0]} maxBarSize={22}>
+          <Bar dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={22}>
             {chartData.map((_, i) => (
               <Cell
                 key={`cell-${i}`}
-                fill="var(--primary)"
+                fill={accentColor}
                 fillOpacity={0.9 - i * 0.055}
               />
             ))}
@@ -125,7 +143,11 @@ function DownloadsBarChart({ authors }: { authors: RegistryAuthorRow[] }) {
 
 const MAX_AUTHORS = 20;
 
-type AuthorSortKey = 'total_downloads' | 'map_count' | 'mod_count' | 'asset_count';
+type AuthorSortKey =
+  | 'total_downloads'
+  | 'map_count'
+  | 'mod_count'
+  | 'asset_count';
 
 type AuthorSortState = {
   key: AuthorSortKey;
@@ -158,7 +180,9 @@ function AuthorRow({
       <td
         className={`${TABLE_CELL_NUMERIC_CLS} ${sortKey === 'total_downloads' ? 'font-black' : 'font-medium text-muted-foreground'}`}
         style={
-          sortKey === 'total_downloads' ? { color: 'var(--primary)' } : undefined
+          sortKey === 'total_downloads'
+            ? { color: 'var(--primary)' }
+            : undefined
         }
       >
         {row.total_downloads.toLocaleString()}
@@ -214,6 +238,20 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
     return ordered;
   }, [filtered, sort.direction, sort.key]);
   const visible = sorted.slice(0, MAX_AUTHORS);
+  const activeMetricLabel =
+    sort.key === 'map_count'
+      ? 'Maps Published'
+      : sort.key === 'mod_count'
+        ? 'Mods Published'
+        : sort.key === 'asset_count'
+          ? 'Total Assets Published'
+          : 'Downloads';
+  const activeMetricColor =
+    sort.key === 'map_count'
+      ? MAP_COLOR
+      : sort.key === 'mod_count'
+        ? MOD_COLOR
+        : 'var(--primary)';
 
   const makeSortToggle = (key: AuthorSortKey) => () => {
     setSort((previous) => ({
@@ -225,6 +263,18 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
 
   return (
     <div>
+      <div className="mb-4 rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Top 10 by {activeMetricLabel}
+        </p>
+        <AuthorsMetricChart
+          rows={sorted}
+          metricKey={sort.key}
+          metricLabel={activeMetricLabel}
+          accentColor={activeMetricColor}
+        />
+      </div>
+
       <SearchField
         placeholder="Search authors..."
         value={query}
@@ -249,7 +299,7 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
               </th>
               <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
                 <SortableNumberHeader
-                  label="Maps"
+                  label="Maps Published"
                   isActive={sort.key === 'map_count'}
                   direction={sort.direction}
                   accentColor={MAP_COLOR}
@@ -258,7 +308,7 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
               </th>
               <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
                 <SortableNumberHeader
-                  label="Mods"
+                  label="Mods Published"
                   isActive={sort.key === 'mod_count'}
                   direction={sort.direction}
                   accentColor={MOD_COLOR}
@@ -267,7 +317,7 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
               </th>
               <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} md:table-cell`}>
                 <SortableNumberHeader
-                  label="Total"
+                  label="Total Assets Published"
                   isActive={sort.key === 'asset_count'}
                   direction={sort.direction}
                   accentColor="var(--primary)"
@@ -322,13 +372,6 @@ export function RegistryAuthorsSection({
   return (
     <section id="author-rankings" className="scroll-mt-24 mb-12">
       <SectionHeader icon={Users} title="Authors" />
-
-      <div className="mb-8 rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Top 10 by Downloads
-        </p>
-        <DownloadsBarChart authors={data.authors} />
-      </div>
 
       {/* Table */}
       <AuthorsTable authors={data.authors} />

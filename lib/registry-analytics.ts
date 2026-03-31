@@ -91,6 +91,17 @@ function resolveAnalyticsDir(): string {
 
 const ANALYTICS_DIR = resolveAnalyticsDir();
 let warnedMissingAnalytics = false;
+const MAP_POPULATION_FILENAMES = ['maps_statistics.csv', 'map_statistics.csv'];
+
+function resolveMapPopulationPath(baseDir: string): string {
+  for (const filename of MAP_POPULATION_FILENAMES) {
+    const candidate = path.join(baseDir, filename);
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return path.join(baseDir, MAP_POPULATION_FILENAMES[0]);
+}
 
 const REGISTRY_ANALYTICS_PATHS = {
   allTime: path.join(ANALYTICS_DIR, 'most_popular_all_time.csv'),
@@ -115,14 +126,14 @@ const REGISTRY_ANALYTICS_PATHS = {
     'projects_most_popular_last_7d.csv',
   ),
   listingProjects: path.join(ANALYTICS_DIR, 'listing_projects.csv'),
-  mapsByPopulation: path.join(ANALYTICS_DIR, 'map_statistics.csv'),
+  mapsByPopulation: resolveMapPopulationPath(ANALYTICS_DIR),
   assetsByDay: path.join(ANALYTICS_DIR, 'assets_by_day.csv'),
   listingsByDay: path.join(ANALYTICS_DIR, 'most_popular_by_day.csv'),
   authorsByDay: path.join(ANALYTICS_DIR, 'authors_by_day.csv'),
 } as const;
 
 type RegistryAnalyticsFileKey = keyof typeof REGISTRY_ANALYTICS_PATHS;
-type RegistryTrendingKey = 'trending1d' | 'tremaps_statisticsending7d';
+type RegistryTrendingKey = 'trending1d' | 'trending3d' | 'trending7d';
 type RegistryProjectTrendingKey =
   | 'projectsTrending1d'
   | 'projectsTrending3d'

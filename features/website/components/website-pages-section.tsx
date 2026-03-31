@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import { FileText } from 'lucide-react';
-import { SortableNumberHeader, type SortDirection } from '@/components/shared/sortable-number-header';
+import {
+  SortableNumberHeader,
+  type SortDirection,
+} from '@/components/shared/sortable-number-header';
 import { usePersistedState } from '@/lib/use-persisted-state';
 import type {
   WebsiteAnalyticsData,
