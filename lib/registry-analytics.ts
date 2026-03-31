@@ -97,8 +97,43 @@ function resolveAnalyticsDir(): string {
 const ANALYTICS_DIR = resolveAnalyticsDir();
 let warnedMissingAnalytics = false;
 
-function readFile(filename: string): Record<string, string>[] {
-  const fullPath = path.join(ANALYTICS_DIR, filename);
+const REGISTRY_ANALYTICS_PATHS = {
+  allTime: path.join(ANALYTICS_DIR, 'most_popular_all_time.csv'),
+  trending1d: path.join(ANALYTICS_DIR, 'most_popular_last_1d.csv'),
+  trending3d: path.join(ANALYTICS_DIR, 'most_popular_last_3d.csv'),
+  trending7d: path.join(ANALYTICS_DIR, 'most_popular_last_7d.csv'),
+  authors: path.join(ANALYTICS_DIR, 'authors_by_total_downloads.csv'),
+  projectsAllTime: path.join(
+    ANALYTICS_DIR,
+    'projects_most_popular_all_time.csv',
+  ),
+  projectsTrending1d: path.join(
+    ANALYTICS_DIR,
+    'projects_most_popular_last_1d.csv',
+  ),
+  projectsTrending3d: path.join(
+    ANALYTICS_DIR,
+    'projects_most_popular_last_3d.csv',
+  ),
+  projectsTrending7d: path.join(
+    ANALYTICS_DIR,
+    'projects_most_popular_last_7d.csv',
+  ),
+  listingProjects: path.join(ANALYTICS_DIR, 'listing_projects.csv'),
+  mapsByPopulation: path.join(ANALYTICS_DIR, 'maps_by_population.csv'),
+  listingsByDay: path.join(ANALYTICS_DIR, 'most_popular_by_day.csv'),
+  authorsByDay: path.join(ANALYTICS_DIR, 'authors_by_day.csv'),
+} as const;
+
+type RegistryAnalyticsFileKey = keyof typeof REGISTRY_ANALYTICS_PATHS;
+type RegistryTrendingKey = 'trending1d' | 'trending3d' | 'trending7d';
+type RegistryProjectTrendingKey =
+  | 'projectsTrending1d'
+  | 'projectsTrending3d'
+  | 'projectsTrending7d';
+
+function readFile(fileKey: RegistryAnalyticsFileKey): Record<string, string>[] {
+  const fullPath = REGISTRY_ANALYTICS_PATHS[fileKey];
   try {
     const text = readFileSync(fullPath, 'utf-8');
     return parseCSV(text);
@@ -151,7 +186,7 @@ const TEST_PROJECT_KEYS = new Set([
 // ---------------------------------------------------------------------------
 
 function parseAllTime(): RegistryListingRow[] {
-  const rows = readFile('most_popular_all_time.csv')
+  const rows = readFile('allTime')
     .filter((r) => !TEST_IDS.has(r['id'] ?? ''))
     .map((r) => ({
       rank: 0, // assigned per-type below
@@ -173,8 +208,8 @@ function parseAllTime(): RegistryListingRow[] {
   return rows;
 }
 
-function parseTrending(filename: string): RegistryTrendingRow[] {
-  return readFile(filename)
+function parseTrending(fileKey: RegistryTrendingKey): RegistryTrendingRow[] {
+  return readFile(fileKey)
     .filter(
       (r) => !TEST_IDS.has(r['id'] ?? '') && Number(r['download_change']) > 0,
     )
@@ -193,7 +228,7 @@ function parseTrending(filename: string): RegistryTrendingRow[] {
 }
 
 function parseAuthors(): RegistryAuthorRow[] {
-  return readFile('authors_by_total_downloads.csv').map((r, i) => ({
+  return readFile('authors').map((r, i) => ({
     rank: i + 1,
     author: r['author'] ?? '',
     author_alias: readAuthorAlias(r),
@@ -206,7 +241,7 @@ function parseAuthors(): RegistryAuthorRow[] {
 }
 
 function parseProjects(): RegistryProjectRow[] {
-  return readFile('projects_most_popular_all_time.csv')
+  return readFile('projectsAllTime')
     .filter(
       (r) =>
         !TEST_PROJECT_KEYS.has(r['project_key'] ?? '') &&
@@ -221,8 +256,10 @@ function parseProjects(): RegistryProjectRow[] {
     }));
 }
 
-function parseProjectsTrending(filename: string): RegistryProjectTrendingRow[] {
-  return readFile(filename)
+function parseProjectsTrending(
+  fileKey: RegistryProjectTrendingKey,
+): RegistryProjectTrendingRow[] {
+  return readFile(fileKey)
     .filter(
       (r) =>
         !TEST_PROJECT_KEYS.has(r['project_key'] ?? '') &&
@@ -240,7 +277,7 @@ function parseProjectsTrending(filename: string): RegistryProjectTrendingRow[] {
 }
 
 function parseListingProjects(): RegistryListingProjectRow[] {
-  return readFile('listing_projects.csv')
+  return readFile('listingProjects')
     .filter((r) => !TEST_IDS.has(r['id'] ?? ''))
     .map((r) => ({
       listing_type: r['listing_type'] as ListingType,
@@ -252,7 +289,7 @@ function parseListingProjects(): RegistryListingProjectRow[] {
 }
 
 function parseMapPopulations(): RegistryMapPopulationRow[] {
-  return readFile('maps_by_population.csv').map((r, i) => ({
+  return readFile('mapsByPopulation').map((r, i) => ({
     rank: i + 1,
     id: r['id'] ?? '',
     name: r['name'] ?? '',
@@ -286,13 +323,13 @@ function extractDailyPoints(row: Record<string, string>): DailyDataPoint[] {
 }
 
 export function loadListingDailyData(id: string): DailyDataPoint[] {
-  const rows = readFile('most_popular_by_day.csv');
+  const rows = readFile('listingsByDay');
   const row = rows.find((r) => r['id'] === id);
   return row ? extractDailyPoints(row) : [];
 }
 
 export function loadAuthorDailyData(author: string): DailyDataPoint[] {
-  const rows = readFile('authors_by_day.csv');
+  const rows = readFile('authorsByDay');
   const row = rows.find(
     (r) => (r['author'] ?? '').toLowerCase() === author.toLowerCase(),
   );
@@ -300,7 +337,7 @@ export function loadAuthorDailyData(author: string): DailyDataPoint[] {
 }
 
 export function loadAllListingDailyData(): RegistryListingDailyRow[] {
-  return readFile('most_popular_by_day.csv')
+  return readFile('listingsByDay')
     .filter((r) => !TEST_IDS.has(r['id'] ?? ''))
     .map((r) => ({
       listing_type: r['listing_type'] as ListingType,
@@ -310,7 +347,7 @@ export function loadAllListingDailyData(): RegistryListingDailyRow[] {
 }
 
 export function loadAllAuthorDailyData(): RegistryAuthorDailyRow[] {
-  return readFile('authors_by_day.csv').map((r) => ({
+  return readFile('authorsByDay').map((r) => ({
     author: r['author'] ?? '',
     dailyData: extractDailyPoints(r),
   }));
@@ -322,9 +359,7 @@ export function loadAllAuthorDailyData(): RegistryAuthorDailyRow[] {
 
 function buildSnapshotLabel(): string {
   try {
-    const mtime = statSync(
-      path.join(ANALYTICS_DIR, 'most_popular_all_time.csv'),
-    ).mtime;
+    const mtime = statSync(REGISTRY_ANALYTICS_PATHS.allTime).mtime;
     const y = mtime.getUTCFullYear();
     const mo = String(mtime.getUTCMonth() + 1).padStart(2, '0');
     const d = String(mtime.getUTCDate()).padStart(2, '0');
@@ -342,20 +377,14 @@ function buildSnapshotLabel(): string {
 
 export function loadRegistryAnalytics(): RegistryAnalyticsData {
   const allTime = parseAllTime();
-  const trending1d = parseTrending('most_popular_last_1d.csv');
-  const trending3d = parseTrending('most_popular_last_3d.csv');
-  const trending7d = parseTrending('most_popular_last_7d.csv');
+  const trending1d = parseTrending('trending1d');
+  const trending3d = parseTrending('trending3d');
+  const trending7d = parseTrending('trending7d');
   const authors = parseAuthors();
   const projects = parseProjects();
-  const projectsTrending1d = parseProjectsTrending(
-    'projects_most_popular_last_1d.csv',
-  );
-  const projectsTrending3d = parseProjectsTrending(
-    'projects_most_popular_last_3d.csv',
-  );
-  const projectsTrending7d = parseProjectsTrending(
-    'projects_most_popular_last_7d.csv',
-  );
+  const projectsTrending1d = parseProjectsTrending('projectsTrending1d');
+  const projectsTrending3d = parseProjectsTrending('projectsTrending3d');
+  const projectsTrending7d = parseProjectsTrending('projectsTrending7d');
   const listingProjects = parseListingProjects();
   const mapPopulations = parseMapPopulations();
 

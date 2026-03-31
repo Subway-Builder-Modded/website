@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import type {
   WebsiteAnalyticsData,
@@ -123,6 +123,23 @@ function mergePageRows(rows: WebsitePageRow[]): WebsitePageRow[] {
   return [...map.values()].sort((a, b) => b.pageviews.all - a.pageviews.all);
 }
 
+function resolveCanonicalPath(
+  pathname: string,
+  aliases: ReadonlyMap<string, string>,
+): string {
+  let current = normalizePath(pathname);
+  let hops = 0;
+
+  while (aliases.has(current) && hops < 10) {
+    const nextPath = normalizePath(aliases.get(current) ?? '');
+    if (!nextPath || nextPath === current) break;
+    current = nextPath;
+    hops += 1;
+  }
+
+  return current;
+}
+
 function parseSummary(value: unknown): WebsiteSummaryStats | null {
   if (!value || typeof value !== 'object') return null;
   const row = value as Record<string, unknown>;
@@ -157,15 +174,18 @@ function parseTimeseries(value: unknown): WebsiteTimeseriesRow[] {
 
 function parsePages(
   value: unknown,
+  aliases: ReadonlyMap<string, string>,
   validPaths?: Set<string>,
 ): WebsitePageRow[] {
   if (!Array.isArray(value)) return [];
 
   const rows = value.map((row) => {
     const item = (row ?? {}) as Record<string, unknown>;
+    const rawPath = normalizePath(String(item['path'] ?? '/'));
+    const canonicalPath = resolveCanonicalPath(rawPath, aliases);
 
     return {
-      path: normalizePath(String(item['path'] ?? '/')),
+      path: canonicalPath,
       pageviews: parsePeriodMetrics(item['pageviews']),
       visitors: parsePeriodMetrics(item['visitors']),
       entrances: item['entrances']
@@ -288,8 +308,25 @@ function resolveWebsiteAnalyticsDir(): string {
 const WEBSITE_ANALYTICS_DIR = resolveWebsiteAnalyticsDir();
 let warnedMissingDirectory = false;
 
-function readJsonFile<T>(filename: string, fallback: T): T {
-  const fullPath = path.join(WEBSITE_ANALYTICS_DIR, filename);
+const WEBSITE_ANALYTICS_PATHS = {
+  summary: path.join(WEBSITE_ANALYTICS_DIR, 'summary.json'),
+  timeseries: path.join(WEBSITE_ANALYTICS_DIR, 'timeseries.json'),
+  pages: path.join(WEBSITE_ANALYTICS_DIR, 'pages.json'),
+  countries: path.join(WEBSITE_ANALYTICS_DIR, 'countries.json'),
+  browsers: path.join(WEBSITE_ANALYTICS_DIR, 'browsers.json'),
+  operatingSystems: path.join(WEBSITE_ANALYTICS_DIR, 'operating-systems.json'),
+  devices: path.join(WEBSITE_ANALYTICS_DIR, 'devices.json'),
+  screenSizes: path.join(WEBSITE_ANALYTICS_DIR, 'screen-sizes.json'),
+  validPaths: path.join(WEBSITE_ANALYTICS_DIR, 'valid-paths.json'),
+  pathAliases: path.join(WEBSITE_ANALYTICS_DIR, 'path-aliases.json'),
+  snapshotMeta: path.join(WEBSITE_ANALYTICS_DIR, 'snapshot-meta.json'),
+  dailyHistory: path.join(WEBSITE_ANALYTICS_DIR, 'daily-history.json'),
+} as const;
+
+type WebsiteAnalyticsFileKey = keyof typeof WEBSITE_ANALYTICS_PATHS;
+
+function readJsonFile<T>(key: WebsiteAnalyticsFileKey, fallback: T): T {
+  const fullPath = WEBSITE_ANALYTICS_PATHS[key];
   try {
     const text = readFileSync(fullPath, 'utf-8');
     return JSON.parse(text) as T;
@@ -305,9 +342,7 @@ function readJsonFile<T>(filename: string, fallback: T): T {
       return fallback;
     }
     if (error instanceof SyntaxError) {
-      console.warn(
-        `[website] Invalid JSON in ${filename}; using fallback dataset.`,
-      );
+      console.warn(`[website] Invalid JSON in ${key}; using fallback dataset.`);
       return fallback;
     }
     throw error;
@@ -315,7 +350,7 @@ function readJsonFile<T>(filename: string, fallback: T): T {
 }
 
 function readValidPathSet(): Set<string> | undefined {
-  const values = readJsonFile<unknown[]>('valid-paths.json', []);
+  const values = readJsonFile<unknown[]>('validPaths', []);
   if (!Array.isArray(values) || values.length === 0) return undefined;
 
   const normalized = values
@@ -323,6 +358,28 @@ function readValidPathSet(): Set<string> | undefined {
     .filter((value) => value.length > 0 && !isLikely404Path(value));
 
   return normalized.length > 0 ? new Set(normalized) : undefined;
+}
+
+function readPathAliases(): ReadonlyMap<string, string> {
+  const value = readJsonFile<Record<string, unknown>>('pathAliases', {});
+  const entries = Object.entries(value ?? {})
+    .map(
+      ([aliasPath, destinationPath]) =>
+        [
+          normalizePath(aliasPath),
+          normalizePath(String(destinationPath ?? '')),
+        ] as const,
+    )
+    .filter(
+      ([aliasPath, destinationPath]) =>
+        aliasPath.length > 0 &&
+        destinationPath.length > 0 &&
+        !isLikely404Path(aliasPath) &&
+        !isLikely404Path(destinationPath) &&
+        aliasPath !== destinationPath,
+    );
+
+  return new Map(entries);
 }
 
 function formatUtcSnapshot(date: Date): string {
@@ -347,13 +404,17 @@ function buildSnapshotLabel(meta: SnapshotMetadata | null): string {
   }
 
   try {
-    const files = readdirSync(WEBSITE_ANALYTICS_DIR).filter((file) =>
-      file.endsWith('.json'),
+    const latestTime = Object.values(WEBSITE_ANALYTICS_PATHS).reduce<number>(
+      (latest, fullPath) => {
+        try {
+          const mtime = statSync(fullPath).mtimeMs;
+          return Math.max(latest, mtime);
+        } catch {
+          return latest;
+        }
+      },
+      0,
     );
-    const latestTime = files.reduce<number>((latest, file) => {
-      const mtime = statSync(path.join(WEBSITE_ANALYTICS_DIR, file)).mtimeMs;
-      return Math.max(latest, mtime);
-    }, 0);
 
     if (latestTime > 0) {
       return formatUtcSnapshot(new Date(latestTime));
@@ -366,33 +427,40 @@ function buildSnapshotLabel(meta: SnapshotMetadata | null): string {
 }
 
 export function loadWebsiteAnalytics(): WebsiteAnalyticsData {
-  const metadata = readJsonFile<SnapshotMetadata | null>(
-    'snapshot-meta.json',
-    null,
-  );
-  const validPathSet = readValidPathSet();
+  const metadata = readJsonFile<SnapshotMetadata | null>('snapshotMeta', null);
+  const aliases = readPathAliases();
+  const rawValidPathSet = readValidPathSet();
+  const validPathSet =
+    rawValidPathSet && rawValidPathSet.size > 0
+      ? new Set(
+          [...rawValidPathSet]
+            .map((pathname) => resolveCanonicalPath(pathname, aliases))
+            .filter(
+              (pathname) => pathname.length > 0 && !isLikely404Path(pathname),
+            ),
+        )
+      : undefined;
 
   const pages = parsePages(
-    readJsonFile<unknown[]>('pages.json', []),
+    readJsonFile<unknown[]>('pages', []),
+    aliases,
     validPathSet,
   );
-  const countries = parseCountries(
-    readJsonFile<unknown[]>('countries.json', []),
-  );
+  const countries = parseCountries(readJsonFile<unknown[]>('countries', []));
   const browsers = parseTechnologyRows(
-    readJsonFile<unknown[]>('browsers.json', []),
+    readJsonFile<unknown[]>('browsers', []),
     'browser',
   );
   const operatingSystems = parseTechnologyRows(
-    readJsonFile<unknown[]>('operating-systems.json', []),
+    readJsonFile<unknown[]>('operatingSystems', []),
     'os',
   );
   const devices = parseTechnologyRows(
-    readJsonFile<unknown[]>('devices.json', []),
+    readJsonFile<unknown[]>('devices', []),
     'device',
   );
   const screenSizes = parseTechnologyRows(
-    readJsonFile<unknown[]>('screen-sizes.json', []),
+    readJsonFile<unknown[]>('screenSizes', []),
     'size',
   );
 
@@ -403,12 +471,12 @@ export function loadWebsiteAnalytics(): WebsiteAnalyticsData {
   });
 
   const summary =
-    parseSummary(readJsonFile<unknown>('summary.json', {})) ?? summaryFallback;
+    parseSummary(readJsonFile<unknown>('summary', {})) ?? summaryFallback;
 
   return {
     snapshotLabel: buildSnapshotLabel(metadata),
     summary,
-    timeseries: parseTimeseries(readJsonFile<unknown[]>('timeseries.json', [])),
+    timeseries: parseTimeseries(readJsonFile<unknown[]>('timeseries', [])),
     pages,
     countries,
     browsers: browsers as WebsiteBrowserRow[],

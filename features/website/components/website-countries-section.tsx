@@ -137,9 +137,9 @@ export function WebsiteCountriesSection({
 
   const topCountries = useMemo(
     () =>
-      [...data.countries]
-        .sort((a, b) => b.visitors[period] - a.visitors[period])
-        .slice(0, 30),
+      [...data.countries].sort(
+        (a, b) => b.visitors[period] - a.visitors[period],
+      ),
     [data.countries, period],
   );
 

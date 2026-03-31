@@ -14,11 +14,19 @@ const TIMESERIES_FILE = path.join(ANALYTICS_DIR, 'timeseries.json');
 const SUMMARY_FILE = path.join(ANALYTICS_DIR, 'summary.json');
 const SNAPSHOT_META_FILE = path.join(ANALYTICS_DIR, 'snapshot-meta.json');
 const DAILY_HISTORY_FILE = path.join(ANALYTICS_DIR, 'daily-history.json');
+const PATH_ALIASES_FILE = path.join(ANALYTICS_DIR, 'path-aliases.json');
 
 const WEBSITE_PATH_SOURCE_DIR = path.join(ROOT, 'out');
 
-const CLOUDFLARE_ZONE_TAG = process.env['CLOUDFLARE_ZONE_TAG']?.trim() || '';
-const CLOUDFLARE_API_TOKEN = process.env['CLOUDFLARE_API_TOKEN']?.trim() || '';
+const CLOUDFLARE_ZONE_TAG =
+  process.env['CLOUDFLARE_ZONE_TAG']?.trim() ||
+  process.env['CLOUDFLARE_ZONE_ID']?.trim() ||
+  '';
+const CLOUDFLARE_API_TOKEN =
+  process.env['CLOUDFLARE_API_TOKEN']?.trim() ||
+  process.env['CLOUDFLARE_TOKEN']?.trim() ||
+  process.env['CF_API_TOKEN']?.trim() ||
+  '';
 const CLOUDFLARE_GRAPHQL_ENDPOINT = 'https://api.cloudflare.com/client/v4/graphql';
 
 const PERIOD_DAYS = {
@@ -88,10 +96,25 @@ function dateKeyFromDate(date) {
   return `${y}-${m}-${d}`;
 }
 
-function collectValidPathsFromOut(outDir) {
-  if (!existsSync(outDir)) return [];
+function extractRedirectTargetFromHtml(html) {
+  const text = String(html ?? '');
+  const redirectMatch =
+    /NEXT_REDIRECT;(?:replace|push);([^;]+);\d{3};/.exec(text);
 
-  const paths = [];
+  if (!redirectMatch?.[1]) return null;
+
+  const normalizedTarget = normalizePathname(redirectMatch[1]);
+  if (isLikely404Path(normalizedTarget)) return null;
+  return normalizedTarget;
+}
+
+function collectPathInventoryFromOut(outDir) {
+  if (!existsSync(outDir)) {
+    return { validPaths: [], aliases: {} };
+  }
+
+  const validPathSet = new Set();
+  const aliasMap = new Map();
 
   function walk(currentDir) {
     const entries = readdirSync(currentDir, { withFileTypes: true });
@@ -112,15 +135,31 @@ function collectValidPathsFromOut(outDir) {
           ? normalizePathname(relDir === '.' ? '/' : `/${relDir}`)
           : normalizePathname(`/${relFile.replace(/\.html$/i, '')}`);
 
-      if (!isLikely404Path(routePath) && !baseName.includes('404')) {
-        paths.push(routePath);
+      if (isLikely404Path(routePath) || baseName.includes('404')) {
+        continue;
       }
+
+      const html = readFileSync(full, 'utf8');
+      const redirectTarget = extractRedirectTargetFromHtml(html);
+
+      if (redirectTarget && redirectTarget !== routePath) {
+        aliasMap.set(routePath, redirectTarget);
+        validPathSet.add(redirectTarget);
+        continue;
+      }
+
+      validPathSet.add(routePath);
     }
   }
 
   walk(outDir);
 
-  return [...new Set(paths)].sort((a, b) => a.localeCompare(b));
+  return {
+    validPaths: [...validPathSet].sort((a, b) => a.localeCompare(b)),
+    aliases: Object.fromEntries(
+      [...aliasMap.entries()].sort(([left], [right]) => left.localeCompare(right)),
+    ),
+  };
 }
 
 function splitIntoChunks(values, chunkSize) {
@@ -290,6 +329,20 @@ function normalizeMetricMap({ map, normalizer, fallback, validPathSet }) {
   return output;
 }
 
+function resolveCanonicalPath(pathname, aliasesMap) {
+  let current = normalizePathname(pathname);
+  let safetyCounter = 0;
+
+  while (aliasesMap.has(current) && safetyCounter < 10) {
+    const nextPath = normalizePathname(aliasesMap.get(current));
+    if (!nextPath || nextPath === current) break;
+    current = nextPath;
+    safetyCounter += 1;
+  }
+
+  return current;
+}
+
 function emptyDaySnapshot() {
   return {
     totals: { visits: 0 },
@@ -388,8 +441,14 @@ function updateSnapshotMeta(existingMeta) {
   };
 }
 
-async function fetchDaySnapshot({ start, end, validPaths }) {
+async function fetchDaySnapshot({ start, end, validPaths, aliases }) {
   const validPathSet = new Set(validPaths);
+  const aliasesMap = new Map(
+    Object.entries(aliases ?? {}).map(([key, value]) => [
+      normalizePathname(key),
+      normalizePathname(value),
+    ]),
+  );
 
   const [totalVisits, pagesRaw, countriesRaw, browsersRaw, operatingSystemsRaw, devicesRaw] =
     await Promise.all([
@@ -403,7 +462,8 @@ async function fetchDaySnapshot({ start, end, validPaths }) {
 
   const pages = normalizeMetricMap({
     map: pagesRaw,
-    normalizer: (key) => normalizePathname(key),
+    normalizer: (key) =>
+      resolveCanonicalPath(normalizePathname(key), aliasesMap),
     validPathSet,
   });
 
@@ -445,24 +505,57 @@ async function fetchDaySnapshot({ start, end, validPaths }) {
 async function main() {
   ensureDir(ANALYTICS_DIR);
 
-  const collectedPaths = collectValidPathsFromOut(WEBSITE_PATH_SOURCE_DIR);
-  const validPaths =
-    collectedPaths.length > 0
-      ? collectedPaths
-      : readJson(VALID_PATHS_FILE, []).map(normalizePathname);
+  const inventory = collectPathInventoryFromOut(WEBSITE_PATH_SOURCE_DIR);
+
+  const rawAliases =
+    Object.keys(inventory.aliases).length > 0
+      ? inventory.aliases
+      : readJson(PATH_ALIASES_FILE, {});
+  const aliases = Object.fromEntries(
+    Object.entries(rawAliases ?? {})
+      .map(([aliasPath, destinationPath]) => [
+        normalizePathname(aliasPath),
+        normalizePathname(destinationPath),
+      ])
+      .filter(
+        ([aliasPath, destinationPath]) =>
+          aliasPath.length > 0 &&
+          destinationPath.length > 0 &&
+          !isLikely404Path(aliasPath) &&
+          !isLikely404Path(destinationPath) &&
+          aliasPath !== destinationPath,
+      )
+      .sort(([left], [right]) => left.localeCompare(right)),
+  );
+
+  const collectedPaths = inventory.validPaths;
+  const fallbackPaths = readJson(VALID_PATHS_FILE, []).map(normalizePathname);
+  const basePaths = collectedPaths.length > 0 ? collectedPaths : fallbackPaths;
+
+  const validPathSet = new Set(
+    basePaths.filter((pathname) => pathname.length > 0 && !isLikely404Path(pathname)),
+  );
+
+  for (const [aliasPath, destinationPath] of Object.entries(aliases)) {
+    validPathSet.delete(aliasPath);
+    validPathSet.add(destinationPath);
+  }
+
+  const validPaths = [...validPathSet].sort((a, b) => a.localeCompare(b));
 
   if (validPaths.length === 0) {
     throw new Error('No valid paths found for website analytics generation.');
   }
 
   writeJson(VALID_PATHS_FILE, validPaths);
+  writeJson(PATH_ALIASES_FILE, aliases);
 
   const hasCloudflareCreds = Boolean(CLOUDFLARE_ZONE_TAG && CLOUDFLARE_API_TOKEN);
   const existingMeta = readJson(SNAPSHOT_META_FILE, {});
 
   if (!hasCloudflareCreds) {
     console.warn(
-      '[website-analytics] Missing CLOUDFLARE_ZONE_TAG or CLOUDFLARE_API_TOKEN. Refetch skipped.',
+      '[website-analytics] Missing Cloudflare credentials (CLOUDFLARE_ZONE_TAG/CLOUDFLARE_ZONE_ID and CLOUDFLARE_API_TOKEN/CLOUDFLARE_TOKEN/CF_API_TOKEN). Refetch skipped.',
     );
     writeJson(SNAPSHOT_META_FILE, updateSnapshotMeta(existingMeta));
     return;
@@ -483,6 +576,7 @@ async function main() {
       start: start.toISOString(),
       end: end.toISOString(),
       validPaths,
+      aliases,
     });
 
     history.days[dayKey] = { ...emptyDaySnapshot(), ...snapshot };
