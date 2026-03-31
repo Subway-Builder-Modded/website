@@ -7,12 +7,14 @@ type NavbarBrandLinkProps = {
   brand: AppNavbarBrand;
   onNavigate: () => void;
   mobile?: boolean;
+  compact?: boolean;
 };
 
 export function NavbarBrandLink({
   brand,
   onNavigate,
   mobile = false,
+  compact = false,
 }: NavbarBrandLinkProps) {
   return (
     <NextLink
@@ -29,17 +31,19 @@ export function NavbarBrandLink({
         icon={brand.icon}
         className="shrink-0 text-current size-[var(--app-navbar-brand-icon)]"
       />
-      <span
-        className={cn(
-          'overflow-hidden text-clip whitespace-nowrap text-[var(--app-navbar-brand-title)]',
-          mobile
-            ? 'max-w-[min(54vw,36rem)]'
-            : 'max-w-[min(54vw,36rem)] md:max-w-[min(58vw,44rem)]',
-        )}
-        style={{ fontWeight: 'var(--app-navbar-brand-weight)' }}
-      >
-        {brand.title}
-      </span>
+      {compact ? null : (
+        <span
+          className={cn(
+            'overflow-hidden text-clip whitespace-nowrap text-[var(--app-navbar-brand-title)]',
+            mobile
+              ? 'max-w-[min(54vw,36rem)]'
+              : 'max-w-[min(54vw,36rem)] md:max-w-[min(58vw,44rem)]',
+          )}
+          style={{ fontWeight: 'var(--app-navbar-brand-weight)' }}
+        >
+          {brand.title}
+        </span>
+      )}
     </NextLink>
   );
 }
