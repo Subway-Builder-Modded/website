@@ -272,13 +272,17 @@ function parseMapPopulations(): RegistryMapPopulationRow[] {
 // ---------------------------------------------------------------------------
 
 function extractDailyPoints(row: Record<string, string>): DailyDataPoint[] {
-  return Object.entries(row)
+  const points = Object.entries(row)
     .filter(([key]) => /^\d{4}_\d{2}_\d{2}$/.test(key))
     .map(([key, val]) => ({
       date: key.replace(/_/g, '-'),
       downloads: Number(val) || 0,
     }))
     .sort((a, b) => a.date.localeCompare(b.date));
+
+  // The first snapshot is a baseline and not a true 1-day delta sample.
+  // Start timeline series from the second snapshot onward.
+  return points.length > 1 ? points.slice(1) : [];
 }
 
 export function loadListingDailyData(id: string): DailyDataPoint[] {
@@ -316,39 +320,17 @@ export function loadAllAuthorDailyData(): RegistryAuthorDailyRow[] {
 // Snapshot label (date + time from file mtime)
 // ---------------------------------------------------------------------------
 
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-] as const;
-
 function buildSnapshotLabel(): string {
   try {
     const mtime = statSync(
       path.join(ANALYTICS_DIR, 'most_popular_all_time.csv'),
     ).mtime;
-
-    const month = MONTHS[mtime.getMonth()]!;
-    const day = mtime.getDate();
-    const year = mtime.getFullYear();
-
-    let hours = mtime.getHours();
-    const minutes = mtime.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    if (hours === 0) hours = 12;
-    const minuteStr = minutes.toString().padStart(2, '0');
-
-    return `${month} ${day}, ${year} ${hours}:${minuteStr} ${ampm}`;
+    const y = mtime.getUTCFullYear();
+    const mo = String(mtime.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(mtime.getUTCDate()).padStart(2, '0');
+    const h = String(mtime.getUTCHours()).padStart(2, '0');
+    const mi = String(mtime.getUTCMinutes()).padStart(2, '0');
+    return `${y}-${mo}-${d} ${h}:${mi} UTC`;
   } catch {
     return 'Unknown';
   }

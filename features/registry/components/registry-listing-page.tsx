@@ -27,7 +27,10 @@ import {
 } from '@/lib/registry-analytics-helpers';
 import {
   DailyDownloadChart,
+  getAuthorAttributionHref,
+  getAuthorDisplayName,
   getListingColor,
+  isExternalHref,
   RankBadge,
   RegistryDetailShell,
   SectionHeader,
@@ -274,10 +277,26 @@ export function RegistryListingPage({
       </RegistryDetailShell>
     );
   }
+  const authorHref = getAuthorAttributionHref(listing);
+  const authorIsExternal = isExternalHref(authorHref);
 
   return (
     <RegistryDetailShell
       title={listing.name}
+      subtitle={
+        <>
+          by{' '}
+          <Link
+            href={authorHref}
+            target={authorIsExternal ? '_blank' : undefined}
+            rel={authorIsExternal ? 'noreferrer' : undefined}
+            className="font-medium !no-underline hover:!no-underline"
+            style={{ color }}
+          >
+            {getAuthorDisplayName(listing)}
+          </Link>
+        </>
+      }
       type={type}
       snapshotLabel={data.snapshotLabel}
       actions={
@@ -285,8 +304,11 @@ export function RegistryListingPage({
           <TypeBadge type={type} />
           <Link
             href={`/railyard/${type}s/${id}`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/45 hover:text-[var(--action-accent)]"
-            style={{ ['--action-accent' as string]: color }}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:!bg-[var(--action-soft)] hover:text-[var(--action-accent)]"
+            style={{
+              ['--action-accent' as string]: color,
+              ['--action-soft' as string]: `${color}24`,
+            }}
             aria-label="Open in Railyard"
           >
             <TrainTrack className="size-4" />
@@ -296,8 +318,11 @@ export function RegistryListingPage({
               href={`https://github.com/${analytics.project.project_key}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/45 hover:text-[var(--action-accent)]"
-              style={{ ['--action-accent' as string]: color }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:!bg-[var(--action-soft)] hover:text-[var(--action-accent)]"
+              style={{
+                ['--action-accent' as string]: color,
+                ['--action-soft' as string]: `${color}24`,
+              }}
               aria-label="Open project on GitHub"
             >
               <Github className="size-4" />

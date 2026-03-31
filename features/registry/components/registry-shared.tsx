@@ -398,6 +398,7 @@ export function RegistryFilterControls({
 
 export function RegistryDetailShell({
   title,
+  subtitle,
   type,
   snapshotLabel,
   backHref = '/registry',
@@ -406,6 +407,7 @@ export function RegistryDetailShell({
   children,
 }: {
   title: string;
+  subtitle?: ReactNode;
   /** Listing type — sets the accent color. Omit for author pages (uses purple). */
   type?: ListingType;
   snapshotLabel: string;
@@ -419,9 +421,9 @@ export function RegistryDetailShell({
     borderColor: accentColor,
     color: accentColor,
     backgroundColor: 'transparent',
-    ['--back-soft' as string]: `${accentColor}2b`,
+    ['--back-accent' as string]: accentColor,
+    ['--back-soft' as string]: `color-mix(in srgb, ${accentColor} 18%, transparent)`,
   };
-
   return (
     <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero card with type-colored accent strip */}
@@ -431,7 +433,7 @@ export function RegistryDetailShell({
           <div className="mb-3 flex items-center justify-between gap-3">
             <Link
               href={backHref}
-              className="group inline-flex h-10 items-center gap-1.5 rounded-lg border px-4 text-sm font-semibold transition-colors duration-200 ease-out hover:bg-[var(--back-soft)]"
+              className="group inline-flex h-10 items-center gap-1.5 rounded-lg border px-4 text-sm font-semibold transition-colors duration-200 ease-out hover:!bg-[var(--back-soft)] hover:!text-[var(--back-accent)]"
               style={backButtonStyle}
               aria-label="Go back"
             >
@@ -451,6 +453,11 @@ export function RegistryDetailShell({
               <h1 className="truncate text-3xl font-black tracking-tight text-foreground sm:text-4xl">
                 {title}
               </h1>
+              {subtitle ? (
+                <div className="mt-1 text-sm text-muted-foreground">
+                  {subtitle}
+                </div>
+              ) : null}
             </div>
             <p className="shrink-0 text-xs text-muted-foreground">
               Updated:{' '}
