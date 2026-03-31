@@ -26,6 +26,8 @@ function formatDateLabel(date: string): string {
   return `${String(month).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
 }
 
+const FIRST_SNAPSHOT_DATE = '2026-03-11';
+
 export function RegistryDownloadsTimelineSection({
   data,
 }: {
@@ -33,7 +35,7 @@ export function RegistryDownloadsTimelineSection({
 }) {
   const isClientReady = useClientReady();
   const chartRows = data.downloadsByTypeDaily
-    .filter((row) => row.date !== '2026-03-11')
+    .filter((row) => row.date !== FIRST_SNAPSHOT_DATE)
     .map((row) => ({
       ...row,
       label: formatDateLabel(row.date),

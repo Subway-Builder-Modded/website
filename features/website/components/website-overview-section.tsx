@@ -119,9 +119,7 @@ function TrendChart({
 
   const dayCount =
     period === '1d' ? 2 : period === '7d' ? 7 : period === '30d' ? 30 : 0;
-  const filteredData = data.filter((row) => row.date !== '2026-03-11');
-  const sourceRows =
-    dayCount > 0 ? filteredData.slice(-dayCount) : filteredData;
+  const sourceRows = dayCount > 0 ? data.slice(-dayCount) : data;
 
   const chartRows = sourceRows.map((row) => {
     const [, month, day] = row.date.split('-');

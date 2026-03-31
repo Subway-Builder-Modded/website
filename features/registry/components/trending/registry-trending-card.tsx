@@ -40,6 +40,8 @@ function listingAnalyticsHref(row: EnrichedTrendingRow): string {
   return `/registry/${row.listing_type}/${row.id}`;
 }
 
+const FIRST_SNAPSHOT_DATE = '2026-03-11';
+
 export function RegistryTrendingCard({
   row,
   rank,
@@ -58,7 +60,9 @@ export function RegistryTrendingCard({
   const modeDays = getModeDays(mode);
   const spanDays = modeDays;
 
-  const chartSource = trimLeadingZeroDailyData(row.dailyData);
+  const chartSource = trimLeadingZeroDailyData(row.dailyData).filter(
+    (point) => point.date !== FIRST_SNAPSHOT_DATE,
+  );
   const windowPointCount = spanDays * 2 + 1;
   const chartData = chartSource.slice(-windowPointCount);
   const splitIndex = Math.max(0, chartData.length - (spanDays + 1));
