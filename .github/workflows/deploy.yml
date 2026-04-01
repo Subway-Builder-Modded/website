@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy site
+    name: Deploy production site
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ZONE_TAG: ${{ secrets.CLOUDFLARE_ZONE_TAG }}
@@ -24,12 +24,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -60,10 +60,10 @@ jobs:
           RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
-      - name: Regenerate website analytics snapshot
+      - name: Generate analytics
         env:
           WEBSITE_PATH_SOURCE_DIR: ${{ github.workspace }}/out
-        run: pnpm run generate:website-analytics
+        run: pnpm run analytics
 
       - name: Build final deploy output
         env:

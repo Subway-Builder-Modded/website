@@ -1,17 +1,18 @@
-name: Build Site
+name: Deploy Dev Site
 
 on:
-  pull_request:
-    branches: [main, dev]
+  push:
+    branches:
+      - dev
   workflow_dispatch:
 
 concurrency:
-  group: build-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: deploy-subway-builder-dev-site
+  cancel-in-progress: false
 
 jobs:
-  build:
-    name: Build site
+  deploy:
+    name: Deploy dev site
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_ZONE_TAG: ${{ secrets.CLOUDFLARE_ZONE_TAG }}
@@ -62,8 +63,18 @@ jobs:
           WEBSITE_PATH_SOURCE_DIR: ${{ github.workspace }}/out
         run: pnpm run generate:website-analytics
 
-      - name: Build final output
+      - name: Build final deploy output
         env:
           RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
-        
+
+      - name: Deploy to website-dev repo
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.WEBSITE_DEV_PAT }}
+          external_repository: Subway-Builder-Modded/website-dev
+          publish_branch: gh-pages
+          publish_dir: ./out
+          force_orphan: true
+          cname: dev.subwaybuildermodded.com
+          
