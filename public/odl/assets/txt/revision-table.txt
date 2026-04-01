@@ -1,0 +1,8 @@
+ODL REVISION TABLE
+
+194 - Signage termination on public mezzanine only.
+207 - Transfer shift to Platform D at Meridian Exchange.
+311 - Continuity precedence in sectors C and F.
+
+Operator note:
+Apply in ascending notice order for continuity exercises.
