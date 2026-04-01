@@ -77,23 +77,22 @@ jobs:
           set -euo pipefail
 
           rm -rf target-repo
-          git clone "https://x-access-token:${GH_PAT}@github.com/Subway-Builder-Modded/website-dev.git" target-repo
+          git clone "https://x-access-token:${GH_PAT}@github.com/Subway-Builder-Modded/website-dev.git" target-repo >/dev/null 2>&1
           cd target-repo
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            git fetch origin gh-pages
-            git checkout -B gh-pages origin/gh-pages
+            git fetch origin gh-pages >/dev/null 2>&1
+            git checkout -B gh-pages origin/gh-pages >/dev/null 2>&1
           else
-            git checkout --orphan gh-pages
+            git checkout --orphan gh-pages >/dev/null 2>&1
           fi
 
           find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
           cp -R ../out/. .
-
           touch .nojekyll
           printf '%s\n' 'dev.subwaybuildermodded.com' > CNAME
 
@@ -101,8 +100,11 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
-          else
-            git commit -m "Deploy dev site from ${GITHUB_SHA}"
-            git push origin gh-pages
+            exit 0
           fi
+
+          git commit -qm "Deploy dev site from ${GITHUB_SHA}"
+          echo "Commit created. Pushing to website-dev/gh-pages..."
+          git push --verbose origin gh-pages:gh-pages
+          echo "Push finished."
           
