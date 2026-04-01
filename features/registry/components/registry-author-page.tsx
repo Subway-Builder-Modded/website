@@ -116,7 +116,7 @@ function ListingsTable({
               </td>
               <td className={TABLE_CELL_CLS}>
                 <Link
-                  href={`/registry/${type}/${r.id}`}
+                  href={`/registry/${type === 'map' ? 'maps' : 'mods'}/${r.id}`}
                   className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
                   style={registryLinkStyle(color)}
                 >

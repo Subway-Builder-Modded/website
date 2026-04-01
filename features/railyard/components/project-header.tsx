@@ -1,13 +1,15 @@
 'use client';
 
-import { Download, ExternalLink, Globe, Users } from 'lucide-react';
+import { ChartLine, Download, ExternalLink, Globe, Users } from 'lucide-react';
 import { createElement } from 'react';
+import { useTheme } from 'next-themes';
 
 import { GalleryImage } from '@/features/railyard/components/gallery-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { getModeHex, PROJECT_COLOR_SCHEMES } from '@/config/theme/colors';
 import { getCountryFlagIcon } from '@/lib/railyard/flags';
-import { formatSourceQuality } from '@/lib/railyard/map-filter-values';
+import { formatDataQuality } from '@/lib/railyard/map-filter-values';
 import type { MapManifest, ModManifest, VersionInfo } from '@/types/registry';
 
 interface ProjectHeaderProps {
@@ -29,12 +31,14 @@ export function ProjectHeader({
   versionsLoading,
   totalDownloads,
 }: ProjectHeaderProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
   const mapItem = isMapManifest(item) ? item : null;
 
   const badges = mapItem
     ? [
         mapItem.location,
-        formatSourceQuality(mapItem.source_quality ?? ''),
+        formatDataQuality(mapItem.source_quality ?? ''),
         mapItem.level_of_detail,
         ...(mapItem.special_demand ?? []),
       ].filter((v): v is string => Boolean(v))
@@ -48,6 +52,17 @@ export function ProjectHeader({
   const handleOpenInRailyard = () => {
     window.location.href = `railyard://open?type=${encodeURIComponent(type)}&id=${encodeURIComponent(item.id)}`;
   };
+  const handleViewAnalytics = () => {
+    window.location.href = `/registry/maps/${encodeURIComponent(item.id)}`;
+  };
+  const registryAccent = getModeHex(
+    PROJECT_COLOR_SCHEMES.registry.accentColor,
+    isDark,
+  );
+  const registryText = getModeHex(
+    PROJECT_COLOR_SCHEMES.registry.textColorInverted,
+    isDark,
+  );
 
   return (
     <div className="flex gap-7">
@@ -143,14 +158,30 @@ export function ProjectHeader({
               Loading...
             </Button>
           ) : latestVersion ? (
-            <Button
-              size="sm"
-              className="!bg-[var(--suite-accent-light)] !text-[var(--suite-text-inverted-light)] border-transparent hover:!brightness-90 dark:!bg-[var(--suite-accent-dark)] dark:!text-[var(--suite-text-inverted-dark)]"
-              onPress={handleOpenInRailyard}
-            >
-              <Download className="h-4 w-4" />
-              Open in Railyard
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                size="sm"
+                className="!bg-[var(--suite-accent-light)] !text-[var(--suite-text-inverted-light)] border-transparent hover:!brightness-90 dark:!bg-[var(--suite-accent-dark)] dark:!text-[var(--suite-text-inverted-dark)]"
+                onPress={handleOpenInRailyard}
+              >
+                <Download className="h-4 w-4" />
+                Open in Railyard
+              </Button>
+              {type === 'maps' ? (
+                <Button
+                  size="sm"
+                  className="border-transparent hover:!brightness-95"
+                  style={{
+                    backgroundColor: registryAccent,
+                    color: registryText,
+                  }}
+                  onPress={handleViewAnalytics}
+                >
+                  <ChartLine className="h-4 w-4" />
+                  View Analytics
+                </Button>
+              ) : null}
+            </div>
           ) : null}
         </div>
       </div>

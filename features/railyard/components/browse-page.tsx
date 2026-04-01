@@ -89,7 +89,7 @@ export function BrowsePage() {
   const {
     modTagCounts,
     mapLocationCounts,
-    mapSourceQualityCounts,
+    mapDataQualityCounts,
     mapLevelOfDetailCounts,
     mapSpecialDemandCounts,
   } = useMemo(() => buildAssetListingCounts(mods, maps), [mods, maps]);
@@ -170,7 +170,7 @@ export function BrowsePage() {
         availableSpecialDemand={availableSpecialDemand}
         modTagCounts={modTagCounts}
         mapLocationCounts={mapLocationCounts}
-        mapSourceQualityCounts={mapSourceQualityCounts}
+        mapDataQualityCounts={mapDataQualityCounts}
         mapLevelOfDetailCounts={mapLevelOfDetailCounts}
         mapSpecialDemandCounts={mapSpecialDemandCounts}
         modCount={mods.length}

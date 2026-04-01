@@ -255,7 +255,7 @@ function PopulationTable({ rows }: { rows: PopulationRow[] }) {
                   </td>
                   <td className={TABLE_CELL_CLS}>
                     <Link
-                      href={`/registry/map/${row.id}`}
+                      href={`/registry/maps/${row.id}`}
                       className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
                       style={registryLinkStyle(MAP_COLOR)}
                     >
@@ -264,7 +264,7 @@ function PopulationTable({ rows }: { rows: PopulationRow[] }) {
                   </td>
                   <td className={`hidden ${TABLE_CELL_CLS} md:table-cell`}>
                     <Link
-                      href={`/registry/author/${encodeURIComponent(row.author)}`}
+                      href={`/registry/authors/${encodeURIComponent(row.author)}`}
                       className={REGISTRY_LINK_HOVER_CLS}
                       style={registryLinkStyle(MAP_COLOR)}
                     >

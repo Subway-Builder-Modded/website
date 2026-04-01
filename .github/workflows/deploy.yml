@@ -44,6 +44,7 @@ jobs:
       - name: Build (route discovery)
         env:
           GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
+          RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
       - name: Regenerate website analytics snapshot
@@ -54,6 +55,7 @@ jobs:
       - name: Build (final deploy output)
         env:
           GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
+          RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
       - name: Deploy to GitHub Pages

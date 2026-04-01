@@ -120,12 +120,6 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
         icon: FileSearchCorner,
       },
       {
-        id: 'railyard-world-map',
-        label: 'World Map',
-        href: '/railyard/world-map',
-        icon: Globe,
-      },
-      {
         id: 'railyard-docs',
         label: 'Docs',
         href: '/railyard/docs',
@@ -156,6 +150,12 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
         label: 'Trending',
         href: '/registry/trending',
         icon: TrendingUp,
+      },
+      {
+        id: 'registry-world-map',
+        label: 'World Map',
+        href: '/registry/world-map',
+        icon: Globe,
       },
     ],
   },

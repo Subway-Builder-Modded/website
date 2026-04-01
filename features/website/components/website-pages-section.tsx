@@ -76,10 +76,10 @@ function PageTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
+          {rows.map((row) => (
             <tr key={row.path} className={WEBSITE_TABLE_ROW_CLS}>
               <td className={WEBSITE_TABLE_CELL_CLS}>
-                <WebsiteRankBadge rank={index + 1} />
+                <WebsiteRankBadge rank={row.rank} />
               </td>
               <td className={WEBSITE_TABLE_CELL_CLS}>
                 <span className="block truncate font-medium text-foreground">
@@ -118,8 +118,17 @@ export function WebsitePagesSection({ data }: { data: WebsiteAnalyticsData }) {
   const filteredPages = useMemo<
     Array<WebsitePageRow & { rank: number }>
   >(() => {
+    const sortByVisits = (a: WebsitePageRow, b: WebsitePageRow) => {
+      const leftValue = a.pageviews[period];
+      const rightValue = b.pageviews[period];
+      if (leftValue === rightValue) return a.path.localeCompare(b.path);
+      return sort.direction === 'asc'
+        ? leftValue - rightValue
+        : rightValue - leftValue;
+    };
+
     const globallyRankedRows = [...data.pages]
-      .sort((a, b) => b.pageviews[period] - a.pageviews[period])
+      .sort(sortByVisits)
       .map((row, index) => ({ ...row, rank: index + 1 }));
 
     const trimmed = query.trim().toLowerCase();
@@ -129,15 +138,8 @@ export function WebsitePagesSection({ data }: { data: WebsiteAnalyticsData }) {
         : globallyRankedRows.filter((row) =>
             row.path.toLowerCase().includes(trimmed),
           );
-    const sortedRows = [...matchingRows].sort((left, right) => {
-      const leftValue = left.pageviews[period];
-      const rightValue = right.pageviews[period];
-      if (leftValue === rightValue) return left.rank - right.rank;
-      return sort.direction === 'asc'
-        ? leftValue - rightValue
-        : rightValue - leftValue;
-    });
-    return trimmed.length === 0 ? sortedRows.slice(0, 20) : sortedRows;
+
+    return trimmed.length === 0 ? matchingRows.slice(0, 20) : matchingRows;
   }, [data.pages, period, query, sort.direction]);
 
   const handleToggleVisitsSort = () => {

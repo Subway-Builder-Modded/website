@@ -33,11 +33,11 @@ function railyardListingHref(row: EnrichedTrendingRow): string {
 }
 
 function authorAnalyticsHref(row: EnrichedTrendingRow): string {
-  return `/registry/author/${encodeURIComponent(row.author)}`;
+  return `/registry/authors/${encodeURIComponent(row.author)}`;
 }
 
 function listingAnalyticsHref(row: EnrichedTrendingRow): string {
-  return `/registry/${row.listing_type}/${row.id}`;
+  return `/registry/${row.listing_type === 'map' ? 'maps' : 'mods'}/${row.id}`;
 }
 
 const FIRST_SNAPSHOT_DATE = '2026-03-11';

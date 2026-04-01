@@ -16,13 +16,8 @@ describe('resolveRegistryAnalyticsDir', () => {
     expect(resolved).toBe(envPath);
   });
 
-  it('falls back to public railyard cache before legacy locations', () => {
-    const cachePath = path.join(
-      cwd,
-      'public',
-      'railyard',
-      'registry-analytics',
-    );
+  it('falls back to public registry cache before legacy locations', () => {
+    const cachePath = path.join(cwd, 'public', 'registry', 'analytics');
     const legacyPath = path.join(cwd, 'The-Railyard', 'analytics');
     const resolved = resolveRegistryAnalyticsDir({
       cwd,

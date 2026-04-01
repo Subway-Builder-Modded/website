@@ -1,60 +1,23 @@
-import type { Metadata } from 'next';
-import {
-  loadAuthorDailyData,
-  loadRegistryAnalytics,
-} from '@/lib/registry-analytics';
-import { RegistryAuthorPage } from '@/features/registry/components/registry-author-page';
-import {
-  buildEmbedMetadata,
-  buildNoEmbedMetadata,
-} from '@/config/site/metadata';
+import { redirect } from 'next/navigation';
+import { loadRegistryAnalytics } from '@/lib/registry-analytics';
 
 export const dynamicParams = false;
 export const dynamic = 'force-static';
 
 export async function generateStaticParams() {
   const data = loadRegistryAnalytics();
-  const params = data.authors.map((a) => ({
-    author: a.author,
+  const params = data.authors.map((authorRow) => ({
+    author: authorRow.author,
   }));
   if (params.length > 0) return params;
-  // Static export fallback when analytics files are unavailable in CI.
   return [{ author: '__registry-data-unavailable__' }];
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ author: string }>;
-}): Promise<Metadata> {
-  const { author } = await params;
-  const data = loadRegistryAnalytics();
-  const authorRow = data.authors.find(
-    (a) => a.author.toLowerCase() === author.toLowerCase(),
-  );
-
-  if (!authorRow) {
-    return buildNoEmbedMetadata({
-      title: 'Not Found | Registry',
-      description: 'This author could not be found.',
-    });
-  }
-
-  return buildEmbedMetadata({
-    title: `${authorRow.author_alias?.trim() || authorRow.author} | Registry`,
-    description: `Registry stats for ${authorRow.author_alias?.trim() || authorRow.author} — ${authorRow.asset_count} listing${authorRow.asset_count !== 1 ? 's' : ''} with ${authorRow.total_downloads.toLocaleString()} total downloads.`,
-  });
-}
-
-export default async function RegistryAuthorRoute({
+export default async function RegistryAuthorSingularRedirect({
   params,
 }: {
   params: Promise<{ author: string }>;
 }) {
   const { author } = await params;
-  const data = loadRegistryAnalytics();
-  const dailyData = loadAuthorDailyData(author);
-  return (
-    <RegistryAuthorPage data={data} author={author} dailyData={dailyData} />
-  );
+  redirect(`/registry/authors/${encodeURIComponent(author)}`);
 }

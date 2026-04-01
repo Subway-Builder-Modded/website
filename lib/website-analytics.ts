@@ -292,8 +292,8 @@ function resolveWebsiteAnalyticsDir(): string {
   const envDir = process.env['WEBSITE_ANALYTICS_DIR']?.trim();
   const candidates = [
     envDir || '',
-    path.join(process.cwd(), 'public', 'website-analytics'),
-    path.join(process.cwd(), 'website-analytics'),
+    path.join(process.cwd(), 'public', 'website'),
+    path.join(process.cwd(), 'website'),
   ].filter(Boolean);
 
   for (const dir of candidates) {
@@ -302,7 +302,7 @@ function resolveWebsiteAnalyticsDir(): string {
     }
   }
 
-  return path.join(process.cwd(), 'public', 'website-analytics');
+  return path.join(process.cwd(), 'public', 'website');
 }
 
 const WEBSITE_ANALYTICS_DIR = resolveWebsiteAnalyticsDir();

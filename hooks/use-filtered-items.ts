@@ -34,7 +34,7 @@ export interface SearchFilterState {
   };
   map: {
     locations: string[];
-    sourceQuality: string[];
+    dataQuality: string[];
     levelOfDetail: string[];
     specialDemand: string[];
   };
@@ -49,7 +49,7 @@ interface AssetFilterState {
   };
   map: {
     locations: string[];
-    sourceQuality: string[];
+    dataQuality: string[];
     levelOfDetail: string[];
     specialDemand: string[];
   };
@@ -96,7 +96,7 @@ function createDefaultFilters(type: AssetType = 'map'): SearchFilterState {
     },
     map: {
       locations: [],
-      sourceQuality: [],
+      dataQuality: [],
       levelOfDetail: [],
       specialDemand: [],
     },
@@ -112,7 +112,7 @@ function cloneFilterState(state: SearchFilterState): SearchFilterState {
     },
     map: {
       locations: [...state.map.locations],
-      sourceQuality: [...state.map.sourceQuality],
+      dataQuality: [...state.map.dataQuality],
       levelOfDetail: [...state.map.levelOfDetail],
       specialDemand: [...state.map.specialDemand],
     },
@@ -132,7 +132,7 @@ function toAssetFilterState(
     },
     map: {
       locations: [...state.map.locations],
-      sourceQuality: [...state.map.sourceQuality],
+      dataQuality: [...state.map.dataQuality],
       levelOfDetail: [...state.map.levelOfDetail],
       specialDemand: [...state.map.specialDemand],
     },
@@ -199,7 +199,7 @@ function matchesMapAttributeFilters(
 
   return (
     matchesSingleValueFilter(item.item.location, filters.locations) &&
-    matchesSingleValueFilter(item.item.source_quality, filters.sourceQuality) &&
+    matchesSingleValueFilter(item.item.source_quality, filters.dataQuality) &&
     matchesSingleValueFilter(
       item.item.level_of_detail,
       filters.levelOfDetail,
@@ -313,8 +313,8 @@ function parsePersistedState(
         locations: Array.isArray(parsed.filters.map?.locations)
           ? parsed.filters.map.locations
           : [],
-        sourceQuality: Array.isArray(parsed.filters.map?.sourceQuality)
-          ? parsed.filters.map.sourceQuality
+        dataQuality: Array.isArray(parsed.filters.map?.dataQuality)
+          ? parsed.filters.map.dataQuality
           : [],
         levelOfDetail: Array.isArray(parsed.filters.map?.levelOfDetail)
           ? parsed.filters.map.levelOfDetail
@@ -465,7 +465,7 @@ export function useFilteredItems({
           },
           map: {
             locations: [...targetState.map.locations],
-            sourceQuality: [...targetState.map.sourceQuality],
+            dataQuality: [...targetState.map.dataQuality],
             levelOfDetail: [...targetState.map.levelOfDetail],
             specialDemand: [...targetState.map.specialDemand],
           },

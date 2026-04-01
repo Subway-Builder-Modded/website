@@ -16,20 +16,20 @@ export const LOCATION_TAGS = [
   'west-africa',
 ] as const;
 
-export const SOURCE_QUALITY_VALUES = [
+export const DATA_QUALITY_VALUES = [
   'low-quality',
   'medium-quality',
   'high-quality',
 ] as const;
 
-const SOURCE_QUALITY_LABELS: Record<string, string> = {
+const DATA_QUALITY_LABELS: Record<string, string> = {
   'low-quality': 'low-data-quality',
   'medium-quality': 'medium-data-quality',
   'high-quality': 'high-data-quality',
 };
 
-export function formatSourceQuality(value: string): string {
-  return SOURCE_QUALITY_LABELS[value] ?? value;
+export function formatDataQuality(value: string): string {
+  return DATA_QUALITY_LABELS[value] ?? value;
 }
 
 export const LEVEL_OF_DETAIL_VALUES = [

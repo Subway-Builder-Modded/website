@@ -12,7 +12,7 @@ interface MapListingMatches {
 export interface AssetListingCounts {
   modTagCounts: Record<string, number>;
   mapLocationCounts: Record<string, number>;
-  mapSourceQualityCounts: Record<string, number>;
+  mapDataQualityCounts: Record<string, number>;
   mapLevelOfDetailCounts: Record<string, number>;
   mapSpecialDemandCounts: Record<string, number>;
 }
@@ -56,7 +56,7 @@ export function buildAssetListingCounts(
     valuesByItem: maps.map((item) => [item.location]),
     dedupePerItem: false,
   });
-  const mapSourceQualityCounts = buildListingCounts({
+  const mapDataQualityCounts = buildListingCounts({
     valuesByItem: maps.map((item) => [item.source_quality]),
     dedupePerItem: false,
   });
@@ -71,7 +71,7 @@ export function buildAssetListingCounts(
   return {
     modTagCounts,
     mapLocationCounts,
-    mapSourceQualityCounts,
+    mapDataQualityCounts,
     mapLevelOfDetailCounts,
     mapSpecialDemandCounts,
   };

@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const ANALYTICS_DIR = path.join(ROOT, 'public', 'website-analytics');
+const ANALYTICS_DIR = path.join(ROOT, 'public', 'website');
 const VALID_PATHS_FILE = path.join(ANALYTICS_DIR, 'valid-paths.json');
 const PAGES_FILE = path.join(ANALYTICS_DIR, 'pages.json');
 const COUNTRIES_FILE = path.join(ANALYTICS_DIR, 'countries.json');

@@ -17,10 +17,10 @@ import type { SearchFilterState } from '@/hooks/use-filtered-items';
 import type { AssetType } from '@/lib/railyard/asset-types';
 import { filterVisibleListingValues } from '@/lib/railyard/listing-counts';
 import {
+  DATA_QUALITY_VALUES,
   LEVEL_OF_DETAIL_VALUES,
   LOCATION_TAGS,
-  SOURCE_QUALITY_VALUES,
-  formatSourceQuality,
+  formatDataQuality,
 } from '@/lib/railyard/map-filter-values';
 import { SEARCH_FILTER_EMPTY_LABELS } from '@/lib/railyard/search';
 import { cn } from '@/lib/utils';
@@ -38,7 +38,7 @@ interface SidebarFiltersProps {
   availableSpecialDemand: string[];
   modTagCounts: Record<string, number>;
   mapLocationCounts: Record<string, number>;
-  mapSourceQualityCounts: Record<string, number>;
+  mapDataQualityCounts: Record<string, number>;
   mapLevelOfDetailCounts: Record<string, number>;
   mapSpecialDemandCounts: Record<string, number>;
   modCount: number;
@@ -58,7 +58,7 @@ export function SidebarFilters({
   availableSpecialDemand,
   modTagCounts,
   mapLocationCounts,
-  mapSourceQualityCounts,
+  mapDataQualityCounts,
   mapLevelOfDetailCounts,
   mapSpecialDemandCounts,
   modCount,
@@ -160,16 +160,16 @@ export function SidebarFilters({
             }
           />
           <ChecklistFilterSection
-            title="Source Quality"
+            title="Data Quality"
             icon={BadgeCheck}
-            values={SOURCE_QUALITY_VALUES}
-            counts={mapSourceQualityCounts}
-            formatValue={formatSourceQuality}
-            selected={filters.map.sourceQuality}
+            values={DATA_QUALITY_VALUES}
+            counts={mapDataQualityCounts}
+            formatValue={formatDataQuality}
+            selected={filters.map.dataQuality}
             onChange={(values) =>
               onFiltersChange((prev) => ({
                 ...prev,
-                map: { ...prev.map, sourceQuality: values },
+                map: { ...prev.map, dataQuality: values },
               }))
             }
           />

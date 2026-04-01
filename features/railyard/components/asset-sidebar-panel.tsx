@@ -24,7 +24,7 @@ export interface AssetSidebarPanelProps {
   availableSpecialDemand: string[];
   modTagCounts: Record<string, number>;
   mapLocationCounts: Record<string, number>;
-  mapSourceQualityCounts: Record<string, number>;
+  mapDataQualityCounts: Record<string, number>;
   mapLevelOfDetailCounts: Record<string, number>;
   mapSpecialDemandCounts: Record<string, number>;
   modCount: number;

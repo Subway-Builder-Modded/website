@@ -658,7 +658,7 @@ export default function RailyardPage() {
                   icon={BookText}
                 />
                 <HeroIconLink
-                  href="/railyard/world-map"
+                  href="/registry/world-map"
                   ariaLabel={heroCopy.worldMapAriaLabel}
                   icon={Globe}
                 />
@@ -879,7 +879,7 @@ export default function RailyardPage() {
             <SectionHeader title="World Map" />
             <div className="mt-8">
               <Link
-                href="/railyard/world-map"
+                href="/registry/world-map"
                 className="group block rounded-xl border border-border bg-card/70 p-5 transition-all duration-200 hover:border-[var(--ry-accent)] hover:shadow-md hover:ring-1 hover:ring-[var(--ry-primary)]"
               >
                 <div className="flex items-center gap-3">

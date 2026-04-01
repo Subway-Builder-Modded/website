@@ -108,13 +108,6 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
         schemeId: 'railyard',
       },
       {
-        id: 'railyard-world-map',
-        title: 'World Map',
-        href: '/railyard/world-map',
-        icon: Globe,
-        schemeId: 'railyard',
-      },
-      {
         id: 'railyard-docs',
         title: 'Docs',
         href: '/railyard/docs',
@@ -150,6 +143,13 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
         title: 'Trending',
         href: '/registry/trending',
         icon: TrendingUp,
+        schemeId: 'registry',
+      },
+      {
+        id: 'registry-world-map',
+        title: 'World Map',
+        href: '/registry/world-map',
+        icon: Globe,
         schemeId: 'registry',
       },
     ],

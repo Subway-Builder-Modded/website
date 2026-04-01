@@ -11,7 +11,7 @@ import {
   assetTypeToListingPath,
 } from '@/lib/railyard/asset-types';
 import { getCountryFlagIcon } from '@/lib/railyard/flags';
-import { formatSourceQuality } from '@/lib/railyard/map-filter-values';
+import { formatDataQuality } from '@/lib/railyard/map-filter-values';
 import { MAX_CARD_BADGES } from '@/lib/railyard/search';
 import type { SearchViewMode } from '@/lib/railyard/search-view-mode';
 import { cn } from '@/lib/utils';
@@ -47,7 +47,7 @@ function buildItemCardPresentation(
   const mapBadges = isMap
     ? [
         item.location,
-        formatSourceQuality(item.source_quality ?? ''),
+        formatDataQuality(item.source_quality ?? ''),
         item.level_of_detail,
         ...(item.special_demand ?? []),
       ].filter((value): value is string => Boolean(value))

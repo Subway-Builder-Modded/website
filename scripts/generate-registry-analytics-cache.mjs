@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const OUTPUT_DIR = path.join(ROOT, 'public', 'railyard', 'registry-analytics');
+const OUTPUT_DIR = path.join(ROOT, 'public', 'registry', 'analytics');
 const META_FILE = path.join(OUTPUT_DIR, 'snapshot-meta.json');
 
 const REPO_OWNER = 'Subway-Builder-Modded';

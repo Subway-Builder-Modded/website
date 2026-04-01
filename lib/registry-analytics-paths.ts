@@ -15,7 +15,7 @@ export function resolveRegistryAnalyticsDir({
 }: ResolveRegistryAnalyticsDirArgs): string {
   const candidates = [
     envDir?.trim() || '',
-    path.join(cwd, 'public', 'railyard', 'registry-analytics'),
+    path.join(cwd, 'public', 'registry', 'analytics'),
     path.join(cwd, '..', 'The-Railyard', 'analytics'),
     path.join(cwd, 'The-Railyard', 'analytics'),
     path.join(cwd, 'analytics'),

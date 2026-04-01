@@ -11,7 +11,10 @@ import {
   TrendingUp,
   History,
   Trophy,
+  BadgeCheck,
+  Layers,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
   Stat,
   StatDescription,
@@ -47,6 +50,7 @@ import {
 } from './registry-shared';
 import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
 import { usePersistedState } from '@/lib/use-persisted-state';
+import { RegistryMapPreview } from '@/features/registry/components/registry-map-preview';
 
 const STAT_HEADER_CLS =
   'text-xs font-semibold uppercase tracking-wider text-muted-foreground';
@@ -267,7 +271,7 @@ function SiblingsSection({
               <tr key={s.id} className={TABLE_ROW_CLS}>
                 <td className={TABLE_CELL_CLS}>
                   <Link
-                    href={`/registry/${s.listing_type}/${s.id}`}
+                    href={`/registry/${s.listing_type === 'map' ? 'maps' : 'mods'}/${s.id}`}
                     className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
                     style={registryLinkStyle(getListingColor(s.listing_type))}
                   >
@@ -301,11 +305,16 @@ export function RegistryListingPage({
   type,
   id,
   dailyData,
+  mapMetadata,
 }: {
   data: RegistryAnalyticsData;
   type: ListingType;
   id: string;
   dailyData: DailyDataPoint[];
+  mapMetadata?: {
+    dataQuality?: string | null;
+    levelOfDetail?: string | null;
+  } | null;
 }) {
   const analytics = getListingAnalytics(data, type, id, dailyData);
   const listing = analytics.allTime;
@@ -329,7 +338,44 @@ export function RegistryListingPage({
       </RegistryDetailShell>
     );
   }
-  const authorHref = `/registry/author/${encodeURIComponent(listing.author)}`;
+  const authorHref = `/registry/authors/${encodeURIComponent(listing.author)}`;
+  const normalizeQualityValue = (value?: string | null) => {
+    const lower = (value ?? '').trim().toLowerCase();
+    if (!lower) return null;
+    if (lower.includes('high')) return 'High';
+    if (lower.includes('medium')) return 'Medium';
+    if (lower.includes('low')) return 'Low';
+    return null;
+  };
+  const normalizedDataQuality = normalizeQualityValue(mapMetadata?.dataQuality);
+  const normalizedDetail = normalizeQualityValue(mapMetadata?.levelOfDetail);
+  const metadataBadges =
+    type === 'map'
+      ? [
+          normalizedDetail
+            ? {
+                icon: Layers,
+                value: normalizedDetail,
+                tooltip: 'Level of Detail',
+              }
+            : null,
+          normalizedDataQuality
+            ? {
+                icon: BadgeCheck,
+                value: normalizedDataQuality,
+                tooltip: 'Data Quality',
+              }
+            : null,
+        ].filter(
+          (
+            value,
+          ): value is {
+            icon: LucideIcon;
+            value: string;
+            tooltip: string;
+          } => Boolean(value),
+        )
+      : [];
 
   return (
     <RegistryDetailShell
@@ -348,6 +394,7 @@ export function RegistryListingPage({
       }
       type={type}
       snapshotLabel={data.snapshotLabel}
+      metadataBadges={metadataBadges}
       actions={
         <>
           <TypeBadge type={type} />
@@ -439,6 +486,19 @@ export function RegistryListingPage({
         </Stat>
       </div>
 
+      {type === 'map' && (
+        <section className="mb-12">
+          <PopulationCard analytics={analytics} />
+
+          <SectionHeader
+            icon={MapPin}
+            title="Population Statistics"
+            accent={color}
+          />
+          <RegistryMapPreview mapId={id} />
+        </section>
+      )}
+
       {/* Daily download history */}
       {analytics.dailyData.length > 0 && (
         <section className="mb-12">
@@ -493,7 +553,6 @@ export function RegistryListingPage({
         </div>
       </section>
 
-      <PopulationCard analytics={analytics} />
       <SiblingsSection analytics={analytics} type={type} />
     </RegistryDetailShell>
   );

@@ -170,7 +170,7 @@ function AuthorRow({
       </td>
       <td className={TABLE_CELL_CLS}>
         <Link
-          href={`/registry/author/${encodeURIComponent(row.author)}`}
+          href={`/registry/authors/${encodeURIComponent(row.author)}`}
           className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
           style={registryLinkStyle('var(--primary)')}
         >
@@ -211,6 +211,128 @@ function AuthorRow({
   );
 }
 
+function AuthorSearchResultsTable({
+  rows,
+  sortKey,
+  sortDirection,
+  onToggleSort,
+}: {
+  rows: RegistryAuthorRow[];
+  sortKey: AuthorSortKey;
+  sortDirection: 'asc' | 'desc';
+  onToggleSort: (key: AuthorSortKey) => void;
+}) {
+  return (
+    <div className="overflow-x-auto rounded-lg border border-border">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-border bg-muted/40">
+            <th className={TABLE_HEADER_CLS}>Author</th>
+            <th className={TABLE_HEADER_RIGHT_CLS}>
+              <SortableNumberHeader
+                label="Downloads"
+                isActive={sortKey === 'total_downloads'}
+                direction={sortDirection}
+                accentColor="var(--primary)"
+                onToggle={() => onToggleSort('total_downloads')}
+              />
+            </th>
+            <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
+              <SortableNumberHeader
+                label="Maps Published"
+                isActive={sortKey === 'map_count'}
+                direction={sortDirection}
+                accentColor={MAP_COLOR}
+                onToggle={() => onToggleSort('map_count')}
+              />
+            </th>
+            <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
+              <SortableNumberHeader
+                label="Mods Published"
+                isActive={sortKey === 'mod_count'}
+                direction={sortDirection}
+                accentColor={MOD_COLOR}
+                onToggle={() => onToggleSort('mod_count')}
+              />
+            </th>
+            <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} md:table-cell`}>
+              <SortableNumberHeader
+                label="Total Assets Published"
+                isActive={sortKey === 'asset_count'}
+                direction={sortDirection}
+                accentColor="var(--primary)"
+                onToggle={() => onToggleSort('asset_count')}
+              />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.length === 0 ? (
+            <tr>
+              <td
+                colSpan={5}
+                className="px-3 py-6 text-center text-sm text-muted-foreground"
+              >
+                No authors match your search.
+              </td>
+            </tr>
+          ) : (
+            rows.map((row) => (
+              <tr key={row.author} className={TABLE_ROW_CLS}>
+                <td className={TABLE_CELL_CLS}>
+                  <Link
+                    href={`/registry/authors/${encodeURIComponent(row.author)}`}
+                    className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
+                    style={registryLinkStyle('var(--primary)')}
+                  >
+                    {getAuthorDisplayName(row)}
+                  </Link>
+                </td>
+                <td
+                  className={`${TABLE_CELL_NUMERIC_CLS} ${sortKey === 'total_downloads' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                  style={
+                    sortKey === 'total_downloads'
+                      ? { color: 'var(--primary)' }
+                      : undefined
+                  }
+                >
+                  {row.total_downloads.toLocaleString()}
+                </td>
+                <td
+                  className={`hidden ${TABLE_CELL_NUMERIC_CLS} sm:table-cell ${sortKey === 'map_count' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                  style={
+                    sortKey === 'map_count' ? { color: MAP_COLOR } : undefined
+                  }
+                >
+                  {row.map_count}
+                </td>
+                <td
+                  className={`hidden ${TABLE_CELL_NUMERIC_CLS} sm:table-cell ${sortKey === 'mod_count' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                  style={
+                    sortKey === 'mod_count' ? { color: MOD_COLOR } : undefined
+                  }
+                >
+                  {row.mod_count}
+                </td>
+                <td
+                  className={`hidden ${TABLE_CELL_NUMERIC_CLS} md:table-cell ${sortKey === 'asset_count' ? 'font-black' : 'font-medium text-muted-foreground'}`}
+                  style={
+                    sortKey === 'asset_count'
+                      ? { color: 'var(--primary)' }
+                      : undefined
+                  }
+                >
+                  {row.asset_count}
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
   const [query, setQuery] = useState('');
   const [sort, setSort] = usePersistedState<AuthorSortState>(
@@ -237,6 +359,7 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
     });
     return ordered;
   }, [filtered, sort.direction, sort.key]);
+  const isSearching = query.trim().length > 0;
   const visible = sorted.slice(0, MAX_AUTHORS);
   const activeMetricLabel =
     sort.key === 'map_count'
@@ -264,11 +387,17 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
   return (
     <div>
       <div className="mb-4 rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Top 10 by {activeMetricLabel}
-        </p>
+        {isSearching ? (
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Search Results by {activeMetricLabel}
+          </p>
+        ) : (
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Top 10 by {activeMetricLabel}
+          </p>
+        )}
         <AuthorsMetricChart
-          rows={sorted}
+          rows={isSearching ? sorted : visible}
           metricKey={sort.key}
           metricLabel={activeMetricLabel}
           accentColor={activeMetricColor}
@@ -282,75 +411,98 @@ function AuthorsTable({ authors }: { authors: RegistryAuthorRow[] }) {
         className="mb-3"
       />
 
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted/40">
-              <th className={TABLE_HEADER_CLS}>#</th>
-              <th className={TABLE_HEADER_CLS}>Author</th>
-              <th className={TABLE_HEADER_RIGHT_CLS}>
-                <SortableNumberHeader
-                  label="Downloads"
-                  isActive={sort.key === 'total_downloads'}
-                  direction={sort.direction}
-                  accentColor="var(--primary)"
-                  onToggle={makeSortToggle('total_downloads')}
-                />
-              </th>
-              <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
-                <SortableNumberHeader
-                  label="Maps Published"
-                  isActive={sort.key === 'map_count'}
-                  direction={sort.direction}
-                  accentColor={MAP_COLOR}
-                  onToggle={makeSortToggle('map_count')}
-                />
-              </th>
-              <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}>
-                <SortableNumberHeader
-                  label="Mods Published"
-                  isActive={sort.key === 'mod_count'}
-                  direction={sort.direction}
-                  accentColor={MOD_COLOR}
-                  onToggle={makeSortToggle('mod_count')}
-                />
-              </th>
-              <th className={`hidden ${TABLE_HEADER_RIGHT_CLS} md:table-cell`}>
-                <SortableNumberHeader
-                  label="Total Assets Published"
-                  isActive={sort.key === 'asset_count'}
-                  direction={sort.direction}
-                  accentColor="var(--primary)"
-                  onToggle={makeSortToggle('asset_count')}
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {visible.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="px-3 py-6 text-center text-sm text-muted-foreground"
+      {isSearching ? (
+        <AuthorSearchResultsTable
+          rows={sorted}
+          sortKey={sort.key}
+          sortDirection={sort.direction}
+          onToggleSort={(key) => {
+            setSort((previous) => ({
+              key,
+              direction:
+                previous.key === key && previous.direction === 'desc'
+                  ? 'asc'
+                  : 'desc',
+            }));
+          }}
+        />
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/40">
+                <th className={TABLE_HEADER_CLS}>#</th>
+                <th className={TABLE_HEADER_CLS}>Author</th>
+                <th className={TABLE_HEADER_RIGHT_CLS}>
+                  <SortableNumberHeader
+                    label="Downloads"
+                    isActive={sort.key === 'total_downloads'}
+                    direction={sort.direction}
+                    accentColor="var(--primary)"
+                    onToggle={makeSortToggle('total_downloads')}
+                  />
+                </th>
+                <th
+                  className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}
                 >
-                  No authors match your search.
-                </td>
+                  <SortableNumberHeader
+                    label="Maps Published"
+                    isActive={sort.key === 'map_count'}
+                    direction={sort.direction}
+                    accentColor={MAP_COLOR}
+                    onToggle={makeSortToggle('map_count')}
+                  />
+                </th>
+                <th
+                  className={`hidden ${TABLE_HEADER_RIGHT_CLS} sm:table-cell`}
+                >
+                  <SortableNumberHeader
+                    label="Mods Published"
+                    isActive={sort.key === 'mod_count'}
+                    direction={sort.direction}
+                    accentColor={MOD_COLOR}
+                    onToggle={makeSortToggle('mod_count')}
+                  />
+                </th>
+                <th
+                  className={`hidden ${TABLE_HEADER_RIGHT_CLS} md:table-cell`}
+                >
+                  <SortableNumberHeader
+                    label="Total Assets Published"
+                    isActive={sort.key === 'asset_count'}
+                    direction={sort.direction}
+                    accentColor="var(--primary)"
+                    onToggle={makeSortToggle('asset_count')}
+                  />
+                </th>
               </tr>
-            ) : (
-              visible.map((a, index) => (
-                <AuthorRow
-                  key={a.author}
-                  row={a}
-                  displayRank={index + 1}
-                  sortKey={sort.key}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {visible.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-3 py-6 text-center text-sm text-muted-foreground"
+                  >
+                    No authors match your search.
+                  </td>
+                </tr>
+              ) : (
+                visible.map((a, index) => (
+                  <AuthorRow
+                    key={a.author}
+                    row={a}
+                    displayRank={index + 1}
+                    sortKey={sort.key}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {!query.trim() && sorted.length > MAX_AUTHORS && (
+      {!isSearching && sorted.length > MAX_AUTHORS && (
         <p className="mt-2 text-center text-xs text-muted-foreground">
           Showing {MAX_AUTHORS} of {sorted.length} authors. Use search to find
           more.
