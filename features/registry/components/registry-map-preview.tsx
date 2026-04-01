@@ -135,15 +135,15 @@ const METRIC_ORDER: MetricId[] = [
 ];
 
 const HEAT_COLORS = [
-  '#130f2e',
-  '#26135f',
-  '#4a1b9d',
-  '#7c29bf',
-  '#b43bb8',
-  '#e95f8f',
-  '#f78a5b',
-  '#f7bc74',
-  '#fff3bf',
+  '#0a1220',
+  '#0f2f5f',
+  '#1756a9',
+  '#1c7ed6',
+  '#339af0',
+  '#4dabf7',
+  '#74c0fc',
+  '#a5d8ff',
+  '#e7f5ff',
 ];
 
 const THEME_COLORS: Record<ResolvedTheme, SubwayThemeColors> = {
@@ -669,8 +669,8 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
               className={cn(
                 'group rounded-lg border px-3 py-2 text-left transition-all',
                 isActive
-                  ? 'border-[#7c29bf] bg-[#2a1a4d]/65 text-foreground shadow-[0_0_0_1px_rgba(124,41,191,0.35)]'
-                  : 'border-border/70 bg-card/65 text-muted-foreground hover:border-[#7c29bf]/60 hover:bg-[#2a1a4d]/65 hover:text-foreground',
+                  ? 'border-[#1c7ed6] bg-[#10243f]/65 text-foreground shadow-[0_0_0_1px_rgba(28,126,214,0.35)]'
+                  : 'border-border/70 bg-card/65 text-muted-foreground hover:border-[#1c7ed6]/60 hover:bg-[#10243f]/65 hover:text-foreground',
               )}
             >
               <p className="text-[0.66rem] font-bold uppercase tracking-[0.16em]">
@@ -696,7 +696,12 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
               <span>{METRIC_CONFIG[activeMetric].label}</span>
               <span>{summaryText}</span>
             </div>
-            <div className="mt-2 h-2 w-full rounded-sm bg-gradient-to-r from-[#130f2e] via-[#b43bb8] to-[#fff3bf]" />
+            <div
+              className="mt-2 h-2 w-full rounded-sm"
+              style={{
+                backgroundImage: `linear-gradient(to right, ${HEAT_COLORS[0]}, ${HEAT_COLORS[4]}, ${HEAT_COLORS[HEAT_COLORS.length - 1]})`,
+              }}
+            />
             <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
               <span>{formatMetricValue(activeMetric, legendMin)}</span>
               <span>{formatMetricValue(activeMetric, legendMax)}</span>
