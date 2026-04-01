@@ -50,7 +50,6 @@ Alternatively, the status page has an HTML comment visible to anyone who views s
 Players read the Line 9 suspension advisory. It reads formally and explains that:
 - Line 9 is placed on **Amber Retention** (not cancelled)
 - All transmissions are encoded with **Service Key 9**
-- The Signal Codebook holds the decoding reference
 
 Scrolling to **Appendix A**, players see:
 
@@ -76,9 +75,9 @@ The hidden page confirms this is the "retained internal registry" for Line 9. It
 WRWN-JVKNA-URWN
 ```
 
-With the instruction: "Decode using Service Key 9 — use the Signal Codebook."
+With the instruction: "Decode using Service Key 9."
 
-Players open `/odl/records/signal-codebook.html`, which provides a clean two-column table:
+Players open `/odl/records/signal-codebook.html`, which provides a caesar cipher decoder:
 
 | Encoded | Original |
 |---------|----------|
@@ -147,7 +146,7 @@ S→J  T→K  U→L  V→M  W→N  X→O  Y→P  Z→Q
 
 - All pages are fully static (no server-side logic)
 - The terminal validation runs entirely client-side in `js/terminal.js`
-- The puzzle does not require any external tools — the Signal Codebook is provided in-world
+- The puzzle does not require any external tools
 - Dashes and spaces in the terminal input are stripped before comparison; any of
   `NINE-AMBER-LINE`, `NINE AMBER LINE`, `NINEAMBERLINE` are accepted
 
