@@ -277,10 +277,12 @@ export function useRegistry(): RegistryState {
 
         const filteredMods = modsWithLastUpdated.filter(
           (manifest) =>
+            !manifest.test &&
             modsIntegrity.listings?.[manifest.id]?.has_complete_version,
         );
         const filteredMaps = mapsWithLastUpdated.filter(
           (manifest) =>
+            !manifest.test &&
             mapsIntegrity.listings?.[manifest.id]?.has_complete_version,
         );
 

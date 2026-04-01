@@ -16,6 +16,7 @@ export interface ModManifest {
   gallery?: string[];
   source?: string;
   update?: UpdateConfig;
+  test?: boolean;
 }
 
 export interface MapManifest extends ModManifest {
