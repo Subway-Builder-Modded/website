@@ -464,7 +464,6 @@ function formatCoord(value: number | null) {
 export function RegistryMapPreview({ mapId }: { mapId: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapInstance | null>(null);
-  const activeMetricRef = useRef<MetricId>('residentCount');
   const { resolvedTheme } = useTheme();
   const [snapshot, setSnapshot] = useState<GridSnapshot | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'empty' | 'error'>(
@@ -472,11 +471,6 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
   );
   const [activeMetric, setActiveMetric] = useState<MetricId>('residentCount');
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
-  const [mapReadyNonce, setMapReadyNonce] = useState(0);
-
-  useEffect(() => {
-    activeMetricRef.current = activeMetric;
-  }, [activeMetric]);
 
   const mapTheme: ResolvedTheme = isMapTheme(resolvedTheme)
     ? resolvedTheme
@@ -568,8 +562,7 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
                 type: 'fill',
                 source: GRID_SOURCE_ID,
                 layout: {
-                  visibility:
-                    metricId === activeMetricRef.current ? 'visible' : 'none',
+                  visibility: metricId === METRIC_ORDER[0] ? 'visible' : 'none',
                 },
                 paint: {
                   'fill-color': [
@@ -578,17 +571,7 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
                     ['coalesce', ['get', metricId], 0],
                     ...stops.flat(),
                   ],
-                  'fill-opacity': [
-                    'interpolate',
-                    ['linear'],
-                    ['coalesce', ['get', metricId], 0],
-                    0,
-                    0,
-                    Math.max(recommendedMax * 0.1, 1),
-                    0.45,
-                    recommendedMax,
-                    0.95,
-                  ],
+                  'fill-opacity': 0.8
                 },
               });
             }
@@ -598,29 +581,19 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
               type: 'line',
               source: GRID_SOURCE_ID,
               paint: {
-                'line-color': 'rgba(255,255,255,0.17)',
+                'line-color': 'rgb(0, 0, 0)',
                 'line-width': [
                   'interpolate',
                   ['linear'],
                   ['zoom'],
                   7,
-                  0.3,
-                  10,
-                  0.6,
-                  13,
-                  0.85,
-                ],
-                'line-opacity': [
-                  'interpolate',
-                  ['linear'],
-                  ['zoom'],
-                  7,
                   0.25,
-                  11,
-                  0.4,
-                  14,
+                  10,
                   0.5,
+                  13,
+                  0.75,
                 ],
+                'line-opacity': 1
               },
             });
           }
@@ -632,7 +605,6 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
             ],
             { padding: 20, duration: 0, maxZoom: 12 },
           );
-          setMapReadyNonce((previous) => previous + 1);
         };
 
         map.on('load', handleLoad);
@@ -716,7 +688,7 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
       map.off('mousemove', handleMove);
       map.off('mouseleave', handleLeave);
     };
-  }, [activeMetric, mapReadyNonce, status, snapshot]);
+  }, [activeMetric, status, snapshot]);
 
   const metricStats = snapshot?.metrics?.[activeMetric];
   const legendMin = metricStats?.min ?? 0;
@@ -800,21 +772,20 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
           </div>
           {hoverInfo ? (
             <div
-              className="pointer-events-none absolute z-40 grid w-[15rem] items-start rounded-lg bg-overlay/75 p-3 py-2 text-xs text-overlay-fg ring ring-current/10 backdrop-blur-lg"
+              className="pointer-events-none absolute z-40 w-[15rem] rounded-lg border border-border/70 bg-[#0b0f17]/94 p-3 backdrop-blur-sm"
               style={{
                 left: `${hoverInfo.x}px`,
                 top: `${hoverInfo.y}px`,
                 transform: 'translate(14px, 14px)',
               }}
             >
-              <p className="text-[0.66rem] font-bold uppercase tracking-[0.16em] text-muted-fg">
+              <p className="text-[0.66rem] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 Grid Cell
               </p>
-              <p className="mt-1 text-muted-fg">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {formatCoord(hoverInfo.centroidLat)},{' '}
                 {formatCoord(hoverInfo.centroidLng)}
               </p>
-              <span className="mt-2 mb-1 block h-px w-full bg-current/10" />
               <div className="mt-2 space-y-1.5">
                 {METRIC_ORDER.map((metricId) => {
                   const isActive = metricId === activeMetric;
@@ -824,13 +795,11 @@ export function RegistryMapPreview({ mapId }: { mapId: string }) {
                       className={cn(
                         'flex items-center justify-between text-xs',
                         isActive
-                          ? 'font-semibold text-overlay-fg'
-                          : 'text-muted-fg',
+                          ? 'font-semibold text-foreground'
+                          : 'text-muted-foreground',
                       )}
                     >
-                      <span className="text-[0.66rem] font-bold uppercase tracking-[0.14em]">
-                        {METRIC_CONFIG[metricId].shortLabel}
-                      </span>
+                      <span>{METRIC_CONFIG[metricId].shortLabel}</span>
                       <span>
                         {formatMetricValue(
                           metricId,
