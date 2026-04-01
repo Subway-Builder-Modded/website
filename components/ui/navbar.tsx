@@ -320,9 +320,9 @@ const NavbarMobile = ({
       ref={ref}
       data-slot="navbar-mobile"
       className={twMerge(
-        'group/navbar-mobile flex items-center gap-x-2 px-4 py-2.5 md:hidden',
-        'group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-sidebar',
-        'group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:top-0 group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-b',
+        'group/navbar-mobile flex items-center gap-x-2 px-4 py-2.5 md:hidden z-50',
+        'group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-background/90 group-has-data-navbar-sticky/navbar:backdrop-blur-md group-has-data-navbar-sticky/navbar:shadow-sm',
+        'group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:top-0 group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-b group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-border/70',
         'group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:bottom-0 group-has-data-navbar-sticky/navbar:group-has-placement-bottom/navbar:border-t',
         className,
       )}

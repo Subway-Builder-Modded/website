@@ -17,6 +17,8 @@ export { SIDEBAR_CONTENT_OFFSET };
 export interface AssetSidebarPanelProps {
   open: boolean;
   onToggle: () => void;
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
   filters: SearchFilterState;
   onFiltersChange: Dispatch<SetStateAction<SearchFilterState>>;
   onTypeChange: (type: AssetType) => void;
@@ -43,6 +45,8 @@ const TYPE_BUTTONS: Array<{
 export function AssetSidebarPanel({
   open,
   onToggle,
+  mobileOpen,
+  onMobileOpenChange,
   filters,
   onFiltersChange,
   onTypeChange,
@@ -84,6 +88,8 @@ export function AssetSidebarPanel({
     <SidebarPanel
       open={open}
       onToggle={onToggle}
+      mobileOpen={mobileOpen}
+      onMobileOpenChange={onMobileOpenChange}
       ariaLabel="Browse filters"
       filters={filters}
       collapsedContent={collapsedContent}

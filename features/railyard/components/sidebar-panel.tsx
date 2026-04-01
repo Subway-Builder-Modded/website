@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import {
   type CSSProperties,
   type ReactNode,
@@ -12,12 +12,21 @@ import {
 
 import { cn } from '@/lib/utils';
 import type { SearchFilterState } from '@/hooks/use-filtered-items';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 
 const SIDEBAR_WIDTH_REM = 15.5;
 const SIDEBAR_GAP_REM = 1.5;
 const EDGE_GAP_PX = 24;
 
 export const SIDEBAR_CONTENT_OFFSET = `${SIDEBAR_WIDTH_REM + SIDEBAR_GAP_REM}rem`;
+
+const MOBILE_SIDEBAR_TOP = 'var(--app-navbar-offset, 5.5rem)';
 
 function getNavbarOffsetPx(): number {
   return (
@@ -32,6 +41,8 @@ function getNavbarOffsetPx(): number {
 export interface SidebarPanelProps {
   open: boolean;
   onToggle: () => void;
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
   ariaLabel: string;
   filters: SearchFilterState;
   children: ReactNode;
@@ -41,11 +52,25 @@ export interface SidebarPanelProps {
 export function SidebarPanel({
   open,
   onToggle,
+  mobileOpen = false,
+  onMobileOpenChange,
   ariaLabel,
   filters,
   children,
   collapsedContent,
 }: SidebarPanelProps) {
+  const [isMobileResolved, setIsMobileResolved] = useState<boolean | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setIsMobileResolved(mql.matches);
+    onChange();
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
   const panelRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -55,6 +80,8 @@ export function SidebarPanel({
   const [thumbTop, setThumbTop] = useState(0);
 
   useLayoutEffect(() => {
+    if (isMobileResolved !== false) return;
+
     const mainEl =
       document.querySelector<HTMLElement>('[data-sidebar-host]') ??
       document.querySelector<HTMLElement>('main');
@@ -126,7 +153,7 @@ export function SidebarPanel({
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', updatePosition);
     };
-  }, []);
+  }, [isMobileResolved]);
 
   const lastFiltersRef = useRef<SearchFilterState | null>(null);
   useEffect(() => {
@@ -140,6 +167,8 @@ export function SidebarPanel({
   }, [filters, open]);
 
   useLayoutEffect(() => {
+    if (isMobileResolved !== false) return;
+
     const scrollEl = scrollRef.current;
     if (!scrollEl || !open) {
       setShowScrollThumb(false);
@@ -176,7 +205,66 @@ export function SidebarPanel({
       window.removeEventListener('resize', updateThumb);
       ro.disconnect();
     };
-  }, [filters, open]);
+  }, [filters, open, isMobileResolved]);
+
+  if (isMobileResolved === null) {
+    return null;
+  }
+
+  if (isMobileResolved) {
+    return (
+      <Sheet
+        isOpen={mobileOpen}
+        onOpenChange={onMobileOpenChange ?? (() => {})}
+      >
+        <SheetContent
+          side="left"
+          closeButton={false}
+          isFloat={false}
+          overlayClassName="bg-black/10 backdrop-blur-sm"
+          className={cn(
+            'inset-y-auto h-[calc(100svh-var(--browse-mobile-sidebar-top))]',
+            'w-72 max-w-none bg-background p-0',
+            'entering:duration-200 entering:ease-out exiting:duration-160 exiting:ease-in',
+            '[&>button]:hidden',
+          )}
+          style={
+            {
+              '--browse-mobile-sidebar-top': MOBILE_SIDEBAR_TOP,
+              top: MOBILE_SIDEBAR_TOP,
+            } as CSSProperties
+          }
+          aria-label={ariaLabel}
+        >
+          <SheetHeader className="sr-only">
+            <SheetTitle>Browse filters</SheetTitle>
+            <SheetDescription>Filter browse results</SheetDescription>
+          </SheetHeader>
+          <div className="flex h-full flex-col overflow-hidden">
+            <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-semibold text-muted-foreground">
+                  Filters
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => onMobileOpenChange?.(false)}
+                aria-label="Close filters"
+                className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-accent/45 hover:text-primary"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+              {children}
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
 
   const panelStyle = {
     position: 'fixed' as const,

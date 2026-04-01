@@ -65,8 +65,8 @@ export function ProjectHeader({
   );
 
   return (
-    <div className="flex gap-7">
-      <div className="relative h-[10rem] w-[10rem] shrink-0 overflow-hidden rounded-xl bg-muted border border-border/50">
+    <div className="flex flex-col gap-5 sm:flex-row sm:gap-7">
+      <div className="relative h-[7rem] w-[7rem] shrink-0 overflow-hidden rounded-xl bg-muted border border-border/50 sm:h-[10rem] sm:w-[10rem]">
         <GalleryImage
           type={type}
           id={item.id}
@@ -75,10 +75,10 @@ export function ProjectHeader({
         />
       </div>
 
-      <div className="flex min-w-0 flex-1 items-start justify-between gap-4 pt-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:pt-1">
         <div className="flex min-w-0 flex-col gap-2.5">
           <div>
-            <h1 className="text-4xl font-bold leading-tight text-foreground">
+            <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-4xl">
               {item.name}
             </h1>
             {mapItem?.city_code && (
@@ -152,7 +152,7 @@ export function ProjectHeader({
           )}
         </div>
 
-        <div className="shrink-0 pt-6">
+        <div className="shrink-0 sm:pt-6">
           {versionsLoading ? (
             <Button size="sm" isDisabled>
               Loading...

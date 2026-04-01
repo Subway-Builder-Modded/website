@@ -1,7 +1,12 @@
 'use client';
 
-import { Compass, SearchX } from 'lucide-react';
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { Compass, SearchX, SlidersHorizontal } from 'lucide-react';
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import {
@@ -18,6 +23,7 @@ import { SearchBar } from '@/features/railyard/components/search-bar';
 import { SortSelect } from '@/features/railyard/components/sort-select';
 import { ViewModeToggle } from '@/features/railyard/components/view-mode-toggle';
 import { createRandomSeed, useFilteredItems } from '@/hooks/use-filtered-items';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { preloadGalleryImage } from '@/hooks/use-gallery-image';
 import { useRegistry } from '@/hooks/use-registry';
 import { buildAssetListingCounts } from '@/lib/railyard/listing-counts';
@@ -51,6 +57,9 @@ export function BrowsePage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const queryType = normalizeType(searchParams.get('type'));
+
+  const isMobile = useIsMobile();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -163,6 +172,8 @@ export function BrowsePage() {
       <AssetSidebarPanel
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        mobileOpen={mobileSidebarOpen}
+        onMobileOpenChange={setMobileSidebarOpen}
         filters={filters}
         onFiltersChange={setFilters}
         onTypeChange={setType}
@@ -178,12 +189,18 @@ export function BrowsePage() {
       />
 
       <div
-        className="relative z-10 space-y-5"
-        style={{
-          paddingLeft: sidebarOpen ? SIDEBAR_CONTENT_OFFSET : '0px',
-          transition: 'padding-left 200ms ease-out',
-          minHeight: 'calc(100vh - var(--app-navbar-offset))',
-        }}
+        className={cn(
+          'relative z-10 space-y-5 transition-[padding-left] duration-200 ease-out',
+          sidebarOpen && !isMobile
+            ? 'md:pl-[var(--browse-sidebar-offset)]'
+            : '',
+        )}
+        style={
+          {
+            '--browse-sidebar-offset': SIDEBAR_CONTENT_OFFSET,
+            minHeight: 'calc(100vh - var(--app-navbar-offset))',
+          } as React.CSSProperties
+        }
       >
         <PageHeader
           icon={Compass}
@@ -202,26 +219,36 @@ export function BrowsePage() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm text-muted-foreground">
-              {loading ? (
-                <span className="inline-block h-4 w-24 animate-pulse rounded bg-muted" />
-              ) : (
-                <>
-                  <span className="font-medium text-foreground">
-                    {totalResults}
-                  </span>{' '}
-                  result{totalResults !== 1 ? 's' : ''}
-                  {filters.query && (
-                    <span className="ml-1">
-                      for{' '}
-                      <span className="italic">
-                        &quot;{filters.query}&quot;
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setMobileSidebarOpen(true)}
+                className="md:hidden flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/90 px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-accent/45 hover:text-primary"
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5 shrink-0" />
+                Filters
+              </button>
+              <p className="text-sm text-muted-foreground">
+                {loading ? (
+                  <span className="inline-block h-4 w-24 animate-pulse rounded bg-muted" />
+                ) : (
+                  <>
+                    <span className="font-medium text-foreground">
+                      {totalResults}
+                    </span>{' '}
+                    result{totalResults !== 1 ? 's' : ''}
+                    {filters.query && (
+                      <span className="ml-1">
+                        for{' '}
+                        <span className="italic">
+                          &quot;{filters.query}&quot;
+                        </span>
                       </span>
-                    </span>
-                  )}
-                </>
-              )}
-            </p>
+                    )}
+                  </>
+                )}
+              </p>
+            </div>
             <div className="flex items-center gap-2">
               <ViewModeToggle value={viewMode} onChange={setViewMode} />
               <SortSelect
