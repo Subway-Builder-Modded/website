@@ -13,8 +13,6 @@ const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/$
 
 const TOKEN =
   process.env['RAILYARD_GITHUB_TOKEN']?.trim() ||
-  process.env['GITHUB_TOKEN']?.trim() ||
-  process.env['GH_TOKEN']?.trim() ||
   '';
 
 const METRICS = [

@@ -2,7 +2,8 @@ name: Deploy Site
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   schedule:
     - cron: '0 * * * *'
   workflow_dispatch:
@@ -20,30 +21,42 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup pnpm
+      - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
 
-      - name: Setup Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
 
-      - name: Install deps
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Verify analytics secrets
+        shell: bash
         run: |
-          echo "Cloudflare zone present: $([ -n \"${CLOUDFLARE_ZONE_TAG}${CLOUDFLARE_ZONE_ID}\" ] && echo yes || echo no)"
-          echo "Cloudflare token present: $([ -n \"${CLOUDFLARE_API_TOKEN}${CLOUDFLARE_TOKEN}${CF_API_TOKEN}\" ] && echo yes || echo no)"
+          zone_present=no
+          token_present=no
 
-      - name: Build (route discovery)
+          if [ -n "${CLOUDFLARE_ZONE_TAG}${CLOUDFLARE_ZONE_ID}" ]; then
+            zone_present=yes
+          fi
+
+          if [ -n "${CLOUDFLARE_API_TOKEN}${CLOUDFLARE_TOKEN}${CF_API_TOKEN}" ]; then
+            token_present=yes
+          fi
+
+          echo "Cloudflare zone present: ${zone_present}"
+          echo "Cloudflare token present: ${token_present}"
+
+      - name: Build for route discovery
         env:
-          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
           RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
@@ -52,9 +65,8 @@ jobs:
           WEBSITE_PATH_SOURCE_DIR: ${{ github.workspace }}/out
         run: pnpm run generate:website-analytics
 
-      - name: Build (final deploy output)
+      - name: Build final deploy output
         env:
-          GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
           RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 

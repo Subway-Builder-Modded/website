@@ -8,7 +8,7 @@ const OUTPUT_PATH = path.resolve(
   process.cwd(),
   'public/railyard/github-releases-cache.json',
 );
-const TOKEN = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? '';
+const TOKEN = process.env.RAILYARD_GITHUB_TOKEN ?? process.env.GH_TOKEN ?? '';
 const WORKER_LIMIT = 8;
 const GAME_DEP_KEY = 'subway-builder';
 
