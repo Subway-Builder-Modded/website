@@ -14,7 +14,7 @@ describe('useDropdownHoverState', () => {
 
     act(() => {
       result.current.onTriggerMouseLeave({} as never);
-      vi.advanceTimersByTime(200);
+      vi.advanceTimersByTime(100);
     });
     expect(result.current.open).toBe(false);
     vi.useRealTimers();
@@ -28,15 +28,39 @@ describe('useDropdownHoverState', () => {
       result.current.onTriggerPointerEnter({} as never);
       result.current.onTriggerPointerLeave({} as never);
       result.current.onContentPointerEnter({} as never);
-      vi.advanceTimersByTime(200);
+      vi.advanceTimersByTime(100);
     });
     expect(result.current.open).toBe(true);
 
     act(() => {
       result.current.onContentPointerLeave({} as never);
-      vi.advanceTimersByTime(200);
+      vi.advanceTimersByTime(100);
     });
     expect(result.current.open).toBe(false);
     vi.useRealTimers();
+  });
+
+  it('ignores menu close requests while hovered on trigger', () => {
+    const { result } = renderHook(() => useDropdownHoverState());
+
+    act(() => {
+      result.current.onTriggerPointerEnter({} as never);
+      result.current.setOpenFromMenu(false);
+    });
+
+    expect(result.current.open).toBe(true);
+  });
+
+  it('allows menu close requests when not hovered', () => {
+    const { result } = renderHook(() => useDropdownHoverState());
+
+    act(() => {
+      result.current.setOpenFromMenu(true);
+      result.current.onTriggerPointerLeave({} as never);
+      result.current.onContentPointerLeave({} as never);
+      result.current.setOpenFromMenu(false);
+    });
+
+    expect(result.current.open).toBe(false);
   });
 });

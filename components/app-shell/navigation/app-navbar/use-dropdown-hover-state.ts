@@ -23,7 +23,6 @@ export function useDropdownHoverState(): DropdownHoverState {
   const triggerHoveredRef = useRef(false);
   const contentHoveredRef = useRef(false);
   const hoverCloseTimeoutRef = useRef<number | null>(null);
-  const closeLockTimeoutRef = useRef<number | null>(null);
 
   const clearHoverClose = useCallback(() => {
     if (!hoverCloseTimeoutRef.current) return;
@@ -31,29 +30,14 @@ export function useDropdownHoverState(): DropdownHoverState {
     hoverCloseTimeoutRef.current = null;
   }, []);
 
-  const clearCloseLock = useCallback(() => {
-    if (!closeLockTimeoutRef.current) return;
-    window.clearTimeout(closeLockTimeoutRef.current);
-    closeLockTimeoutRef.current = null;
-  }, []);
-
-  const beginCloseLock = useCallback(() => {
-    clearCloseLock();
-    closeLockTimeoutRef.current = window.setTimeout(() => {
-      closeLockTimeoutRef.current = null;
-    }, 210);
-  }, [clearCloseLock]);
-
   const openMenu = useCallback(() => {
     clearHoverClose();
-    clearCloseLock();
     setOpen(true);
-  }, [clearCloseLock, clearHoverClose]);
+  }, [clearHoverClose]);
 
   const closeMenu = useCallback(() => {
-    beginCloseLock();
     setOpen(false);
-  }, [beginCloseLock]);
+  }, []);
 
   const scheduleHoverClose = useCallback(() => {
     clearHoverClose();
@@ -63,15 +47,14 @@ export function useDropdownHoverState(): DropdownHoverState {
         closeMenu();
       }
       hoverCloseTimeoutRef.current = null;
-    }, 180);
+    }, 90);
   }, [clearHoverClose, closeMenu]);
 
   useEffect(() => {
     return () => {
       clearHoverClose();
-      clearCloseLock();
     };
-  }, [clearCloseLock, clearHoverClose]);
+  }, [clearHoverClose]);
 
   const onTriggerPointerEnter: PointerEventHandler = useCallback(() => {
     triggerHoveredRef.current = true;
@@ -107,6 +90,9 @@ export function useDropdownHoverState(): DropdownHoverState {
     (nextOpen: boolean) => {
       if (nextOpen) {
         openMenu();
+        return;
+      }
+      if (triggerHoveredRef.current || contentHoveredRef.current) {
         return;
       }
       closeMenu();
