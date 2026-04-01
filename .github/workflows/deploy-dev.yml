@@ -58,9 +58,10 @@ jobs:
           RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
-      - name: Generate analytics snapshot
+      - name: Generate analytics and caches
         env:
           WEBSITE_PATH_SOURCE_DIR: ${{ github.workspace }}/out
+          RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run analytics
 
       - name: Build final deploy output
@@ -68,36 +69,40 @@ jobs:
           RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run build
 
-      - name: Clone target repo
+      - name: Publish to website-dev gh-pages
+        shell: bash
         env:
           GH_PAT: ${{ secrets.WEBSITE_DEV_PAT }}
         run: |
-          git clone https://x-access-token:${GH_PAT}@github.com/Subway-Builder-Modded/website-dev.git target-repo
+          set -euo pipefail
 
-      - name: Prepare gh-pages branch
-        working-directory: target-repo
-        run: |
+          rm -rf target-repo
+          git clone "https://x-access-token:${GH_PAT}@github.com/Subway-Builder-Modded/website-dev.git" target-repo
+          cd target-repo
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
-            git checkout gh-pages || git checkout -b gh-pages origin/gh-pages
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch origin gh-pages
+            git checkout -B gh-pages origin/gh-pages
           else
             git checkout --orphan gh-pages
-            git rm -rf . || true
           fi
 
-      - name: Replace site contents
-        run: |
-          shopt -s dotglob
-          rm -rf target-repo/*
-          cp -R out/* target-repo/
-          touch target-repo/.nojekyll
-          echo "dev.subwaybuildermodded.com" > target-repo/CNAME
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
-      - name: Commit and push
-        working-directory: target-repo
-        run: |
+          cp -R ../out/. .
+
+          touch .nojekyll
+          printf '%s\n' 'dev.subwaybuildermodded.com' > CNAME
+
           git add --all
-          git commit -m "Deploy dev site from ${GITHUB_SHA}" || echo "No changes to commit"
-          git push origin gh-pages
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Deploy dev site from ${GITHUB_SHA}"
+            git push origin gh-pages
+          fi
+          
