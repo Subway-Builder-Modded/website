@@ -8,6 +8,8 @@ import {
   buildEmbedMetadata,
   buildNoEmbedMetadata,
 } from '@/config/site/metadata';
+import { getRegistryManifest } from '@/lib/railyard/registry.server';
+import type { MapManifest } from '@/types/registry';
 import type { ListingType } from '@/types/registry-analytics';
 
 export const dynamicParams = false;
@@ -61,12 +63,26 @@ export default async function RegistryListingRoute({
   const { type, id } = await params;
   const data = loadRegistryAnalytics();
   const dailyData = loadListingDailyData(id);
+  const manifest =
+    type === 'map'
+      ? await getRegistryManifest('maps', id)
+      : type === 'mod'
+        ? await getRegistryManifest('mods', id)
+        : null;
+  const mapManifest = type === 'map' ? (manifest as MapManifest | null) : null;
+  const mapMetadata = mapManifest
+    ? {
+        sourceQuality: mapManifest.source_quality ?? null,
+        levelOfDetail: mapManifest.level_of_detail ?? null,
+      }
+    : null;
   return (
     <RegistryListingPage
       data={data}
       type={type as ListingType}
       id={id}
       dailyData={dailyData}
+      mapMetadata={mapMetadata}
     />
   );
 }

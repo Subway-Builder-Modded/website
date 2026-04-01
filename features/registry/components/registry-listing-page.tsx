@@ -4,14 +4,17 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import {
   Download,
+  Grid3x3,
   Github,
   MapPin,
   Package,
+  ShieldCheck,
   TrainTrack,
   TrendingUp,
   History,
   Trophy,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
   Stat,
   StatDescription,
@@ -302,11 +305,16 @@ export function RegistryListingPage({
   type,
   id,
   dailyData,
+  mapMetadata,
 }: {
   data: RegistryAnalyticsData;
   type: ListingType;
   id: string;
   dailyData: DailyDataPoint[];
+  mapMetadata?: {
+    sourceQuality?: string | null;
+    levelOfDetail?: string | null;
+  } | null;
 }) {
   const analytics = getListingAnalytics(data, type, id, dailyData);
   const listing = analytics.allTime;
@@ -331,6 +339,45 @@ export function RegistryListingPage({
     );
   }
   const authorHref = `/registry/author/${encodeURIComponent(listing.author)}`;
+  const normalizeQualityValue = (value?: string | null) => {
+    const lower = (value ?? '').trim().toLowerCase();
+    if (!lower) return null;
+    if (lower.includes('high')) return 'High';
+    if (lower.includes('medium')) return 'Medium';
+    if (lower.includes('low')) return 'Low';
+    return null;
+  };
+  const normalizedDataQuality = normalizeQualityValue(
+    mapMetadata?.sourceQuality,
+  );
+  const normalizedDetail = normalizeQualityValue(mapMetadata?.levelOfDetail);
+  const metadataBadges =
+    type === 'map'
+      ? [
+          normalizedDetail
+            ? {
+                icon: Grid3x3,
+                value: normalizedDetail,
+                tooltip: 'Level of Detail',
+              }
+            : null,
+          normalizedDataQuality
+            ? {
+                icon: ShieldCheck,
+                value: normalizedDataQuality,
+                tooltip: 'Data Quality',
+              }
+            : null,
+        ].filter(
+          (
+            value,
+          ): value is {
+            icon: LucideIcon;
+            value: string;
+            tooltip: string;
+          } => Boolean(value),
+        )
+      : [];
 
   return (
     <RegistryDetailShell
@@ -349,6 +396,7 @@ export function RegistryListingPage({
       }
       type={type}
       snapshotLabel={data.snapshotLabel}
+      metadataBadges={metadataBadges}
       actions={
         <>
           <TypeBadge type={type} />

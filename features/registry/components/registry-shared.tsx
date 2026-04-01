@@ -425,6 +425,7 @@ export function RegistryDetailShell({
   backHref = '/registry',
   actions,
   showTypeBadge = true,
+  metadataBadges = [],
   children,
 }: {
   title: string;
@@ -435,6 +436,11 @@ export function RegistryDetailShell({
   backHref?: string;
   actions?: ReactNode;
   showTypeBadge?: boolean;
+  metadataBadges?: Array<{
+    icon: LucideIcon;
+    value: string;
+    tooltip: string;
+  }>;
   children: ReactNode;
 }) {
   const accentColor = type ? getListingColor(type) : 'var(--primary)';
@@ -448,7 +454,7 @@ export function RegistryDetailShell({
   return (
     <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero card with type-colored accent strip */}
-      <div className="mb-8 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="mb-8 overflow-visible rounded-xl border border-border bg-card shadow-sm">
         <div className="h-1 w-full" style={{ backgroundColor: accentColor }} />
         <div className="px-5 py-5 sm:px-6">
           <div className="mb-3 flex items-center justify-between gap-3">
@@ -480,12 +486,37 @@ export function RegistryDetailShell({
                 </div>
               ) : null}
             </div>
-            <p className="shrink-0 text-xs text-muted-foreground">
-              Updated:{' '}
-              <code className="rounded bg-foreground/8 px-1 font-mono text-[0.85em]">
-                {snapshotLabel}
-              </code>
-            </p>
+            <div className="shrink-0 text-right">
+              <p className="text-xs text-muted-foreground">
+                Updated:{' '}
+                <code className="rounded bg-foreground/8 px-1 font-mono text-[0.85em]">
+                  {snapshotLabel}
+                </code>
+              </p>
+              {metadataBadges.length > 0 ? (
+                <div className="mt-2 flex flex-col items-end gap-1.5">
+                  {metadataBadges.map((badge, index) => (
+                    <div
+                      key={`${badge.value}-${index}`}
+                      className="group relative inline-flex"
+                    >
+                      <div className="inline-flex cursor-default items-center gap-1.5 rounded-md border border-border/70 bg-card/70 px-2 py-1 text-xs text-foreground/90">
+                        <badge.icon className="size-3.5 text-[#1c7ed6]" />
+                        <span className="font-semibold">{badge.value}</span>
+                      </div>
+                      <div className="pointer-events-none absolute right-0 top-full z-30 mt-2 hidden min-w-max rounded-lg bg-overlay/75 p-2.5 text-xs text-overlay-fg ring ring-current/10 backdrop-blur-lg group-hover:block group-focus-within:block">
+                        <span className="inline-flex items-center gap-2">
+                          <badge.icon className="size-3.5 text-[#1c7ed6]" />
+                          <span className="text-[0.66rem] font-bold uppercase tracking-[0.14em]">
+                            {badge.tooltip}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
