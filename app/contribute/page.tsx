@@ -4,7 +4,10 @@ import { ExternalLink } from 'lucide-react';
 
 import { PageHeader } from '@/components/shared/page-header';
 import { SubscriptionTierCard } from '@/features/contribute/subscription-tier-card';
-import { CONTRIBUTE_PAGE_CONTENT, SUBSCRIPTION_TIERS } from '@/config/ui/contribute';
+import {
+  CONTRIBUTE_PAGE_CONTENT,
+  SUBSCRIPTION_TIERS,
+} from '@/config/ui/contribute';
 import { buildEmbedMetadata } from '@/config/site/metadata';
 
 export const metadata: Metadata = buildEmbedMetadata({
@@ -30,14 +33,17 @@ export default function ContributePage() {
             {/* Introduction Text */}
             <div className="rounded-lg border border-border/50 bg-card/50 p-6 text-center sm:p-8">
               <p className="text-base leading-relaxed text-foreground/90">
-                Subway Builder Modded is a passion project that continues to evolve thanks to our
-                community. By becoming a supporter, you'll not only help fund ongoing development,
-                but you'll also gain earlier access to cutting-edge features, help shape a thriving
-                community, and have your voice heard in shaping the future of the platform.
+                Subway Builder Modded is a passion project that continues to
+                evolve thanks to our community. By becoming a supporter,
+                you&apos;ll not only help fund ongoing development, but
+                you&apos;ll also gain earlier access to cutting-edge features,
+                help shape a thriving community, and have your voice heard in
+                shaping the future of the platform.
               </p>
               <p className="mt-4 text-sm text-muted-foreground">
-                All tiers are fully optional—our services will always be free to use. Your support
-                simply helps us prioritize development and fund server costs.
+                All tiers are fully optional—our services will always be free to
+                use. Your support simply helps us prioritize development and
+                fund server costs.
               </p>
             </div>
 
@@ -60,7 +66,7 @@ export default function ContributePage() {
                 href={KOFI_URL}
                 target="_blank"
                 rel="noreferrer"
-                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-primary px-4 py-2.5 font-semibold text-primary-foreground transition-all hover:bg-primary/90"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-primary px-4 py-2.5 font-semibold text-primary-foreground transition-all hover:bg-primary/90"
               >
                 Support on Ko-fi
                 <ExternalLink className="size-4" />

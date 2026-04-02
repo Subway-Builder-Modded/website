@@ -1,6 +1,12 @@
 import Image from 'next/image';
 import { Check } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { SubscriptionTier } from '@/config/ui/contribute';
 
@@ -13,7 +19,7 @@ export function SubscriptionTierCard({ tier }: SubscriptionTierCardProps) {
     <Card
       className={cn(
         'relative flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg',
-        tier.highlighted && 'ring-2 ring-primary/50 sm:scale-105'
+        tier.highlighted && 'ring-2 ring-primary/50 sm:scale-105',
       )}
     >
       {tier.highlighted && (
@@ -26,7 +32,9 @@ export function SubscriptionTierCard({ tier }: SubscriptionTierCardProps) {
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               {tier.name}
             </CardTitle>
-            <CardDescription className="mt-1">{tier.description}</CardDescription>
+            <CardDescription className="mt-1">
+              {tier.description}
+            </CardDescription>
           </div>
         </div>
 
