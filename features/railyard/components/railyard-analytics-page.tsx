@@ -31,6 +31,15 @@ const TABS: {
   { key: 'os', label: 'OS Breakdown', icon: MonitorCog },
 ];
 
+function isValidTabKey(value: unknown): value is TabKey {
+  return (
+    value === 'overview' ||
+    value === 'timeline' ||
+    value === 'versions' ||
+    value === 'os'
+  );
+}
+
 export function RailyardAnalyticsPage({
   data,
 }: {
@@ -40,6 +49,14 @@ export function RailyardAnalyticsPage({
     'railyard.analytics.active-tab',
     'overview',
   );
+
+  const activeTab = isValidTabKey(active) ? active : 'overview';
+
+  useEffect(() => {
+    if (!isValidTabKey(active)) {
+      setActive('overview');
+    }
+  }, [active, setActive]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -73,7 +90,7 @@ export function RailyardAnalyticsPage({
 
       <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
         {TABS.map(({ key, label, icon: Icon }) => {
-          const isActive = active === key;
+          const isActive = activeTab === key;
           return (
             <button
               key={key}
@@ -92,16 +109,16 @@ export function RailyardAnalyticsPage({
         })}
       </div>
 
-      {active === 'overview' ? (
+      {activeTab === 'overview' ? (
         <RailyardAnalyticsOverviewSection data={data} />
       ) : null}
-      {active === 'timeline' ? (
+      {activeTab === 'timeline' ? (
         <RailyardAnalyticsTimelineSection data={data} />
       ) : null}
-      {active === 'versions' ? (
+      {activeTab === 'versions' ? (
         <RailyardAnalyticsVersionsSection data={data} />
       ) : null}
-      {active === 'os' ? <RailyardAnalyticsOsSection data={data} /> : null}
+      {activeTab === 'os' ? <RailyardAnalyticsOsSection data={data} /> : null}
     </div>
   );
 }
