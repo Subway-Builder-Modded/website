@@ -123,6 +123,24 @@ function formatTimeLabel(timestamp: string, period: TimelinePeriod): string {
   return timestamp.slice(5).replace('-', '/');
 }
 
+function formatTooltipTime(timestamp: string): string {
+  const dt = new Date(timestamp);
+  if (Number.isNaN(dt.getTime())) return timestamp;
+  const hour = String(dt.getHours()).padStart(2, '0');
+  const minute = String(dt.getMinutes()).padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
+function formatLongDate(timestamp: string): string {
+  const parsed = new Date(timestamp);
+  if (Number.isNaN(parsed.getTime())) return timestamp;
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(parsed);
+}
+
 function packageLabel(packageType: string, assetLabel: string): string {
   if (/installer/i.test(assetLabel)) return 'Installer';
   if (/portable/i.test(assetLabel)) return 'Portable';
@@ -259,13 +277,13 @@ export function RailyardAnalyticsOsSection({
     };
   }, [activeOs, period, sortState]);
 
-  const periodSeries = useMemo(() => {
+  const periodSeriesForTotals = useMemo(() => {
     const source = isSubDaily(period)
       ? data.osHourlyTotals
       : data.osDailyTotals;
-    const sorted = [...source]
-      .filter((row) => row.timestamp.slice(5, 10) !== '03-30')
-      .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+    const sorted = [...source].sort((a, b) =>
+      a.timestamp.localeCompare(b.timestamp),
+    );
 
     const filtered =
       period === 'all'
@@ -284,9 +302,19 @@ export function RailyardAnalyticsOsSection({
       macos: Math.round(row.macos),
       linux: Math.round(row.linux),
       downloads: Math.round(row.downloads),
-      label: formatTimeLabel(row.timestamp, period),
     }));
   }, [data.osDailyTotals, data.osHourlyTotals, period]);
+
+  const periodSeries = useMemo(() => {
+    const filtered = periodSeriesForTotals.filter(
+      (row) => row.timestamp.slice(5, 10) !== '03-30',
+    );
+
+    return filtered.map((row) => ({
+      ...row,
+      label: formatTimeLabel(row.timestamp, period),
+    }));
+  }, [period, periodSeriesForTotals]);
 
   const osTables = useMemo(() => {
     const makeRows = (osLabel: 'Windows' | 'macOS' | 'Linux') => {
@@ -323,7 +351,7 @@ export function RailyardAnalyticsOsSection({
 
   const totals = useMemo(
     () =>
-      periodSeries.reduce(
+      periodSeriesForTotals.reduce(
         (acc, row) => {
           acc.windows += row.windows;
           acc.macos += row.macos;
@@ -333,7 +361,7 @@ export function RailyardAnalyticsOsSection({
         },
         { windows: 0, macos: 0, linux: 0, downloads: 0 },
       ),
-    [periodSeries],
+    [periodSeriesForTotals],
   );
 
   const xInterval =
@@ -519,12 +547,17 @@ export function RailyardAnalyticsOsSection({
                             <Tooltip
                               content={({ active, payload, label }) => {
                                 if (!active || !payload?.length) return null;
+                                const row = payload[0]?.payload as
+                                  | { timestamp?: string }
+                                  | undefined;
+                                const timestamp = row?.timestamp ?? '';
+                                const title = isSubDaily(period)
+                                  ? formatTooltipTime(timestamp)
+                                  : (label as string);
 
                                 return (
                                   <div className="rounded-lg bg-overlay/95 p-2.5 text-xs text-overlay-fg ring ring-current/20 backdrop-blur-lg">
-                                    <div className="font-semibold">
-                                      {label as string}
-                                    </div>
+                                    <div className="font-semibold">{title}</div>
                                     {payload.map((entry) => (
                                       <div
                                         key={entry.dataKey as string}
@@ -538,6 +571,11 @@ export function RailyardAnalyticsOsSection({
                                         </span>
                                       </div>
                                     ))}
+                                    {isSubDaily(period) ? (
+                                      <div className="mt-1 text-[11px] text-muted-fg">
+                                        {formatLongDate(timestamp)}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 );
                               }}
@@ -626,17 +664,27 @@ export function RailyardAnalyticsOsSection({
                               content={({ active, payload, label }) => {
                                 if (!active || !payload?.length) return null;
                                 const value = Number(payload[0]?.value ?? 0);
+                                const row = payload[0]?.payload as
+                                  | { timestamp?: string }
+                                  | undefined;
+                                const timestamp = row?.timestamp ?? '';
+                                const title = isSubDaily(period)
+                                  ? formatTooltipTime(timestamp)
+                                  : (label as string);
                                 return (
                                   <div className="rounded-lg bg-overlay/95 p-2.5 text-xs text-overlay-fg ring ring-current/20 backdrop-blur-lg">
-                                    <div className="font-semibold">
-                                      {label as string}
-                                    </div>
+                                    <div className="font-semibold">{title}</div>
                                     <div className="mt-1 flex items-center justify-between gap-3">
                                       <span>{os.label}</span>
                                       <span className="font-semibold tabular-nums">
                                         {Math.round(value).toLocaleString()}
                                       </span>
                                     </div>
+                                    {isSubDaily(period) ? (
+                                      <div className="mt-1 text-[11px] text-muted-fg">
+                                        {formatLongDate(timestamp)}
+                                      </div>
+                                    ) : null}
                                   </div>
                                 );
                               }}

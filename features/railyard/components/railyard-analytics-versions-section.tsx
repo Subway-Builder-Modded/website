@@ -75,11 +75,15 @@ function periodLabel(period: VersionPeriod): string {
   return 'All Time';
 }
 
+function isSubDaily(period: VersionPeriod): boolean {
+  return period === '1' || period === '3';
+}
+
 function formatTimeLabel(timestamp: string, period: VersionPeriod): string {
   const dt = new Date(timestamp);
   if (Number.isNaN(dt.getTime())) return timestamp;
 
-  if (period === '1' || period === '3') {
+  if (isSubDaily(period)) {
     const month = String(dt.getMonth() + 1).padStart(2, '0');
     const day = String(dt.getDate()).padStart(2, '0');
     const hour = String(dt.getHours()).padStart(2, '0');
@@ -89,6 +93,24 @@ function formatTimeLabel(timestamp: string, period: VersionPeriod): string {
   }
 
   return timestamp.slice(5).replace('-', '/');
+}
+
+function formatTooltipTime(timestamp: string): string {
+  const dt = new Date(timestamp);
+  if (Number.isNaN(dt.getTime())) return timestamp;
+  const hour = String(dt.getHours()).padStart(2, '0');
+  const minute = String(dt.getMinutes()).padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
+function formatLongDate(timestamp: string): string {
+  const parsed = new Date(timestamp);
+  if (Number.isNaN(parsed.getTime())) return timestamp;
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(parsed);
 }
 
 export function RailyardAnalyticsVersionsSection({
@@ -388,17 +410,27 @@ export function RailyardAnalyticsVersionsSection({
                           content={({ active, payload, label }) => {
                             if (!active || !payload?.length) return null;
                             const value = Number(payload[0]?.value ?? 0);
+                            const row = payload[0]?.payload as
+                              | { date?: string }
+                              | undefined;
+                            const timestamp = row?.date ?? '';
+                            const title = isSubDaily(period)
+                              ? formatTooltipTime(timestamp)
+                              : (label as string);
                             return (
                               <div className="rounded-lg bg-overlay/95 p-2.5 text-xs text-overlay-fg ring ring-current/20 backdrop-blur-lg">
-                                <div className="font-semibold">
-                                  {label as string}
-                                </div>
+                                <div className="font-semibold">{title}</div>
                                 <div className="mt-1 flex items-center justify-between gap-3">
                                   <span>{`v${version}`}</span>
                                   <span className="font-semibold tabular-nums">
                                     {value.toLocaleString()}
                                   </span>
                                 </div>
+                                {isSubDaily(period) ? (
+                                  <div className="mt-1 text-[11px] text-muted-fg">
+                                    {formatLongDate(timestamp)}
+                                  </div>
+                                ) : null}
                               </div>
                             );
                           }}
