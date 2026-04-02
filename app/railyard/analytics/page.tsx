@@ -4,7 +4,7 @@ import { RailyardAnalyticsPage } from '@/features/railyard/components/railyard-a
 import { loadRailyardAnalytics } from '@/lib/railyard-analytics';
 
 export const metadata: Metadata = buildEmbedMetadata({
-  title: 'Analytics',
+  title: 'Analytics | Railyard',
   description:
     'In-depth release and download analytics for the Railyard desktop app.',
 });
