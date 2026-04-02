@@ -28,7 +28,16 @@ const ASSET_LABEL_PATTERNS: Array<{ regex: RegExp; label: string }> = [
     label: 'Linux (x64) - Flatpak',
   },
   {
+    regex: /^railyard-v\d+\.\d+\.\d+-linux-amd64\.flatpak$/i,
+    label: 'Linux (x64) - Flatpak',
+  },
+  {
     regex: /^railyard-v\d+\.\d+\.\d+-current-linux-amd64\.appimage$/i,
+    label: 'Linux (x64) - AppImage',
+  },
+  {
+    regex:
+      /^railyard-v\d+\.\d+\.\d+-(?:current-|legacy-)?linux-amd64\.appimage$/i,
     label: 'Linux (x64) - AppImage',
   },
 ];

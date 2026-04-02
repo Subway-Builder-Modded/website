@@ -5,8 +5,8 @@ import {
   BarChart3,
   LineChart,
   Layers3,
-  HardDrive,
-  TrainTrack,
+  MonitorCog,
+  History,
 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { cn } from '@/lib/utils';
@@ -15,10 +15,10 @@ import type { RailyardAnalyticsData } from '@/types/railyard-analytics';
 import { RailyardAnalyticsOverviewSection } from './railyard-analytics-overview-section';
 import { RailyardAnalyticsTimelineSection } from './railyard-analytics-timeline-section';
 import { RailyardAnalyticsVersionsSection } from './railyard-analytics-versions-section';
-import { RailyardAnalyticsAssetsSection } from './railyard-analytics-assets-section';
+import { RailyardAnalyticsOsSection } from './railyard-analytics-os-section';
 import { RAILYARD_ANALYTICS_PAGE_HEADER_SCHEME } from './railyard-analytics-shared';
 
-type TabKey = 'overview' | 'timeline' | 'versions' | 'assets';
+type TabKey = 'overview' | 'timeline' | 'versions' | 'os';
 
 const TABS: {
   key: TabKey;
@@ -26,9 +26,9 @@ const TABS: {
   icon: React.FC<{ className?: string }>;
 }[] = [
   { key: 'overview', label: 'Overview', icon: BarChart3 },
-  { key: 'timeline', label: 'Timeline', icon: LineChart },
+  { key: 'timeline', label: 'Timeline', icon: History },
   { key: 'versions', label: 'Versions', icon: Layers3 },
-  { key: 'assets', label: 'Assets', icon: HardDrive },
+  { key: 'os', label: 'OS Breakdown', icon: MonitorCog },
 ];
 
 export function RailyardAnalyticsPage({
@@ -46,11 +46,16 @@ export function RailyardAnalyticsPage({
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab');
 
+    if (tab === 'assets') {
+      setActive('os');
+      return;
+    }
+
     if (
       tab === 'overview' ||
       tab === 'timeline' ||
       tab === 'versions' ||
-      tab === 'assets'
+      tab === 'os'
     ) {
       setActive(tab);
     }
@@ -59,8 +64,8 @@ export function RailyardAnalyticsPage({
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">
       <PageHeader
-        icon={TrainTrack}
-        title="Railyard Analytics"
+        icon={LineChart}
+        title="Analytics"
         description="In-depth release and download analytics for the Railyard desktop app."
         colorScheme={RAILYARD_ANALYTICS_PAGE_HEADER_SCHEME}
         badges={[{ text: `Updated: \`${data.snapshotLabel}\`` }]}
@@ -96,9 +101,7 @@ export function RailyardAnalyticsPage({
       {active === 'versions' ? (
         <RailyardAnalyticsVersionsSection data={data} />
       ) : null}
-      {active === 'assets' ? (
-        <RailyardAnalyticsAssetsSection data={data} />
-      ) : null}
+      {active === 'os' ? <RailyardAnalyticsOsSection data={data} /> : null}
     </div>
   );
 }

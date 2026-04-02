@@ -8,15 +8,25 @@ const META_FILE = path.join(OUTPUT_DIR, 'snapshot-meta.json');
 const REPO_OWNER = 'Subway-Builder-Modded';
 const REPO_NAME = 'The-Railyard';
 const REPO_BRANCH = 'main';
-const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}/analytics`;
+const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`;
 
 const TOKEN =
   process.env['RAILYARD_GITHUB_TOKEN']?.trim() ||
   '';
 
 const ANALYTICS_FILES = [
-  'railyard_app_downloads.json',
-  'railyard_app_by_day.csv',
+  {
+    sourcePath: 'analytics/railyard_app_downloads.json',
+    outputName: 'railyard_app_downloads.json',
+  },
+  {
+    sourcePath: 'analytics/railyard_app_by_day.csv',
+    outputName: 'railyard_app_by_day.csv',
+  },
+  {
+    sourcePath: 'history/railyard_app_downloads.json',
+    outputName: 'railyard_app_downloads_history.json',
+  },
 ];
 
 function ensureDir(dir) {
@@ -46,8 +56,8 @@ function buildHeaders() {
   return headers;
 }
 
-async function fetchFile(filename) {
-  const url = `${RAW_BASE}/${filename}`;
+async function fetchFile(sourcePath) {
+  const url = `${RAW_BASE}/${sourcePath}`;
   const response = await fetch(url, { headers: buildHeaders() });
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText} for ${url}`);
@@ -73,13 +83,13 @@ async function main() {
 
   for (const file of ANALYTICS_FILES) {
     try {
-      const text = await fetchFile(file);
-      writeFileSync(path.join(OUTPUT_DIR, file), text);
-      fetched.push(file);
+      const text = await fetchFile(file.sourcePath);
+      writeFileSync(path.join(OUTPUT_DIR, file.outputName), text);
+      fetched.push(file.outputName);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      failures.push({ file, error: message });
-      console.warn(`[railyard-analytics] Failed ${file}: ${message}`);
+      failures.push({ file: file.outputName, sourcePath: file.sourcePath, error: message });
+      console.warn(`[railyard-analytics] Failed ${file.outputName}: ${message}`);
     }
   }
 

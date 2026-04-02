@@ -27,6 +27,12 @@ describe('getRailyardAssetLabel', () => {
     expect(
       getRailyardAssetLabel('railyard-v0.2.0-current-linux-amd64.AppImage'),
     ).toBe('Linux (x64) - AppImage');
+    expect(getRailyardAssetLabel('railyard-v0.1.3-linux-amd64.AppImage')).toBe(
+      'Linux (x64) - AppImage',
+    );
+    expect(
+      getRailyardAssetLabel('railyard-v0.1.3-legacy-linux-amd64.AppImage'),
+    ).toBe('Linux (x64) - AppImage');
   });
 
   it('returns original name when no alias rule matches', () => {

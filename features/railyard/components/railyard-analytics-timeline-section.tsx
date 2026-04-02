@@ -22,11 +22,11 @@ import {
   SafeChartContainer,
   useClientReady,
 } from './railyard-analytics-shared';
-import { getRailyardAssetLabel } from '@/lib/railyard-asset-label';
 
-type TimelinePeriod = 'all' | '3' | '7' | '14';
+type TimelinePeriod = 'all' | '1' | '3' | '7' | '14';
 
 function periodLabel(period: TimelinePeriod): string {
+  if (period === '1') return 'Last 24 Hours';
   if (period === '3') return 'Last 3 Days';
   if (period === '7') return 'Last Week';
   if (period === '14') return 'Last 2 Weeks';
@@ -46,6 +46,69 @@ function trimEdgeZeros<T extends { downloads: number }>(rows: T[]): T[] {
   return rows.slice(start, end + 1);
 }
 
+function isSubDaily(period: TimelinePeriod): boolean {
+  return period === '1' || period === '3';
+}
+
+function formatTimeLabel(timestamp: string, period: TimelinePeriod): string {
+  if (isSubDaily(period)) {
+    const dt = new Date(timestamp);
+    if (Number.isNaN(dt.getTime())) return timestamp;
+    const month = String(dt.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(dt.getUTCDate()).padStart(2, '0');
+    const hour = String(dt.getUTCHours()).padStart(2, '0');
+    const minute = String(dt.getUTCMinutes()).padStart(2, '0');
+    if (period === '1') return `${hour}:${minute}`;
+    return `${month}/${day} ${hour}:${minute}`;
+  }
+
+  return timestamp.slice(5).replace('-', '/');
+}
+
+function formatLongDate(timestamp: string): string {
+  const parsed = new Date(timestamp);
+  if (Number.isNaN(parsed.getTime())) return timestamp;
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(parsed);
+}
+
+function filterDailyRange(
+  rows: Array<{ date: string; downloads: number }>,
+  period: TimelinePeriod,
+): Array<{ date: string; downloads: number }> {
+  const sorted = [...rows].sort((a, b) => a.date.localeCompare(b.date));
+  if (period === 'all') return trimEdgeZeros(sorted);
+  const days = Number.parseInt(period, 10);
+  return trimEdgeZeros(sorted.slice(-days));
+}
+
+function filterHourlyRange(
+  rows: Array<{ timestamp: string; downloads: number }>,
+  period: TimelinePeriod,
+): Array<{ timestamp: string; downloads: number }> {
+  const sorted = [...rows].sort((a, b) =>
+    a.timestamp.localeCompare(b.timestamp),
+  );
+  if (sorted.length === 0) return [];
+  if (period === 'all') return trimEdgeZeros(sorted);
+
+  const hours = period === '1' ? 24 : 72;
+  const end = new Date(sorted[sorted.length - 1]?.timestamp ?? '');
+  if (Number.isNaN(end.getTime())) return trimEdgeZeros(sorted.slice(-hours));
+
+  const startMs = end.getTime() - (hours - 1) * 60 * 60 * 1000;
+  const filtered = sorted.filter((row) => {
+    const current = new Date(row.timestamp);
+    if (Number.isNaN(current.getTime())) return false;
+    return current.getTime() >= startMs;
+  });
+
+  return trimEdgeZeros(filtered);
+}
+
 export function RailyardAnalyticsTimelineSection({
   data,
 }: {
@@ -57,23 +120,39 @@ export function RailyardAnalyticsTimelineSection({
     'all',
   );
 
-  const periodRows = useMemo(() => {
-    const source = [...data.dailyTotals].sort((a, b) =>
-      a.date.localeCompare(b.date),
-    );
-    const base =
-      period === 'all' ? source : source.slice(-Number.parseInt(period, 10));
-    return trimEdgeZeros(base);
-  }, [data.dailyTotals, period]);
+  const totalRows = useMemo(() => {
+    if (isSubDaily(period)) {
+      return filterHourlyRange(data.hourlyTotals, period).map((row) => ({
+        timestamp: row.timestamp,
+        downloads: row.downloads,
+      }));
+    }
+
+    return filterDailyRange(data.dailyTotals, period).map((row) => ({
+      timestamp: row.date,
+      downloads: row.downloads,
+    }));
+  }, [data.dailyTotals, data.hourlyTotals, period]);
+
+  const chartRows = useMemo(
+    () =>
+      totalRows
+        .filter((row) => row.timestamp.slice(5, 10) !== '03-30')
+        .map((row) => ({
+          ...row,
+          label: formatTimeLabel(row.timestamp, period),
+        })),
+    [period, totalRows],
+  );
 
   const timelineStats = useMemo(() => {
-    const totalDownloads = periodRows.reduce(
+    const totalDownloads = totalRows.reduce(
       (sum, row) => sum + row.downloads,
       0,
     );
 
-    const windowStart = periodRows[0]?.date;
-    const windowEnd = periodRows[periodRows.length - 1]?.date;
+    const windowStart = totalRows[0]?.timestamp;
+    const windowEnd = totalRows[totalRows.length - 1]?.timestamp;
 
     const selectedVersionRows = data.versionDaily
       .map((row) => ({
@@ -81,7 +160,10 @@ export function RailyardAnalyticsTimelineSection({
         downloads: row.daily
           .filter((dailyRow) => {
             if (!windowStart || !windowEnd) return false;
-            return dailyRow.date >= windowStart && dailyRow.date <= windowEnd;
+            return (
+              dailyRow.date >= windowStart.slice(0, 10) &&
+              dailyRow.date <= windowEnd.slice(0, 10)
+            );
           })
           .reduce((sum, dailyRow) => sum + dailyRow.downloads, 0),
       }))
@@ -92,45 +174,11 @@ export function RailyardAnalyticsTimelineSection({
       return compareSemver(b.version, a.version);
     })[0];
 
-    const assetTotals = new Map<string, number>();
-    for (const versionRow of data.versions) {
-      const versionDownloads =
-        selectedVersionRows.find((row) => row.version === versionRow.version)
-          ?.downloads ?? 0;
-
-      if (versionDownloads <= 0 || versionRow.totalDownloads <= 0) continue;
-
-      for (const assetRow of versionRow.assets) {
-        const estimatedDownloads =
-          (versionDownloads * assetRow.totalDownloads) /
-          versionRow.totalDownloads;
-        assetTotals.set(
-          assetRow.assetLabel,
-          (assetTotals.get(assetRow.assetLabel) ?? 0) + estimatedDownloads,
-        );
-      }
-    }
-
-    const topAsset = [...assetTotals.entries()]
-      .map(([assetLabel, downloads]) => ({
-        assetLabel: getRailyardAssetLabel(assetLabel),
-        downloads,
-      }))
-      .sort((a, b) => b.downloads - a.downloads)[0];
-
     return {
       totalDownloads,
       topVersion,
-      topAsset,
     };
-  }, [data.versionDaily, data.versions, periodRows]);
-
-  const chartRows = periodRows
-    .filter((row) => !row.date.endsWith('-03-30'))
-    .map((row) => ({
-      ...row,
-      label: row.date.slice(5).replace('-', '/'),
-    }));
+  }, [data.versionDaily, totalRows]);
 
   return (
     <section className="mb-12">
@@ -169,22 +217,20 @@ export function RailyardAnalyticsTimelineSection({
 
         <div className="rounded-xl border border-border bg-card p-4 ring-1 ring-foreground/5">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Top Asset
+            Most Popular OS
           </p>
-          <p className="mt-1 truncate text-lg font-black text-foreground">
-            {timelineStats.topAsset?.assetLabel ?? 'N/A'}
+          <p className="mt-1 text-2xl font-black text-foreground">
+            {data.summary.topOs || 'N/A'}
           </p>
           <p className="text-xs text-muted-foreground">
-            {timelineStats.topAsset
-              ? `${Math.round(timelineStats.topAsset.downloads).toLocaleString()} downloads`
-              : 'No downloads in selected period'}
+            {data.summary.topOsDownloads.toLocaleString()} downloads
           </p>
         </div>
       </div>
 
       <div className="mb-10 rounded-xl border border-border bg-card p-5 ring-1 ring-foreground/5">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Daily Downloads ({periodLabel(period)})
+          Downloads ({periodLabel(period)})
         </p>
 
         <SafeChartContainer height={320}>
@@ -225,7 +271,11 @@ export function RailyardAnalyticsTimelineSection({
                   tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
                   axisLine={false}
                   tickLine={false}
-                  interval={chartRows.length > 14 ? 'preserveStartEnd' : 0}
+                  interval={
+                    chartRows.length > (isSubDaily(period) ? 12 : 14)
+                      ? 'preserveStartEnd'
+                      : 0
+                  }
                   tickMargin={6}
                 />
                 <YAxis
@@ -240,7 +290,7 @@ export function RailyardAnalyticsTimelineSection({
                     if (!active || !payload?.length) return null;
                     const value = Number(payload[0]?.value ?? 0);
                     const row = payload[0]?.payload as
-                      | { date?: string }
+                      | { timestamp?: string }
                       | undefined;
 
                     return (
@@ -253,7 +303,7 @@ export function RailyardAnalyticsTimelineSection({
                           </span>
                         </div>
                         <div className="mt-1 text-[11px] text-muted-fg">
-                          {row?.date ?? 'Unknown date'}
+                          {formatLongDate(row?.timestamp ?? '')}
                         </div>
                       </div>
                     );

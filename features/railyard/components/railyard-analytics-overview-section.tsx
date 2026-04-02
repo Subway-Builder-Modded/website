@@ -90,12 +90,10 @@ export function RailyardAnalyticsOverviewSection({
           <StatIndicator variant="icon" style={ICON_STYLE}>
             <FolderArchive />
           </StatIndicator>
-          <StatLabel className={STAT_LABEL_CLS}>Top Asset</StatLabel>
-          <StatValue className="truncate text-base">
-            {data.summary.topAsset}
-          </StatValue>
+          <StatLabel className={STAT_LABEL_CLS}>Most Popular OS</StatLabel>
+          <StatValue>{data.summary.topOs}</StatValue>
           <StatDescription>
-            {data.summary.topAssetDownloads.toLocaleString()} downloads
+            {data.summary.topOsDownloads.toLocaleString()} downloads
           </StatDescription>
         </Stat>
       </div>

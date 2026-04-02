@@ -4,10 +4,13 @@ import type {
   RailyardAnalyticsData,
   RailyardAssetDownloadRow,
   RailyardDailyTotalRow,
+  RailyardHourlyTotalRow,
+  RailyardOsTotalsPoint,
   RailyardOverlapPeriod,
   RailyardOverlapPoint,
   RailyardVersionDailyRow,
   RailyardVersionDownloadRow,
+  RailyardVersionHourlyRow,
 } from '@/types/railyard-analytics';
 import { getRailyardAssetLabel } from '@/lib/railyard-asset-label';
 
@@ -15,10 +18,13 @@ export type {
   RailyardAnalyticsData,
   RailyardAssetDownloadRow,
   RailyardDailyTotalRow,
+  RailyardHourlyTotalRow,
+  RailyardOsTotalsPoint,
   RailyardOverlapPeriod,
   RailyardOverlapPoint,
   RailyardVersionDailyRow,
   RailyardVersionDownloadRow,
+  RailyardVersionHourlyRow,
 } from '@/types/railyard-analytics';
 
 type DownloadMetricRaw = {
@@ -40,6 +46,20 @@ type DownloadSnapshotRaw = {
   versions?: Record<string, VersionRaw>;
 };
 
+type HistoryVersionRaw = {
+  total_downloads?: unknown;
+  assets?: Record<string, unknown>;
+};
+
+type HistorySnapshotRaw = {
+  captured_at?: unknown;
+  versions?: Record<string, HistoryVersionRaw>;
+};
+
+type DownloadHistoryRaw = {
+  snapshots?: Record<string, HistorySnapshotRaw>;
+};
+
 const ANALYTICS_DIR =
   process.env['RAILYARD_ANALYTICS_DIR']?.trim() ||
   path.join(process.cwd(), 'public', 'railyard', 'analytics');
@@ -47,6 +67,10 @@ const ANALYTICS_DIR =
 const RAILYARD_ANALYTICS_PATHS = {
   downloadsJson: path.join(ANALYTICS_DIR, 'railyard_app_downloads.json'),
   downloadsCsv: path.join(ANALYTICS_DIR, 'railyard_app_by_day.csv'),
+  downloadsHistoryJson: path.join(
+    ANALYTICS_DIR,
+    'railyard_app_downloads_history.json',
+  ),
 } as const;
 
 let warnedMissingAnalytics = false;
@@ -301,6 +325,150 @@ function parseVersionDailyRows(rows: Record<string, string>[]): {
   return { versionDaily, dailyTotals };
 }
 
+function osKeyFromOsLabel(
+  os: string,
+): keyof Omit<RailyardOsTotalsPoint, 'timestamp' | 'downloads'> | null {
+  if (os === 'Windows') return 'windows';
+  if (os === 'macOS') return 'macos';
+  if (os === 'Linux') return 'linux';
+  return null;
+}
+
+function buildOsDailyTotals(args: {
+  versions: RailyardVersionDownloadRow[];
+  versionDaily: RailyardVersionDailyRow[];
+}): RailyardOsTotalsPoint[] {
+  const versionMap = new Map(args.versions.map((row) => [row.version, row]));
+  const dateMap = new Map<string, Omit<RailyardOsTotalsPoint, 'timestamp'>>();
+
+  for (const versionRow of args.versionDaily) {
+    const versionMeta = versionMap.get(versionRow.version);
+    if (!versionMeta || versionMeta.totalDownloads <= 0) continue;
+
+    const osRatios: Array<{
+      key: keyof Omit<RailyardOsTotalsPoint, 'timestamp' | 'downloads'>;
+      ratio: number;
+    }> = [];
+    for (const asset of versionMeta.assets) {
+      const key = osKeyFromOsLabel(asset.os);
+      if (!key) continue;
+      osRatios.push({
+        key,
+        ratio: asset.totalDownloads / versionMeta.totalDownloads,
+      });
+    }
+
+    for (const dailyPoint of versionRow.daily) {
+      const entry = dateMap.get(dailyPoint.date) ?? {
+        windows: 0,
+        macos: 0,
+        linux: 0,
+        downloads: 0,
+      };
+
+      for (const ratio of osRatios) {
+        entry[ratio.key] += dailyPoint.downloads * ratio.ratio;
+      }
+      entry.downloads += dailyPoint.downloads;
+      dateMap.set(dailyPoint.date, entry);
+    }
+  }
+
+  return [...dateMap.entries()]
+    .map(([timestamp, totals]) => ({ timestamp, ...totals }))
+    .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+}
+
+function buildHourlySeries(history: DownloadHistoryRaw): {
+  versionHourly: RailyardVersionHourlyRow[];
+  hourlyTotals: RailyardHourlyTotalRow[];
+  osHourlyTotals: RailyardOsTotalsPoint[];
+} {
+  const snapshotEntries = Object.entries(history.snapshots ?? {}).sort((a, b) =>
+    a[0].localeCompare(b[0]),
+  );
+
+  if (snapshotEntries.length < 2) {
+    return {
+      versionHourly: [],
+      hourlyTotals: [],
+      osHourlyTotals: [],
+    };
+  }
+
+  const versionPoints = new Map<string, RailyardVersionHourlyRow['hourly']>();
+  const hourlyTotals: RailyardHourlyTotalRow[] = [];
+  const osHourlyTotals: RailyardOsTotalsPoint[] = [];
+
+  for (let index = 1; index < snapshotEntries.length; index += 1) {
+    const [timestamp, currentSnapshot] = snapshotEntries[index] ?? [];
+    const [, previousSnapshot] = snapshotEntries[index - 1] ?? [];
+
+    const currentVersions = currentSnapshot?.versions ?? {};
+    const previousVersions = previousSnapshot?.versions ?? {};
+
+    const allVersions = new Set<string>([
+      ...Object.keys(previousVersions),
+      ...Object.keys(currentVersions),
+    ]);
+
+    let totalDownloads = 0;
+    for (const version of allVersions) {
+      const current = toNumber(currentVersions[version]?.total_downloads);
+      const previous = toNumber(previousVersions[version]?.total_downloads);
+      const delta = Math.max(0, current - previous);
+      totalDownloads += delta;
+
+      const points = versionPoints.get(version) ?? [];
+      points.push({ timestamp, downloads: delta });
+      versionPoints.set(version, points);
+    }
+
+    const osTotals = {
+      windows: 0,
+      macos: 0,
+      linux: 0,
+    };
+
+    for (const version of allVersions) {
+      const currentAssets = currentVersions[version]?.assets ?? {};
+      const previousAssets = previousVersions[version]?.assets ?? {};
+      const allAssets = new Set<string>([
+        ...Object.keys(previousAssets),
+        ...Object.keys(currentAssets),
+      ]);
+
+      for (const assetName of allAssets) {
+        const current = toNumber(currentAssets[assetName]);
+        const previous = toNumber(previousAssets[assetName]);
+        const delta = Math.max(0, current - previous);
+        const osKey = osKeyFromOsLabel(parseAssetMetadata(assetName).os);
+        if (!osKey) continue;
+        osTotals[osKey] += delta;
+      }
+    }
+
+    const osDownloads = osTotals.windows + osTotals.macos + osTotals.linux;
+
+    hourlyTotals.push({ timestamp, downloads: totalDownloads });
+    osHourlyTotals.push({
+      timestamp,
+      ...osTotals,
+      downloads: osDownloads,
+    });
+  }
+
+  const versionHourly = [...versionPoints.entries()]
+    .map(([version, hourly]) => ({ version, hourly }))
+    .sort((a, b) => compareVersionsDesc(a.version, b.version));
+
+  return {
+    versionHourly,
+    hourlyTotals,
+    osHourlyTotals,
+  };
+}
+
 function formatSnapshotLabel(input: string): string {
   const parsed = new Date(input);
   if (Number.isNaN(parsed.getTime())) return 'Unknown';
@@ -372,6 +540,24 @@ function buildSummary(args: {
     .map(([label, downloads]) => ({ label, downloads }))
     .sort((a, b) => b.downloads - a.downloads)[0];
 
+  const osTotals = new Map<string, number>();
+  for (const asset of flattenedAssets) {
+    if (
+      asset.os !== 'Windows' &&
+      asset.os !== 'macOS' &&
+      asset.os !== 'Linux'
+    ) {
+      continue;
+    }
+    osTotals.set(
+      asset.os,
+      (osTotals.get(asset.os) ?? 0) + asset.totalDownloads,
+    );
+  }
+  const topOs = [...osTotals.entries()]
+    .map(([label, downloads]) => ({ label, downloads }))
+    .sort((a, b) => b.downloads - a.downloads)[0];
+
   return {
     totalDownloads,
     totalVersions: versions.length,
@@ -381,6 +567,8 @@ function buildSummary(args: {
     topVersionDownloads: topVersion?.totalDownloads ?? 0,
     topAsset: topAsset?.label ?? 'Unknown',
     topAssetDownloads: topAsset?.downloads ?? 0,
+    topOs: topOs?.label ?? 'Unknown',
+    topOsDownloads: topOs?.downloads ?? 0,
     current1dDownloads: versions.reduce(
       (sum, row) => sum + (row.last1dDownloads ?? 0),
       0,
@@ -404,8 +592,16 @@ export function loadRailyardAnalytics(): RailyardAnalyticsData {
   );
 
   const csvRows = readCsvFile(RAILYARD_ANALYTICS_PATHS.downloadsCsv);
+  const history = readJsonFile<DownloadHistoryRaw>(
+    RAILYARD_ANALYTICS_PATHS.downloadsHistoryJson,
+    {},
+    'railyard_app_downloads_history.json',
+  );
   const { versions, flattenedAssets } = buildVersionRows(snapshot);
   const { versionDaily, dailyTotals } = parseVersionDailyRows(csvRows);
+  const { versionHourly, hourlyTotals, osHourlyTotals } =
+    buildHourlySeries(history);
+  const osDailyTotals = buildOsDailyTotals({ versions, versionDaily });
 
   return {
     schemaVersion: toNumber(snapshot.schema_version),
@@ -416,7 +612,11 @@ export function loadRailyardAnalytics(): RailyardAnalyticsData {
     summary: buildSummary({ versions, flattenedAssets }),
     versions,
     versionDaily,
+    versionHourly,
     dailyTotals,
+    hourlyTotals,
+    osDailyTotals,
+    osHourlyTotals,
     overlaps: {
       7: buildOverlapRows(dailyTotals, 7),
       14: buildOverlapRows(dailyTotals, 14),

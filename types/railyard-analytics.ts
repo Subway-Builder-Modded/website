@@ -23,14 +23,37 @@ export type RailyardVersionDailyPoint = {
   downloads: number;
 };
 
+export type RailyardVersionHourlyPoint = {
+  timestamp: string;
+  downloads: number;
+};
+
 export type RailyardVersionDailyRow = {
   version: string;
   csvTotalDownloads: number;
   daily: RailyardVersionDailyPoint[];
 };
 
+export type RailyardVersionHourlyRow = {
+  version: string;
+  hourly: RailyardVersionHourlyPoint[];
+};
+
 export type RailyardDailyTotalRow = {
   date: string;
+  downloads: number;
+};
+
+export type RailyardHourlyTotalRow = {
+  timestamp: string;
+  downloads: number;
+};
+
+export type RailyardOsTotalsPoint = {
+  timestamp: string;
+  windows: number;
+  macos: number;
+  linux: number;
   downloads: number;
 };
 
@@ -54,6 +77,8 @@ export type RailyardAnalyticsSummary = {
   topVersionDownloads: number;
   topAsset: string;
   topAssetDownloads: number;
+  topOs: string;
+  topOsDownloads: number;
   current1dDownloads: number;
   current3dDownloads: number;
   current7dDownloads: number;
@@ -68,6 +93,10 @@ export type RailyardAnalyticsData = {
   summary: RailyardAnalyticsSummary;
   versions: RailyardVersionDownloadRow[];
   versionDaily: RailyardVersionDailyRow[];
+  versionHourly: RailyardVersionHourlyRow[];
   dailyTotals: RailyardDailyTotalRow[];
+  hourlyTotals: RailyardHourlyTotalRow[];
+  osDailyTotals: RailyardOsTotalsPoint[];
+  osHourlyTotals: RailyardOsTotalsPoint[];
   overlaps: Record<RailyardOverlapPeriod, RailyardOverlapPoint[]>;
 };

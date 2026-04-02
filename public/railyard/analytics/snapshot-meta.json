@@ -1,10 +1,11 @@
 {
   "source": "Subway-Builder-Modded/The-Railyard@main",
-  "generatedAt": "2026-04-02T20:41:29.844Z",
-  "snapshotLabel": "2026-04-02 20:41 UTC",
+  "generatedAt": "2026-04-02T22:10:11.295Z",
+  "snapshotLabel": "2026-04-02 22:10 UTC",
   "files": [
     "railyard_app_downloads.json",
-    "railyard_app_by_day.csv"
+    "railyard_app_by_day.csv",
+    "railyard_app_downloads_history.json"
   ],
   "failedFiles": []
 }

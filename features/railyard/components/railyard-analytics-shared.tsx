@@ -15,6 +15,12 @@ export const RAILYARD_ACCENT_COLOR =
 
 export const RAILYARD_PREVIOUS_COLOR = '#2c6e58';
 
+export const RAILYARD_OS_COLORS = {
+  windows: '#3b82f6',
+  macos: '#eab308',
+  linux: '#ef4444',
+} as const;
+
 export function RailyardSectionHeader({
   icon: Icon,
   title,
@@ -149,11 +155,12 @@ export function RailyardRankBadge({ rank }: { rank: number }) {
   );
 }
 
-type TimelinePeriodValue = 'all' | '3' | '7' | '14';
+type TimelinePeriodValue = 'all' | '1' | '3' | '7' | '14';
 
 const TIMELINE_PERIOD_OPTIONS: { value: TimelinePeriodValue; label: string }[] =
   [
     { value: 'all', label: 'All Time' },
+    { value: '1', label: 'Last 24 Hours' },
     { value: '3', label: 'Last 3 Days' },
     { value: '7', label: 'Last Week' },
     { value: '14', label: 'Last 2 Weeks' },
@@ -174,7 +181,13 @@ export function RailyardTimelinePeriodToggle({
       size="sm"
       spacing={1}
       onValueChange={(next) => {
-        if (next === 'all' || next === '3' || next === '7' || next === '14') {
+        if (
+          next === 'all' ||
+          next === '1' ||
+          next === '3' ||
+          next === '7' ||
+          next === '14'
+        ) {
           onChange(next);
         }
       }}

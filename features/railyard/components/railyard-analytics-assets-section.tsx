@@ -9,8 +9,8 @@ import {
 } from '@/components/shared/sortable-number-header';
 import type { RailyardAnalyticsData } from '@/types/railyard-analytics';
 import {
-  compareSemver,
   RAILYARD_ACCENT_COLOR,
+  RAILYARD_OS_COLORS,
   RailyardRankBadge,
   RailyardSectionHeader,
   SafeChartContainer,
@@ -19,10 +19,11 @@ import {
 
 const PIE_COLORS = ['#19D89C', '#0F8F68', '#2C6E58', '#4ECDC4', '#A8E6CF'];
 
-type SortField = 'version' | 'total' | 'share';
+type SortField = 'total' | 'share';
 
 type AssetRow = {
   key: string;
+  buildLabel: string;
   assetLabel: string;
   version: string;
   os: string;
@@ -38,11 +39,6 @@ function sortRows(
   direction: SortDirection,
 ): AssetRow[] {
   return [...rows].sort((left, right) => {
-    if (field === 'version') {
-      const cmp = compareSemver(left.version, right.version);
-      return direction === 'asc' ? cmp : -cmp;
-    }
-
     const leftValue = left[field];
     const rightValue = right[field];
     if (leftValue !== rightValue) {
@@ -72,6 +68,7 @@ export function RailyardAnalyticsAssetsSection({
             key: `${row.version}-${asset.assetName}`,
             assetLabel: asset.assetLabel,
             version: row.version,
+            buildLabel: `${asset.assetLabel} (v${row.version})`,
             os: asset.os,
             arch: asset.arch,
             packageType: asset.packageType,
@@ -110,6 +107,13 @@ export function RailyardAnalyticsAssetsSection({
       .sort((a, b) => b.value - a.value);
   }, [assetRows]);
 
+  const osColor = (os: string) => {
+    if (os === 'Windows') return RAILYARD_OS_COLORS.windows;
+    if (os === 'macOS') return RAILYARD_OS_COLORS.macos;
+    if (os === 'Linux') return RAILYARD_OS_COLORS.linux;
+    return '#64748b';
+  };
+
   const packageBreakdown = useMemo(() => {
     const map = new Map<string, number>();
     for (const row of assetRows) {
@@ -147,8 +151,8 @@ export function RailyardAnalyticsAssetsSection({
                       <Cell
                         key={entry.name}
                         fill={
-                          PIE_COLORS[index % PIE_COLORS.length] ??
-                          RAILYARD_ACCENT_COLOR
+                          osColor(entry.name) ??
+                          PIE_COLORS[index % PIE_COLORS.length]
                         }
                       />
                     ))}
@@ -243,16 +247,7 @@ export function RailyardAnalyticsAssetsSection({
                   Rank
                 </th>
                 <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Asset
-                </th>
-                <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  <SortableNumberHeader
-                    label="Version"
-                    isActive={sortField === 'version'}
-                    direction={sortDirection}
-                    accentColor={RAILYARD_ACCENT_COLOR}
-                    onToggle={() => toggleSort('version')}
-                  />
+                  Asset Build
                 </th>
                 <th className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Platform
@@ -290,17 +285,7 @@ export function RailyardAnalyticsAssetsSection({
                     <RailyardRankBadge rank={index + 1} />
                   </td>
                   <td className="px-3 py-2.5 max-w-[26rem] truncate font-semibold text-foreground">
-                    {row.assetLabel}
-                  </td>
-                  <td
-                    className={`px-3 py-2.5 tabular-nums ${sortField === 'version' ? 'font-black' : 'font-medium text-muted-foreground'}`}
-                    style={
-                      sortField === 'version'
-                        ? { color: RAILYARD_ACCENT_COLOR }
-                        : undefined
-                    }
-                  >
-                    v{row.version}
+                    {row.buildLabel}
                   </td>
                   <td className="px-3 py-2.5">
                     {row.os} / {row.arch}
