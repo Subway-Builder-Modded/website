@@ -89,7 +89,7 @@ export function NavbarDropdown({
           const dropdownLabel = dropdownItem.title ?? dropdownItem.id;
 
           const className = cn(
-            'gap-[var(--app-navbar-dd-item-gap)] rounded-[var(--app-navbar-dd-item-radius)] px-[var(--app-navbar-dd-item-px)] py-[var(--app-navbar-dd-item-py)] text-[var(--app-navbar-dd-item-title)] text-muted-fg',
+            'gap-[var(--app-navbar-dd-item-gap)] rounded-[var(--app-navbar-dd-item-radius)] px-[var(--app-navbar-dd-item-px)] py-[var(--app-navbar-dd-item-py)] text-[var(--app-navbar-dd-item-title)] text-muted-fg hover:bg-accent/45 hover:text-primary hover:[&_*]:text-primary focus:bg-accent/45 focus:text-primary focus:[&_*]:text-primary data-[highlighted]:bg-accent/45 data-[highlighted]:text-primary data-[highlighted]:[&_*]:text-primary data-[active=true]:bg-accent/45 data-[active=true]:text-primary data-[active=true]:[&_*]:text-primary',
             scheme && ITEM_SCHEME_VARIABLE_CLASS_NAME,
             scheme &&
               'hover:!bg-[var(--nav-hover-bg)] hover:!text-[var(--nav-hover-fg)] hover:[&_*]:!text-[var(--nav-hover-fg)] focus:!bg-[var(--nav-hover-bg)] focus:!text-[var(--nav-hover-fg)] focus:[&_*]:!text-[var(--nav-hover-fg)] data-[highlighted]:!bg-[var(--nav-hover-bg)] data-[highlighted]:!text-[var(--nav-hover-fg)] data-[highlighted]:[&_*]:!text-[var(--nav-hover-fg)] data-[active=true]:!bg-[var(--nav-active-bg)] data-[active=true]:!text-[var(--nav-active-fg)] data-[active=true]:[&_*]:!text-[var(--nav-active-fg)]',
