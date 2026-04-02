@@ -200,6 +200,13 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
         icon: ChartLine,
         schemeId: 'website',
       },
+      {
+        id: 'website-updates',
+        title: 'Updates',
+        href: '/website/updates',
+        icon: Megaphone,
+        schemeId: 'website',
+      },
     ],
   },
   {

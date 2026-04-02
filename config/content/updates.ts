@@ -1,7 +1,7 @@
-import { Package, TrainTrack, type LucideIcon } from 'lucide-react';
+import { Globe, Package, TrainTrack, type LucideIcon } from 'lucide-react';
 import { PROJECT_COLOR_SCHEMES, type ModeHex } from '@/config/theme/colors';
 
-export type UpdateProjectId = 'railyard' | 'template-mod';
+export type UpdateProjectId = 'railyard' | 'template-mod' | 'website';
 
 export type UpdateProject = {
   id: UpdateProjectId;
@@ -44,6 +44,20 @@ export const UPDATE_PROJECTS: UpdateProject[] = [
     secondaryColor: PROJECT_COLOR_SCHEMES['template-mod'].secondaryColor,
     textColor: PROJECT_COLOR_SCHEMES['template-mod'].textColor,
     textColorInverted: PROJECT_COLOR_SCHEMES['template-mod'].textColorInverted,
+  },
+  {
+    id: 'website',
+    label: 'Website',
+    description:
+      'Release notes and changelogs for the Subway Builder Modded website.',
+    currentVersion: 'v1.0.0',
+    basePath: '/website/updates',
+    icon: Globe,
+    accentColor: PROJECT_COLOR_SCHEMES.website.accentColor,
+    primaryColor: PROJECT_COLOR_SCHEMES.website.primaryColor,
+    secondaryColor: PROJECT_COLOR_SCHEMES.website.secondaryColor,
+    textColor: PROJECT_COLOR_SCHEMES.website.textColor,
+    textColorInverted: PROJECT_COLOR_SCHEMES.website.textColorInverted,
   },
 ];
 

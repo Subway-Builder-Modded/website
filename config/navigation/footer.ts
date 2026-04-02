@@ -197,6 +197,12 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
         href: '/website',
         icon: ChartLine,
       },
+      {
+        id: 'website-updates',
+        label: 'Updates',
+        href: '/website/updates',
+        icon: Megaphone,
+      },
     ],
   },
 ];
