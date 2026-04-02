@@ -217,13 +217,6 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
     position: 'right',
     dropdown: [
       {
-        id: 'contribute',
-        title: 'Contribute',
-        href: '/contribute',
-        activeMatchPaths: ['/contribute'],
-        icon: Heart,
-      },
-      {
         id: 'credits',
         title: 'Credits',
         href: '/credits',
@@ -236,6 +229,13 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
         href: '/license',
         activeMatchPaths: ['/license'],
         icon: Scale,
+      },
+      {
+        id: 'contribute',
+        title: 'Contribute',
+        href: '/contribute',
+        activeMatchPaths: ['/contribute'],
+        icon: Heart,
       },
     ],
   },

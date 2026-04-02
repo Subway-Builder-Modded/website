@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/page';
 import {
+  HOME_CONTRIBUTE_SECTION,
   HOME_COMMUNITY_SECTION,
   HOME_HERO,
   HOME_OPEN_SOURCE_SECTION,
@@ -28,6 +29,9 @@ describe('home page', () => {
     ).toBeVisible();
     expect(
       screen.getByRole('heading', { name: HOME_OPEN_SOURCE_SECTION.title }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: HOME_CONTRIBUTE_SECTION.title }),
     ).toBeVisible();
     expect(
       screen.getByRole('heading', { name: HOME_COMMUNITY_SECTION.title }),

@@ -53,7 +53,7 @@ export function ProjectHeader({
     window.location.href = `railyard://open?type=${encodeURIComponent(type)}&id=${encodeURIComponent(item.id)}`;
   };
   const handleViewAnalytics = () => {
-    window.location.href = `/registry/maps/${encodeURIComponent(item.id)}`;
+    window.location.href = `/registry/${type}/${encodeURIComponent(item.id)}`;
   };
   const registryAccent = getModeHex(
     PROJECT_COLOR_SCHEMES.registry.accentColor,
@@ -167,20 +167,18 @@ export function ProjectHeader({
                 <Download className="h-4 w-4" />
                 Open in Railyard
               </Button>
-              {type === 'maps' ? (
-                <Button
-                  size="sm"
-                  className="border-transparent hover:!brightness-95"
-                  style={{
-                    backgroundColor: registryAccent,
-                    color: registryText,
-                  }}
-                  onPress={handleViewAnalytics}
-                >
-                  <ChartLine className="h-4 w-4" />
-                  View Analytics
-                </Button>
-              ) : null}
+              <Button
+                size="sm"
+                className="border-transparent hover:!brightness-95"
+                style={{
+                  backgroundColor: registryAccent,
+                  color: registryText,
+                }}
+                onPress={handleViewAnalytics}
+              >
+                <ChartLine className="h-4 w-4" />
+                View Analytics
+              </Button>
             </div>
           ) : null}
         </div>

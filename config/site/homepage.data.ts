@@ -11,6 +11,8 @@ import {
   Database,
   ChartLine,
   FolderGit2,
+  Coffee,
+  Heart,
 } from 'lucide-react';
 import type { HomeLink, HomeProjectCard } from '@/config/site/homepage.types';
 
@@ -228,6 +230,35 @@ export const HOME_OPEN_SOURCE_SECTION = {
       href: '/credits',
       variant: 'outline',
       icon: Users,
+      scheme: 'default',
+      size: 'md',
+    },
+  ] satisfies HomeLink[],
+} as const;
+
+export const HOME_CONTRIBUTE_SECTION = {
+  title: 'Contribute',
+  description:
+    'Support ongoing development and help us ship new features faster while keeping everything free and open for everyone.',
+  points: [
+    'Directly helps fund infrastructure and active development.',
+    'Supporters get early access to release candidates and roadmap previews.',
+    'Every contribution helps prioritize fixes, features, and long-term improvements.',
+  ],
+  links: [
+    {
+      label: 'More Information',
+      href: '/contribute',
+      variant: 'solid',
+      icon: Heart,
+      scheme: 'default',
+      size: 'md',
+    },
+    {
+      label: 'Support on Ko-fi',
+      href: '/contribute',
+      variant: 'outline',
+      icon: Coffee,
       scheme: 'default',
       size: 'md',
     },

@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import Link from 'next/link';
 import { BarChart3 } from 'lucide-react';
 import {
@@ -193,22 +194,27 @@ function TrendingWindowChart({
   modeDays: number;
 }) {
   const isClientReady = useClientReady();
+  const chartInstanceId = useId();
   if (data.length === 0) return null;
   if (!isClientReady) return <div style={{ height: 220, width: '100%' }} />;
 
-  const baseGradientId = `trend-base-${color.replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const currGradientId = `trend-curr-${color.replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const clipKey = `${data[0]?.date ?? 'na'}-${data[data.length - 1]?.date ?? 'na'}-${modeDays}`;
-  const prevClipId = `trend-prev-clip-${clipKey.replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const currClipId = `trend-curr-clip-${clipKey.replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const splitAtIndex = Math.max(
-    0,
-    data.findIndex((point) => point.isCurrent),
-  );
+  const chartKey =
+    `${data[0]?.date ?? 'na'}-${data[data.length - 1]?.date ?? 'na'}-${modeDays}`.replace(
+      /[^a-zA-Z0-9_-]/g,
+      '',
+    );
+  const instanceKey = chartInstanceId.replace(/[^a-zA-Z0-9_-]/g, '');
+  const baseGradientId = `trend-base-${color.replace(/[^a-zA-Z0-9_-]/g, '')}-${chartKey}-${instanceKey}`;
+  const currGradientId = `trend-curr-${color.replace(/[^a-zA-Z0-9_-]/g, '')}-${chartKey}-${instanceKey}`;
+  const prevClipId = `trend-prev-clip-${chartKey}-${instanceKey}`;
+  const currClipId = `trend-curr-clip-${chartKey}-${instanceKey}`;
+  const firstCurrentIndex = data.findIndex((point) => point.isCurrent);
+  const splitIndex =
+    firstCurrentIndex === -1 ? data.length - 1 : firstCurrentIndex;
   const splitRatio =
     data.length <= 1
       ? 1
-      : Math.min(1, Math.max(0, splitAtIndex / (data.length - 1)));
+      : Math.min(1, Math.max(0, splitIndex / (data.length - 1)));
   const splitPercent = splitRatio * 100;
 
   return (
@@ -314,7 +320,7 @@ function TrendingWindowChart({
               dataKey="downloads"
               stroke="none"
               fill={`url(#${baseGradientId})`}
-              connectNulls
+              isAnimationActive={false}
               dot={false}
               clipPath={`url(#${prevClipId})`}
             />
@@ -323,7 +329,7 @@ function TrendingWindowChart({
               dataKey="downloads"
               stroke="none"
               fill={`url(#${currGradientId})`}
-              connectNulls
+              isAnimationActive={false}
               dot={false}
               clipPath={`url(#${currClipId})`}
             />
