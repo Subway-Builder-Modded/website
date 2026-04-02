@@ -13,6 +13,7 @@ import {
   Database,
   ChartLine,
   TrendingUp,
+  Heart,
 } from 'lucide-react';
 import {
   PROJECT_COLOR_SCHEMES,
@@ -98,6 +99,12 @@ export const FOOTER_NAV_SECTIONS: FooterNavSection[] = [
         label: 'License',
         href: '/license',
         icon: Scale,
+      },
+      {
+        id: 'contribute',
+        label: 'Contribute',
+        href: '/contribute',
+        icon: Heart,
       },
     ],
   },

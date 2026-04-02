@@ -47,7 +47,7 @@ export function useDropdownHoverState(): DropdownHoverState {
         closeMenu();
       }
       hoverCloseTimeoutRef.current = null;
-    }, 90);
+    }, 45);
   }, [clearHoverClose, closeMenu]);
 
   useEffect(() => {

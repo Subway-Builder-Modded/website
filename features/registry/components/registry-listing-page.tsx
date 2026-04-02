@@ -352,18 +352,18 @@ export function RegistryListingPage({
   const metadataBadges =
     type === 'map'
       ? [
-          normalizedDetail
-            ? {
-                icon: Layers,
-                value: normalizedDetail,
-                tooltip: 'Level of Detail',
-              }
-            : null,
           normalizedDataQuality
             ? {
                 icon: BadgeCheck,
                 value: normalizedDataQuality,
                 tooltip: 'Data Quality',
+              }
+            : null,
+          normalizedDetail
+            ? {
+                icon: Layers,
+                value: normalizedDetail,
+                tooltip: 'Level of Detail',
               }
             : null,
         ].filter(

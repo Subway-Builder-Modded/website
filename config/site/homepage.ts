@@ -1,5 +1,6 @@
 export type * from '@/config/site/homepage.types';
 export {
+  HOME_CONTRIBUTE_SECTION,
   HOME_COMMUNITY_SECTION,
   HOME_HERO,
   HOME_OPEN_SOURCE_SECTION,

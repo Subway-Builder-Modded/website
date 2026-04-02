@@ -6,6 +6,7 @@ import {
   HomeSectionShell,
 } from '@/features/home/components/home-sections';
 import {
+  HOME_CONTRIBUTE_SECTION,
   HOME_COMMUNITY_SECTION,
   HOME_HERO,
   HOME_OPEN_SOURCE_SECTION,
@@ -97,6 +98,34 @@ export default function Page() {
           <div className="rounded-xl border border-border/70 bg-card/70 p-5">
             <div className="flex flex-col gap-2.5">
               {HOME_OPEN_SOURCE_SECTION.links.map((link) => (
+                <HomeLinkButton key={link.label} link={link} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </HomeSectionShell>
+
+      <HomeSectionDivider />
+
+      <HomeSectionShell
+        title={HOME_CONTRIBUTE_SECTION.title}
+        description={HOME_CONTRIBUTE_SECTION.description}
+      >
+        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-xl border border-border/70 bg-card/70 p-5">
+            <ul className="space-y-2.5 text-sm text-muted-foreground sm:text-base">
+              {HOME_CONTRIBUTE_SECTION.points.map((point) => (
+                <li key={point} className="flex items-start gap-2.5">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-black dark:bg-white" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-xl border border-border/70 bg-card/70 p-5">
+            <div className="flex flex-col gap-2.5">
+              {HOME_CONTRIBUTE_SECTION.links.map((link) => (
                 <HomeLinkButton key={link.label} link={link} />
               ))}
             </div>

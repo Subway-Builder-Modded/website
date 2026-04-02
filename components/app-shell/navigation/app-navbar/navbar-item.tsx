@@ -62,7 +62,6 @@ export function NavbarItemView({
     'group relative inline-flex min-w-0 items-center justify-center text-start font-semibold text-muted-fg no-underline outline-none transition-all duration-200 ease-[cubic-bezier(.22,.9,.35,1)]',
     'gap-[var(--app-navbar-item-gap)] rounded-[var(--app-navbar-item-radius)] px-[var(--app-navbar-item-px)] py-[var(--app-navbar-item-py)] text-[var(--app-navbar-item-title)]',
     'hover:bg-accent/45 hover:text-primary active:bg-accent/55',
-    'focus-visible:ring-2 focus-visible:ring-ring/30',
     'data-[active=true]:bg-accent/45 data-[active=true]:text-primary',
     itemScheme && ITEM_SCHEME_VARIABLE_CLASS_NAME,
     itemScheme &&
