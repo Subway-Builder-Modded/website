@@ -59,6 +59,13 @@ export function DesktopNavbar({
 
       <NavbarGap />
 
+      <div
+        aria-hidden="true"
+        className="h-7 w-[3px] shrink-0 rounded-full bg-foreground/25"
+      />
+
+      <NavbarGap />
+
       <NavbarSection className="gap-1.5 md:gap-1.5">
         {leftItems.map((item) => (
           <NavbarItemView

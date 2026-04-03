@@ -46,6 +46,7 @@ export const APP_NAVBAR_COLOR_SCHEMES = {
   registry: getProjectNavbarScheme('registry'),
   'template-mod': getProjectNavbarScheme('template-mod'),
   website: getProjectNavbarScheme('website'),
+  tools: getProjectNavbarScheme('tools'),
   themeLight: {
     hover: {
       light: { text: '#B06710', background: '#FFD26055' },

@@ -12,6 +12,8 @@ export const SITE_COLOR_SCHEME_ROUTE_RULES: SiteColorSchemeRouteRule[] = [
   { pattern: '/registry', scheme: 'registry' },
   { pattern: '/website/**', scheme: 'website' },
   { pattern: '/website', scheme: 'website' },
+  { pattern: '/tools/**', scheme: 'tools' },
+  { pattern: '/tools', scheme: 'tools' },
 ];
 
 function normalizePathname(pathname: string): string {

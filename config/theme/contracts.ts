@@ -3,6 +3,7 @@ export const PROJECT_COLOR_IDS = [
   'registry',
   'template-mod',
   'website',
+  'tools',
 ] as const;
 
 export type ProjectColorId = (typeof PROJECT_COLOR_IDS)[number];

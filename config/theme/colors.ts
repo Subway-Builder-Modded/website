@@ -213,4 +213,10 @@ export const PROJECT_COLOR_SCHEMES: Record<ProjectColorId, ThemedColorSet> = {
     primaryColor: createModeColorFromDarkVibrant('#F2992E55'),
     secondaryColor: createModeColorFromDarkVibrant('#FFBE7355'),
   }),
+  tools: withSharedTextColors({
+    accentColor: createModeColorFromDarkAccent('#FF6B6B'),
+    mutedColor: createModeColorFromDarkVibrant('#D94F4F'),
+    primaryColor: createModeColorFromDarkVibrant('#D94F4F55'),
+    secondaryColor: createModeColorFromDarkVibrant('#FF6B6B55'),
+  }),
 };

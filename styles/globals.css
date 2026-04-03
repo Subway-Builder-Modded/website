@@ -7,6 +7,7 @@
 @import './schemes/template-mod.css';
 @import './schemes/registry.css';
 @import './schemes/website.css';
+@import './schemes/tools.css';
 @plugin "../node_modules/@tailwindcss/typography/src/index.js";
 
 @custom-variant dark (&:is(.dark *));

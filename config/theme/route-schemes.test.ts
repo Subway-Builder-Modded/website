@@ -16,6 +16,8 @@ describe('resolveSiteColorScheme', () => {
     expect(resolveSiteColorScheme('/registry/author/someone')).toBe('registry');
     expect(resolveSiteColorScheme('/website')).toBe('website');
     expect(resolveSiteColorScheme('/website/trending')).toBe('website');
+    expect(resolveSiteColorScheme('/tools')).toBe('tools');
+    expect(resolveSiteColorScheme('/tools/md-playground')).toBe('tools');
   });
 
   it('normalizes missing leading slash and trailing slash', () => {
@@ -37,6 +39,8 @@ describe('resolveSiteColorScheme', () => {
       { pattern: '/registry', scheme: 'registry' },
       { pattern: '/website/**', scheme: 'website' },
       { pattern: '/website', scheme: 'website' },
+      { pattern: '/tools/**', scheme: 'tools' },
+      { pattern: '/tools', scheme: 'tools' },
     ]);
   });
 });
