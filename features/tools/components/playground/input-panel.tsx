@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Editor } from '@tiptap/core';
+import type { Editor } from '@tiptap/react';
 import { EditorContent } from '@tiptap/react';
 import {
   Bold,

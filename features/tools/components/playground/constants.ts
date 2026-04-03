@@ -1,4 +1,4 @@
-import type { JSONContent } from '@tiptap/core';
+import type { JSONContent } from '@tiptap/react';
 
 export type OutputMode = 'normal' | 'inline' | 'preview';
 export type InputMode = 'rich-text' | 'markdown';
