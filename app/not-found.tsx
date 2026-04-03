@@ -59,6 +59,7 @@ export default function NotFound() {
         <div className="mt-7">
           <Link
             href="/"
+            data-color-scheme="default"
             className="inline-flex min-h-10 items-center justify-center rounded-lg border border-border bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           >
             Return Home
