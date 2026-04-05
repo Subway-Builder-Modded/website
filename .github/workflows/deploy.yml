@@ -98,7 +98,36 @@ jobs:
       - name: Generate analytics
         env:
           WEBSITE_PATH_SOURCE_DIR: ${{ github.workspace }}/out
+          RAILYARD_GITHUB_TOKEN: ${{ secrets.RAILYARD_GITHUB_TOKEN }}
         run: pnpm run analytics
+
+      - name: Verify analytics refresh
+        shell: bash
+        run: |
+          node -e "
+            const fs = require('node:fs');
+
+            function readJson(path) {
+              return JSON.parse(fs.readFileSync(path, 'utf8'));
+            }
+
+            const registryMeta = readJson('public/registry/analytics/snapshot-meta.json');
+            const railyardMeta = readJson('public/railyard/analytics/snapshot-meta.json');
+
+            const registryFiles = Array.isArray(registryMeta.files) ? registryMeta.files.length : 0;
+            const railyardFiles = Array.isArray(railyardMeta.files) ? railyardMeta.files.length : 0;
+
+            if (registryFiles === 0 || railyardFiles === 0) {
+              console.error('[deploy] Analytics refresh verification failed.');
+              console.error('[deploy] registry files refreshed:', registryFiles);
+              console.error('[deploy] railyard files refreshed:', railyardFiles);
+              process.exit(1);
+            }
+
+            console.log('[deploy] Analytics refresh verified.');
+            console.log('[deploy] registry files refreshed:', registryFiles);
+            console.log('[deploy] railyard files refreshed:', railyardFiles);
+          "
 
       - name: Build
         env:
