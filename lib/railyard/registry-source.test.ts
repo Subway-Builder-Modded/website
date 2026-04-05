@@ -58,28 +58,42 @@ describe('registry-source', () => {
 
     expect(payload).toEqual({ sourceRepo: 'The-Railyard', ok: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(String(fetchMock.mock.calls[0][0])).toContain('/registry/main/mods/index.json');
-    expect(String(fetchMock.mock.calls[1][0])).toContain('/The-Railyard/main/mods/index.json');
+    expect(String(fetchMock.mock.calls[0][0])).toContain(
+      '/registry/main/mods/index.json',
+    );
+    expect(String(fetchMock.mock.calls[1][0])).toContain(
+      '/The-Railyard/main/mods/index.json',
+    );
   });
 
-  it.fails('KNOWN_FAILING: registry should serve index without fallback', async () => {
-    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
-      const url = String(input);
-      if (url.includes('/registry/')) {
-        return new Response('not found', { status: 404, statusText: 'Not Found' });
-      }
+  it.fails(
+    'KNOWN_FAILING: registry should serve index without fallback',
+    async () => {
+      vi.spyOn(globalThis, 'fetch').mockImplementation(
+        async (input: RequestInfo | URL) => {
+          const url = String(input);
+          if (url.includes('/registry/')) {
+            return new Response('not found', {
+              status: 404,
+              statusText: 'Not Found',
+            });
+          }
 
-      return new Response(
-        JSON.stringify({ sourceRepo: 'The-Railyard', ok: true }),
-        {
-          status: 200,
-          headers: { 'content-type': 'application/json' },
+          return new Response(
+            JSON.stringify({ sourceRepo: 'The-Railyard', ok: true }),
+            {
+              status: 200,
+              headers: { 'content-type': 'application/json' },
+            },
+          );
         },
       );
-    });
 
-    const payload = await fetchRegistryJsonWithFallback<{ sourceRepo: string }>('mods/index.json');
+      const payload = await fetchRegistryJsonWithFallback<{
+        sourceRepo: string;
+      }>('mods/index.json');
 
-    expect(payload.sourceRepo).toBe('registry');
-  });
+      expect(payload.sourceRepo).toBe('registry');
+    },
+  );
 });

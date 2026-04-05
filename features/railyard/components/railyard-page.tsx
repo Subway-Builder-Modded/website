@@ -398,7 +398,8 @@ export default function RailyardPage() {
       setValue: (n: number) => void,
     ) {
       try {
-        const data = await fetchRegistryJsonWithFallback<Record<string, unknown>>(path);
+        const data =
+          await fetchRegistryJsonWithFallback<Record<string, unknown>>(path);
         if (Array.isArray(data[key])) setValue(data[key].length);
         else if (Array.isArray(data)) setValue(data.length);
       } catch {

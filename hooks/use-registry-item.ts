@@ -26,9 +26,9 @@ export function useRegistryItem(
         setLoading(true);
         setError(null);
 
-        const data = await fetchRegistryJsonWithFallback<ModManifest | MapManifest>(
-          `${type}/${id}/manifest.json`,
-        );
+        const data = await fetchRegistryJsonWithFallback<
+          ModManifest | MapManifest
+        >(`${type}/${id}/manifest.json`);
         if (!cancelled) setItem(data);
       } catch (err) {
         if (!cancelled) {

@@ -22,7 +22,8 @@ describe('resolveRegistryAnalyticsDir', () => {
     const legacyPath = path.join(cwd, 'The-Railyard', 'analytics');
     const resolved = resolveRegistryAnalyticsDir({
       cwd,
-      hasSentinelFile: (dir) => dir === cachePath || dir === siblingPath || dir === legacyPath,
+      hasSentinelFile: (dir) =>
+        dir === cachePath || dir === siblingPath || dir === legacyPath,
     });
 
     expect(resolved).toBe(cachePath);

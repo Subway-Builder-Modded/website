@@ -41,7 +41,9 @@ export async function fetchRegistryJsonWithFallback<T>(
   init?: RequestInit,
 ): Promise<T> {
   const candidates = getRawRegistryUrls(path);
-  let lastError: unknown = new Error(`Failed to fetch registry JSON for ${path}`);
+  let lastError: unknown = new Error(
+    `Failed to fetch registry JSON for ${path}`,
+  );
 
   for (const url of candidates) {
     try {
@@ -49,7 +51,9 @@ export async function fetchRegistryJsonWithFallback<T>(
       if (response.ok) {
         return (await response.json()) as T;
       }
-      lastError = new Error(`${response.status} ${response.statusText} for ${url}`);
+      lastError = new Error(
+        `${response.status} ${response.statusText} for ${url}`,
+      );
     } catch (error) {
       lastError = error;
     }
