@@ -23,6 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useRegistryItem } from '@/hooks/use-registry-item';
 import { useVersions } from '@/hooks/use-versions';
+import { fetchRegistryJsonWithFallback } from '@/lib/railyard/registry-source';
 import {
   mergeVersionDownloads,
   withZeroDownloads,
@@ -38,16 +39,13 @@ interface ProjectPageProps {
   id: string;
 }
 
-const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
-
 async function fetchIntegrity(
   type: 'mods' | 'maps',
 ): Promise<RegistryIntegrityReport | null> {
   try {
-    const response = await fetch(`${BASE_URL}/${type}/integrity.json`);
-    if (!response.ok) return null;
-    return response.json();
+    return await fetchRegistryJsonWithFallback<RegistryIntegrityReport>(
+      `${type}/integrity.json`,
+    );
   } catch {
     return null;
   }
@@ -57,9 +55,9 @@ async function fetchDownloadCounts(
   type: 'mods' | 'maps',
 ): Promise<AssetDownloadCountsByVersion> {
   try {
-    const response = await fetch(`${BASE_URL}/${type}/downloads.json`);
-    if (!response.ok) return {};
-    return response.json();
+    return await fetchRegistryJsonWithFallback<AssetDownloadCountsByVersion>(
+      `${type}/downloads.json`,
+    );
   } catch {
     return {};
   }

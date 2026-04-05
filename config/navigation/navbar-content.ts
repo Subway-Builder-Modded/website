@@ -301,7 +301,7 @@ export const APP_NAVBAR_ITEMS: AppNavbarItem[] = [
       {
         id: 'github-registry',
         title: 'Registry',
-        href: 'https://github.com/Subway-Builder-Modded/The-Railyard',
+        href: 'https://github.com/Subway-Builder-Modded/registry',
         icon: Database,
         schemeId: 'registry',
       },

@@ -22,30 +22,36 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRegistryItem } from '@/hooks/use-registry-item';
 import { useVersions } from '@/hooks/use-versions';
+import { fetchRegistryJsonWithFallback } from '@/lib/railyard/registry-source';
 import {
   mergeVersionDownloads,
   withZeroDownloads,
 } from '@/lib/railyard/version-downloads';
+import type {
+  AssetDownloadCountsByVersion,
+  RegistryIntegrityReport,
+} from '@/types/registry';
 import type { VersionInfo } from '@/types/registry';
 
-const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
-
-async function fetchIntegrity(type: 'mods' | 'maps') {
+async function fetchIntegrity(
+  type: 'mods' | 'maps',
+): Promise<RegistryIntegrityReport | null> {
   try {
-    const res = await fetch(`${BASE_URL}/${type}/integrity.json`);
-    if (!res.ok) return null;
-    return res.json();
+    return await fetchRegistryJsonWithFallback<RegistryIntegrityReport>(
+      `${type}/integrity.json`,
+    );
   } catch {
     return null;
   }
 }
 
-async function fetchDownloadCounts(type: 'mods' | 'maps') {
+async function fetchDownloadCounts(
+  type: 'mods' | 'maps',
+): Promise<AssetDownloadCountsByVersion> {
   try {
-    const res = await fetch(`${BASE_URL}/${type}/downloads.json`);
-    if (!res.ok) return {};
-    return res.json();
+    return await fetchRegistryJsonWithFallback<AssetDownloadCountsByVersion>(
+      `${type}/downloads.json`,
+    );
   } catch {
     return {};
   }

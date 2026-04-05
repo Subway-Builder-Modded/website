@@ -130,7 +130,7 @@ export const HOME_PROJECT_SECTION = {
         },
         {
           label: 'View the Registry',
-          href: 'https://github.com/Subway-Builder-Modded/The-Railyard',
+          href: 'https://github.com/Subway-Builder-Modded/registry',
           external: true,
           variant: 'outline',
           icon: FolderGit2,

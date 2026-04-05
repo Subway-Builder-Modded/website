@@ -16,15 +16,27 @@ describe('resolveRegistryAnalyticsDir', () => {
     expect(resolved).toBe(envPath);
   });
 
-  it('falls back to public registry cache before legacy locations', () => {
+  it('falls back to public registry cache before sibling repo locations', () => {
     const cachePath = path.join(cwd, 'public', 'registry', 'analytics');
+    const siblingPath = path.join(cwd, '..', 'registry', 'analytics');
     const legacyPath = path.join(cwd, 'The-Railyard', 'analytics');
     const resolved = resolveRegistryAnalyticsDir({
       cwd,
-      hasSentinelFile: (dir) => dir === cachePath || dir === legacyPath,
+      hasSentinelFile: (dir) => dir === cachePath || dir === siblingPath || dir === legacyPath,
     });
 
     expect(resolved).toBe(cachePath);
+  });
+
+  it('prefers registry sibling directory over legacy The-Railyard location', () => {
+    const siblingPath = path.join(cwd, '..', 'registry', 'analytics');
+    const legacyPath = path.join(cwd, 'The-Railyard', 'analytics');
+    const resolved = resolveRegistryAnalyticsDir({
+      cwd,
+      hasSentinelFile: (dir) => dir === siblingPath || dir === legacyPath,
+    });
+
+    expect(resolved).toBe(siblingPath);
   });
 
   it('returns stable default when no candidates exist', () => {

@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
 import { buildEmbedMetadata } from '@/config/site/metadata';
+import {
+  fetchRegistryJsonWithFallback,
+  getRawRegistryUrls,
+} from '@/lib/railyard/registry-source';
 import type {
   MapManifest,
   ModManifest,
@@ -9,18 +13,13 @@ import type {
 export type RailyardRegistryType = 'mods' | 'maps';
 
 type RailyardManifest = ModManifest | MapManifest;
-
-const RAILYARD_REGISTRY_BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 const RAILYARD_EMBED_FALLBACK_IMAGE_PATH =
   '/images/docs/creating-custom-maps/empty-thumbnail.png?v=20260329';
 const EMBED_DESCRIPTION_MAX_LENGTH = 180;
 
 async function fetchRegistryJson<T>(path: string): Promise<T | null> {
   try {
-    const response = await fetch(`${RAILYARD_REGISTRY_BASE_URL}/${path}`);
-    if (!response.ok) return null;
-    return (await response.json()) as T;
+    return await fetchRegistryJsonWithFallback<T>(path);
   } catch {
     return null;
   }
@@ -78,9 +77,9 @@ function resolveManifestEmbedImage(
   );
   if (!thumbnailPath) return RAILYARD_EMBED_FALLBACK_IMAGE_PATH;
 
-  return `${RAILYARD_REGISTRY_BASE_URL}/${encodePathSegment(type)}/${encodePathSegment(id)}/${encodePath(
-    thumbnailPath,
-  )}`;
+  return getRawRegistryUrls(
+    `${encodePathSegment(type)}/${encodePathSegment(id)}/${encodePath(thumbnailPath)}`,
+  )[0];
 }
 
 export async function getRegistryStaticIds(

@@ -7,9 +7,11 @@ const INDEX_FILE = path.join(OUTPUT_DIR, 'index.json');
 const LEGACY_BOUNDS_FILE = path.join(ROOT, 'public', 'registry', 'map-data.json');
 
 const REPO_OWNER = 'Subway-Builder-Modded';
-const REPO_NAME = 'The-Railyard';
+const REPO_NAME = 'registry';
+const REPO_NAME_FALLBACK = 'The-Railyard';
 const REPO_BRANCH = 'main';
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`;
+const RAW_BASE_FALLBACK = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME_FALLBACK}/${REPO_BRANCH}`;
 
 const TOKEN =
   process.env['RAILYARD_GITHUB_TOKEN']?.trim() ||
@@ -69,12 +71,19 @@ function buildHeaders() {
 }
 
 async function fetchJson(pathname) {
-  const url = `${RAW_BASE}/${pathname}`;
-  const response = await fetch(url, { headers: buildHeaders() });
-  if (!response.ok) {
-    throw new Error(`${response.status} ${response.statusText} for ${url}`);
+  const bases = [RAW_BASE, RAW_BASE_FALLBACK];
+  let lastError;
+  for (const base of bases) {
+    const url = `${base}/${pathname}`;
+    try {
+      const response = await fetch(url, { headers: buildHeaders() });
+      if (response.ok) return response.json();
+      lastError = new Error(`${response.status} ${response.statusText} for ${url}`);
+    } catch (error) {
+      lastError = error;
+    }
   }
-  return response.json();
+  throw lastError;
 }
 
 function readMapIds(indexData) {

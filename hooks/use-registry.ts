@@ -6,6 +6,11 @@ import {
   getCustomVersions,
   getGithubReleases,
 } from '@/lib/railyard/github-releases';
+import {
+  fetchRegistryJsonWithFallback,
+  getRawRegistryUrls,
+  getRegistryCdnUrls,
+} from '@/lib/railyard/registry-source';
 import type {
   AssetDownloadCountsByVersion,
   ModManifest,
@@ -13,8 +18,6 @@ import type {
   RegistryIntegrityReport,
 } from '@/types/registry';
 
-const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 const LAST_UPDATED_WORKER_LIMIT = 6;
 
 type LastUpdatedCandidate = {
@@ -32,32 +35,30 @@ type LastUpdatedArgs = {
 const lastUpdatedCache = new Map<string, number>();
 
 async function fetchIndex(type: 'mods' | 'maps'): Promise<string[]> {
-  const res = await fetch(`${BASE_URL}/${type}/index.json`);
-  if (!res.ok) throw new Error(`Failed to fetch ${type} index`);
-  const data = await res.json();
-  return Array.isArray(data[type]) ? data[type] : [];
+  const data = await fetchRegistryJsonWithFallback<Record<string, unknown>>(
+    `${type}/index.json`,
+  );
+  return Array.isArray(data[type]) ? (data[type] as string[]) : [];
 }
 
 async function fetchManifest<T>(type: 'mods' | 'maps', id: string): Promise<T> {
-  const res = await fetch(`${BASE_URL}/${type}/${id}/manifest.json`);
-  if (!res.ok) throw new Error(`Failed to fetch manifest for ${type}/${id}`);
-  return res.json();
+  return fetchRegistryJsonWithFallback<T>(`${type}/${id}/manifest.json`);
 }
 
 async function fetchIntegrity(
   type: 'mods' | 'maps',
 ): Promise<RegistryIntegrityReport> {
-  const res = await fetch(`${BASE_URL}/${type}/integrity.json`);
-  if (!res.ok) throw new Error(`Failed to fetch ${type} integrity`);
-  return res.json();
+  return fetchRegistryJsonWithFallback<RegistryIntegrityReport>(
+    `${type}/integrity.json`,
+  );
 }
 
 async function fetchDownloadCounts(
   type: 'mods' | 'maps',
 ): Promise<AssetDownloadCountsByVersion> {
-  const res = await fetch(`${BASE_URL}/${type}/downloads.json`);
-  if (!res.ok) throw new Error(`Failed to fetch ${type} download counts`);
-  return res.json();
+  return fetchRegistryJsonWithFallback<AssetDownloadCountsByVersion>(
+    `${type}/downloads.json`,
+  );
 }
 
 function parseVersionDate(value: string, updateType: string): number | null {
@@ -331,7 +332,7 @@ export function buildGalleryUrl(
   id: string,
   imagePath: string,
 ): string {
-  return `${BASE_URL}/${type}/${id}/${imagePath}`;
+  return getRawRegistryUrls(`${type}/${id}/${imagePath}`)[0];
 }
 
 export function buildGalleryCdnUrl(
@@ -339,5 +340,5 @@ export function buildGalleryCdnUrl(
   id: string,
   imagePath: string,
 ): string {
-  return `https://cdn.jsdelivr.net/gh/Subway-Builder-Modded/The-Railyard@main/${type}/${id}/${imagePath}`;
+  return getRegistryCdnUrls(`${type}/${id}/${imagePath}`)[0];
 }

@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { fetchRegistryJsonWithFallback } from '@/lib/railyard/registry-source';
 import type { ModManifest, MapManifest } from '@/types/registry';
-
-const BASE_URL =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 
 interface UseRegistryItemResult {
   item: ModManifest | MapManifest | null;
@@ -28,10 +26,9 @@ export function useRegistryItem(
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${BASE_URL}/${type}/${id}/manifest.json`);
-        if (!res.ok) throw new Error(`Failed to fetch ${type}/${id} manifest`);
-
-        const data = await res.json();
+        const data = await fetchRegistryJsonWithFallback<ModManifest | MapManifest>(
+          `${type}/${id}/manifest.json`,
+        );
         if (!cancelled) setItem(data);
       } catch (err) {
         if (!cancelled) {

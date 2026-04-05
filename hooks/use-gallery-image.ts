@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { buildGalleryCdnUrl, buildGalleryUrl } from '@/hooks/use-registry';
+import { getRawRegistryUrls, getRegistryCdnUrls } from '@/lib/railyard/registry-source';
 
 interface GalleryImageCacheEntry {
   imageUrl: string | null;
@@ -31,10 +32,15 @@ async function resolveFirstWorkingImageUrl(
   id: string,
   imagePath: string,
 ): Promise<string | null> {
-  const candidates = [
-    buildGalleryUrl(type, id, imagePath),
-    buildGalleryCdnUrl(type, id, imagePath),
-  ];
+  const path = `${type}/${id}/${imagePath}`;
+  const candidates = Array.from(
+    new Set([
+      ...getRawRegistryUrls(path),
+      ...getRegistryCdnUrls(path),
+      buildGalleryUrl(type, id, imagePath),
+      buildGalleryCdnUrl(type, id, imagePath),
+    ]),
+  );
 
   for (const url of candidates) {
     try {

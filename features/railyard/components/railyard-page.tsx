@@ -51,6 +51,7 @@ import { useRegistry } from '@/hooks/use-registry';
 import { DEFAULT_SORT_STATE } from '@/lib/railyard/constants';
 import type { GithubRelease } from '@/lib/railyard/github-releases';
 import { getGithubReleases } from '@/lib/railyard/github-releases';
+import { fetchRegistryJsonWithFallback } from '@/lib/railyard/registry-source';
 import { buildTaggedItems, compareItems } from '@/lib/railyard/tagged-items';
 import { cn } from '@/lib/utils';
 
@@ -331,9 +332,6 @@ const WORKFLOW_STOPS = [
   },
 ];
 
-const INDEX_BASE =
-  'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/refs/heads/main';
-
 // ─── Page ─────────────────────────────────────────────────────────────────
 
 export default function RailyardPage() {
@@ -395,14 +393,12 @@ export default function RailyardPage() {
       });
 
     async function fetchCount(
-      url: string,
+      path: string,
       key: string,
       setValue: (n: number) => void,
     ) {
       try {
-        const res = await fetch(url);
-        if (!res.ok) return;
-        const data = await res.json();
+        const data = await fetchRegistryJsonWithFallback<Record<string, unknown>>(path);
         if (Array.isArray(data[key])) setValue(data[key].length);
         else if (Array.isArray(data)) setValue(data.length);
       } catch {
@@ -410,8 +406,8 @@ export default function RailyardPage() {
       }
     }
 
-    fetchCount(`${INDEX_BASE}/maps/index.json`, 'maps', setMapCount);
-    fetchCount(`${INDEX_BASE}/mods/index.json`, 'mods', setModCount);
+    fetchCount('maps/index.json', 'maps', setMapCount);
+    fetchCount('mods/index.json', 'mods', setModCount);
 
     const closeMenu = (e: MouseEvent) => {
       if (

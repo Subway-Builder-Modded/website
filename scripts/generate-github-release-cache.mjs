@@ -3,6 +3,8 @@ import path from 'node:path';
 import process from 'node:process';
 
 const BASE_URL =
+  'https://raw.githubusercontent.com/Subway-Builder-Modded/registry/main/';
+const BASE_URL_FALLBACK =
   'https://raw.githubusercontent.com/Subway-Builder-Modded/The-Railyard/main/';
 const OUTPUT_PATH = path.resolve(
   process.cwd(),
@@ -60,13 +62,31 @@ function sanitizeRelease(input) {
 }
 
 async function fetchIndex(type) {
-  const data = await fetchJson(`${BASE_URL}/${type}/index.json`);
-  const entries = Array.isArray(data?.[type]) ? data[type] : [];
-  return entries;
+  const bases = [BASE_URL, BASE_URL_FALLBACK];
+  let lastError;
+  for (const base of bases) {
+    try {
+      const data = await fetchJson(`${base}/${type}/index.json`);
+      const entries = Array.isArray(data?.[type]) ? data[type] : [];
+      return entries;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError;
 }
 
 async function fetchManifest(type, id) {
-  return fetchJson(`${BASE_URL}/${type}/${id}/manifest.json`);
+  const bases = [BASE_URL, BASE_URL_FALLBACK];
+  let lastError;
+  for (const base of bases) {
+    try {
+      return await fetchJson(`${base}/${type}/${id}/manifest.json`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError;
 }
 
 async function collectGithubRepos() {

@@ -6,9 +6,11 @@ const OUTPUT_DIR = path.join(ROOT, 'public', 'railyard', 'analytics');
 const META_FILE = path.join(OUTPUT_DIR, 'snapshot-meta.json');
 
 const REPO_OWNER = 'Subway-Builder-Modded';
-const REPO_NAME = 'The-Railyard';
+const REPO_NAME = 'registry';
+const REPO_NAME_FALLBACK = 'The-Railyard';
 const REPO_BRANCH = 'main';
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`;
+const RAW_BASE_FALLBACK = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME_FALLBACK}/${REPO_BRANCH}`;
 
 const TOKEN =
   process.env['RAILYARD_GITHUB_TOKEN']?.trim() ||
@@ -57,12 +59,19 @@ function buildHeaders() {
 }
 
 async function fetchFile(sourcePath) {
-  const url = `${RAW_BASE}/${sourcePath}`;
-  const response = await fetch(url, { headers: buildHeaders() });
-  if (!response.ok) {
-    throw new Error(`${response.status} ${response.statusText} for ${url}`);
+  const bases = [RAW_BASE, RAW_BASE_FALLBACK];
+  let lastError;
+  for (const base of bases) {
+    const url = `${base}/${sourcePath}`;
+    try {
+      const response = await fetch(url, { headers: buildHeaders() });
+      if (response.ok) return response.text();
+      lastError = new Error(`${response.status} ${response.statusText} for ${url}`);
+    } catch (error) {
+      lastError = error;
+    }
   }
-  return response.text();
+  throw lastError;
 }
 
 function buildSnapshotLabel(date) {
