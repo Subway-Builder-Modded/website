@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { enrichAuthorIdentity } from '@/lib/authors';
 import { toCumulativeDownloadTotals } from '@/lib/railyard/download-totals';
+import { getRegistryAuthorDirectory } from '@/lib/railyard/registry-author-directory';
 import {
   getCustomVersions,
   getGithubReleases,
@@ -243,6 +245,7 @@ export function useRegistry(): RegistryState {
           mapsIntegrity,
           modCounts,
           mapCounts,
+          authorDirectory,
         ] = await Promise.all([
           fetchIndex('mods'),
           fetchIndex('maps'),
@@ -250,6 +253,7 @@ export function useRegistry(): RegistryState {
           fetchIntegrity('maps'),
           fetchDownloadCounts('mods').catch(() => ({})),
           fetchDownloadCounts('maps').catch(() => ({})),
+          getRegistryAuthorDirectory(),
         ]);
 
         const [fetchedMods, fetchedMaps] = await Promise.all([
@@ -261,8 +265,15 @@ export function useRegistry(): RegistryState {
           ),
         ]);
 
-        const liveMods = fetchedMods.filter((m) => !m.is_test);
-        const liveMaps = fetchedMaps.filter((m) => !m.is_test);
+        const enrichedMods = fetchedMods.map((manifest) =>
+          enrichAuthorIdentity(manifest, authorDirectory),
+        );
+        const enrichedMaps = fetchedMaps.map((manifest) =>
+          enrichAuthorIdentity(manifest, authorDirectory),
+        );
+
+        const liveMods = enrichedMods.filter((m) => !m.is_test);
+        const liveMaps = enrichedMaps.filter((m) => !m.is_test);
 
         const [modLastUpdated, mapLastUpdated] = await Promise.all([
           resolveLastUpdatedBatch(liveMods),

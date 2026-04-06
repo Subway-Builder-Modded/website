@@ -17,12 +17,12 @@ import {
   RankBadge,
   SafeChartContainer,
   TypeBadge,
-  getAuthorDisplayName,
   getListingColor,
   registryLinkStyle,
   trimLeadingZeroDailyData,
   useClientReady,
 } from '@/features/registry/components/registry-shared';
+import { AuthorName } from '@/components/shared/author-name';
 import type {
   EnrichedTrendingRow,
   TrendingModeKey,
@@ -114,13 +114,12 @@ export function RegistryTrendingCard({
 
           <p className="mt-1 text-sm text-muted-foreground">
             by{' '}
-            <Link
+            <AuthorName
+              author={row}
               href={authorAnalyticsHref(row)}
-              className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
+              linkClassName={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
               style={registryLinkStyle(color)}
-            >
-              {getAuthorDisplayName(row)}
-            </Link>
+            />
           </p>
 
           <div className="mt-4 rounded-xl border border-border bg-card p-4 ring-1 ring-foreground/5">

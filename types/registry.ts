@@ -4,11 +4,33 @@ export interface UpdateConfig {
   url?: string;
 }
 
+export type ContributorTier =
+  | 'developer'
+  | 'engineer'
+  | 'conductor'
+  | 'executive';
+
+export interface RegistryAuthorsIndexEntry {
+  github_id?: number;
+  author_id: string;
+  author_alias?: string;
+  attribution_link?: string;
+  contributor_tier?: string;
+}
+
+export interface RegistryAuthorsIndex {
+  schema_version?: number;
+  authors: RegistryAuthorsIndexEntry[];
+}
+
 export interface ModManifest {
   schema_version?: number;
   id: string;
   name: string;
   author: string;
+  author_alias?: string;
+  attribution_link?: string;
+  contributor_tier?: ContributorTier | null;
   github_id?: number;
   last_updated?: number;
   description: string;

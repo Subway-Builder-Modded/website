@@ -15,6 +15,7 @@ import {
 import { Users } from 'lucide-react';
 import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
 import { usePersistedState } from '@/lib/use-persisted-state';
+import { AuthorName } from '@/components/shared/author-name';
 
 import {
   REGISTRY_LINK_HOVER_CLS,
@@ -169,13 +170,12 @@ function AuthorRow({
         <RankBadge rank={displayRank} />
       </td>
       <td className={TABLE_CELL_CLS}>
-        <Link
+        <AuthorName
+          author={row}
           href={`/registry/authors/${encodeURIComponent(row.author)}`}
-          className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
+          linkClassName={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
           style={registryLinkStyle('var(--primary)')}
-        >
-          {getAuthorDisplayName(row)}
-        </Link>
+        />
       </td>
       <td
         className={`${TABLE_CELL_NUMERIC_CLS} ${sortKey === 'total_downloads' ? 'font-black' : 'font-medium text-muted-foreground'}`}
@@ -285,7 +285,7 @@ function AuthorSearchResultsTable({
                     className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
                     style={registryLinkStyle('var(--primary)')}
                   >
-                    {getAuthorDisplayName(row)}
+                    <AuthorName author={row} />
                   </Link>
                 </td>
                 <td

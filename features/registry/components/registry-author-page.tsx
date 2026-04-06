@@ -38,6 +38,7 @@ import {
   TABLE_ROW_CLS,
   registryLinkStyle,
 } from './registry-shared';
+import { AuthorName } from '@/components/shared/author-name';
 import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
 import { usePersistedState } from '@/lib/use-persisted-state';
 
@@ -193,7 +194,13 @@ export function RegistryAuthorPage({
 
   return (
     <RegistryDetailShell
-      title={displayName}
+      title={
+        authorRow ? (
+          <AuthorName author={authorRow} contributorVariant="pill" />
+        ) : (
+          displayName
+        )
+      }
       snapshotLabel={data.snapshotLabel}
       actions={
         attributionHref ? (

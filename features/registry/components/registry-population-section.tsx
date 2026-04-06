@@ -16,6 +16,7 @@ import { Globe } from 'lucide-react';
 import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
 import { getCountryFlagIcon } from '@/lib/railyard/flags';
 import { usePersistedState } from '@/lib/use-persisted-state';
+import { AuthorName } from '@/components/shared/author-name';
 
 import {
   MAP_COLOR,
@@ -30,7 +31,6 @@ import {
   TABLE_HEADER_RIGHT_CLS,
   TABLE_ROW_CLS,
   formatCount,
-  getAuthorDisplayName,
   truncateName,
   useClientReady,
   registryLinkStyle,
@@ -216,13 +216,12 @@ function PopulationSearchResultsTable({
                     </Link>
                   </td>
                   <td className={`hidden ${TABLE_CELL_CLS} md:table-cell`}>
-                    <Link
+                    <AuthorName
+                      author={row}
                       href={`/registry/authors/${encodeURIComponent(row.author)}`}
-                      className={REGISTRY_LINK_HOVER_CLS}
+                      linkClassName={REGISTRY_LINK_HOVER_CLS}
                       style={registryLinkStyle(MAP_COLOR)}
-                    >
-                      {getAuthorDisplayName(row)}
-                    </Link>
+                    />
                   </td>
                   <td
                     className={`hidden ${TABLE_CELL_CLS} text-muted-foreground sm:table-cell`}
@@ -458,13 +457,12 @@ function PopulationTable({ rows }: { rows: PopulationRow[] }) {
                       </Link>
                     </td>
                     <td className={`hidden ${TABLE_CELL_CLS} md:table-cell`}>
-                      <Link
+                      <AuthorName
+                        author={row}
                         href={`/registry/authors/${encodeURIComponent(row.author)}`}
-                        className={REGISTRY_LINK_HOVER_CLS}
+                        linkClassName={REGISTRY_LINK_HOVER_CLS}
                         style={registryLinkStyle(MAP_COLOR)}
-                      >
-                        {getAuthorDisplayName(row)}
-                      </Link>
+                      />
                     </td>
                     <td
                       className={`hidden ${TABLE_CELL_CLS} text-muted-foreground sm:table-cell`}

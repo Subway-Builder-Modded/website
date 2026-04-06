@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { enrichAuthorIdentity } from '@/lib/authors';
+import { getRegistryAuthorDirectory } from '@/lib/railyard/registry-author-directory';
 import { fetchRegistryJsonWithFallback } from '@/lib/railyard/registry-source';
 import type { ModManifest, MapManifest } from '@/types/registry';
 
@@ -29,7 +31,8 @@ export function useRegistryItem(
         const data = await fetchRegistryJsonWithFallback<
           ModManifest | MapManifest
         >(`${type}/${id}/manifest.json`);
-        if (!cancelled) setItem(data);
+        const authorDirectory = await getRegistryAuthorDirectory();
+        if (!cancelled) setItem(enrichAuthorIdentity(data, authorDirectory));
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Failed to load item');

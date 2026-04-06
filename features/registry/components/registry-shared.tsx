@@ -20,7 +20,13 @@ import {
   YAxis,
 } from 'recharts';
 import { cn } from '@/lib/utils';
+import { AuthorName } from '@/components/shared/author-name';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import {
+  getAuthorAttributionHref as resolveAuthorAttributionHref,
+  getAuthorDisplayName as resolveAuthorDisplayName,
+  isExternalHref as checkExternalHref,
+} from '@/lib/authors';
 import type { DailyDataPoint, ListingType } from '@/types/registry-analytics';
 
 // ---------------------------------------------------------------------------
@@ -191,7 +197,20 @@ export function RegistryTooltip({
       {entry['author'] ? (
         <div className="mt-1 flex items-center justify-between gap-4">
           <span className="text-muted-fg">Author</span>
-          <span className="font-medium">{entry['author'] as string}</span>
+          <AuthorName
+            author={{
+              author: entry['author'] as string,
+              author_alias: entry['author_alias'] as string | undefined,
+              contributor_tier: entry['contributor_tier'] as
+                | 'developer'
+                | 'engineer'
+                | 'conductor'
+                | 'executive'
+                | undefined,
+            }}
+            className="justify-end"
+            nameClassName="font-medium"
+          />
         </div>
       ) : null}
       {entry['type'] ? (
@@ -267,21 +286,18 @@ export function getAuthorDisplayName(author: {
   author: string;
   author_alias?: string;
 }): string {
-  return author.author_alias?.trim() || author.author;
+  return resolveAuthorDisplayName(author);
 }
 
 export function getAuthorAttributionHref(author: {
   author: string;
   attribution_link?: string;
 }): string {
-  return (
-    author.attribution_link?.trim() ||
-    `/registry/authors/${encodeURIComponent(author.author)}`
-  );
+  return resolveAuthorAttributionHref(author);
 }
 
 export function isExternalHref(href: string): boolean {
-  return /^https?:\/\//i.test(href);
+  return checkExternalHref(href);
 }
 
 export function trimLeadingZeroDailyData(
@@ -428,7 +444,7 @@ export function RegistryDetailShell({
   metadataBadges = [],
   children,
 }: {
-  title: string;
+  title: ReactNode;
   subtitle?: ReactNode;
   /** Listing type — sets the accent color. Omit for author pages (uses purple). */
   type?: ListingType;

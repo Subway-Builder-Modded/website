@@ -17,7 +17,6 @@ import { SortableNumberHeader } from '@/components/shared/sortable-number-header
 
 import {
   REGISTRY_LINK_HOVER_CLS,
-  getAuthorDisplayName,
   RegistryFilterControls,
   SafeChartContainer,
   formatCount,
@@ -37,6 +36,7 @@ import {
   useClientReady,
   registryLinkStyle,
 } from '@/features/registry/components/registry-shared';
+import { AuthorName } from '@/components/shared/author-name';
 import type {
   ListingType,
   RegistryAnalyticsData,
@@ -59,6 +59,8 @@ type ChartEntry = {
   downloads: number;
   type: ListingType;
   author: string;
+  author_alias?: string;
+  contributor_tier?: 'engineer' | 'conductor' | 'executive' | null;
   id: string;
 };
 
@@ -88,7 +90,9 @@ function rowsToChart(
           ? r.download_change
           : r.total_downloads,
     type: r.listing_type,
-    author: getAuthorDisplayName(r),
+    author: r.author,
+    author_alias: r.author_alias,
+    contributor_tier: r.contributor_tier,
     id: r.id,
   }));
 }
@@ -236,13 +240,12 @@ function SearchGroup({
                   <td
                     className={`hidden ${TABLE_CELL_CLS} text-muted-foreground sm:table-cell`}
                   >
-                    <Link
+                    <AuthorName
+                      author={row}
                       href={`/registry/authors/${encodeURIComponent(row.author)}`}
-                      className={REGISTRY_LINK_HOVER_CLS}
+                      linkClassName={REGISTRY_LINK_HOVER_CLS}
                       style={registryLinkStyle(accent)}
-                    >
-                      {getAuthorDisplayName(row)}
-                    </Link>
+                    />
                   </td>
                   <td
                     className={`${TABLE_CELL_NUMERIC_CLS} ${sort.key === 'total_downloads' ? 'font-black' : 'font-medium text-muted-foreground'}`}
@@ -449,13 +452,12 @@ function TypeTable({
                   <td
                     className={`hidden ${TABLE_CELL_CLS} text-muted-foreground sm:table-cell`}
                   >
-                    <Link
+                    <AuthorName
+                      author={row}
                       href={`/registry/authors/${encodeURIComponent(row.author)}`}
-                      className={REGISTRY_LINK_HOVER_CLS}
+                      linkClassName={REGISTRY_LINK_HOVER_CLS}
                       style={registryLinkStyle(color)}
-                    >
-                      {getAuthorDisplayName(row)}
-                    </Link>
+                    />
                   </td>
                   <td
                     className={`${TABLE_CELL_NUMERIC_CLS} ${sort.key === 'primary' ? 'font-black' : 'font-medium text-muted-foreground'}`}

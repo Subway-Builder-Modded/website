@@ -1,3 +1,5 @@
+import type { ContributorTier } from '@/types/registry';
+
 export type ListingType = 'mod' | 'map';
 
 export type RegistryListingRow = {
@@ -8,6 +10,7 @@ export type RegistryListingRow = {
   author: string;
   author_alias?: string;
   attribution_link?: string;
+  contributor_tier?: ContributorTier | null;
   total_downloads: number;
 };
 
@@ -19,6 +22,7 @@ export type RegistryTrendingRow = {
   author: string;
   author_alias?: string;
   attribution_link?: string;
+  contributor_tier?: ContributorTier | null;
   download_change: number;
   current_total: number;
   baseline_total: number;
@@ -29,6 +33,7 @@ export type RegistryAuthorRow = {
   author: string;
   author_alias?: string;
   attribution_link?: string;
+  contributor_tier?: ContributorTier | null;
   total_downloads: number;
   asset_count: number;
   map_count: number;
@@ -68,6 +73,7 @@ export type RegistryMapPopulationRow = {
   author: string;
   author_alias?: string;
   attribution_link?: string;
+  contributor_tier?: ContributorTier | null;
   city_code: string;
   country: string;
   population: number;

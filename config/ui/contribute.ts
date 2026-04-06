@@ -1,5 +1,6 @@
 import { Heart } from 'lucide-react';
 import type { PageHeaderConfig } from '@/components/shared/page-header';
+import type { ContributorTier } from '@/types/registry';
 
 export const CONTRIBUTE_PAGE_CONTENT: PageHeaderConfig = {
   icon: Heart,
@@ -16,6 +17,16 @@ export type SubscriptionTier = {
   description: string;
   features: string[];
   highlighted?: boolean;
+};
+
+export const CONTRIBUTOR_TIER_STYLES: Record<
+  ContributorTier,
+  { label: string; color: string }
+> = {
+  developer: { label: 'Developer', color: '#5296D5' },
+  engineer: { label: 'Engineer', color: '#D65745' },
+  conductor: { label: 'Conductor', color: '#9F2757' },
+  executive: { label: 'Executive', color: '#D8833B' },
 };
 
 export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [

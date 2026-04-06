@@ -4,10 +4,12 @@ import { ChartLine, Download, ExternalLink, Globe, Users } from 'lucide-react';
 import { createElement } from 'react';
 import { useTheme } from 'next-themes';
 
+import { AuthorName } from '@/components/shared/author-name';
 import { GalleryImage } from '@/features/railyard/components/gallery-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getModeHex, PROJECT_COLOR_SCHEMES } from '@/config/theme/colors';
+import { getAuthorAttributionHref } from '@/lib/authors';
 import { getCountryFlagIcon } from '@/lib/railyard/flags';
 import { formatDataQuality } from '@/lib/railyard/map-filter-values';
 import type { MapManifest, ModManifest, VersionInfo } from '@/types/registry';
@@ -48,6 +50,7 @@ export function ProjectHeader({
   const CountryFlag = mapCountryCode
     ? getCountryFlagIcon(mapCountryCode)
     : null;
+  const authorHref = getAuthorAttributionHref(item);
 
   const handleOpenInRailyard = () => {
     window.location.href = `railyard://open?type=${encodeURIComponent(type)}&id=${encodeURIComponent(item.id)}`;
@@ -100,18 +103,22 @@ export function ProjectHeader({
                 )}
               </div>
             )}
-            <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-              by{' '}
+            <div className="mt-1 flex min-w-0 items-center gap-1 text-sm text-muted-foreground">
+              <span className="shrink-0">by</span>
               <a
-                href={`https://github.com/${item.author}`}
+                href={authorHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                className="inline-flex min-w-0 max-w-full items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
               >
-                {item.author}
-                <ExternalLink className="h-3 w-3" />
+                <AuthorName
+                  author={item}
+                  className="min-w-0 max-w-full"
+                  nameClassName="truncate"
+                />
+                <ExternalLink className="h-3 w-3 shrink-0" />
               </a>
-            </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">

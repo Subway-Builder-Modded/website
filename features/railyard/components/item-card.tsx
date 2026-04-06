@@ -4,6 +4,7 @@ import { CheckCircle, Download, MapPin, Package, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
+import { AuthorName } from '@/components/shared/author-name';
 import { GalleryImage } from '@/features/railyard/components/gallery-image';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -247,9 +248,14 @@ export function ItemCard({
                   <h3 className="font-semibold text-sm leading-snug text-foreground truncate">
                     {item.name}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                    by {item.author}
-                  </p>
+                  <div className="mt-0.5 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                    <span className="shrink-0">by</span>
+                    <AuthorName
+                      author={item}
+                      className="min-w-0 max-w-full"
+                      nameClassName="truncate"
+                    />
+                  </div>
                 </div>
                 {presentation.isMap && (
                   <MapLocationMeta
@@ -330,9 +336,14 @@ export function ItemCard({
                 <h3 className="font-semibold text-sm leading-snug text-foreground truncate">
                   {item.name}
                 </h3>
-                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
-                  by {item.author}
-                </p>
+                <div className="mt-0.5 flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground">
+                  <span className="shrink-0">by</span>
+                  <AuthorName
+                    author={item}
+                    className="min-w-0 max-w-full"
+                    nameClassName="truncate"
+                  />
+                </div>
               </div>
               {presentation.isMap && (
                 <MapLocationMeta
@@ -412,9 +423,14 @@ export function ItemCard({
               <h3 className="font-semibold text-sm leading-snug text-foreground truncate">
                 {item.name}
               </h3>
-              <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                by {item.author}
-              </p>
+              <div className="mt-0.5 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                <span className="shrink-0">by</span>
+                <AuthorName
+                  author={item}
+                  className="min-w-0 max-w-full"
+                  nameClassName="truncate"
+                />
+              </div>
             </div>
             {presentation.isMap && (
               <MapLocationMeta

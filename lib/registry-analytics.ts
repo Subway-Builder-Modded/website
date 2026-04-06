@@ -1,5 +1,7 @@
 import { existsSync, readFileSync, statSync } from 'fs';
 import path from 'path';
+import { enrichAuthorIdentity } from '@/lib/authors';
+import { loadRegistryAuthorDirectoryFromWorkspace } from '@/lib/registry-author-directory.server';
 import {
   REGISTRY_ANALYTICS_SENTINEL,
   resolveRegistryAnalyticsDir,
@@ -129,6 +131,8 @@ const REGISTRY_ANALYTICS_PATHS = {
   authorsByDay: path.join(ANALYTICS_DIR, 'authors_by_day.csv'),
 } as const;
 
+const AUTHOR_DIRECTORY = loadRegistryAuthorDirectoryFromWorkspace();
+
 type RegistryAnalyticsFileKey = keyof typeof REGISTRY_ANALYTICS_PATHS;
 type RegistryTrendingKey = 'trending1d' | 'trending3d' | 'trending7d';
 type RegistryProjectTrendingKey =
@@ -173,6 +177,17 @@ function readAttributionLink(row: Record<string, string>): string {
   return authorId ? `https://github.com/${authorId}` : '';
 }
 
+function enrichAnalyticsAuthor<
+  T extends {
+    author: string;
+    author_alias?: string;
+    attribution_link?: string;
+    contributor_tier?: null;
+  },
+>(row: T): T {
+  return enrichAuthorIdentity(row, AUTHOR_DIRECTORY);
+}
+
 // ---------------------------------------------------------------------------
 // Test/dev content to exclude
 // ---------------------------------------------------------------------------
@@ -196,16 +211,19 @@ const TEST_PROJECT_KEYS = new Set([
 function parseAllTime(): RegistryListingRow[] {
   const rows = readFile('allTime')
     .filter((r) => !TEST_IDS.has(r['id'] ?? ''))
-    .map((r) => ({
-      rank: 0, // assigned per-type below
-      listing_type: r['listing_type'] as ListingType,
-      id: r['id'] ?? '',
-      name: r['name'] ?? '',
-      author: r['author'] ?? '',
-      author_alias: readAuthorAlias(r),
-      attribution_link: readAttributionLink(r),
-      total_downloads: Number(r['total_downloads']),
-    }));
+    .map((r) =>
+      enrichAnalyticsAuthor({
+        rank: 0, // assigned per-type below
+        listing_type: r['listing_type'] as ListingType,
+        id: r['id'] ?? '',
+        name: r['name'] ?? '',
+        author: r['author'] ?? '',
+        author_alias: readAuthorAlias(r),
+        attribution_link: readAttributionLink(r),
+        contributor_tier: null,
+        total_downloads: Number(r['total_downloads']),
+      }),
+    );
 
   // Assign rank per type so maps and mods are ranked independently
   let modRank = 1;
@@ -221,31 +239,37 @@ function parseTrending(fileKey: RegistryTrendingKey): RegistryTrendingRow[] {
     .filter(
       (r) => !TEST_IDS.has(r['id'] ?? '') && Number(r['download_change']) > 0,
     )
-    .map((r, i) => ({
-      rank: i + 1,
-      listing_type: r['listing_type'] as ListingType,
-      id: r['id'] ?? '',
-      name: r['name'] ?? '',
-      author: r['author'] ?? '',
-      author_alias: readAuthorAlias(r),
-      attribution_link: readAttributionLink(r),
-      download_change: Number(r['download_change']),
-      current_total: Number(r['current_total']),
-      baseline_total: Number(r['baseline_total']),
-    }));
+    .map((r, i) =>
+      enrichAnalyticsAuthor({
+        rank: i + 1,
+        listing_type: r['listing_type'] as ListingType,
+        id: r['id'] ?? '',
+        name: r['name'] ?? '',
+        author: r['author'] ?? '',
+        author_alias: readAuthorAlias(r),
+        attribution_link: readAttributionLink(r),
+        contributor_tier: null,
+        download_change: Number(r['download_change']),
+        current_total: Number(r['current_total']),
+        baseline_total: Number(r['baseline_total']),
+      }),
+    );
 }
 
 function parseAuthors(): RegistryAuthorRow[] {
-  return readFile('authors').map((r, i) => ({
-    rank: i + 1,
-    author: r['author'] ?? '',
-    author_alias: readAuthorAlias(r),
-    attribution_link: readAttributionLink(r),
-    total_downloads: Number(r['total_downloads']),
-    asset_count: Number(r['asset_count']),
-    map_count: Number(r['map_count']),
-    mod_count: Number(r['mod_count']),
-  }));
+  return readFile('authors').map((r, i) =>
+    enrichAnalyticsAuthor({
+      rank: i + 1,
+      author: r['author'] ?? '',
+      author_alias: readAuthorAlias(r),
+      attribution_link: readAttributionLink(r),
+      contributor_tier: null,
+      total_downloads: Number(r['total_downloads']),
+      asset_count: Number(r['asset_count']),
+      map_count: Number(r['map_count']),
+      mod_count: Number(r['mod_count']),
+    }),
+  );
 }
 
 function parseProjects(): RegistryProjectRow[] {
@@ -297,19 +321,22 @@ function parseListingProjects(): RegistryListingProjectRow[] {
 }
 
 function parseMapPopulations(): RegistryMapPopulationRow[] {
-  return readFile('mapsByPopulation').map((r, i) => ({
-    rank: i + 1,
-    id: r['id'] ?? '',
-    name: r['name'] ?? '',
-    author: r['author'] ?? '',
-    author_alias: readAuthorAlias(r),
-    attribution_link: readAttributionLink(r),
-    city_code: r['city_code'] ?? '',
-    country: r['country'] ?? '',
-    population: Number(r['population']),
-    population_count: Number(r['population_count']),
-    points_count: Number(r['points_count']),
-  }));
+  return readFile('mapsByPopulation').map((r, i) =>
+    enrichAnalyticsAuthor({
+      rank: i + 1,
+      id: r['id'] ?? '',
+      name: r['name'] ?? '',
+      author: r['author'] ?? '',
+      author_alias: readAuthorAlias(r),
+      attribution_link: readAttributionLink(r),
+      contributor_tier: null,
+      city_code: r['city_code'] ?? '',
+      country: r['country'] ?? '',
+      population: Number(r['population']),
+      population_count: Number(r['population_count']),
+      points_count: Number(r['points_count']),
+    }),
+  );
 }
 
 function parseDownloadsByTypeDaily(): RegistryDownloadsByTypeDailyRow[] {

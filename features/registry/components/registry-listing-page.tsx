@@ -34,7 +34,6 @@ import {
 import {
   DailyDownloadChart,
   REGISTRY_LINK_HOVER_CLS,
-  getAuthorDisplayName,
   getListingColor,
   RankBadge,
   RegistryDetailShell,
@@ -48,6 +47,7 @@ import {
   registryLinkStyle,
   trimLeadingZeroDailyData,
 } from './registry-shared';
+import { AuthorName } from '@/components/shared/author-name';
 import { SortableNumberHeader } from '@/components/shared/sortable-number-header';
 import { usePersistedState } from '@/lib/use-persisted-state';
 import { RegistryMapPreview } from '@/features/registry/components/registry-map-preview';
@@ -383,13 +383,12 @@ export function RegistryListingPage({
       subtitle={
         <>
           by{' '}
-          <Link
+          <AuthorName
+            author={listing}
             href={authorHref}
-            className={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
+            linkClassName={`font-medium ${REGISTRY_LINK_HOVER_CLS}`}
             style={registryLinkStyle(color)}
-          >
-            {getAuthorDisplayName(listing)}
-          </Link>
+          />
         </>
       }
       type={type}
