@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from 'fs';
 import path from 'path';
 import { enrichAuthorIdentity } from '@/lib/authors';
-import { loadRegistryAuthorDirectoryFromWorkspace } from '@/lib/registry-author-directory.server';
+import { loadRegistryAuthorDirectoryFromCache } from '@/lib/registry-author-directory.server';
 import {
   REGISTRY_ANALYTICS_SENTINEL,
   resolveRegistryAnalyticsDir,
@@ -131,7 +131,7 @@ const REGISTRY_ANALYTICS_PATHS = {
   authorsByDay: path.join(ANALYTICS_DIR, 'authors_by_day.csv'),
 } as const;
 
-const AUTHOR_DIRECTORY = loadRegistryAuthorDirectoryFromWorkspace();
+const AUTHOR_DIRECTORY = loadRegistryAuthorDirectoryFromCache();
 
 type RegistryAnalyticsFileKey = keyof typeof REGISTRY_ANALYTICS_PATHS;
 type RegistryTrendingKey = 'trending1d' | 'trending3d' | 'trending7d';

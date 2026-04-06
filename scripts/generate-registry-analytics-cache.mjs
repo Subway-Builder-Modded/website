@@ -9,8 +9,11 @@ const REPO_OWNER = 'Subway-Builder-Modded';
 const REPO_NAME = 'registry';
 const REPO_NAME_FALLBACK = 'The-Railyard';
 const REPO_BRANCH = 'main';
+const RAW_REPO_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}`;
+const RAW_REPO_BASE_FALLBACK = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME_FALLBACK}/${REPO_BRANCH}`;
 const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}/analytics`;
 const RAW_BASE_FALLBACK = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME_FALLBACK}/${REPO_BRANCH}/analytics`;
+const AUTHORS_INDEX_CACHE_FILE = 'authors_index.json';
 
 const TOKEN =
   process.env['RAILYARD_GITHUB_TOKEN']?.trim() ||
@@ -32,6 +35,7 @@ const ANALYTICS_FILES = [
   'most_popular_by_day.csv',
   'authors_by_day.csv',
 ];
+const TOTAL_CACHE_FILES = ANALYTICS_FILES.length + 1;
 
 function ensureDir(dir) {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
@@ -76,6 +80,22 @@ async function fetchCsv(filename) {
   throw lastError;
 }
 
+async function fetchRepoJson(relativePath) {
+  const bases = [RAW_REPO_BASE, RAW_REPO_BASE_FALLBACK];
+  let lastError;
+  for (const base of bases) {
+    const url = `${base}/${relativePath}`;
+    try {
+      const response = await fetch(url, { headers: buildHeaders() });
+      if (response.ok) return response.text();
+      lastError = new Error(`${response.status} ${response.statusText} for ${url}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError;
+}
+
 function buildSnapshotLabel(date) {
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -104,6 +124,18 @@ async function main() {
     }
   }
 
+  try {
+    const authorsIndex = await fetchRepoJson('authors/index.json');
+    writeFileSync(path.join(OUTPUT_DIR, AUTHORS_INDEX_CACHE_FILE), authorsIndex);
+    fetched.push(AUTHORS_INDEX_CACHE_FILE);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    failures.push({ file: AUTHORS_INDEX_CACHE_FILE, error: message });
+    console.warn(
+      `[registry-analytics] Failed ${AUTHORS_INDEX_CACHE_FILE}: ${message}`,
+    );
+  }
+
   const now = new Date();
   const nextMeta = {
     ...previousMeta,
@@ -123,7 +155,7 @@ async function main() {
   }
 
   console.log(
-    `[registry-analytics] Cached ${fetched.length}/${ANALYTICS_FILES.length} files in ${OUTPUT_DIR}.`,
+    `[registry-analytics] Cached ${fetched.length}/${TOTAL_CACHE_FILES} files in ${OUTPUT_DIR}.`,
   );
 }
 

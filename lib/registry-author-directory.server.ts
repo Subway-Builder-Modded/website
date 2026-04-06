@@ -4,29 +4,37 @@ import {
   createRegistryAuthorDirectory,
   type RegistryAuthorDirectoryEntry,
 } from '@/lib/authors';
+import {
+  REGISTRY_ANALYTICS_SENTINEL,
+  resolveRegistryAnalyticsDir,
+} from '@/lib/registry-analytics-paths';
 import type { RegistryAuthorsIndex } from '@/types/registry';
 
 let authorDirectoryCache: Map<string, RegistryAuthorDirectoryEntry> | null =
   null;
 
-function getAuthorIndexCandidates(cwd: string): string[] {
-  return [
-    path.resolve(cwd, 'authors', 'index.json'),
-    path.resolve(cwd, 'The-Railyard', 'authors', 'index.json'),
-    path.resolve(cwd, '..', 'The-Railyard', 'authors', 'index.json'),
-    path.resolve(cwd, '..', '..', 'The-Railyard', 'authors', 'index.json'),
-  ];
+const REGISTRY_AUTHORS_CACHE_FILE = 'authors_index.json';
+
+function resolveAnalyticsDir(): string {
+  return resolveRegistryAnalyticsDir({
+    cwd: process.cwd(),
+    envDir: process.env['REGISTRY_ANALYTICS_DIR'],
+    hasSentinelFile: (dir) =>
+      existsSync(path.join(dir, REGISTRY_ANALYTICS_SENTINEL)),
+  });
 }
 
-export function loadRegistryAuthorDirectoryFromWorkspace(): Map<
+export function loadRegistryAuthorDirectoryFromCache(): Map<
   string,
   RegistryAuthorDirectoryEntry
 > {
   if (authorDirectoryCache) return authorDirectoryCache;
 
-  for (const candidate of getAuthorIndexCandidates(process.cwd())) {
-    if (!existsSync(candidate)) continue;
-
+  const candidate = path.join(
+    resolveAnalyticsDir(),
+    REGISTRY_AUTHORS_CACHE_FILE,
+  );
+  if (existsSync(candidate)) {
     try {
       const payload = JSON.parse(
         readFileSync(candidate, 'utf-8'),
@@ -34,7 +42,7 @@ export function loadRegistryAuthorDirectoryFromWorkspace(): Map<
       authorDirectoryCache = createRegistryAuthorDirectory(payload);
       return authorDirectoryCache;
     } catch {
-      continue;
+      // Fall through to empty cache if parsing fails.
     }
   }
 

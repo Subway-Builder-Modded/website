@@ -5,6 +5,8 @@ import {
 import { fetchRegistryJsonWithFallback } from '@/lib/railyard/registry-source';
 import type { RegistryAuthorsIndex } from '@/types/registry';
 
+const AUTHORS_CACHE_PATH = '/registry/analytics/authors_index.json';
+
 let authorDirectoryPromise: Promise<
   Map<string, RegistryAuthorDirectoryEntry>
 > | null = null;
@@ -12,6 +14,16 @@ let authorDirectoryPromise: Promise<
 async function readRegistryAuthorDirectory(): Promise<
   Map<string, RegistryAuthorDirectoryEntry>
 > {
+  try {
+    const response = await fetch(AUTHORS_CACHE_PATH, { cache: 'no-store' });
+    if (response.ok) {
+      const payload = (await response.json()) as RegistryAuthorsIndex;
+      return createRegistryAuthorDirectory(payload);
+    }
+  } catch {
+    // Fall back to direct registry fetch below.
+  }
+
   try {
     const payload =
       await fetchRegistryJsonWithFallback<RegistryAuthorsIndex>(
