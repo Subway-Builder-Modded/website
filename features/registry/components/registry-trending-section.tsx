@@ -37,6 +37,7 @@ import {
   registryLinkStyle,
 } from '@/features/registry/components/registry-shared';
 import { AuthorName } from '@/components/shared/author-name';
+import type { ContributorTier } from '@/types/registry';
 import type {
   ListingType,
   RegistryAnalyticsData,
@@ -60,7 +61,7 @@ type ChartEntry = {
   type: ListingType;
   author: string;
   author_alias?: string;
-  contributor_tier?: 'engineer' | 'conductor' | 'executive' | null;
+  contributor_tier?: ContributorTier | null;
   id: string;
 };
 
